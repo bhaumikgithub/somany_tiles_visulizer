@@ -1,0 +1,138 @@
+/*!
+ * Global App styles
+ */
+body {
+    margin: 0;
+    font-family: Century Gothic, Helvetica, sans-serif;
+    font-size: small;
+}
+
+
+
+.bold {
+    font-weight: bold;
+}
+
+.form-group.required .control-label:after {
+    content:"*";
+    color:red;
+}
+
+.alert-top-right {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    z-index: 1111;
+    cursor: pointer;
+}
+
+.code-font {
+    font-family: monospace;
+    font-size: small;
+}
+
+.btn-edit {
+    vertical-align: super;
+    font-size: x-small;
+}
+
+.no-display {
+    display: none;
+}
+
+.margin-top-small {
+    margin-top: 5px;
+}
+
+.overflow-y {
+    overflow-y: auto;
+}
+
+.btn-email,
+.btn-google,
+.btn-facebook,
+.btn-twitter,
+.btn-whatsapp,
+.btn-vkontakte {
+    color: #fff;
+    margin: 1px 5px;
+    padding: 5px;
+}
+.btn-email {
+    background-color: #00c4ec;
+    border-color: #00b7dc;
+}
+.btn-email:hover,
+.btn-email:focus,
+.btn-email:active {
+    background-color: #00b7dc;
+    color: #fff;
+}
+.btn-google {
+    background-color: #db4437;
+    border-color: #d33527;
+}
+.btn-google:hover,
+.btn-google:focus,
+.btn-google:active {
+    background-color: #d33527;
+    color: #fff;
+}
+.btn-facebook {
+    background-color: #3b5998;
+    border-color: #334d84;
+}
+.btn-facebook:hover,
+.btn-facebook:focus,
+.btn-facebook:active {
+    background-color: #334d84;
+    color: #fff;
+}
+.btn-twitter {
+    background-color: #1da1f2;
+    border-color: #0d94e7;
+}
+.btn-twitter:hover,
+.btn-twitter:focus,
+.btn-twitter:active {
+    background-color: #0d94e7;
+    color: #fff;
+}
+.btn-whatsapp {
+    background-color: #00E676;
+    border-color: #00d26c;
+}
+.btn-whatsapp:hover,
+.btn-whatsapp:focus,
+.btn-whatsapp:active {
+    background-color: #00d26c;
+    color: #fff;
+}
+.btn-vkontakte {
+    background-color: #4d75a3;
+    border-color: #406a9a;
+}
+.btn-vkontakte:hover,
+.btn-vkontakte:focus,
+.btn-vkontakte:active {
+    background-color: #406a9a;
+    color: #fff;
+}
+
+.social-share {
+    margin-top: 16px;
+}
+
+.modal-header .close {
+    padding: 6px 10px;
+}
+
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

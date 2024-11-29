@@ -1,0 +1,217 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+
+use App\RoomType;
+use App\Panorama;
+use App\SurfaceType;
+use App\Savedroom;
+use App\Category;
+
+class ControllerPanorama extends Controller
+{
+
+    /**
+     *  AJAX
+     */
+
+    public function getRoom($id) {
+        $room = Panorama::findOrFail($id);
+        $room->surfaceTypes = SurfaceType::optionsAsArray();
+        return response()->json($room);
+    }
+
+
+    ///////////////////////////////////////////////////////////
+
+
+    public function room($id, $url = null, $icon = null) {
+        $roomById = false;
+        if ($id) {
+            $roomById = Panorama::find($id);
+            $icon = Panorama::find($id)->icon;
+        }
+
+        if (!$roomById && !$url) { abort(404); }
+
+        $userId = Auth::id();
+
+        return view('panorama.room', [
+            'roomId' => $id,
+            'savedRoomUrl' => $url,
+            'rooms' => Panorama::roomsByType(),
+            'saved_rooms' => Savedroom::getUserSavedRooms($userId),
+            'userId' => $userId,
+            'room_types' => RoomType::optionsAsArray(),
+            'room_icon' => $icon,
+            'product_categories' => Category::getByType(1),
+        ]);
+    }
+
+    public function roomDefault() {
+        $room = Panorama::where('enabled', 1)->first();
+
+        if (!$room) { abort(404); }
+
+        return $this->room($room->id);
+    }
+
+
+    ///////////////////////////////////////////////////////////
+
+
+    public function rooms() {
+        $rooms = Panorama::orderBy('id', 'desc')->paginate(10);
+        $roomTypes = RoomType::optionsAsArray();
+
+        return view('panorama.rooms', ['rooms' => $rooms, 'roomTypes' => $roomTypes]);
+    }
+
+    public function roomAdd(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255|string',
+            'type' => 'nullable|max:32|string',
+            'icon' => 'nullable|image|max:1024|dimensions:max_width=1024,max_height=1024',
+            'image' => 'required|image', // |max:10000|dimensions:max_width=12288,max_height=1024
+            'shadow' => 'nullable|image', // |max:10000|dimensions:max_width=12288,max_height=1024
+            'shadow_matt' => 'nullable|image', // |max:10000|dimensions:max_width=12288,max_height=1024
+            'surfaces' => 'required|json',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/panoramas')->withInput()->withErrors($validator);
+        }
+
+        $room = new Panorama;
+        $room->name = $request->name;
+        $room->type = $request->type;
+
+        if ($request->hasFile('icon')) {
+            $room->icon = $request->file('icon')->store('panoramas', 'public');
+        }
+        if ($request->hasFile('image')) {
+            $room->image = $request->file('image')->store('panoramas', 'public');
+        }
+        if ($request->hasFile('shadow')) {
+            $room->shadow = $request->file('shadow')->store('panoramas', 'public');
+        }
+        if ($request->hasFile('shadow_matt')) {
+            $room->shadow_matt = $request->file('shadow_matt')->store('panoramas', 'public');
+        }
+
+        $room->surfaces = $request->surfaces;
+        $room->enabled = 1;
+        $room->save();
+
+        return redirect('/panoramas');
+    }
+
+    public function roomUpdate(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer|exists:panoramas,id',
+            'name' => 'required|max:255|string',
+            'type' => 'nullable|max:32|string',
+            'icon' => 'nullable|image|max:1024|dimensions:max_width=1024,max_height=1024',
+            'image' => 'nullable|image', // |max:10000|dimensions:max_width=12288,max_height=1024
+            'shadow' => 'nullable|image', // |max:10000|dimensions:max_width=12288,max_height=1024
+            'shadow_matt' => 'nullable|image', // |max:10000|dimensions:max_width=12288,max_height=1024
+            'surfaces' => 'required|json',
+            'enabled' => 'nullable|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/panoramas')->withInput()->withErrors($validator);
+        }
+
+        $room = Panorama::findOrFail($request->id);
+        $room->name = $request->name;
+        $room->type = $request->type;
+
+        if ($request->hasFile('icon')) {
+            Storage::disk('public')->delete($room->getOriginal('icon'));
+            $room->icon = $request->file('icon')->store('panoramas', 'public');
+        }
+        if ($request->hasFile('image')) {
+            Storage::disk('public')->delete($room->getOriginal('image'));
+            $room->image = $request->file('image')->store('panoramas', 'public');
+        }
+        if ($request->hasFile('shadow')) {
+            Storage::disk('public')->delete($room->getOriginal('shadow'));
+            $room->shadow = $request->file('shadow')->store('panoramas', 'public');
+        }
+        if ($request->hasFile('shadow_matt')) {
+            Storage::disk('public')->delete($room->getOriginal('shadow_matt'));
+            $room->shadow_matt = $request->file('shadow_matt')->store('panoramas', 'public');
+        }
+
+        $room->surfaces = $request->surfaces;
+        if (isset($request->enabled)) { $room->enabled = 1; } else { $room->enabled = 0; }
+
+        $room->save();
+
+        return redirect('/panoramas');
+    }
+
+    public function roomsDelete(Request $request) {
+        $rooms = Panorama::find(json_decode($request->selectedRooms));
+        foreach ($rooms as $room) {
+            Savedroom::deleteRelated($room->id, '2d');
+
+            Storage::disk('public')->delete($room->getOriginal('icon'));
+            Storage::disk('public')->delete($room->getOriginal('image'));
+            Storage::disk('public')->delete($room->getOriginal('shadow'));
+            Storage::disk('public')->delete($room->getOriginal('shadow_matt'));
+            $room->delete();
+        }
+
+        return redirect('/panoramas');
+    }
+
+    public function roomsEnable(Request $request) {
+        Panorama::whereIn('id', json_decode($request->selectedRooms))->update(['enabled' => 1]);
+        return redirect('/panoramas');
+    }
+
+    public function roomsDisable(Request $request) {
+        Panorama::whereIn('id', json_decode($request->selectedRooms))->update(['enabled' => 0]);
+        return redirect('/panoramas');
+    }
+
+
+    ///////////////////////////////////////////////////////////
+
+
+    public function backedRoom($id, $url, $icon) {
+        return view('panorama.backedRoom', [
+            'room_url' => $url,
+            'room_icon' => $icon,
+        ]);
+    }
+
+//    public function roomSurfaces($id) {
+//        return view('panorama.roomSurfaces', ['roomId' => $id]);
+//    }
+//
+//    public function roomSurfacesUpdate(Request $request) {
+//        $validator = Validator::make($request->all(), [
+//            'roomId' => 'required|integer|exists:panoramas,id',
+//            'surfaces' => 'required|json',
+//        ]);
+//
+//        if ($validator->fails()) {
+//            return redirect('/panoramas')->withInput()->withErrors($validator);
+//        }
+//
+//        $room = Panorama::findOrFail($request->roomId);
+//        $room->surfaces = $request->surfaces;
+//        $room->save();
+//
+//        return redirect('/panoramas');
+//    }
+
+}

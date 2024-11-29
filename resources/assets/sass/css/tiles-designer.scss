@@ -1,0 +1,291 @@
+/*!
+ * Tiles Designer app Interior stiles
+ *
+ * td prefix for all Tiles Designer classes
+ */
+
+#tilesDesigner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 9px;
+    width: 100%;
+    height: 100%;
+}
+
+#tilesDesigner > div {
+    padding: 14px;
+    width: 1248px;
+    background: #f5f5f5;
+    margin: auto;
+    position: relative;
+}
+
+.td-x-close-btn {
+    position: absolute;
+    right: 14px;
+}
+
+.td-x-close-btn > button > span {
+    font-family: arial, helvetica;
+    font-size: 32px;
+    padding: 0px 8px;
+}
+
+.td-logo {
+    text-align: center;
+}
+.td-logo-img {
+    max-width: 215px;
+    max-height: 100px;
+}
+
+.td-blank-tiles-block {
+    display: inline-block;
+    width: 210px;
+    height: 600px;
+    max-height: 600px;
+    margin-left: 14px;
+    vertical-align: top;
+}
+
+.td-blank-tiles-block > select {
+    cursor: pointer;
+}
+
+#td-blank-tiles {
+    margin-top: 12px;
+    max-height: 502px;
+    overflow-y: auto;
+    width: 232px;
+}
+
+#td-blank-tiles > div {
+    display: none;
+    cursor: pointer;
+    width: 64px;
+    height: 64px;
+    border: solid 2px #cdcdcd;
+    border-radius: 4px;
+    margin: 0px 7px 7px 0px;
+    float: left;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+#td-blank-tiles > div:hover {
+    border: solid 2px #999999;
+}
+
+#td-blank-tiles > div > img {
+    max-width: 100%;
+    max-height: 100%;
+    display: unset;
+}
+
+.td-paint-block {
+    display: inline-block;
+    width: 350px;
+    margin-left: 28px;
+    margin-top: 38px;
+    vertical-align: top;
+}
+
+.td-suggestions {
+    display: inline-block;
+    width: 106px;
+    height: 106px;
+    vertical-align: top;
+    border: solid 1px #eee;
+    background: #ffffff;
+}
+
+#tilesDesignerSuggestion_2,
+#tilesDesignerSuggestion_3 {
+    margin-left: 12px;
+}
+
+.td-suggestions > img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    cursor: pointer;
+}
+
+.td-suggestions > img:hover {
+    cursor: pointer;
+}
+
+#edit-wrap {
+    width: 350px;
+    height: 350px;
+    margin-top: 10px;
+    text-align: center;
+    background: #ffffff;
+}
+
+#td-custom-tile {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#colors-container {
+    display: inline-block;
+    width: 350px;
+    margin-top: 10px;
+}
+
+#colors-container > div {
+    cursor: pointer;
+    width: 23px;
+    height: 23px;
+    float: left;
+    margin: 1px;
+    border: solid 1px #dedede;
+    border-radius: 2px;
+}
+
+#colors-container > div:hover {
+    border: solid 1px #777777;
+}
+
+.td-buttons-block {
+    display: inline-block;
+    width: 128px;
+    height: 560px;
+    max-height: 560px;
+    margin-left: 16px;
+    margin-top: 38px;
+    padding-top: 116px;
+    vertical-align: top;
+}
+
+.td-buttons-block > button {
+    width: 100%;
+    height: 41px;
+    margin-bottom: 19px;
+    background-color: #e3dfe0;
+}
+
+.td-buttons-block > button:hover {
+    background-color: #d4cdcf;
+}
+.td-buttons-block > button:disabled {
+    color: #bbbbbb;
+}
+
+.td-tile-info {
+    width: 100%;
+    font-size: larger;
+    margin-bottom: 16px;
+    padding: 1px 6px;
+}
+
+.td-tile-info-header {
+    margin-top: 14px;
+    margin-bottom: 0;
+}
+
+#tilesDesignerUsedColors {
+    overflow-y: auto;
+    max-height: 160px;
+}
+
+.td-grid-block {
+    display: inline-block;
+    width: 440px;
+    height: 560px;
+    margin-left: 16px;
+    margin-top: 38px;
+    vertical-align: top;
+}
+
+.td-saved-tiles-block {
+    width: auto;
+    height: 110px;
+    margin-top: 16px;
+}
+
+.td-saved-tiles-left-arrow {
+    cursor: pointer;
+    float: left;
+}
+
+.td-saved-tiles-right-arrow {
+    cursor: pointer;
+    float: right;
+}
+
+#tilesDesignerSavedTiles {
+    display: inline-block;
+    width: calc(100% - 100px);
+    height: 110px;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+#tilesDesignerSavedTiles > div {
+    width: 92px;
+    height: 92px;
+    display: inline-block;
+    position: relative;
+    border: solid 1px #dedede;
+    text-align: center;
+    vertical-align: top;
+    background: #ffffff;
+}
+
+#tilesDesignerSavedTiles > div:hover {
+    border: solid 1px #777777;
+}
+
+#tilesDesignerSavedTiles > div > img {
+    cursor: pointer;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#tilesDesignerSavedTiles > div > button {
+    cursor: pointer;
+    font-size: large;
+    position: absolute;
+    top: 1px;
+    right: 0px;
+}
+
+#tilesDesignerSavedTiles > div > button:hover {
+    top: 0px;
+    font-weight: bold;
+}
+
+#topPanelCustomTilesListBox {
+    overflow-x: auto;
+    margin-right: 8px;
+}
+
+#topPanelCustomTilesListBox > div {
+    cursor: pointer;
+    display: table-cell;
+    background-color: #ffffff;
+    padding: 4px;
+    border: 1px solid #dddddd;
+    border-radius: 6px;
+}
+
+#topPanelCustomTilesListBox > div:hover {
+    border: 1px solid #aaaaaa;
+}
+
+#topPanelCustomTilesListBox > div > img {
+    max-width: 85px;
+    max-height: 85px;
+}
+
+.draggable {
+    cursor: grab;
+}
+
+
+
