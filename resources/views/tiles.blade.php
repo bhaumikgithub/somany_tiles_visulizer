@@ -463,37 +463,45 @@ function tileFormReset() {
 
 function addTiles() {
     'use strict';
+    let used_tiles = $('#used_tiles').val();
+    let maximum_tiles = $('#maximum_tiles').val();
 
-    if (addTilesFormAction !== 'upload') {
-        tileFormReset();
-
-        window.$('#form-tile-id-box').hide();
-        window.$('#form-tile-name-box').hide();
-        window.$('#form-tile-file-img-box').hide();
-        window.$('#form-tile-icon-img-box').hide();
-        window.$('#form-tile-specular-file-box').hide();
-        window.$('#form-tile-specular-checkbox-box').hide();
-        window.$('#form-tile-grout-box').hide();
-        window.$('#form-tile-url-box').hide();
-        window.$('#form-tile-price-box').hide();
-
-        window.$('#form-tile-id').attr('required', false);
-        window.$('#form-tile-name').attr('required', false);
-        window.$('#form-tile-files').attr('required', true);
-        window.$('#form-tile-files').attr('multiple', true);
-        window.$('#form-tile-removeTile').hide();
-        window.$('#form-tile-saveAsCopy').hide();
-        window.$('#form-tile-submit').text('Add tile');
-        window.$('#form-tile-file-img').attr('src', '');
-        window.$('#form-tile-icon-img').attr('src', '');
-        window.$('#form-tile-specular-file-img').attr('src', '');
-
-        addTilesFormAction = 'upload';
-        document.forms.addTilesForm.action = '/tiles/upload';
+    if( parseInt(used_tiles) > parseInt(maximum_tiles) ){
+        alert('You have reached maximum tiles. Contact admin to update maximum tiles allowance')
+        return false;
     }
 
-    showFilters();
-    window.$('#addTilesFormBlock').slideDown();
+    else {
+        if (addTilesFormAction !== 'upload') {
+            tileFormReset();
+
+            window.$('#form-tile-id-box').hide();
+            window.$('#form-tile-name-box').hide();
+            window.$('#form-tile-file-img-box').hide();
+            window.$('#form-tile-icon-img-box').hide();
+            window.$('#form-tile-specular-file-box').hide();
+            window.$('#form-tile-specular-checkbox-box').hide();
+            window.$('#form-tile-grout-box').hide();
+            window.$('#form-tile-url-box').hide();
+            window.$('#form-tile-price-box').hide();
+
+            window.$('#form-tile-id').attr('required', false);
+            window.$('#form-tile-name').attr('required', false);
+            window.$('#form-tile-files').attr('required', true);
+            window.$('#form-tile-files').attr('multiple', true);
+            window.$('#form-tile-removeTile').hide();
+            window.$('#form-tile-saveAsCopy').hide();
+            window.$('#form-tile-submit').text('Add tile');
+            window.$('#form-tile-file-img').attr('src', '');
+            window.$('#form-tile-icon-img').attr('src', '');
+            window.$('#form-tile-specular-file-img').attr('src', '');
+
+            addTilesFormAction = 'upload';
+            document.forms.addTilesForm.action = '/tiles/upload';
+        }
+        showFilters();
+        window.$('#addTilesFormBlock').slideDown();
+    }
 }
 
 function getSpecularFileName(tileFile) {
@@ -666,7 +674,6 @@ document.addEventListener('DOMContentLoaded', function () {
 <div id="addTilesFormBlock" class="panel-body" style="display: none;">
   <form id="addTilesForm" name="addTilesForm" action="/tiles/upload" method="POST" enctype="multipart/form-data" class="form-horizontal">
     {{ csrf_field() }}
-
     <div class="form-group required" id="form-tile-id-box" style="display: none;">
       <label for="form-tile-id" class="col-sm-3 control-label">Id</label>
       <div class="col-sm-3">
@@ -874,6 +881,7 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
     @endif
 
+
     <div class="form-group">
       <label for="form-tile-expProps" class="col-sm-3 control-label">Filters</label>
       <div class="col-sm-6">
@@ -1029,173 +1037,176 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <div class="panel panel-default">
   <div class="pull-right">
+      <input type="hidden" value="{{$used_tiles}}" id="used_tiles">
+      <input type="hidden" value="{{$maximum_tiles->maximum_tiles}}" id="maximum_tiles">
+    <span> <b>{{$used_tiles}}</b> out of <b>{{$maximum_tiles->maximum_tiles}}</b> used </span>
     <button class="btn btn-default btn-sm" onclick="addTiles();">+ Add tile</button>
     <button class="btn btn-default btn-sm" onclick="window.$('#batchProcess').modal();">Batch</button>
-    <!-- <label class="btn btn-default btn-sm" style="padding-top: 3px; padding-bottom: 3px;">
+<!-- <label class="btn btn-default btn-sm" style="padding-top: 3px; padding-bottom: 3px;">
+<input type="checkbox" id="selectAllItemsOnCurrentPages" onchange="selectAllItemsOnCurrentPages(this.checked);" title="Select all Tiles on this page">
+Select All
+</label> -->
+<label class="btn btn-default btn-sm" style="padding-top: 3px; padding-bottom: 3px;">
+<input type="checkbox" id="selectAllItemsOnAllPages" onchange="selectAllItemsOnAllPages(this.checked);" title="Select All items on all pages">
+Select All items on all pages
+</label>
+<span class="dropdown">
+<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+  With selected
+  <span class="caret"></span>
+</button>
+<ul class="dropdown-menu">
+  <li><a href="#" onclick="enableSelectedTiles();">Enable</a></li>
+  <li><a href="#" onclick="disableSelectedTiles();">Disable</a></li>
+  <!-- <li class="divider"></li>
+  <li><a href="#" onclick="copySelectedTiles();">Make Copies</a></li> -->
+  <li class="divider"></li>
+  <li><a href="#" onclick="deleteSelectedTiles();">Remove</a></li>
+</ul>
+</span>
+</div>
+
+<h3 class="panel-heading">Tiles list</h3>
+
+<form id="tilesFilterForm" action="/tiles" method="POST" enctype="multipart/form-data" class="form-horizontal">
+{{ csrf_field() }}
+</form>
+
+<div class="panel-body">
+<table class="table table-striped">
+<thead>
+  <tr>
+    <th>
       <input type="checkbox" id="selectAllItemsOnCurrentPages" onchange="selectAllItemsOnCurrentPages(this.checked);" title="Select all Tiles on this page">
-      Select All
-    </label> -->
-    <label class="btn btn-default btn-sm" style="padding-top: 3px; padding-bottom: 3px;">
-      <input type="checkbox" id="selectAllItemsOnAllPages" onchange="selectAllItemsOnAllPages(this.checked);" title="Select All items on all pages">
-      Select All items on all pages
-    </label>
-    <span class="dropdown">
-      <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-        With selected
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li><a href="#" onclick="enableSelectedTiles();">Enable</a></li>
-        <li><a href="#" onclick="disableSelectedTiles();">Disable</a></li>
-        <!-- <li class="divider"></li>
-        <li><a href="#" onclick="copySelectedTiles();">Make Copies</a></li> -->
-        <li class="divider"></li>
-        <li><a href="#" onclick="deleteSelectedTiles();">Remove</a></li>
-      </ul>
-    </span>
-  </div>
+    </th>
+    <th>Tile</th>
+    <th>Name</th>
+    <th>Shape</th>
+    <th>Size</th>
+    <th>Surface</th>
+    @if (!$config_app_product_finish)<th>Finish</th>@endif
+    <th>Url</th>
+    <th>Price</th>
+    <th>Variant Set</th>
+    <th>Expandable Properties</th>
+    @if (config('app.tiles_access_level'))<th>Access Level</th>@endif
+    <th>Enabled</th>
+    <th>&nbsp;</th>
+  </tr>
+</thead>
 
-  <h3 class="panel-heading">Tiles list</h3>
-
-  <form id="tilesFilterForm" action="/tiles" method="POST" enctype="multipart/form-data" class="form-horizontal">
-    {{ csrf_field() }}
-  </form>
-
-  <div class="panel-body">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>
-            <input type="checkbox" id="selectAllItemsOnCurrentPages" onchange="selectAllItemsOnCurrentPages(this.checked);" title="Select all Tiles on this page">
-          </th>
-          <th>Tile</th>
-          <th>Name</th>
-          <th>Shape</th>
-          <th>Size</th>
-          <th>Surface</th>
-          @if (!$config_app_product_finish)<th>Finish</th>@endif
-          <th>Url</th>
-          <th>Price</th>
-          <th>Variant Set</th>
-          <th>Expandable Properties</th>
-          @if (config('app.tiles_access_level'))<th>Access Level</th>@endif
-          <th>Enabled</th>
-          <th>&nbsp;</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr style="white-space: nowrap;">
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>
-            <input form="tilesFilterForm" type="text" name="filterTileName" id="filterTileName" @if (isset($filter)) value="{{ $filter->filterTileName }}" @endif class="tiles-filter-input" style="width: 100%;">
-          </td>
-          <td>
-            <select form="tilesFilterForm" name="filterTileShape" id="filterTileShape" @if (isset($filter)) value="{{ $filter->filterTileShape }}" @endif style="height: 26px; width: 100%;" class="tiles-filter-input">
-              <option value="">All</option>
-              <option value="square">Square</option>
-              <option value="rectangle">Rectangle</option>
-              <option value="hexagon">Hexagon</option>
-              <option value="diamond">Diamond</option>
-              <option value="quadSet">Quad Set</option>
-              <!-- <option value="preparedSet">Prepared Set</option> -->
-              <option value="notionHerringbon">Notion Herringbon</option>
-              <option value="riverstoneRohmboid">Riverstone Rohmboid</option>
-              <option value="rivertsoneChevron">Rivertsone Chevron</option>
-              <option value="stoneSystemCombo">Stone System Combo</option>
-            </select>
-          </td>
-          <td>
-            <input form="tilesFilterForm" type="text" name="filterTileWidth" id="filterTileWidth" @if (isset($filter)) value="{{ $filter->filterTileWidth }}" @endif size="2" class="tiles-filter-input">x<input form="tilesFilterForm" type="text" name="filterTileHeight" id="filterTileHeight" @if (isset($filter)) value="{{ $filter->filterTileHeight }}" @endif size="2" class="tiles-filter-input">
-          </td>
-          <td>
-            <select form="tilesFilterForm" name="filterTileSurface" id="filterTileSurface" @if (isset($filter)) value="{{ $filter->filterTileSurface }}" @endif style="height: 26px; width: 100%;" class="tiles-filter-input">
-              <option value="" selected>All</option>
-              @if (count($surfaceTypes) > 0)
-              @foreach ($surfaceTypes as $type => $display_name)
-                <option value="{{ $type }}">{{ $display_name }}</option>
-              @endforeach
-              @endif
-            </select>
-          </td>
-          @if (!$config_app_product_finish)
-          <td>
-            <select form="tilesFilterForm" name="filterTileFinish" id="filterTileFinish" @if (isset($filter)) value="{{ $filter->filterTileFinish }}" @endif style="height: 26px; width: 100%;" class="tiles-filter-input">
-              <option value="" selected>All</option>
-              <option value="glossy">Glossy</option>
-              <option value="semi_polished">Semi polished</option>
-              <option value="textured">Textured</option>
-              <option value="matt">Matt</option>
-            </select>
-          </td>
-          @endif
-          <td>
-            <input form="tilesFilterForm" type="text" name="filterTileUrl" id="filterTileUrl" @if (isset($filter)) value="{{ $filter->filterTileUrl }}" @endif class="tiles-filter-input" style="width: 100%;">
-          </td>
-          <td>
-            <input form="tilesFilterForm" type="text" name="filterTilePrice" id="filterTilePrice" @if (isset($filter)) value="{{ $filter->filterTilePrice }}" @endif class="tiles-filter-input" style="width: 100%;">
-          </td>
-          <td>
-            <input form="tilesFilterForm" type="text" name="filterTileRotoPrintSetName" id="filterTileRotoPrintSetName" @if (isset($filter)) value="{{ $filter->filterTileRotoPrintSetName }}" @endif class="tiles-filter-input" style="width: 100%;">
-          </td>
-          <td>
-            <input form="tilesFilterForm" type="text" name="filterTileExpProps" id="filterTileExpProps" @if (isset($filter)) value="{{ $filter->filterTileExpProps }}" @endif class="tiles-filter-input" style="width: 100%;">
-          </td>
-          @if (config('app.tiles_access_level'))<td>&nbsp;</td>@endif
-          <td>
-            <select form="tilesFilterForm" name="filterTileEnabled" id="filterTileEnabled" @if (isset($filter)) value="{{ $filter->filterTileEnabled }}" @endif style="height: 26px; width: 100%;" class="tiles-filter-input">
-              <option value="" selected>All</option>
-              <option value="1">Yes</option>
-              <option value="0">No</option>
-            </select>
-          </td>
-          <td colspan="3">
-            <button form="tilesFilterForm" type="submit" class="btn btn-primary btn-xs" title="Apply filter">Filter</button>
-            <button form="tilesFilterForm" type="submit" class="btn btn-default btn-xs" onclick="clearTilesFilterForm();" title="Clear filter and show all data">Show All</button>
-          </td>
-        </tr>
-
-        @if (count($tiles) > 0)
-        @foreach ($tiles as $tile)
-        <tr @if (!$tile->enabled) style="opacity: 0.5;" @endif>
-          <td class="table-text">
-            <input type="checkbox" value="{{ $tile->id }}" onchange="selectItem(this.checked)" class="tiles-list-checkbox">
-          </td>
-          <td class="table-text">
-            <img src="{{ $tile->icon }}" alt="" class="img-thumbnail" style="max-width: 64px; max-height: 64px; cursor: pointer;" onclick="showBigTileImageModal('{{ $tile->name }}', '{{ $tile->file }}')">
-          </td>
-          <td class="table-text bold"><a href="#" onclick="editTile( {{ $tile->id }} )" title="Edit Tile">{{ $tile->name }}</a></td>
-          <td class="table-text">{{ $tile->shape }}</td>
-          <td class="table-text">{{ $tile->width . 'x' . $tile->height }}</td>
-          <td class="table-text">@if (isset($surfaceTypes[$tile->surface])) {{ $surfaceTypes[$tile->surface] }} @else {{ $tile->surface }} @endif</td>
-          @if (!$config_app_product_finish)
-          <td class="table-text">{{ $tile->finish }}</td>
-          @endif
-          <td class="table-text" title="{{ $tile->url }}">@if ($tile->url) {{ substr($tile->url, 0, 8) }} @if (mb_strlen($tile->url) > 8) ... @endif @endif</td>
-          <td class="table-text">{{ $tile->price }}</td>
-          <td class="table-text" title="{{ $tile->rotoPrintSetName }}">@if ($tile->rotoPrintSetName) {{ substr($tile->rotoPrintSetName, 0, 8) }} @if (mb_strlen($tile->rotoPrintSetName) > 8) ... @endif @endif</td>
-          <td class="table-text" title="{{ $tile->expProps }}">@if ($tile->expProps) {{ substr($tile->expProps, 0, 8) }} @if (mb_strlen($tile->expProps) > 8) ... @endif @endif</td>
-
-          <?php if (config('app.tiles_access_level') && isset($tile->access_level)) {
-              $roles = ['All', 'Guests', 'Registered', 'Editors', 'Administrators'];
-              $access_level = $roles[$tile->access_level];
-              echo "<td class=\"table-text\">$access_level</td>";
-          } ?>
-
-          <td class="table-text">@if ($tile->enabled) Yes @else <strong>No</strong> @endif</td>
-          <td class="table-text">
-            <button type="button" class="close" onclick="deleteTile({{ $tile->id }})" title="Remove Tile">&times;</button>
-          </td>
-        </tr>
+<tbody>
+  <tr style="white-space: nowrap;">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>
+      <input form="tilesFilterForm" type="text" name="filterTileName" id="filterTileName" @if (isset($filter)) value="{{ $filter->filterTileName }}" @endif class="tiles-filter-input" style="width: 100%;">
+    </td>
+    <td>
+      <select form="tilesFilterForm" name="filterTileShape" id="filterTileShape" @if (isset($filter)) value="{{ $filter->filterTileShape }}" @endif style="height: 26px; width: 100%;" class="tiles-filter-input">
+        <option value="">All</option>
+        <option value="square">Square</option>
+        <option value="rectangle">Rectangle</option>
+        <option value="hexagon">Hexagon</option>
+        <option value="diamond">Diamond</option>
+        <option value="quadSet">Quad Set</option>
+        <!-- <option value="preparedSet">Prepared Set</option> -->
+        <option value="notionHerringbon">Notion Herringbon</option>
+        <option value="riverstoneRohmboid">Riverstone Rohmboid</option>
+        <option value="rivertsoneChevron">Rivertsone Chevron</option>
+        <option value="stoneSystemCombo">Stone System Combo</option>
+      </select>
+    </td>
+    <td>
+      <input form="tilesFilterForm" type="text" name="filterTileWidth" id="filterTileWidth" @if (isset($filter)) value="{{ $filter->filterTileWidth }}" @endif size="2" class="tiles-filter-input">x<input form="tilesFilterForm" type="text" name="filterTileHeight" id="filterTileHeight" @if (isset($filter)) value="{{ $filter->filterTileHeight }}" @endif size="2" class="tiles-filter-input">
+    </td>
+    <td>
+      <select form="tilesFilterForm" name="filterTileSurface" id="filterTileSurface" @if (isset($filter)) value="{{ $filter->filterTileSurface }}" @endif style="height: 26px; width: 100%;" class="tiles-filter-input">
+        <option value="" selected>All</option>
+        @if (count($surfaceTypes) > 0)
+        @foreach ($surfaceTypes as $type => $display_name)
+          <option value="{{ $type }}">{{ $display_name }}</option>
         @endforeach
-        @else
-          No one tile found. Check filter.
         @endif
-      </tbody>
-    </table>
-    <div class="page-links" style="text-align: center;">{{ $tiles->links() }}</div>
-  </div>
+      </select>
+    </td>
+    @if (!$config_app_product_finish)
+    <td>
+      <select form="tilesFilterForm" name="filterTileFinish" id="filterTileFinish" @if (isset($filter)) value="{{ $filter->filterTileFinish }}" @endif style="height: 26px; width: 100%;" class="tiles-filter-input">
+        <option value="" selected>All</option>
+        <option value="glossy">Glossy</option>
+        <option value="semi_polished">Semi polished</option>
+        <option value="textured">Textured</option>
+        <option value="matt">Matt</option>
+      </select>
+    </td>
+    @endif
+    <td>
+      <input form="tilesFilterForm" type="text" name="filterTileUrl" id="filterTileUrl" @if (isset($filter)) value="{{ $filter->filterTileUrl }}" @endif class="tiles-filter-input" style="width: 100%;">
+    </td>
+    <td>
+      <input form="tilesFilterForm" type="text" name="filterTilePrice" id="filterTilePrice" @if (isset($filter)) value="{{ $filter->filterTilePrice }}" @endif class="tiles-filter-input" style="width: 100%;">
+    </td>
+    <td>
+      <input form="tilesFilterForm" type="text" name="filterTileRotoPrintSetName" id="filterTileRotoPrintSetName" @if (isset($filter)) value="{{ $filter->filterTileRotoPrintSetName }}" @endif class="tiles-filter-input" style="width: 100%;">
+    </td>
+    <td>
+      <input form="tilesFilterForm" type="text" name="filterTileExpProps" id="filterTileExpProps" @if (isset($filter)) value="{{ $filter->filterTileExpProps }}" @endif class="tiles-filter-input" style="width: 100%;">
+    </td>
+    @if (config('app.tiles_access_level'))<td>&nbsp;</td>@endif
+    <td>
+      <select form="tilesFilterForm" name="filterTileEnabled" id="filterTileEnabled" @if (isset($filter)) value="{{ $filter->filterTileEnabled }}" @endif style="height: 26px; width: 100%;" class="tiles-filter-input">
+        <option value="" selected>All</option>
+        <option value="1">Yes</option>
+        <option value="0">No</option>
+      </select>
+    </td>
+    <td colspan="3">
+      <button form="tilesFilterForm" type="submit" class="btn btn-primary btn-xs" title="Apply filter">Filter</button>
+      <button form="tilesFilterForm" type="submit" class="btn btn-default btn-xs" onclick="clearTilesFilterForm();" title="Clear filter and show all data">Show All</button>
+    </td>
+  </tr>
+
+  @if (count($tiles) > 0)
+  @foreach ($tiles as $tile)
+  <tr @if (!$tile->enabled) style="opacity: 0.5;" @endif>
+    <td class="table-text">
+      <input type="checkbox" value="{{ $tile->id }}" onchange="selectItem(this.checked)" class="tiles-list-checkbox">
+    </td>
+    <td class="table-text">
+      <img src="{{ $tile->icon }}" alt="" class="img-thumbnail" style="max-width: 64px; max-height: 64px; cursor: pointer;" onclick="showBigTileImageModal('{{ $tile->name }}', '{{ $tile->file }}')">
+    </td>
+    <td class="table-text bold"><a href="#" onclick="editTile( {{ $tile->id }} )" title="Edit Tile">{{ $tile->name }}</a></td>
+    <td class="table-text">{{ $tile->shape }}</td>
+    <td class="table-text">{{ $tile->width . 'x' . $tile->height }}</td>
+    <td class="table-text">@if (isset($surfaceTypes[$tile->surface])) {{ $surfaceTypes[$tile->surface] }} @else {{ $tile->surface }} @endif</td>
+    @if (!$config_app_product_finish)
+    <td class="table-text">{{ $tile->finish }}</td>
+    @endif
+    <td class="table-text" title="{{ $tile->url }}">@if ($tile->url) {{ substr($tile->url, 0, 8) }} @if (mb_strlen($tile->url) > 8) ... @endif @endif</td>
+    <td class="table-text">{{ $tile->price }}</td>
+    <td class="table-text" title="{{ $tile->rotoPrintSetName }}">@if ($tile->rotoPrintSetName) {{ substr($tile->rotoPrintSetName, 0, 8) }} @if (mb_strlen($tile->rotoPrintSetName) > 8) ... @endif @endif</td>
+    <td class="table-text" title="{{ $tile->expProps }}">@if ($tile->expProps) {{ substr($tile->expProps, 0, 8) }} @if (mb_strlen($tile->expProps) > 8) ... @endif @endif</td>
+
+    <?php if (config('app.tiles_access_level') && isset($tile->access_level)) {
+        $roles = ['All', 'Guests', 'Registered', 'Editors', 'Administrators'];
+        $access_level = $roles[$tile->access_level];
+        echo "<td class=\"table-text\">$access_level</td>";
+    } ?>
+
+    <td class="table-text">@if ($tile->enabled) Yes @else <strong>No</strong> @endif</td>
+    <td class="table-text">
+      <button type="button" class="close" onclick="deleteTile({{ $tile->id }})" title="Remove Tile">&times;</button>
+    </td>
+  </tr>
+  @endforeach
+  @else
+    No one tile found. Check filter.
+  @endif
+</tbody>
+</table>
+<div class="page-links" style="text-align: center;">{{ $tiles->links() }}</div>
+</div>
 </div>
 
 @endsection

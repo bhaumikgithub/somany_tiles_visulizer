@@ -95,12 +95,18 @@ class Controller extends BaseController
 
         $tileIds = Tile::getIds($filterQuery);
 
+        $usedTilesWithVariantName = Tile::where('enabled',1)->where('rotoPrintSetName','!=',NULL)->groupBy('rotoPrintSetName')->count();
+        $usedTilesWithoutVariantName = Tile::where('enabled',1)->where('rotoPrintSetName',NULL)->count();
+        $used_tiles = (int) $usedTilesWithVariantName + (int) $usedTilesWithoutVariantName;
+
         return view('tiles', [
             'tiles' => $tiles,
             'filter' => $filterRequest,
             'surfaceTypes' => $surfaceTypes,
             'tileIds' => $tileIds,
             'product_categories_tree' => Category::getTreeByType(1),
+            'maximum_tiles' => Company::first(),
+            'used_tiles' => $used_tiles
         ]);
     }
 

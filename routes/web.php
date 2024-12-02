@@ -197,6 +197,8 @@ Route::group(['middleware' => 'role:administrator'], function () {
     Route::post('/roomtypes/disable', 'App\Http\Controllers\Controller@roomTypesDisable');
 
     Route::get('/storage-link', 'App\Http\Controllers\ControllerSystem@storageLink');
+    Route::get('/maximum_images', 'App\Http\Controllers\MaxImageController@index');
+    Route::post('/maximum_images/update', 'App\Http\Controllers\MaxImageController@update');
 });
 
 

@@ -128,6 +128,7 @@
 
                                     <li class="divider"></li>
                                     <li><a href="/storage-link">Storage Link</a></li>
+                                    <li><a href="{{url('maximum_images')}}">Maximum Tiles</a></li>
                                 </ul>
                             </li>
                         @endif
