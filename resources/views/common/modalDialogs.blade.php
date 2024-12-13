@@ -27,6 +27,8 @@
             <div class="modal-body text-center">
                 <button id="btnDialogSaveImage" class="dialog-modal-box-button">@lang('Save design as image')</button>
                 <button id="btnDialogSavePdf" class="dialog-modal-box-button">@lang('Save with info as PDF')</button>
+                <button id="btnDialogAddtoPdf" class="dialog-modal-box-button" onclick="addToPDF();">@lang('Add to PDF')</button>
+                <button id="btnDialogViewPdf" class="dialog-modal-box-button">@lang('View PDF')</button>
                 <button id="btnDialogSaveScene" class="dialog-modal-box-button">@lang('Save design in account')</button>
                 @if (config('app.engine_panorama_enabled'))
                     <button id="btnDialogSaveSceneAsPanorama" class="dialog-modal-box-button">@lang('Bake panorama')</button>

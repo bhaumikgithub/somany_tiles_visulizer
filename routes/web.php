@@ -129,6 +129,8 @@ Route::group(['middleware' => 'role:editor'], function () {
 
         Route::get('/room2d/{id}/surfaces', 'App\Http\Controllers\Controller2d@roomSurfaces');
         Route::post('/room2d/surfaces/update', 'App\Http\Controllers\Controller2d@roomSurfacesUpdate');
+
+        Route::post('/add-to-pdf-data','App\Http\Controllers\AddToPdfRoomsController@addToPdf');
     }
 
     if (config('app.engine_panorama_enabled')) {
@@ -223,6 +225,13 @@ if (config('app.api_user_rooms')) {
 
 Route::get('json-data','App\Http\Controllers\HomeController@jsonData')->middleware(['auth'])->name('json.data');
 
+Route::get('/add-to-pdf-data', 'App\Http\Controllers\AddToPdfRoomsController@index')->name('add-to-pdf-data.index');
+Route::get('/pdf-summary/{randomKey}','App\Http\Controllers\AddToPdfRoomsController@pdfSummary');
+Route::post('/generate-pdf', 'App\Http\Controllers\AddToPdfRoomsController@downlaodPdf')->name('generate-pdf');
+Route::post('/add-to-pdf-data-store','App\Http\Controllers\AddToPdfRoomsController@store');
+Route::post('/pdf-summary','App\Http\Controllers\AddToPdfRoomsController@pdf-summary');
+Route::delete('/add-to-pdf-data/{id}', 'App\Http\Controllers\AddToPdfRoomsController@destroy')->name('add-to-pdf-data.destroy');
+Route::delete('/clear-items', 'App\Http\Controllers\AddToPdfRoomsController@removeAllItems')->name('add-to-pdf-data.remove-all-items');
 // Route::get('/test', 'App\Http\Controllers\HomeController@index');
 // Route::get('/test', function () {
 //     return response($_SERVER['SERVER_NAME']);

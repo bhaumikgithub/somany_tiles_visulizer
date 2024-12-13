@@ -60,6 +60,8 @@
 
     @include('common.productInfoPanel')
 
+    @include('common.addToCartInfoPanel')
+
     @include('common.applyingTilesAnimation')
 
     @if (config('app.tiles_designer'))
@@ -94,5 +96,7 @@
     <script src="/js/room/pdfmake.min.js"></script>
     <script src="/js/room/vfs_fonts.js"></script>
     @endif
+
+    <script src="/js/room/add_to_pdf_room.js"></script>
 </body>
 </html>
