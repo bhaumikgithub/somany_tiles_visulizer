@@ -103,15 +103,20 @@ function viewCartPdf()
             _token: $('meta[name="csrf-token"]').attr('content') // Include CSRF token
         },
         success: function (response) {
-            if( response.data.all_selection > 0 )
-                $('.productCount').text(response.data.all_selection);
-            $('#addToCartInfoPanel #cartInfoTilesList').html(response.body);
+            if( response.data.emptyCart === "unfilled" ){
+                alert("Please choose tiles to add in PDF");
+            } else {
+                $('#addToCartInfoPanel').show();
+                if( response.data.all_selection > 0 )
+                    $('.productCount').text(response.data.all_selection);
+                $('#addToCartInfoPanel #cartInfoTilesList').html(response.body);
+            }
         },
         error: function (xhr) {
             alert('Something went wrong!');
         }
     });
-    $('#addToCartInfoPanel').show();
+
 }
 
 function hideCart()

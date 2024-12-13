@@ -20,14 +20,22 @@ class AddToPdfRoomsController extends Controller
     {
         $sessionId = $request->session()->getId();
         $getCartId = Cart::where('user_id',$sessionId)->first();
-        $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
-        $count = $allProduct->count();
+        if( $getCartId ) {
+            $allProduct = CartItem::where('cart_id', $getCartId->id)->get();
+            $count = $allProduct->count();
 
-        $url = '/pdf-summary/'.$getCartId->random_key;
-        return response()->json([
-            'body' => view('common.cartPanel',compact('allProduct','count','url'))->render(),
-            'data' => ['all_selection' => $allProduct->count()],
-            'success' => 'success']);
+            $url = '/pdf-summary/' . $getCartId->random_key;
+            return response()->json([
+                'body' => view('common.cartPanel', compact('allProduct', 'count', 'url'))->render(),
+                'data' => ['emptyCart'=>'filled','all_selection' => $allProduct->count()],
+                'success' => 'success']);
+        } else {
+            return response()->json([
+                'data' => ['emptyCart'=>'unfilled'],
+                'message' => "No items added in PDF",
+                'success' => 'success']);
+        }
+
     }
 
     public function store(Request $request): JsonResponse
