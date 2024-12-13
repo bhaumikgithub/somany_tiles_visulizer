@@ -54,8 +54,12 @@ class AddToPdfRoomsController extends Controller
         $imageName = uniqid() . '.jpeg';
 
         // Save the image to the public folder (e.g., storage/thumbnails)
-        if (!Storage::exists('thumbnails')) {
-            Storage::makeDirectory('thumbnails');
+        if (!Storage::exists('public\thumbnails')) {
+            Storage::makeDirectory('public\thumbnails',0777, true);
+
+            $directoryPath = storage_path('app\public\thumbnails');
+            // Set the directory permissions to 777
+            chmod($directoryPath, 0777);
         }
 
         $filePath = 'thumbnails/' . $imageName;
@@ -70,8 +74,12 @@ class AddToPdfRoomsController extends Controller
         $imageName1 = uniqid() . '.jpeg';
 
         // Save the image to the public folder (e.g., storage/thumbnails)
-        if (!Storage::exists('largeImages')) {
-            Storage::makeDirectory('largeImages');
+        if (!Storage::exists('public\largeImages')) {
+            Storage::makeDirectory('public\largeImages',0777, true);
+
+            $directoryPath = storage_path('app\public\largeImages');
+            // Set the directory permissions to 777
+            chmod($directoryPath, 0777);
         }
 
         $filePath1 = 'largeImages/' . $imageName1;
