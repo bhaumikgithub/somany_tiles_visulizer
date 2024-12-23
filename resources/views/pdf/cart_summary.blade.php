@@ -18,7 +18,7 @@
         <div class="row mt-4">
             <div class="col-sm-8">
                 <h3>Your Product Selection</h3>
-                <button class="btn btn-danger modify-btn">Add More or Modify Selection</button>
+                <button class="btn btn-danger modify-btn" onclick="window.location.href='{{url('/')}}';">Add More or Modify Selection</button>
                 <p>Date: <span>{{\Carbon\Carbon::now()->format('d-m-Y')}}</span></p>
                 <p>Name: <span>customer name</span></p>
                 <p>Number: <span>customer number</span></p>
