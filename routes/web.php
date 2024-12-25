@@ -60,9 +60,11 @@ Route::group(['middleware' => 'role:guest'], function () {
 
 
 if ($engine_2d_enabled) {
-    Route::get('/room2d', 'App\Http\Controllers\Controller2d@roomDefault');
+    Route::get('/room2d', 'App\Http\Controllers\Controller2d@index');
+//    Route::get('/room2d', 'App\Http\Controllers\Controller2d@roomDefault');
     Route::get('/room2d/{id}', 'App\Http\Controllers\Controller2d@room');
     Route::get('/get/room2d/{id}', 'App\Http\Controllers\Controller2d@getRoom');
+    Route::get('/listing/{roomType}', 'App\Http\Controllers\Controller2d@roomListing');
 }
 
 if ($engine_panorama_enabled) {
