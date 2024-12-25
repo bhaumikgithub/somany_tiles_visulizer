@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ZipcodeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -199,7 +200,13 @@ Route::group(['middleware' => 'role:administrator'], function () {
     Route::post('/roomtypes/disable', 'App\Http\Controllers\Controller@roomTypesDisable');
 
     Route::get('/storage-link', 'App\Http\Controllers\ControllerSystem@storageLink');
+
     Route::get('/maximum_images', 'App\Http\Controllers\MaxImageController@index');
+
+    Route::get('/pincode_zone', 'App\Http\Controllers\ZipcodeController@index')->name('pincode_zone');
+    Route::post('/pincode_zone/get_zone_by_pincode', 'App\Http\Controllers\ZipcodeController@getZoneByPincode');
+
+
     Route::post('/maximum_images/update', 'App\Http\Controllers\MaxImageController@update');
 });
 
@@ -232,6 +239,7 @@ Route::post('/add-to-pdf-data-store','App\Http\Controllers\AddToPdfRoomsControll
 Route::post('/pdf-summary','App\Http\Controllers\AddToPdfRoomsController@pdf-summary');
 Route::delete('/add-to-pdf-data/{id}', 'App\Http\Controllers\AddToPdfRoomsController@destroy')->name('add-to-pdf-data.destroy');
 Route::delete('/clear-items', 'App\Http\Controllers\AddToPdfRoomsController@removeAllItems')->name('add-to-pdf-data.remove-all-items');
+
 // Route::get('/test', 'App\Http\Controllers\HomeController@index');
 // Route::get('/test', function () {
 //     return response($_SERVER['SERVER_NAME']);

@@ -6,7 +6,7 @@
         <div class="row header-section mt-20">
             <div class="col-md-12 col-xs-12 d-flex flex-wrap align-items-center">
                 <div class="logo d-flex flex-column">
-                    <img src="{{asset('img/tiles_visu_logo.png')}}" alt="Somany Logo">
+                    <img src="{{asset('img/somany-logo-new.jpg')}}" alt="Somany Logo">
                 </div>
                 <div class="intro d-flex flex-column">
                     <p>Your space reflects your personality; make it impressive. We bring to you an exclusive selection of tiles that are engineered to perfection. Explore designs that make every space memorable.
@@ -70,30 +70,30 @@
             <div class="col-md-3 col-sm-12 col-xs-12">
                 <div class="right-panel form-container">
                     <form action="{{ route('generate-pdf') }}" name="fill_basic_form" method="post">
-                        @csrf
-                        <div class="form-group">
-                            <label for="firstName">First Name</label>
-                            <input type="text" class="form-control" id="firstName" name="firstName">
-                        </div>
-                        <div class="form-group">
-                            <label for="lastName">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" name="lastName">
-                        </div>
-                        <div class="form-group">
-                            <label for="mobileNumber">Mobile Number</label>
-                            <input type="text" class="form-control" id="mobileNumber" name="mobileNumber">
-                        </div>
-                        <div class="form-group">
-                            <label for="state">State</label>
-                            <input type="text" class="form-control" id="state" name="state">
-                        </div>
-                        <div class="form-group">
-                            <label for="city">City</label>
-                            <input type="text" class="form-control" id="city" name="city">
-                        </div>
-                        <input type="hidden" value="{{$randomKey}}" name="random_key">
-                        <button class="btn btn-danger download-btn" id="download_pdf" disabled>Download PDF</button>
-                    </form>
+                    @csrf
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName">
+                    </div>
+                    <div class="form-group">
+                        <label for="mobileNumber">Mobile Number</label>
+                        <input type="text" class="form-control" id="mobileNumber" name="mobileNumber">
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input type="text" class="form-control" id="state" name="state">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" class="form-control" id="city" name="city">
+                    </div>
+                    <input type="hidden" value="{{$randomKey}}" name="random_key">
+                    <button class="btn btn-danger download-btn" id="download_pdf" disabled>Download PDF</button>
+                </form>
                 </div>
             </div>
         </div>

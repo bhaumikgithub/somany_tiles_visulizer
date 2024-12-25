@@ -25,9 +25,11 @@
     <button id="bottomMenuCapture" title="@lang('Capture')" onclick="window.$('#dialogSaveModalBox').modal('show');">
         <img src="/img/icons/capture.png" alt="">
     </button>
+
     <button id="bottomAddToPdf" title="@lang('View Pdf')" onclick="viewCartPdf();">
         <img src="/img/icons/cart.png" alt="">
     </button>
+
     @if (config('app.tiles_designer'))
     <button id="bottomMenuTilesDesigner" title="Tiles Designer" onclick="window.$('#tilesDesigner').modal('show');">
         <img src="/img/icons/brush.png" alt="">

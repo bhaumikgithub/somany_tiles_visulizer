@@ -36,7 +36,9 @@ class Controller2d extends Controller
             $roomById = Room2d::find($id);
             $icon = Room2d::find($id)->icon;
         }
+
         if (!$roomById && !$url) { abort(404); }
+
         $userId = Auth::id();
 
         return view('2d.room', [

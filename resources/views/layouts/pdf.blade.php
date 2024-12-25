@@ -13,6 +13,9 @@
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/pdf.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
 
     <!-- Scripts -->
     <script>
@@ -22,9 +25,9 @@
     </script>
 </head>
 <body>
-<div>
-    @yield('content')
-</div>
+    <div>
+        @yield('content')
+    </div>
 
 <!-- Scripts -->
 <script src="/js/app.js"></script>

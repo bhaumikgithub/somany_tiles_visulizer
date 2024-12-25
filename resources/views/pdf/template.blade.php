@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Tiles Visualizer | PDF</title>
+    <title>Somany Tiles Visualizer | PDF</title>
     <style>
         .header-section {
             padding: 20px 15px;
@@ -62,7 +62,7 @@
         <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tr>
                 <td style="width: 40%; vertical-align: top; padding: 10px;">
-                    <img src="{{ public_path('img/tiles_visu_logo.png') }}" alt="Tiles Logo" style="max-height: 80px;">
+                    <img src="{{ public_path('img/somany-logo-new.jpg') }}" alt="Tiles Logo" style="max-height: 80px;">
                 </td>
                 <td style="width: 60%; vertical-align: top; padding: 10px;">
                     <p style="margin: 0; font-size: 14px; line-height: 1.5;">
@@ -78,7 +78,7 @@
                 <p>Date: <span>{{\Carbon\Carbon::now()->format('d-m-Y')}}</span></p>
                 <p>Name: <span>{{$basic_info['first_name']. " ". $basic_info['last_name']}}</span></p>
                 <p>Number: <span>{{$basic_info['contact_no']}}</span></p>
-                <p>Here are the products you’ve selected from our collection. Visit more on <a href="https://tilevisualizer.com/">https://tilevisualizer.com/</a></p>
+                <p>Here are the products you’ve selected from our collection. Visit more on <a href="www.somany.com">www.somany.com</a></p>
                 @if( isset($allProduct))
                     @foreach($allProduct as $index=>$item)
                         <div>

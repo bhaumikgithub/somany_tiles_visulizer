@@ -9,6 +9,7 @@
 <input type="hidden" value="{{@$room_name}}" id="current_room_name">
 <input type="hidden" value="{{@$room_type}}" id="current_room_type">
 <input type="hidden" value="" id="selected_tile_ids">
+
 @if (config('view.visualizer_layout') != 'iorena.')
     @include('common.' . config('app.bottom_menu') . 'bottomMenu2d')
 @endif

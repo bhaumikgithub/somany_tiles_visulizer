@@ -123,6 +123,7 @@
 
             var productInfoTilesList = (document.getElementById('productInfoTilesList'));
             var surfaces = [...new Set(tiles.map(tile => tile.surface))]
+
             surfaces.forEach(surface => {
                 var surfaceProductInfo = document.createElement('p');
                 surfaceProductInfo.className = 'top-panel-label';
