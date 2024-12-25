@@ -11,6 +11,7 @@
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
     <link href="/css/pdf.css" rel="stylesheet">
 
     <!-- Scripts -->

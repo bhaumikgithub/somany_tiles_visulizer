@@ -1,68 +1,6 @@
 .logo{
     position: unset;
 }
-
-.logo img {
-    max-height: 80px;
-}
-.header-section {
-    padding: 20px 15px;
-}
-.selection-title {
-    margin-top: 20px;
-    font-weight: bold;
-}
-.product-image {
-    border-radius: 10px;
-    margin-bottom: 20px;
-}
-.details-card {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 20px;
-}
-.details-card img {
-    width: 100px;
-    border-radius: 8px;
-}
-.details-card h5 {
-    font-size: 16px;
-}
-.right-panel {
-    background-color: #f5f5f5;
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 190px;
-}
-.download-btn {
-    width: 100%;
-    background-color: #ce1f22;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 10px;
-    font-weight: bold;
-}
-.footer-section {
-    margin-top: 30px;
-}
-.modify-btn{
-    background-color: #ce1f22;
-    color: #fff;
-    border: none;
-    font-weight: bold;
-    float: right;
-    padding: 10px;
-    margin-top: -40px;
-    border-radius: 10px;
-}
-
 .notes_ul{
-    margin-left: 30px;
-}
-
-.notes_ul li {
-    list-style-type: disc;
+    margin-left: 25px !important;
 }
