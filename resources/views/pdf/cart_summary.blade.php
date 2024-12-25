@@ -1,7 +1,7 @@
 @extends('layouts.pdf')
 
 @section('content')
-    <div class="container">
+    <div class="container pdf-summary-container">
         <!-- Header Section -->
         <div class="row header-section mt-20">
             <div class="col-md-12 col-xs-12 d-flex flex-wrap align-items-center">
@@ -19,10 +19,10 @@
         <div class="row mt-20">
             <div class="col-md-9 col-sm-12 col-xs-12">
                 <h3 class="product-title font-bold">Your Product Selection</h3>
-                <p>Date: <span>{{\Carbon\Carbon::now()->format('d-m-Y')}}</span></p>
-                <p>Name: <span>customer name</span></p>
-                <p>Number: <span>customer number</span></p>
-                <p>Here are the products you’ve selected from our collection. Visit more on <a href="www.somany.com">www.somany.com</a></p>
+                <p>Date: <span >{{\Carbon\Carbon::now()->format('d-m-Y')}}</span></p>
+                <p>Name: <span class="font-bold">customer name</span></p>
+                <p>Number: <span class="font-bold">customer number</span></p>
+                <p>Here are the products you’ve selected from our collection. Visit more on <a class="cmn_link" href="www.somany.com">www.somany.com</a></p>
             </div>
             <div class="col-md-3 col-sm-12 col-xs-12">
                 <button class="btn btn-danger modify-btn" onclick="window.location.href='{{url('/')}}';">Add More or Modify Selection</button>
@@ -55,7 +55,7 @@
                                         <p>Wastage: 10%</p>
                                         <p>Number of Box Required: 10</p>
                                         <p>Tiles in 1 Box: 2</p>
-                                        <a href="#" class="tile-cal-link">Open Tiles Calculator</a>
+                                        <button type="button" class="tile-cal-link" id ="tile_cal" data-toggle="modal" data-target="#tilecal">Open Tiles Calculator</button>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left">
                                         <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5">{{$tile_detail->price === NULL ? 'Price not given' : 'Rs. '.$tile_detail->price.'/sq.ft'}}</h5>
@@ -124,4 +124,112 @@
         </div>
     </div>
 
+    <!-- tile_cal modal start -->
+    <div class="modal fade" id="tilecal" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Tiles Calculator
+        </h4>
+        </div>
+        <div class="modal-body">
+        <form>
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-12 cmn-form-data">
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-12">
+                            
+                    <div class="form-group">
+                        <label for="width_feet">Enter Floor/wall's Width
+                        </label>
+                        <input type="number" class="form-control" id="width_feet" name="width_feet" placeholder="Width in Feet">
+                    </div>
+                    <div class="form-group">
+                        <label for="length_feet">Enter Floor/wall's Length/Height
+                        </label>
+                        <input type="number" class="form-control" id="length_feet" name="length_feet" placeholder="Length/Height">
+                    </div>
+                    <div class="form-group">
+                        <label for="tiles_size">Tiles Size
+                        </label>
+                        <select class="form-control" id="tiles_size" name="tiles_size">
+                             <option value="" >Select Size</option>
+                            <option value="1200x2780" data-picperbox="1">1200 x 2780 mm </option>
+                            <option value="1200x2400" data-picperbox="1">1200 x 2400 mm </option>
+                            <option value="1200x1200" data-picperbox="2">1200 x 1200 mm </option>
+        
+                            <option value="800x3000" data-picperbox="1">800 x 3000 mm </option>
+                            <option value="800x1600" data-picperbox="2">800 x 1600 mm </option>
+                            <option value="800x1500" data-picperbox="2">800 x 1500 mm </option>
+                            <option value="800x800" data-picperbox="3">800 x 800 mm </option>
+        
+                            <option value="600x2020" data-picperbox="2">600 x 2020 mm </option>
+                            <option value="600x1200" data-picperbox="2">600 x 1200 mm </option>
+                            <option value="600x900" data-picperbox="1">600 x 900 mm </option>
+                            <option value="600x600" data-picperbox="4">600 x 600 mm </option>
+        
+                            <option value="300x2020" data-picperbox="3">300 x 2020 mm </option>
+                            <option value="300x1600" data-picperbox="4">300 x 1600 mm </option>
+                            <option value="300x1200" data-picperbox="3">300 x 1200 mm </option>
+                            <option value="300x600" data-picperbox="6">300 x 600 mm </option>
+                            <option value="300x450" data-picperbox="6">300 x 450 mm </option>
+                            <option value="300x300" data-picperbox="9">300 x 300 mm </option>
+        
+                            <option value="200x1600" data-picperbox="4">200 x 1600 mm </option>
+                            <option value="195x1200" data-picperbox="6">195 x 1200 mm </option>
+                          </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="wast_per">Wastage in Percentage
+
+                        </label>
+                        <input type="number" class="form-control" id="wast_per" name="length_feet" placeholder="Percentage">
+                    </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-12 result-main">
+                            <div id="result" class="col-12 result_clas">
+                            </div>
+                           
+                                    <div  class="form-label" id="area_covered_meter"> </div>
+                              
+                                    <div  class="form-label" id="area_covered_feet"> </div>
+                                
+                           
+                                    <div  class="form-label" id="required_tiles"></div>
+                         
+                                    <div  class="form-label" id="required_box"></div>
+                               
+                            </div>
+                                     
+                            </div>
+                        </div>
+                </div>
+          <div class="row">
+                <div class="col-xs-12">
+                    <div class="btn-div d-flex flex-wrap ">
+                        <!-- <button class="btn modify-btn tile-cal-btn" id="calculate_btn">Calculate</button>
+                        <button class="btn modify-btn ml-3 tile-cal-btn ml-10" id="reset_btn" >Reset</button> -->
+                        <a href="#" id="calculate_btn" class="btn modify-btn tile-cal-btn" >Calculate</a>
+                        <a href="#" id="reset_btn" class="btn modify-btn ml-3 tile-cal-btn ml-10 reset_btn" >Reset</a>
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+        </div>
+        
+      </div>
+      
+    </div>
+  </div>
+
 @endsection
+
