@@ -1,211 +1,64 @@
-/* common css */
+
 
 body{
-    font-family: "Rethink Sans", serif;
-    font-optical-sizing: auto;
+  font-family: "Rethink Sans", serif !important;
+  font-optical-sizing: auto;
+  font-size: 14px;
 }
 
 .mt-10{
-    margin-top: 10px;
+	margin-top: 10px;
 }
 .mt-20{
-    margin-top: 20px;
+	margin-top: 20px;
 }
 .flex-wrap{
-    flex-wrap: wrap;
+	flex-wrap: wrap;
 }
 .d-flex{
-    display: flex;
+	display: flex;
 }
 .justify-content-center{
-    justify-content: center;
+	justify-content: center;
 }
 .align-items-center{
-    align-items: center;
+	align-items: center;
 }
 .cap-text{
-    text-transform: uppercase;
+	text-transform: uppercase;
 }
 .font-bold{
-    font-weight: bold;
+	font-weight: bold;
 }
 .dark-grey-font{
-    color: #3F3F46;
+	color: #3F3F46;
 }
 .mr-10{
-    margin-right: 10px !important;
+	margin-right: 10px !important;
 }
 .mb-0{
-    margin-bottom: 0px !important;
+	margin-bottom: 0px !important;
 }
 .mt-0{
-    margin-top: 0px !important;
+	margin-top: 0px !important;
+}
+.ml-10{
+	margin-left: 10px;
 }
 .margin-bottom-5{
-    margin-bottom: 5px;
+	margin-bottom: 5px;
 }
-/* pdf summary page css */
-.logo{
-    width: 20%;
+.form-control{
+	box-shadow: none !important;
+	outline: none !important;
+	transition:none !important;
 }
-.intro{
-    width: 80%;
-    padding-left: 20px;
-}
-.logo img {
-    max-height: 80px;
-}
-
-.selection-title {
-    margin-top: 20px;
-    font-weight: bold;
-}
-.product-image {
-    border-radius: 10px;
-    margin-bottom: 40px;
-    /* max-height: 400px; */
-}
-.details-card {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 5px;
-    margin-bottom: 30px;
-    background-color: #F6F6F6;
-
-}
-.details-card img {
-    max-width: 100%;
-    border-radius: 8px;
-}
-.details-card h5 {
-    font-size: 16px;
-}
-.right-panel {
-    background-color: #D9D9D9;
-    padding: 20px 15px;
-    border-radius: 10px;
-    margin-top: 45px;
-
-}
-.download-btn {
-    width: 100%;
-    background-color: #ce1f22;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 10px;
-    font-weight: bold;
-}
-.footer-section {
-    margin-top: 30px;
-    margin-bottom: 20px;
-}
-.modify-btn{
-    background-color: #ce1f22;
-    color: #fff;
-    border: none;
-    font-weight: bold;
-
-    padding: 10px 15px;
-
-    border-radius: 10px;
-}
-
-.notes_ul{
-    margin-left: -20px;
-}
-
-.notes_ul li {
-    list-style-type: disc;
-    margin-bottom: 5px;
-}
-.product-title{
-    margin-bottom: 20px;
-}
-.cmn_link{
-    color: #000;
-}
-.cmn_link:hover{
-    color: #a5181a;
-}
-
-.details-card p{
-    margin-bottom: 2px;
-    font-size: 14px;
-    color: #3F3F46;
-}
-.tile-cal-link{
-    color: #3F3F46;
-    font-weight: 500;
-    margin-top:10px;
-    text-decoration: underline;
-    display: inline-block;
-
-}
-.tile-cal-link:hover{
-    color: #a5181a;
-
-}
-
-/* media query */
-
-@media (max-width:1200px) {
-
-    .logo {
-        width: 25%;
-    }
-    .intro {
-        width: 75%;
-    }
-
-}
-
-@media (max-width:991px) {
-
-    .logo {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 20px;
-        justify-content: center;
-    }
-    .intro {
-        width: 100%;
-        padding-left: 0px;
-    }
-    .product-title{
-        margin-top: 0px !important;
-    }
-    .modify-btn{
-        margin-bottom: 10px;
-    }
-    .right-panel{
-        margin-top: 20px !important;
-        margin-bottom: 20px;
-    }
-
-}
-
-@media (max-width:768px) {
-    .img-wall-set{
-        margin-bottom: 20px;
-    }
-    .product-title{
-        font-size: 22px !important;
-    }
-    .xs-text-left{
-        text-align: left;
-    }
-    .xs-margin-set{
-        margin-top: 10px;
-    }
-    .tile-cal-link{
-        margin-top: 0px !important;
-        margin-bottom: 10px !important;
-    }
-    .xs-margin-top-20{
-        margin-top: 20px;
-    }
-
-
-}
+.form-control:focus{
+	box-shadow: none !important;
+	outline: none !important;
+	transition:none !important;
+	border-color: #ce1f22 !important;
+  }
+  .cmn-form-data label{
+	margin-bottom: 10px;
+  }
