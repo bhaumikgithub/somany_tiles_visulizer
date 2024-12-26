@@ -45,6 +45,7 @@ $('#tilecal').on('click', '.modal-backdrop', function(e){
       e.preventDefault();
 });
 
+
 $(document).on('keydown', function(e){
       if (e.key === "Escape") {
         e.preventDefault();
@@ -141,8 +142,70 @@ function validationCheck(){
   }
 }
 
+</script>
+<script>
+  $("#price").on("input", function(evt) {
+   var self = $(this);
+   self.val(self.val().replace(/[^0-9.]/g, ''));
+   if ((evt.which != 46 || self.val().indexOf('.') != -1) && (evt.which < 48 || evt.which > 57)) 
+   {
+     evt.preventDefault();
+   }
+ });
 
+ $("#update_price_btn").click(function () {
+ // Find the closest parent with the class "detail-card"
+ const parentDiv = $(this).closest('.detail-card');
 
+// Get the ID of the parent div
+const parentId = parentDiv.attr('id');
+
+// Split the ID by "_"
+const idParts = parentId.split('_');
+
+// Log the results
+console.log('Parent ID:', parentId);
+console.log('Split ID Parts:', idParts); 
+
+});
+
+$('#updateprice').on('show.bs.modal', function (event) {
+  
+            const button = $(event.relatedTarget); // Button that triggered the modal
+
+            // Find the parent .details-card element and get its id
+            const detailsCardId = button.closest('.details-card').attr('id');
+            // Store the ID in the modal for later use
+            const modal = $(this);
+            modal.data('detailsCardId', detailsCardId);
+        });
+
+        // When the "Submit" button is clicked
+        $('#submit_btn').on('click', function (event) {
+         
+            event.preventDefault(); // Prevent form submission
+            const modal = $('#updateprice');
+            const detailsCardId = modal.data('detailsCardId'); // Retrieve stored ID
+            if (detailsCardId) {
+                console.log('Details Card ID:', detailsCardId);
+                // Perform your desired action with the ID
+            }
+        });
+ function validationCheck(){
+  var errorMessage = "";
+  
+
+  if ($("#price").val() == "") {
+    errorMessage += "- Please enter Price\n";
+  }
+  if(errorMessage == ""){
+  	return true;
+  }
+  else{
+  	alert(errorMessage);
+ 		return false;
+  }
+}
 </script>
 @stack('custom-scripts')
 </body>
