@@ -184,12 +184,13 @@ $('#updateprice').on('show.bs.modal', function (event) {
             const modal = $(this);
             modal.data('detailsCardId', detailsCardId);
             const priceLabelText = $('#' + detailsCardId).find('.price_lbl').text();
+            const priceLabelText1 = priceLabelText.replace(/Rs\.|\/sq\.ft/g, '').trim();
            
            const priceInput = modal.find('input.set_price'); // Assuming there's an input field with class 'price_input'
            if (priceLabelText === 'Price not given') {
                       priceInput.val('0');
                } else {
-               priceInput.val(priceLabelText);
+               priceInput.val(priceLabelText1);
              }
 
             
@@ -203,7 +204,8 @@ $('#updateprice').on('show.bs.modal', function (event) {
             const priceLabelText = $('#' + detailsCardId).find('.price_lbl').text();
             const priceInput = modal.find('input.set_price'); // Select price input field
             const priceValue = priceInput.val();
-            $('#' + detailsCardId).find('.price_lbl').text(priceValue);
+            const finalprice = 'Rs. ' + priceValue + '/sq.ft';
+            $('#' + detailsCardId).find('.price_lbl').text(finalprice);
             
         
         });

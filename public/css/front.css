@@ -41,11 +41,11 @@ a:hover{
     cursor: pointer;
     /* box-shadow: 0px 40px 63px 20px rgba(0,0,0,0.45) inset,
 0px 25px 20px -20px rgba(0,0,0,0.45); */
-    /* -webkit-box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1);
-    -moz-box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1);
-    box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
+/* -webkit-box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1);
+-moz-box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1);
+box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
 
-    /* box-shadow: inset 100px 200px 60px 42px rgba(0,0,0,0.1); */
+/* box-shadow: inset 100px 200px 60px 42px rgba(0,0,0,0.1); */
 
 }
 .grow:hover {
@@ -53,10 +53,10 @@ a:hover{
 }
 
 .image1{
-    background-image: url(../images/4.jpg);
+    background-image: url(images/4.jpg);
     background-size: cover;
     background-position-x: center;
-    transition: transform .4s;
+    transition: transform .4s;  
     height: 97%; width: 100%;
 
     -webkit-box-shadow: inset 10px 96px 143px 10px rgba(0, 0, 0, 1);
@@ -71,10 +71,10 @@ a:hover{
     /* padding-top: 30px; */
 }
 .image2{
-    background-image: url(../images/1.jpg);
+    background-image: url(images/1.jpg);
     background-size: cover;
     background-position-x: center;
-    transition: transform .4s;
+    transition: transform .4s;  
     height: 97%; width: 100%;
 
     -webkit-box-shadow: inset 10px 96px 143px 10px rgba(0, 0, 0, 1);
@@ -87,10 +87,10 @@ a:hover{
 }
 
 .image3{
-    background-image: url(../images/3.jpg);
+    background-image: url(images/3.jpg);
     background-size: cover;
     background-position-x: center;
-    transition: transform .4s;
+    transition: transform .4s;  
     height: 97%; width: 100%;
 
     -webkit-box-shadow: inset 10px 96px 143px 10px rgba(0, 0, 0, 1);
@@ -102,10 +102,10 @@ a:hover{
     /* padding-top: 30px; */
 }
 .image4{
-    background-image: url(../images/2.jpg);
+    background-image: url(images/2.jpg);
     background-size: cover;
     background-position-x: center;
-    transition: transform .4s;
+    transition: transform .4s;  
     height: 97%; width: 100%;
 
     -webkit-box-shadow: inset 10px 96px 143px 10px rgba(0, 0, 0, 1);
@@ -118,10 +118,10 @@ a:hover{
 }
 
 .image5{
-    background-image: url(../images/5.png);
+    background-image: url(images/5.jpg);
     background-size: cover;
     background-position-x: center;
-    transition: transform .4s;
+    transition: transform .4s;  
     height: 97%; width: 100%;
 
     -webkit-box-shadow: inset 10px 96px 143px 10px rgba(0, 0, 0, 1);
@@ -134,10 +134,10 @@ a:hover{
 }
 
 .image6{
-    background-image: url(../images/6.jpg);
+    background-image: url(images/6.jpg);
     background-size: cover;
     background-position-x: center;
-    transition: transform .4s;
+    transition: transform .4s;  
     height: 97%; width: 100%;
 
     -webkit-box-shadow: inset 10px 96px 143px 10px rgba(0, 0, 0, 1);
@@ -150,10 +150,10 @@ a:hover{
 }
 
 .image7{
-    background-image: url(../images/7.jpg);
+    background-image: url(images/7.jpg);
     background-size: cover;
     background-position-x: center;
-    transition: transform .4s;
+    transition: transform .4s;  
     height: 97%; width: 100%;
 
     -webkit-box-shadow: inset 10px 96px 143px 10px rgba(0, 0, 0, 1);
@@ -183,22 +183,22 @@ a:hover{
     width: 100%;
     max-height: 200px;
     margin: 5px 1% 5px 0px;
-
+    
     position: relative;
     transition: height 0.5s;
     -webkit-transition: height 0.5s;
     text-align: left;
-
+    
     color:#fff;
     overflow: hidden;
-    transition: transform 200ms;
+    transition: transform 200ms;   
     background-repeat: no-repeat;
     box-shadow: 0px 40px 63px 20px rgba(0,0,0,0.45) inset,
-    0px 25px 20px -20px rgba(0,0,0,0.45);
+0px 25px 20px -20px rgba(0,0,0,0.45);
 
 }
 .mobile_grow:active{
-    transition: transform 200ms;
+    transition: transform 200ms;   
     -webkit-transition:1s;
 }
 .mobile_grow:hover {
@@ -206,51 +206,51 @@ a:hover{
     -webkit-transition:1s;
 }
 .mobile_image1{
-    background-image: url(../images/mobile/4.jpg);
+    background-image: url(images/mobile/4.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position-x: center;   
 }
 .mobile_image2{
-    background-image: url(../images/mobile/1.jpg);
+    background-image: url(images/mobile/1.jpg);
     background-size: cover;
     background-position-x: center;
-
+    
 }
 .mobile_image3{
-    background-image: url(../images/mobile/3.jpg);
+    background-image: url(images/mobile/3.jpg);
     background-size: cover;
     background-position-x: center;
-
+    
 }
 .mobile_image4{
-    background-image: url(../images/mobile/2.jpg);
+    background-image: url(images/mobile/2.jpg);
     background-size: cover;
     background-position-x: center;
-
+    
 }
 .mobile_image5{
-    background-image: url(../images/mobile/5.png);
+    background-image: url(images/mobile/5.jpg);
     background-size: cover;
     background-position-x: center;
-
+    
 }
 .mobile_image6{
-    background-image: url(../images/mobile/6.jpg);
+    background-image: url(images/mobile/6.jpg);
     background-size: cover;
     background-position-x: center;
-
+    
 }
 .mobile_image7{
-    background-image: url(../images/mobile/7.jpg);
+    background-image: url(images/mobile/7.jpg);
     background-size: cover;
     background-position-x: center;
-
+    
 }
 .mobile_first_width{
     height: 170px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
     .desktop-div{
         display: none !important;
     }
@@ -258,7 +258,7 @@ a:hover{
         display: block;
     }
     .body-selection-item-image {
-        height: 10rem !important;
+        height: 160px !important;
     }
 }
 
@@ -282,6 +282,7 @@ a:hover{
     /* border: 1px solid #b2b2b2; */
     position: relative;
     border-radius: 10px;
+    
 }
 .body-selection-item-image:hover {
     -ms-transform: scale(1.05);
@@ -296,17 +297,18 @@ a:hover{
     transition: -webkit-transform .5s ease;
     transition: transform .5s ease;
     -webkit-transition: -webkit-transform .5s ease;
-}
-.body-selection-item-image {
-    height: 20rem;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
+    box-shadow: inset 0px 64px 53px 0px rgba(0, 0, 0, 0.8);
+    -moz-box-shadow: inset 0px 64px 53px 0px rgba(0, 0, 0, 0.8);
+    box-shadow: inset 0px 64px 53px 0px rgba(0, 0, 0, 0.8);
     width: 100%;
     position: relative;
+    height: 320px;
+    background-color: #fff;
+    
 }
+
 .body-selection-item-text {
-    font-size: 1.3rem;
+    font-size: 20px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -317,7 +319,7 @@ a:hover{
     z-index: 1000;
     align-items: center;
     width: 100%;
-
+    
 }
 .padding-section{
     padding-left: 0px !important;
@@ -330,4 +332,46 @@ a:hover{
     position: absolute;
     bottom: 0%;
     left: 15%;
+}
+
+.cms-element-text{
+    cursor: pointer;
+}
+
+
+@media (max-width:991px) {
+
+    h1{
+        font-size:30px;
+      
+    }
+
+}
+@media (max-width:767px) {
+    .mobile_grow{
+        min-height: 100px;
+        box-shadow:none;
+        align-items: center;
+        cursor: pointer;
+        -webkit-box-shadow: inset 100px 17px 85px 8px rgba(0, 0, 0, 0.8);
+        -moz-box-shadow: inset 100px 17px 85px 8px rgba(0, 0, 0, 0.8);
+        box-shadow: inset 100px 17px 85px 8px rgba(0, 0, 0, 0.8);
+       
+    }
+
+    .mobile_h1{
+        font-size: 18px;
+        margin-top: 3.5%;
+     
+    }
+    .body-selection-item {
+       
+        margin: 0.8em 0.5em 0px 0.5em;
+    }
+    .body-selection-item-text{
+        font-size: 18px;
+    }
+    
+
+
 }

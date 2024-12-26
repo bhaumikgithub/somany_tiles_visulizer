@@ -231,7 +231,7 @@
       
     </div>
   </div>
-  <!-- tile_cal modal start -->
+  <!-- update price modal start -->
   <div class="modal fade" id="updateprice" role="dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
     
