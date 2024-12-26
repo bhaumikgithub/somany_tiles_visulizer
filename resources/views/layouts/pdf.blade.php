@@ -153,43 +153,59 @@ function validationCheck(){
    }
  });
 
- $("#update_price_btn").click(function () {
- // Find the closest parent with the class "detail-card"
- const parentDiv = $(this).closest('.detail-card');
+//  $("#update_price_btn").click(function () {
+//  // Find the closest parent with the class "detail-card"
+//  const parentDiv = $(this).closest('.detail-card');
 
-// Get the ID of the parent div
-const parentId = parentDiv.attr('id');
+// // Get the ID of the parent div
+// const parentId = parentDiv.attr('id');
 
-// Split the ID by "_"
-const idParts = parentId.split('_');
+// // Split the ID by "_"
+// const idParts = parentId.split('_');
 
-// Log the results
-console.log('Parent ID:', parentId);
-console.log('Split ID Parts:', idParts); 
+// // Log the results
+// console.log('Parent ID:', parentId);
+// console.log('Split ID Parts:', idParts); 
 
-});
+// });
 
 $('#updateprice').on('show.bs.modal', function (event) {
   
             const button = $(event.relatedTarget); // Button that triggered the modal
 
             // Find the parent .details-card element and get its id
-            const detailsCardId = button.closest('.details-card').attr('id');
+           
+            const detailsCard= button.closest('.details-card');
+            const detailsCardId=detailsCard.attr('id');
             // Store the ID in the modal for later use
+            // const priceId = detailsCard.find('.price_lbl').attr('id');
+            // const priceText = detailsCard.find('.price_lbl').text();
+            // const priceId=button.closest('.price_lbl').attr('id');
             const modal = $(this);
             modal.data('detailsCardId', detailsCardId);
+            const priceLabelText = $('#' + detailsCardId).find('.price_lbl').text();
+           
+           const priceInput = modal.find('input.set_price'); // Assuming there's an input field with class 'price_input'
+           if (priceLabelText === 'Price not given') {
+                      priceInput.val('0');
+               } else {
+               priceInput.val(priceLabelText);
+             }
+
+            
         });
 
         // When the "Submit" button is clicked
         $('#submit_btn').on('click', function (event) {
-         
-            event.preventDefault(); // Prevent form submission
+          event.preventDefault();
             const modal = $('#updateprice');
             const detailsCardId = modal.data('detailsCardId'); // Retrieve stored ID
-            if (detailsCardId) {
-                console.log('Details Card ID:', detailsCardId);
-                // Perform your desired action with the ID
-            }
+            const priceLabelText = $('#' + detailsCardId).find('.price_lbl').text();
+            const priceInput = modal.find('input.set_price'); // Select price input field
+            const priceValue = priceInput.val();
+            $('#' + detailsCardId).find('.price_lbl').text(priceValue);
+            
+        
         });
  function validationCheck(){
   var errorMessage = "";

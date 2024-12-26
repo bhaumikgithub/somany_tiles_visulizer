@@ -58,7 +58,8 @@
                                         <button type="button" class="tile-cal-link" id ="tile_cal" data-toggle="modal" data-target="#tilecal">Open Tiles Calculator</button>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left">
-                                        <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5">{{$tile_detail->price === NULL ? 'Price not given' : 'Rs. '.$tile_detail->price.'/sq.ft'}}</h5>
+                                       
+                                        <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl" id="{{$index . '_' . $loop->index . '_'. 'price'}}"> {{$tile_detail->price === NULL ? 'Price not given' : 'Rs. '.$tile_detail->price.'/sq.ft'}}</h5>
                                         <button type="button" class="tile-cal-link mt-0 mr-10" id ="update_price_btn" data-toggle="modal" data-target="#updateprice">Update Price</button>
                                     </div>
                                 </div>
@@ -250,7 +251,7 @@
                        <div class="form-group">
                         <label for="price">Enter Price
                         </label>
-                        <input type="text" class="form-control" id="price" name="price" placeholder="Price" pattern="[0-9]+">
+                        <input type="text" class="form-control set_price" id="price" name="price" placeholder="Price" pattern="[0-9]+">
                     </div>
                    
                     </div>
