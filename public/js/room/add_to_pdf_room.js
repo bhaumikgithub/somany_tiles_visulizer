@@ -220,7 +220,7 @@ $('#updateprice').on('show.bs.modal', function (event) {
 
 // Submit the form via AJAX
 $('#submit_btn').on('click', function(e) {
-    if(validationCheck()===false)
+    if(validationPriceCheck()===false)
         return false;
     let tileId = $('#tile_id').val();
     let price = $('#price').val();
@@ -236,7 +236,7 @@ $('#submit_btn').on('click', function(e) {
         success: function(response) {
             // On success, update the price in the table
             let row = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"]');
-            row.find('.price-update').text(parseFloat(price).toFixed(2)); // Update price in the table cell
+            row.find('.price-update').text(price); // Update price in the table cell
             $('#updateprice').modal('hide');
             $('.modal-backdrop').remove();  // Remove the backdrop manually
             $('body').removeClass('modal-open');  // Remove the 'modal-open' class from body
@@ -251,3 +251,16 @@ $('#submit_btn').on('click', function(e) {
         }
     });
 });
+
+function validationPriceCheck() {
+    let errorMessage = "";
+    if ($("#price").val() === "") {
+        errorMessage += "- Please enter Price\n";
+    }
+    if (errorMessage === "") {
+        return true;
+    } else {
+        alert(errorMessage);
+        return false;
+    }
+}
