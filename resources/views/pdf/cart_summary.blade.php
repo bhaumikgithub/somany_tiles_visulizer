@@ -36,7 +36,7 @@
                         <img src="{{ asset('storage/'.$item->current_room_design) }}" alt="Room" class="img-responsive product-image">
                         @foreach(json_decode($item->tiles_json) as $tile_detail)
                             <h5 class="mt-20 font-bold dark-grey-font">{{ucfirst($tile_detail->surface)}}</h5>
-                            <div class="details-card">
+                            <div class="details-card" id="{{$index . '_' . $loop->index}}">
                                 <div class="row">
                                     <div class="col-md-3 col-sm-3 col-pad-set">
                                         <div class="img-wall-set">
@@ -58,8 +58,9 @@
                                         <button type="button" class="tile-cal-link" id ="tile_cal" data-toggle="modal" data-target="#tilecal">Open Tiles Calculator</button>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left">
-                                        <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5">{{$tile_detail->price === NULL ? 'Price not given' : 'Rs. '.$tile_detail->price.'/sq.ft'}}</h5>
-                                        <a href="#" class="tile-cal-link mr-10 mt-0 ">Update Price</a>
+                                       
+                                        <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl" id="{{$index . '_' . $loop->index . '_'. 'price'}}"> {{$tile_detail->price === NULL ? 'Price not given' : 'Rs. '.$tile_detail->price.'/sq.ft'}}</h5>
+                                        <button type="button" class="tile-cal-link mt-0 mr-10" id ="update_price_btn" data-toggle="modal" data-target="#updateprice">Update Price</button>
                                     </div>
                                 </div>
                             </div>
@@ -219,6 +220,49 @@
                         <button class="btn modify-btn ml-3 tile-cal-btn ml-10" id="reset_btn" >Reset</button> -->
                         <a href="#" id="calculate_btn" class="btn modify-btn tile-cal-btn" >Calculate</a>
                         <a href="#" id="reset_btn" class="btn modify-btn ml-3 tile-cal-btn ml-10 reset_btn" >Reset</a>
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+        </div>
+        
+      </div>
+      
+    </div>
+  </div>
+  <!-- update price modal start -->
+  <div class="modal fade" id="updateprice" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Update Price
+        </h4>
+        </div>
+        <div class="modal-body">
+        <form>
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-12 cmn-form-data">
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-12">
+                       <div class="form-group">
+                        <label for="price">Enter Price
+                        </label>
+                        <input type="text" class="form-control set_price" id="price" name="price" placeholder="Price" pattern="[0-9]+">
+                    </div>
+                   
+                    </div>
+                </div>
+               
+          <div class="row">
+                <div class="col-xs-12">
+                    <div class="btn-div d-flex flex-wrap ">
+                      
+                        <button class="btn btn-danger modify-btn tile-cal-btn mt-0" id="submit_btn">Submit</button>
+                        
                     </div>
                 </div>
             </div>
