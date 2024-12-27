@@ -163,4 +163,19 @@ class AddToPdfRoomsController extends Controller
         $pdf = PDF::loadHTML($html);
         return $pdf->download('product-selection.pdf');
     }
+
+    public function updateTilePrice(Request $request): JsonResponse
+    {
+        // Validate the incoming request
+        $validated = $request->validate([
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        $tile = Tile::findOrFail($request->tile_id);
+        $tile->price = $validated['price'];
+        $tile->save();
+
+        // Return success response
+        return response()->json(['success' => true, 'price' => $tile->price]);
+    }
 }
