@@ -19,6 +19,10 @@ class Controller2d extends Controller
     /**
      *  AJAX
      */
+    public function index()
+    {
+        return view('2d.index');
+    }
 
     public function getRoom($id) {
         $room = Room2d::findOrFail($id);
@@ -38,7 +42,6 @@ class Controller2d extends Controller
         }
         if (!$roomById && !$url) { abort(404); }
         $userId = Auth::id();
-
         return view('2d.room', [
             'roomId' => $id,
             'room_name' => $roomById->name,
@@ -204,6 +207,12 @@ class Controller2d extends Controller
         $room->save();
 
         return redirect('/rooms2d');
+    }
+
+    public function roomListing($room_type)
+    {
+        $rooms = Room2d::where('type', $room_type)->where('enabled', 1)->get();
+        return view('2d.listing',compact('rooms'));
     }
 
 }

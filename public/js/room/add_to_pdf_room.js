@@ -165,3 +165,22 @@ $('.form-container input').on('keyup', function () {
         $('#download_pdf').prop('disabled', true).removeClass('enabled');
     }
 });
+
+$(function(){
+    $('.hover_2').on("mouseover", function () {
+        $('.hover_1').removeClass('first_width');
+        $('.hover_2').removeClass('first_width');
+        $(this).addClass('first_width');
+        // setTimeout(function(){
+        //   $(this).addClass('first_width');
+        // },5000);
+
+    });
+});
+$(function(){
+    $('.mobile_hover_2').on("click", function () {
+        $('.mobile_hover_1').removeClass('mobile_first_width');
+        $('.mobile_hover_2').removeClass('mobile_first_width');
+        $(this).addClass('mobile_first_width');
+    });
+});
