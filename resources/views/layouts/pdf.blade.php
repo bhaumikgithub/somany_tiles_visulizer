@@ -37,13 +37,6 @@
 <script src="/js/jquery-ui.min.js"></script>
 <script src="/js/room/add_to_pdf_room.js"></script>
 <script>
-('#tilecal').modal({
-      backdrop: 'static',
-      keyboard: false
-})
-$('#tilecal').on('click', '.modal-backdrop', function(e){
-      e.preventDefault();
-});
 
 
 $(document).on('keydown', function(e){
@@ -144,37 +137,14 @@ function validationCheck(){
 
 </script>
 <script>
-  $("#price").on("input", function(evt) {
-   var self = $(this);
-   self.val(self.val().replace(/[^0-9.]/g, ''));
-   if ((evt.which != 46 || self.val().indexOf('.') != -1) && (evt.which < 48 || evt.which > 57)) 
-   {
-     evt.preventDefault();
-   }
- });
 
-//  $("#update_price_btn").click(function () {
-//  // Find the closest parent with the class "detail-card"
-//  const parentDiv = $(this).closest('.detail-card');
-
-// // Get the ID of the parent div
-// const parentId = parentDiv.attr('id');
-
-// // Split the ID by "_"
-// const idParts = parentId.split('_');
-
-// // Log the results
-// console.log('Parent ID:', parentId);
-// console.log('Split ID Parts:', idParts); 
-
-// });
 
 $('#updateprice').on('show.bs.modal', function (event) {
-  
+
             const button = $(event.relatedTarget); // Button that triggered the modal
 
             // Find the parent .details-card element and get its id
-           
+
             const detailsCard= button.closest('.details-card');
             const detailsCardId=detailsCard.attr('id');
             // Store the ID in the modal for later use
@@ -185,7 +155,7 @@ $('#updateprice').on('show.bs.modal', function (event) {
             modal.data('detailsCardId', detailsCardId);
             const priceLabelText = $('#' + detailsCardId).find('.price_lbl').text();
             const priceLabelText1 = priceLabelText.replace(/Rs\.|\/sq\.ft/g, '').trim();
-           
+
            const priceInput = modal.find('input.set_price'); // Assuming there's an input field with class 'price_input'
            if (priceLabelText === 'Price not given') {
                       priceInput.val('0');
@@ -193,7 +163,7 @@ $('#updateprice').on('show.bs.modal', function (event) {
                priceInput.val(priceLabelText1);
              }
 
-            
+
         });
 
         // When the "Submit" button is clicked
@@ -206,12 +176,12 @@ $('#updateprice').on('show.bs.modal', function (event) {
             const priceValue = priceInput.val();
             const finalprice = 'Rs. ' + priceValue + '/sq.ft';
             $('#' + detailsCardId).find('.price_lbl').text(finalprice);
-            
-        
+
+
         });
  function validationCheck(){
   var errorMessage = "";
-  
+
 
   if ($("#price").val() == "") {
     errorMessage += "- Please enter Price\n";

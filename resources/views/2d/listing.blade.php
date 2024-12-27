@@ -7,7 +7,7 @@
                     <div class="cms-element-text">
                         <div class="body-selection-item">
                             <a title="{{$aRoom->name}}" href="{{'/room2d/' . $aRoom->id}}">
-                                <div class="body-selection-item-text">"{{$aRoom->name}}</div>
+                                <div class="body-selection-item-text">{{$aRoom->name}}</div>
                                 <div style="background-image:url({{$aRoom->image}});" class="body-selection-item-image"></div>
                                <!-- <div style="background-image:url(../images/l-1.jpg);" class="body-selection-item-image"></div> -->
                             </a>

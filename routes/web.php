@@ -234,6 +234,9 @@ Route::post('/add-to-pdf-data-store','App\Http\Controllers\AddToPdfRoomsControll
 Route::post('/pdf-summary','App\Http\Controllers\AddToPdfRoomsController@pdf-summary');
 Route::delete('/add-to-pdf-data/{id}', 'App\Http\Controllers\AddToPdfRoomsController@destroy')->name('add-to-pdf-data.destroy');
 Route::delete('/clear-items', 'App\Http\Controllers\AddToPdfRoomsController@removeAllItems')->name('add-to-pdf-data.remove-all-items');
+Route::post('/update-tile-price','App\Http\Controllers\AddToPdfRoomsController@updateTilePrice');
+
+
 // Route::get('/test', 'App\Http\Controllers\HomeController@index');
 // Route::get('/test', function () {
 //     return response($_SERVER['SERVER_NAME']);

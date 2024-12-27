@@ -53,7 +53,7 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
 }
 
 .image1{
-    background-image: url(images/4.jpg);
+    background-image: url(../images/4.jpg);
     background-size: cover;
     background-position-x: center;
     transition: transform .4s;  
@@ -71,7 +71,7 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
     /* padding-top: 30px; */
 }
 .image2{
-    background-image: url(images/1.jpg);
+    background-image: url(../images/1.jpg);
     background-size: cover;
     background-position-x: center;
     transition: transform .4s;  
@@ -87,7 +87,7 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
 }
 
 .image3{
-    background-image: url(images/3.jpg);
+    background-image: url(../images/3.jpg);
     background-size: cover;
     background-position-x: center;
     transition: transform .4s;  
@@ -102,7 +102,7 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
     /* padding-top: 30px; */
 }
 .image4{
-    background-image: url(images/2.jpg);
+    background-image: url(../images/2.jpg);
     background-size: cover;
     background-position-x: center;
     transition: transform .4s;  
@@ -118,7 +118,7 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
 }
 
 .image5{
-    background-image: url(images/5.jpg);
+    background-image: url(../images/5.jpg);
     background-size: cover;
     background-position-x: center;
     transition: transform .4s;  
@@ -134,7 +134,7 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
 }
 
 .image6{
-    background-image: url(images/6.jpg);
+    background-image: url(../images/6.jpg);
     background-size: cover;
     background-position-x: center;
     transition: transform .4s;  
@@ -150,7 +150,7 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
 }
 
 .image7{
-    background-image: url(images/7.jpg);
+    background-image: url(../images/7.jpg);
     background-size: cover;
     background-position-x: center;
     transition: transform .4s;  

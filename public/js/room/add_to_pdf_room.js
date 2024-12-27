@@ -184,3 +184,70 @@ $(function(){
         $(this).addClass('mobile_first_width');
     });
 });
+
+//tile calc modal open
+// Open modal and populate the fields with data attributes
+$('#tilecal').on('show.bs.modal', function (event) {
+
+});
+
+
+$("#price").on("input", function(evt) {
+    var self = $(this);
+    self.val(self.val().replace(/[^0-9.]/g, ''));
+    if ((evt.which != 46 || self.val().indexOf('.') != -1) && (evt.which < 48 || evt.which > 57))
+    {
+        evt.preventDefault();
+    }
+});
+
+// Open modal and populate the fields with data attributes
+$('#updateprice').on('show.bs.modal', function (event) {
+    let button = $(event.relatedTarget); // Button that triggered the modal
+    let tileId = button.data('tile-id'); // Extract tile ID
+    let modal = $(this);
+    const priceLabelText = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"]').find('.price_lbl').text();
+    const priceLabelText1 = priceLabelText.replace(/Rs\.|\/sq\.ft/g, '').trim();
+    const priceInput = modal.find('input.set_price'); // Assuming there's an input field with class 'price_input'
+    if (priceLabelText.trim() == 'Price not given') {
+        priceInput.val(0);
+    } else {
+        priceInput.val(priceLabelText1);
+    }
+    modal.find('#tile_id').val(tileId); // Set the tile ID in the modal input
+});
+
+
+// Submit the form via AJAX
+$('#submit_btn').on('click', function(e) {
+    if(validationCheck()===false)
+        return false;
+    let tileId = $('#tile_id').val();
+    let price = $('#price').val();
+
+    $.ajax({
+        url: '/update-tile-price', // URL to the controller method for updating the price
+        type: 'POST',
+        data: {
+            tile_id: tileId,
+            price: price,
+            _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
+        },
+        success: function(response) {
+            // On success, update the price in the table
+            let row = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"]');
+            row.find('.price-update').text(parseFloat(price).toFixed(2)); // Update price in the table cell
+            $('#updateprice').modal('hide');
+            $('.modal-backdrop').remove();  // Remove the backdrop manually
+            $('body').removeClass('modal-open');  // Remove the 'modal-open' class from body
+        },
+        error: function(xhr) {
+            // When the response has errors, this block will be executed
+            let response = xhr.responseJSON;  // Get the JSON response
+            if (response.errors && response.errors.price) {
+                // Show the error message for 'price'
+                $('#price-error').text(response.errors.price[0]);  // Assuming you have a span or div with id="price-error"
+            }
+        }
+    });
+});
