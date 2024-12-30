@@ -27,6 +27,7 @@ function addToPDF(){
             $('.productCount').text(response.data.all_selection);
             $('#addToCartInfoPanel').modal('show');
             $('#addToCartInfoPanel #cartInfoTilesList').html(response.body);
+            $("body").css('overflow', "hidden");
         },
         error: function (xhr, status, error) {
             alert('Failed to stored!');
@@ -106,10 +107,14 @@ function viewCartPdf()
             if( response.data.emptyCart === "unfilled" ){
                 alert("Please choose tiles to add in PDF");
             } else {
+                $("body").css('overflow', "hidden");
+                $('#addToCartInfoPanel').css('overflow', "hidden");
                 $('#addToCartInfoPanel').modal('show');
+              
                 if( response.data.all_selection > 0 )
-                    $('.productCount').text(response.data.all_selection);
+                 $('.productCount').text(response.data.all_selection);
                 $('#addToCartInfoPanel #cartInfoTilesList').html(response.body);
+                
             }
         },
         error: function (xhr) {
@@ -137,6 +142,7 @@ function clearAllItems()
             // Optionally update the UI (e.g., empty the cart display)
             $('.productCount').text('');
             $('#addToCartInfoPanel #cartInfoTilesList').html(''); // Assuming cart items are listed in #cart-items
+          ;
         },
         error: function (xhr) {
             alert('Something went wrong!');
@@ -244,3 +250,12 @@ $('#submit_btn').on('click', function(e) {
         }
     });
 });
+
+$('.cartpanelclose').on('click', function(e) {
+
+    $("body").css('overflow', "auto");
+
+});
+
+
+

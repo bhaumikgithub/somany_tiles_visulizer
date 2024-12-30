@@ -65,10 +65,8 @@
 	border-color:#ce1f22 !important;
     color: #fff;
     border: none;
-    font-weight: bold;
-  
+    font-weight: 500;
     padding: 10px 15px;
-   
     border-radius: 10px;
 }
 .modify-btn:hover , .modify-btn:focus{
@@ -155,6 +153,8 @@
 	background-color: #333 !important;
 	border-color: #333 !important;
 }
+
+
 
 /* media query */
 
