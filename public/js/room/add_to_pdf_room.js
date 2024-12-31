@@ -4,37 +4,39 @@ function addToPDF(){
     let current_room_name = $('#current_room_name').val();
     let current_room_type = $("#current_room_type").val();
     let selected_tiles_ids = $('#selected_tile_ids').val();
-
     let thumbnailData = generateAndDownloadThumbnail();
     let currentDesign = canvasImage();
 
-    window.$.ajax({
-        url: '/add-to-pdf-data-store', // Laravel route URL
-        method: 'POST',
-        data: {
-            _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
+    if( selected_tiles_ids.length == 0 ) {
+        alert("Please select any tiles first");
+    } else {
+        window.$.ajax({
+            url: '/add-to-pdf-data-store', // Laravel route URL
+            method: 'POST',
             data: {
+                _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
+                data: {
                     'room_id':current_room_id,
                     'room_name':current_room_name,
                     'room_type':current_room_type,
                     'selected_tiles_ids':selected_tiles_ids,
                     'thumbnail':thumbnailData,
                     'currentDesign':currentDesign,
+                },
             },
-        },
-        success: function (response) {
-            $('#dialogSaveModalBox').modal('hide');
-            $('.productCount').text(response.data.all_selection);
-            $('#addToCartInfoPanel').modal('show');
-            $('#addToCartInfoPanel #cartInfoTilesList').html(response.body);
-            $("body").css('overflow', "hidden");
-        },
-        error: function (xhr, status, error) {
-            alert('Failed to stored!');
-            console.error(error);
-        },
-    });
-
+            success: function (response) {
+                $('#dialogSaveModalBox').modal('hide');
+                $('.productCount').text(response.data.all_selection);
+                $('#addToCartInfoPanel').modal('show');
+                $('#addToCartInfoPanel #cartInfoTilesList').html(response.body);
+                $("body").css('overflow', "hidden");
+            },
+            error: function (xhr, status, error) {
+                alert('Failed to stored!');
+                console.error(error);
+            },
+        });
+    }
 }
 
 // Get the main canvas and its context
