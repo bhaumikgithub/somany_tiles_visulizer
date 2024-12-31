@@ -6,6 +6,7 @@
         <div class="row">
             <h3>Fetch Product Data</h3>
             <div class="form-group">
+                <input type="hidden" value="{{$api_details->last_fetch_date_from_api}}" id="last_fetch_date_val">
                 <p>Last Fetched Date:
                     <span id="last-fetched-date">
                         @if( $api_details->last_fetch_date_from_api === NULL)
@@ -34,7 +35,7 @@
     @push('custom-scripts')
         <script>
             document.getElementById('fetch-now').addEventListener('click', function () {
-                const lastFetchedDate = "2024-12-01"; // Replace with actual last fetched date
+                const lastFetchedDate = ( $('#last_fetch_date_val').val() ) ? $('#last_fetch_date_val').val() : "2024-12-01"; // Replace with actual last fetched date
                 const todayDate = new Date().toISOString().slice(0, 10); // Current date (YYYY-MM-DD)
 
                 const progressContainer = document.getElementById('progress-container');
