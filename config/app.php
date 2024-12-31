@@ -335,4 +335,6 @@ return [
     'unlimited_image_size' => env('UNLIMITED_IMAGE_SIZE', false),
 
     'product_finish' => env('PRODUCT_FINISH', null),
+
+    'curl' => env('CURL', null),
 ];

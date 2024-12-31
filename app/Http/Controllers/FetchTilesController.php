@@ -78,8 +78,6 @@ class FetchTilesController extends Controller
         ]);
     }
 
-
-
     private function loginAPI()
     {
         // JSON payload - Login cURL
@@ -218,34 +216,6 @@ class FetchTilesController extends Controller
             'updated_at' => now(),
         ];
     }
-
-//    protected function fetchAndSaveImage($imageUrl): string
-//    {
-//        $imageName = uniqid() . '.jpg';
-//        $storagePath = 'tiles/' . $imageName; // Save path
-//        try {
-//            // Fetch the image
-//            $response = Http::withOptions([
-//                'verify' => false,
-//                'Accept' => 'image/*', // Explicitly request a JPEG image
-//            ])->get($imageUrl);
-//            // Debug response
-//            if ($response->successful()) {
-//                $mimeType = finfo_buffer(finfo_open(), $response->body(), FILEINFO_MIME_TYPE);
-//                if (in_array($mimeType, ['image/jpeg', 'image/png','image/jpg'])) {
-//                    Storage::disk('public')->put($storagePath, $imageName);
-//                    return $storagePath;
-//                } else {
-//                    return response()->json(['error' => 'Unsupported file format', 'mimeType' => $mimeType], 415);
-//                }
-//            } else {
-//                return response()->json(['error' => 'Failed to fetch the image'], 500);
-//            }
-//        } catch (\Exception $e) {
-//            return false;
-//        }
-//    }
-
 
     protected function fetchAndSaveImage($imageURL): JsonResponse|string
     {

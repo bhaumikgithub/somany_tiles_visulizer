@@ -213,7 +213,6 @@ Route::group(['middleware' => 'role:administrator'], function () {
     Route::post('/maximum_images/update', 'App\Http\Controllers\MaxImageController@update');
 
     Route::post('/fetch-data', 'App\Http\Controllers\FetchTilesController@fetchData')->name('fetch.data');
-    Route::post('/update-or-insert-single', 'App\Http\Controllers\FetchTilesController@updateOrInsertSingle')->name('fetch.update-or-insert-single');
 });
 
 
