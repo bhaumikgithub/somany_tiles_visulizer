@@ -1,5 +1,8 @@
 
 /* pdf summary page css */
+body{
+	overflow-x: hidden !important;
+}
 .pdf-summary-container p{
     margin: 0 0 10px !important;
 }
