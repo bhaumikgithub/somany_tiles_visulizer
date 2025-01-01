@@ -217,6 +217,7 @@ $('#updateprice').on('show.bs.modal', function (event) {
 });
 
 $('#submit_btn').on('click', function(e) {
+    e.preventDefault();
     let tileId = $('#tile_id').val();
     let price = $('#price').val();
     $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"] .price_lbl').text(`Rs. ${price}/sq.ft`);

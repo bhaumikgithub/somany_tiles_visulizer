@@ -7,7 +7,7 @@
         <div class="row header-section mt-20">
             <div class="col-md-12 col-xs-12 d-flex flex-wrap align-items-center">
                 <div class="logo d-flex flex-column">
-                    <img src="{{asset('img/tiles_visu_logo.png')}}" alt="Somany Logo">
+                    <img src="{{asset('img/tiles_visu_logo.png')}}" alt="Tiles Logo">
                 </div>
                 <div class="intro d-flex flex-column">
                     <p>Your space reflects your personality; make it impressive. We bring to you an exclusive selection
@@ -25,7 +25,7 @@
                 <p>Name: <span class="font-bold">customer name</span></p>
                 <p>Number: <span class="font-bold">customer number</span></p>
                 <p>Here are the products you’ve selected from our collection. Visit more on <a class="cmn_link"
-                                                                                               href="www.somany.com">www.somany.com</a>
+                                                                                               href="https://tilevisualizer.com/">www.tilesvisualizer.com</a>
                 </p>
             </div>
             <div class="col-md-3 col-sm-12 col-xs-12">
