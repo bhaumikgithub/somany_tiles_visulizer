@@ -1,5 +1,8 @@
 
 /* pdf summary page css */
+body{
+	overflow-x: hidden !important;
+}
 .pdf-summary-container p{
     margin: 0 0 10px !important;
 }
@@ -81,7 +84,7 @@
 }
 
 .notes_ul li {
-    list-style-type: disc;
+    list-style-type: nu;
 	margin-bottom: 5px;
 }
 .product-title{
@@ -154,7 +157,16 @@
 	border-color: #333 !important;
 }
 
+.font-bold{
+	font-weight: bold;
+}
+.mt-0{
+	margin-top: 0px;
+}
 
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+	background-color: transparent !important;
+}
 
 /* media query */
 

@@ -95,16 +95,16 @@ $("#reset_btn").click(function(){
   displayResult("#required_tiles","");
   displayResult("#required_box","");
 });
-function getSizeOfTiles(p_sizeId,p_side){
-	var sizeString = $(p_sizeId).val();
-  var arr = sizeString.split("x");
-  if(p_side=="LEFT"){
-  	return (arr[0]/10)*0.0328;//mm to feet
-  }
-  if(p_side=="RIGHT"){
-  	return (arr[1]/10)*0.0328;//mm to feet
-  }
-}
+// function getSizeOfTiles(p_sizeId,p_side){
+// 	var sizeString = $(p_sizeId).val();
+//   var arr = sizeString.split("x");
+//   if(p_side=="LEFT"){
+//   	return (arr[0]/10)*0.0328;//mm to feet
+//   }
+//   if(p_side=="RIGHT"){
+//   	return (arr[1]/10)*0.0328;//mm to feet
+//   }
+// }
 function displayResult(p_displayid,p_message){
 	var html = $(p_displayid).html();
   $(p_displayid).html(p_message);

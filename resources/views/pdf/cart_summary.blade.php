@@ -120,12 +120,14 @@
         </div>
         <div class="row">
             <div class="col-md-12 col-xs-12">
-                <h5 class="font-bold">Notes:</h5>
+                <h5 class="font-bold">Disclaimer:</h5>
                 <ul class="notes_ul">
-                    <li>Prices quoted are as per current prevailing price.</li>
-                    <li>Prices are subject to change without prior notice.</li>
-                    <li>Price ruling at the time of delivery will be applicable.</li>
-                    <li>Billing will be done through authorized dealers only.</li>
+                    <li>The visuals are for reference purposes only; actual colors, finishes, and tile dimensions may vary.</li>
+                    <li>Shade variation is an inherent characteristic of tiles; therefore, physical inspection is
+                    recommended for accurate selection</li>
+                    <li>Tiles with multiple faces feature varied pa0erns, resulting in natural design variations</li>
+                    <li>Prices quoted are subject to change without prior notice. The final price applicable at the time of
+                    delivery will prevail.</li>
                 </ul>
             </div>
         </div>
@@ -143,7 +145,23 @@
                 <p>Show Room Pincode</p>
             </div>
         </div>
+        <hr style="border: 1px solid;">
+        <!-- Footer Section -->
+        <div class="footer-section row ">
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <p>Toll Free Number: <a href="tel:1800-1030-004" class="tile-cal-link font-bold">1800-1030-004</a></p>
+                <p>09:30 am to 6:30 pm</p>
+                <p>Monday to Saturday</p>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12 text-right xs-text-left xs-margin-top-20">
+                <p><span>Email Tile Enquiries:</span><br/><a href="mailto:customer.care@somanyceramics.com" class="tile-cal-link font-bold mt-0">customer.care@somanyceramics.com</a></p>
+                <p>International Business Enquiries:<br/><a href="mailto:export@somanyceramics.com" class="tile-cal-link font-bold mt-0">export@somanyceramics.com</a></p>
+                
+            </div>
+        </div>
     </div>
+    </div>
+   
 
     <!-- tile_cal modal start -->
     <div class="modal fade" id="tilecal" role="dialog" data-keyboard="false" data-backdrop="static">
@@ -178,32 +196,11 @@
                                         <div class="form-group">
                                             <label for="tiles_size">Tiles Size
                                             </label>
-                                            <select class="form-control" id="tiles_size" name="tiles_size">
-                                                <option value="">Select Size</option>
-                                                <option value="1200x2780" data-picperbox="1">1200 x 2780 mm</option>
-                                                <option value="1200x2400" data-picperbox="1">1200 x 2400 mm</option>
-                                                <option value="1200x1200" data-picperbox="2">1200 x 1200 mm</option>
+                                            <input type="text" class="form-control" id="tiles_size"
+                                            name="tiles_size" readonly="readonly" >
 
-                                                <option value="800x3000" data-picperbox="1">800 x 3000 mm</option>
-                                                <option value="800x1600" data-picperbox="2">800 x 1600 mm</option>
-                                                <option value="800x1500" data-picperbox="2">800 x 1500 mm</option>
-                                                <option value="800x800" data-picperbox="3">800 x 800 mm</option>
-
-                                                <option value="600x2020" data-picperbox="2">600 x 2020 mm</option>
-                                                <option value="600x1200" data-picperbox="2">600 x 1200 mm</option>
-                                                <option value="600x900" data-picperbox="1">600 x 900 mm</option>
-                                                <option value="600x600" data-picperbox="4">600 x 600 mm</option>
-
-                                                <option value="300x2020" data-picperbox="3">300 x 2020 mm</option>
-                                                <option value="300x1600" data-picperbox="4">300 x 1600 mm</option>
-                                                <option value="300x1200" data-picperbox="3">300 x 1200 mm</option>
-                                                <option value="300x600" data-picperbox="6">300 x 600 mm</option>
-                                                <option value="300x450" data-picperbox="6">300 x 450 mm</option>
-                                                <option value="300x300" data-picperbox="9">300 x 300 mm</option>
-
-                                                <option value="200x1600" data-picperbox="4">200 x 1600 mm</option>
-                                                <option value="195x1200" data-picperbox="6">195 x 1200 mm</option>
-                                            </select>
+                                            
+                                           
                                         </div>
                                         <div class="form-group">
                                             <label for="wast_per">Wastage in Percentage
@@ -261,7 +258,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Update Price</h4>
+                    <h4 class="modal-title">Tiles Price in Sq. Ft</h4>
                 </div>
                 <div class="modal-body">
                     <form id="priceForm">
@@ -272,7 +269,7 @@
                                         <div class="form-group">
                                             <label for="price">Enter Price</label>
                                             <input type="text" class="form-control set_price" id="price" name="price"
-                                                   placeholder="Price" pattern="[0-9]+" required>
+                                                   placeholder="Tiles price in Sq. Ft" pattern="[0-9]+" maxlength="5" required>
                                             <span id="price-error" class="text-danger"></span>  <!-- This is where the error message will be shown -->
                                         </div>
                                     </div>
