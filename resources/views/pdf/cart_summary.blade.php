@@ -25,7 +25,7 @@
                 <p>Name: <span class="font-bold">customer name</span></p>
                 <p>Number: <span class="font-bold">customer number</span></p>
                 <p>Here are the products you’ve selected from our collection. Visit more on <a class="cmn_link"
-                                                                                               href="www.somany.com">www.somany.com</a>
+                                                                                               href="https://www.somanyceramics.com/">www.somanyceramics.com/</a>
                 </p>
             </div>
             <div class="col-md-3 col-sm-12 col-xs-12">
@@ -57,8 +57,8 @@
                                         <p class="">Sap Code: 12312321312</p>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set xs-margin-set">
-                                        <p>Width: {{Helper::mmToFeet($tile_detail->width)}} ft</p>
-                                        <p>Height: {{Helper::mmToFeet($tile_detail->height)}} ft</p>
+                                        <p>Width: 10 ft</p>
+                                        <p>Height: 10 ft</p>
                                         <p>Wastage: 10%</p>
                                         <p>Number of Box Required: 10</p>
                                         <p>Tiles in 1 Box: 2</p>
@@ -68,18 +68,20 @@
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper"
                                          data-price-tile-id="{{$tile_detail->id}}">
-                                        <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl"
-                                            id="{{$index . '_' . $loop->index . '_'. 'price'}}">
-                                                <?php $getPrice = Helper::getTilePrice($tile_detail->id); ?>
-                                            @if($getPrice === NULL )
-                                                Price not given
-                                            @else
-                                                Rs. <span class="price-update">{{$getPrice}}</span>/sq.ft
-                                            @endif
-                                        </h5>
-                                        <button type="button" class="tile-cal-link mt-0 mr-10" id="update_price_btn"
-                                                data-toggle="modal" data-target="#updateprice"
-                                                data-tile-id="{{$tile_detail->id}}">Update Price
+                                        <a href="javascript:void(0)" id="update_price_btn" data-toggle="modal" data-target="#updateprice"
+                                           data-tile-id="{{$tile_detail->id}}">
+                                            <?php $getPrice = Helper::getTilePrice($tile_detail->id); ?>
+                                            <input type="hidden" value="{{( $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">
+                                            <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl"
+                                                id="{{$index . '_' . $loop->index . '_'. 'price'}}">
+                                                @if($getPrice === NULL )
+                                                    Price not given
+                                                @else
+                                                    Rs. <span class="price-update">{{$getPrice}}</span>/sq.ft
+                                                @endif
+                                            </h5>
+                                        </a>
+                                        <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}">Update Price
                                         </button>
                                     </div>
                                 </div>

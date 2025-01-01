@@ -97,8 +97,7 @@ function removeProductFromCart(id) {
     });
 }
 
-function viewCartPdf()
-{
+function viewCartPdf() {
     window.$.ajax({
         url: `/add-to-pdf-data`, // Endpoint for deletion,
         type: 'GET',
@@ -126,13 +125,11 @@ function viewCartPdf()
 
 }
 
-function hideCart()
-{
+function hideCart() {
     $('#addToCartInfoPanel').modal('hide');
 }
 
-function clearAllItems()
-{
+function clearAllItems() {
     window.$.ajax({
         url: `/clear-items`, // Endpoint for deletion
         type: 'DELETE',
@@ -207,6 +204,7 @@ $('#updateprice').on('show.bs.modal', function (event) {
     let button = $(event.relatedTarget); // Button that triggered the modal
     let tileId = button.data('tile-id'); // Extract tile ID
     let modal = $(this);
+    $('#price').val(''); // Clear the input field
     const priceLabelText = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"]').find('.price_lbl').text();
     const priceLabelText1 = priceLabelText.replace(/Rs\.|\/sq\.ft/g, '').trim();
     const priceInput = modal.find('input.set_price'); // Assuming there's an input field with class 'price_input'
@@ -218,53 +216,49 @@ $('#updateprice').on('show.bs.modal', function (event) {
     modal.find('#tile_id').val(tileId); // Set the tile ID in the modal input
 });
 
-
-// Submit the form via AJAX
 $('#submit_btn').on('click', function(e) {
-    if(validationPriceCheck()===false)
-        return false;
+    e.preventDefault();
     let tileId = $('#tile_id').val();
     let price = $('#price').val();
-
-    $.ajax({
-        url: '/update-tile-price', // URL to the controller method for updating the price
-        type: 'POST',
-        data: {
-            tile_id: tileId,
-            price: price,
-            _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
-        },
-        success: function(response) {
-            // On success, update the price in the table
-            let row = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"]');
-            row.find('.price-update').text(price); // Update price in the table cell
-            $('#updateprice').modal('hide');
-            $('.modal-backdrop').remove();  // Remove the backdrop manually
-            $('body').removeClass('modal-open');  // Remove the 'modal-open' class from body
-        },
-        error: function(xhr) {
-            // When the response has errors, this block will be executed
-            let response = xhr.responseJSON;  // Get the JSON response
-            if (response.errors && response.errors.price) {
-                // Show the error message for 'price'
-                $('#price-error').text(response.errors.price[0]);  // Assuming you have a span or div with id="price-error"
-            }
-        }
-    });
+    $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"] .price_lbl').text(`Rs. ${price}/sq.ft`);
+    $('#updateprice').modal('hide');
+    $('.modal-backdrop').remove();  // Remove the backdrop manually
+    $('body').removeClass('modal-open');  // Remove the 'modal-open' class from body
+    $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"] input#confirm_price').val(price);
 });
 
-function validationPriceCheck() {
-    let errorMessage = "";
-    if ($("#price").val() === "") {
-        errorMessage += "- Please enter Price\n";
+// Submit the form via AJAX
+$('.confirm_update').on('click', function() {
+    const tileId = $(this).data('confirm-tile-id'); // Get the ID of the clicked tile
+    let price = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"] input#confirm_price').val();
+    if (price === ""){
+        alert("- Please enter Price\n");
+    } else{
+        $.ajax({
+            url: '/update-tile-price', // URL to the controller method for updating the price
+            type: 'POST',
+            data: {
+                tile_id: tileId,
+                price: price,
+                _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
+            },
+            success: function(response) {
+                // On success, update the price in the table
+                let row = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"]');
+                row.find('.price-update').text(price); // Update price in the table cell
+                alert("Price Updated Successfully!")
+            },
+            error: function(xhr) {
+                // When the response has errors, this block will be executed
+                let response = xhr.responseJSON;  // Get the JSON response
+                if (response.errors && response.errors.price) {
+                    // Show the error message for 'price'
+                    $('#price-error').text(response.errors.price[0]);  // Assuming you have a span or div with id="price-error"
+                }
+            }
+        });
     }
-    if (errorMessage === "") {
-        return true;
-    } else {
-        alert(errorMessage);
-        return false;
-    }
-}
+});
 
 $('.cartpanelclose').on('click', function(e) {
 
