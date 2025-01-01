@@ -206,42 +206,42 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
     -webkit-transition:1s;
 }
 .mobile_image1{
-    background-image: url(images/mobile/4.jpg);
+    background-image: url(../images/mobile/4.jpg);
     background-size: cover;
     background-position-x: center;   
 }
 .mobile_image2{
-    background-image: url(images/mobile/1.jpg);
+    background-image: url(../images/mobile/1.jpg);
     background-size: cover;
     background-position-x: center;
     
 }
 .mobile_image3{
-    background-image: url(images/mobile/3.jpg);
+    background-image: url(../images/mobile/3.jpg);
     background-size: cover;
     background-position-x: center;
     
 }
 .mobile_image4{
-    background-image: url(images/mobile/2.jpg);
+    background-image: url(../images/mobile/2.jpg);
     background-size: cover;
     background-position-x: center;
     
 }
 .mobile_image5{
-    background-image: url(images/mobile/5.jpg);
+    background-image: url(../images/mobile/5.jpg);
     background-size: cover;
     background-position-x: center;
     
 }
 .mobile_image6{
-    background-image: url(images/mobile/6.jpg);
+    background-image: url(../images/mobile/6.jpg);
     background-size: cover;
     background-position-x: center;
     
 }
 .mobile_image7{
-    background-image: url(images/mobile/7.jpg);
+    background-image: url(../images/mobile/7.jpg);
     background-size: cover;
     background-position-x: center;
     

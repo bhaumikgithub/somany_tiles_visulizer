@@ -64,7 +64,7 @@
                 <h1 class="mobile_h1">Living Room</h1>
             </div>
         </a>
-        <a href="{{url('/listing/bedroom')}}">
+        <a href="#">
             <div class="mobile_grow mobile_image2 mobile_hover_2 col-md-12" >
                 <h1 class="mobile_h1">Bedroom</h1>
             </div>
@@ -74,12 +74,12 @@
                 <h1 class="mobile_h1">Kitchen</h1>
             </div>
         </a>
-        <a href="{{url('/listing/bathroom')}}">
+        <a href="#">
             <div class="mobile_grow mobile_image4 mobile_hover_2 col-md-12" >
                 <h1 class="mobile_h1">Bathroom</h1>
             </div>
         </a>
-        <a href="{{url('/listing/playerroom')}}">
+        <a href="#">
             <div class="mobile_grow mobile_image5 mobile_hover_2 col-md-12" >
                 <h1 class="mobile_h1">Player Room</h1>
             </div>
@@ -89,7 +89,7 @@
                 <h1 class="mobile_h1">Outdoor</h1>
             </div>
         </a>
-        <a href="{{url('/listing/commercial')}}">
+        <a href="#">
             <div class="mobile_grow mobile_image7 mobile_hover_2  col-md-12">
                 <h1 class="mobile_h1">Commercial</h1>
             </div>
