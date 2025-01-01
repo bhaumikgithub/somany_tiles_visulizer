@@ -1,20 +1,43 @@
-<div id="topPanel" class="top-panel" style="display: none;">
-    <div  id="topPanelHideBtn" class="top-panel-hide-button">
-        <span id="topPanelHideIcon" class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+<div id="topPanel" class="top-panel top-panel-product" style="display: none;">
+    <div  id="topPanelHideBtn" class="top-panel-hide-button top-panel-hide-button-product">
+        <span id="topPanelHideIcon" class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
     </div>
 
-    <div class="top-panel-box top-panel-box-first">
-        <button id="btnProduct" class="top-panel-button">@lang('Product')</button>
-        <button id="btnLayout" class="top-panel-button">@lang('Layout')</button>
-        <button id="btnGrout" class="top-panel-button">@lang('Grout')</button>
-    </div>
+    <div class="row">
+    <div class="col-md-12">
 
     <div class="top-panel-box">
-        <input id="inputSearch" type="search" value="" placeholder="@lang('Search Product')" class="input-search"><button id="btnSearchIcon" class="search-icon-button">
-            <img src="/img/icons/search.png" alt="Search" class="search-icon-button-imqge">
+        <h5 class="text-center panel-title">Wall A </h5>
+        <div class="input-box d-flex flex-wrap">
+            <div class="input-text-box-wrap">
+        <input id="inputSearch" type="search" value="" placeholder="@lang('Search Product')" class="input-search product-input-serch"><button id="btnSearchIcon" class="search-icon-button">
+            <svg class="svg-inline--fa fa-magnifying-glass form-control-feedback" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path></svg>
         </button>
-        <button id="btnRefine" class="top-panel-button">@lang('Refine')</button>
-        <div id="topPanelSearchResult" style="display: none"></div>
+            </div>
+            <div class="fliter-btn-wrap">
+        <button id="btnRefine" class="filter-btn img">@lang('<img src="/img/icons/input-filter.png" alt="input-filter">')</button>
+        
+            </div>
+            
+            <div id="topPanelSearchResult" style="display: none"></div>
+           
+            <p class="ds-text">Displaying 3,123 of 3123</p>
+           
+            </div>
+            </div>
+         </div>
+     </div>
+
+     <div class="row top-panel-box top-panel-box-first top-panel-box-first-btn-wrap top-panel-box-cmn-br">
+         <div class="col-md-12 col-xs-12">
+                <div class="d-flex flex-wrap w-100">
+                  <button id="btnProduct" class="top-panel-button top-panel-button-product">@lang('Product')</button>
+                  <button id="btnLayout" class="top-panel-button top-panel-button-product">@lang('Layout')</button>
+                  <button id="btnGrout" class="top-panel-button top-panel-button-product">@lang('Grout')</button>
+                </div>
+            </div>
+        
+        
     </div>
 
     <div id="topPanelLayout" class="top-panel-option-box top-panel-box-overflow-y" style="display: none;">
@@ -105,8 +128,12 @@
 
     <div id="topPanelFilter" class="top-panel-box top-panel-option-box top-panel-box-overflow-y" style="display: none;"></div>
 
-    <div class="top-panel-box radio-surface-rotation">
-        <span class="top-panel-label">@lang('Laying angle'):</span>
+    <div class="top-panel-box row radio-surface-rotation top-panel-box-cmn-br mt-0 d-flex flex-wrap">
+       
+            <div class="col-md-4">
+        <span class="top-panel-label rotate-font-title">@lang('Rotate'):</span>
+        </div>
+        <div class="col-md-8 text-right">
         <input id="topPanelSurfaceRotation_0" type="radio" name="radioSurfaceRotation" value="0" checked="checked">
             <label for="topPanelSurfaceRotation_0">0°</label>
         <input id="topPanelSurfaceRotation_45" type="radio" name="radioSurfaceRotation" value="45">
@@ -117,7 +144,9 @@
             <label id="topPanelSurfaceRotationLabel_135" for="topPanelSurfaceRotation_135">135°</label>
         <input id="topPanelSurfaceRotation_180" type="radio" name="radioSurfaceRotation" value="180">
             <label for="topPanelSurfaceRotation_180">180°</label>
-    </div>
+        </div>
+        </div>
+    
 
     <div id="topPanelAccordionFilter" class="top-panel-box" style="display: none;">
         <span class="top-panel-label">@lang('Sorting tiles'):</span>
@@ -130,14 +159,16 @@
     </div>
 
     @if (!config('app.hide_top_panel_sort'))
-    <div class="top-panel-box dropdown-tiles-sort">
-        <span class="top-panel-label">@lang('Sort tiles'):</span>
-        <select id="topPanelTilesSort" name="topPanelTilesSort">
+    <div class="row top-panel-box dropdown-tiles-sort top-panel-box-cmn-br mt-0 d-flex flex-wrap">
+    <div class="col-md-12">
+        <span class="top-panel-label rotate-font-title">@lang('Sort tiles'):</span>
+        <select id="topPanelTilesSort" name="topPanelTilesSort" class="tile-sort-select">
             <option value="a-z">A-Z</option>
             <option value="z-a">Z-A</option>
             <option value="newest first">@lang('Newest first')</option>
             <option value="oldest first">@lang('Oldest first')</option>
         </select>
+    </div>
     </div>
     @endif
 
