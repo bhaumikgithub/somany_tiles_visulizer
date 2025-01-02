@@ -538,6 +538,9 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
 .align-items-center{
 	align-items: center;
 }
+.justify-content-end{
+    justify-content: end;
+}
 
 .top-panel-product{
     background-color: #eeeeef !important;
@@ -907,24 +910,24 @@ border-radius: 20px;
     border: 2px solid #000; /* Highlight active button */
     box-shadow: 0 0 5px #000;
   }
-  #topPanelTilesListUl{
+  .panel_list{
     display: flex;
     flex-wrap: wrap;
   }
-  #topPanelTilesListUl li{
+  .panel_list li{
     width: 33%;
     background-color: transparent;
     border-radius: none;
   }
-  #topPanelTilesListUl .tile-list-text{
+  .panel_list .tile-list-text{
    display: block !important;
   }
-  #topPanelTilesListUl  .tile-list-thumbnail-image-holder{
+  .panel_list  .tile-list-thumbnail-image-holder{
      width: max-content !important;
      height: max-content !important;
      line-height: unset !important;
   }
-  #topPanelTilesListUl  .tile-list-thumbnail-image-holder img{
+  .panel_list  .tile-list-thumbnail-image-holder img{
     height: 100px;
     width:100px;
      max-width: 100%;
@@ -932,20 +935,66 @@ border-radius: 20px;
      border-radius: 20px;
   }
 
-  .tile-list-text .-caption{
+  .panel_list .tile-list-text .-caption{
     border-bottom: none;
     margin-top:10px !important;
     font-size: 13px !important;
     margin-bottom: 0px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
-  .tile-list-text p{
+  .panel_list .tile-list-text p{
      font-size: 10px;
      text-transform: lowercase !important;
      margin-top: 0px;
   }
-  .tile-list-text p:first-letter {
+  .panel_list .tile-list-text p:first-letter {
     text-transform: capitalize !important;
   }
+  .detail-section {
+    position: fixed;
+    bottom: 8%;
+    left: 7%;
+    width: 86%;
+}
+.cmn-room-btn{
+
+    background:#cdc7bf;
+    border:1px solid #3F3F46;
+    padding:10px;
+    border-radius: 20px;
+    color:#3F3F46;
+    /* box-shadow: rgba(0, 0, 0, 0.24) 0 0 10px; */
+}
+.cmn-room-btn.back-btn{
+    padding:20px 12px 20px 20px;
+    height: 60px;
+}
+.cmn-room-btn.cn-btn{
+    padding:10px 20px 20px 12px;
+    height: 60px;
+}
+.btn-text-set{
+    margin-left: 10px;
+    display: inline-block;
+}
+.img-responsive{
+    max-width: 100%;
+}
+.share-btn-img{
+    padding:15px;
+    margin-bottom: 10px;
+}
+.share-btn-img img{
+    width: 22px;
+}
+
+.cn-img-set{
+    border-radius:20px;
+    padding: 8px;
+    border:2px solid #3F3F46;
+}
   @media (max-width:767px) {
     .top-panel-product{
         width: 400px;
@@ -954,7 +1003,7 @@ border-radius: 20px;
     margin-top: 10px;
   }
 
-  #topPanelTilesListUl li{
+  .panel_list li{
     width: 100%;
 }
 .top-panel-button-product{
