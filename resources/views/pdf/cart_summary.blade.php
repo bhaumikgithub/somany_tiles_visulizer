@@ -56,20 +56,24 @@
                                         <p class="">{{$tile_detail->finish}}</p>
                                         <p class="">Sap Code: 12312321312</p>
                                     </div>
-                                    <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set xs-margin-set">
-                                        <p>Width: 10 ft</p>
-                                        <p>Height: 10 ft</p>
-                                        <p>Wastage: 10%</p>
-                                        <p>Number of Box Required: 10</p>
-                                        <p>Tiles in 1 Box: 2</p>
-                                        <button type="button" class="tile-cal-link" id="tile_cal" data-toggle="modal"
-                                                data-target="#tilecal">Open Tiles Calculator
+                                    <div id="tile{{$tile_detail->id}}" class="col-md-3 col-sm-3 col-xs-12 col-pad-set xs-margin-set" data-weight="{{$tile_detail->width}}" data-height="{{$tile_detail->height}}">
+                                        <input type="hidden" value="{{$tile_detail->width}}" id="tiles_width">
+                                        <input type="hidden" value="{{$tile_detail->height}}" id="tiles_height">
+                                        <div class="tiles_calculation_wrapper" style="display: none;">
+                                            <p>Width: <span class="width_feet"></span></p>
+                                            <p>Height: <span class="height_feet"></span></p>
+                                            <p>Wastage: <span class="tiles_wastage"></span></p>
+                                            <p>Number of Box Required: <span class="require_box"></span></p>
+                                        </div>
+                                        <p>Tiles in 1 Box: <span class="tiles_in_box">2</span></p>
+                                        <button class="tile-cal-link" id="tile_cal" data-toggle="modal"
+                                                data-target="#tilecal" data-tile-id="{{$tile_detail->id}}">Open Tiles Calculator
                                         </button>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper"
                                          data-price-tile-id="{{$tile_detail->id}}">
-                                        <a href="javascript:void(0)" id="update_price_btn" data-toggle="modal" data-target="#updateprice"
-                                           data-tile-id="{{$tile_detail->id}}">
+                                        <button id="update_price_btn" data-toggle="modal" data-target="#updateprice"
+                                                data-tile-id="{{$tile_detail->id}}">
                                             <?php $getPrice = Helper::getTilePrice($tile_detail->id); ?>
                                             <input type="hidden" value="{{( $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">
                                             <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl"
@@ -80,7 +84,7 @@
                                                     Rs. <span class="price-update">{{$getPrice}}</span>/sq.ft
                                                 @endif
                                             </h5>
-                                        </a>
+                                        </button>
                                         <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}">Update Price
                                         </button>
                                     </div>
@@ -149,7 +153,7 @@
         </div>
         <hr style="border: 1px solid;">
         <!-- Footer Section -->
-        <div class="footer-section row ">
+        <div class="footer-section row">
             <div class="col-md-6 col-sm-6 col-xs-12">
                 <p>Toll Free Number: <a href="tel:1800-1030-004" class="tile-cal-link font-bold">1800-1030-004</a></p>
                 <p>09:30 am to 6:30 pm</p>
@@ -182,7 +186,6 @@
                             <div class="col-md-6 col-sm-6 col-xs-12 cmn-form-data">
                                 <div class="row">
                                     <div class="col-sm-12 col-xs-12">
-
                                         <div class="form-group">
                                             <label for="width_feet">Enter Floor/wall's Width
                                             </label>
@@ -196,13 +199,11 @@
                                                    name="length_feet" placeholder="Length/Height">
                                         </div>
                                         <div class="form-group">
-                                            <label for="tiles_size">Tiles Size
-                                            </label>
+                                            <label for="tiles_size">Tiles Size</label>
+                                            <input type="hidden" value="" id="tileWidth">
+                                            <input type="hidden" value="" id="tileHeight">
                                             <input type="text" class="form-control" id="tiles_size"
-                                            name="tiles_size" readonly="readonly" >
-
-                                            
-                                           
+                                            name="tiles_size" readonly="readonly">
                                         </div>
                                         <div class="form-group">
                                             <label for="wast_per">Wastage in Percentage
