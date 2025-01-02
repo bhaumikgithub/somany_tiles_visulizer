@@ -95,47 +95,4 @@
             </div>
         </a>
     </div>
-
 @endsection
-
-  <!-- update price modal start -->
-  <div class="modal fade" id="pincode" role="dialog" data-keyboard="false" data-backdrop="static">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Pincode</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="priceForm">
-                        <div class="row">
-                            <div class="col-md-6 col-sm-6 col-xs-12 cmn-form-data">
-                                <div class="row">
-                                    <div class="col-sm-12 col-xs-12">
-                                        <div class="form-group">
-                                            <label for="price">Enter Pincode</label>
-                                            <input type="text" class="form-control set_price" id="price" name="price"
-                                                   placeholder="Enter your Pincode"   required>
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div class="btn-div d-flex flex-wrap ">
-                                    
-                                    <button type="button" class="btn btn-danger modify-btn tile-cal-btn mt-0"
-                                            id="pincode_submit_btn">Submit
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>

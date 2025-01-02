@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
 
             \App\Http\Middleware\Locale::class,
+            \App\Http\Middleware\CheckPincode::class, // Add your middleware here
         ],
 
         'api' => [
@@ -67,5 +68,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         'role' => \App\Http\Middleware\CheckRole::class,
+        'check.pincode' => \App\Http\Middleware\CheckPincode::class,
     ];
 }

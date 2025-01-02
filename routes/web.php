@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\PincodeController;
 use App\Http\Controllers\ZipcodeController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,11 +63,22 @@ Route::group(['middleware' => 'role:guest'], function () {
 
 
 if ($engine_2d_enabled) {
-    Route::get('/room2d', 'App\Http\Controllers\Controller2d@index');
 //    Route::get('/room2d', 'App\Http\Controllers\Controller2d@roomDefault');
-    Route::get('/room2d/{id}', 'App\Http\Controllers\Controller2d@room');
-    Route::get('/get/room2d/{id}', 'App\Http\Controllers\Controller2d@getRoom');
-    Route::get('/listing/{roomType}', 'App\Http\Controllers\Controller2d@roomListing');
+    Route::middleware(['check.pincode'])->group(function () {
+        Route::get('/room2d', 'App\Http\Controllers\Controller2d@index');
+        Route::get('/listing/{roomType}', 'App\Http\Controllers\Controller2d@roomListing');
+        Route::get('/room2d/{id}', 'App\Http\Controllers\Controller2d@room');
+        Route::get('/get/room2d/{id}', 'App\Http\Controllers\Controller2d@getRoom');
+    });
+
+    Route::get('/check-pincode', function() {
+        return response()->json([
+            'pincode_saved' => session()->has('pincode')
+        ]);
+    });
+
+    // Route to save the pincode
+    Route::post('/save-pincode', [PincodeController::class, 'store'])->name('save-pincode');
 }
 
 if ($engine_panorama_enabled) {

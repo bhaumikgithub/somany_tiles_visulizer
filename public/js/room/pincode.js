@@ -1,0 +1,44 @@
+// Check if the modal should open on a page load
+window.onload = function() {
+    // Check if pincode is already set in session using AJAX
+    fetch('/check-pincode')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.pincode_saved) {
+                $('#pincode').modal('show');
+            }
+        });
+
+};
+
+$(document).on("input", ".pin_code", function() {
+    this.value = this.value.replace(/\D/g,'');
+});
+
+// Handle the pincode form submission
+$('#pincodeForm').on('submit', function (e) {
+    e.preventDefault(); // Prevent the default form submission
+
+    let pincode = $('#pin_code').val(); // Get the pincode value
+
+    // Send the pincode to the backend using jQuery AJAX
+    $.ajax({
+        url: '/save-pincode', // Endpoint for saving the pincode
+        type: 'POST', // HTTP method
+        dataType: 'json', // Expected response format
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+        },
+        data: {
+            pincode: pincode // Data to send in the request body
+        },
+        success: function (response) {
+            // Close the modal on successful response
+            $('#pincode').modal('hide');
+            console.log('Pincode saved successfully:', response.message);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error saving pincode:', error);
+        }
+    });
+});
