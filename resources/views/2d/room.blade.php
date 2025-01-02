@@ -19,6 +19,7 @@
 <script type="module" src="/js/src/2d/interior2d.js"></script>
 @else
 <script src="/js/room/2d.min.js"></script>
+<script src="/js/room/custom.js"></script>
 @endif
 
 @endsection

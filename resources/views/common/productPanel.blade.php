@@ -15,13 +15,15 @@
         </button>
             </div>
             <div class="fliter-btn-wrap">
-        <button id="btnRefine" class="filter-btn img">@lang('<img src="/img/icons/input-filter.png" alt="input-filter">')</button>
+            <button id="btnRefine" class="top-panel-button top-panel-btn-filter">@lang('<img src="/img/icons/input-filter.png" alt="input-filter">')</button>
         
             </div>
             
             <div id="topPanelSearchResult" style="display: none"></div>
            
             <p class="ds-text">Displaying 3,123 of 3123</p>
+
+            <div id="topPanelFilter" class="top-panel-box top-panel-option-box top-panel-box-overflow-y filter-top-panel" style="display: none;"></div>
            
             </div>
             </div>
@@ -31,6 +33,7 @@
      <div class="row top-panel-box top-panel-box-first top-panel-box-first-btn-wrap top-panel-box-cmn-br">
          <div class="col-md-12 col-xs-12">
                 <div class="d-flex flex-wrap w-100">
+               
                   <button id="btnProduct" class="top-panel-button top-panel-button-product">@lang('Product')</button>
                   <button id="btnLayout" class="top-panel-button top-panel-button-product">@lang('Layout')</button>
                   <button id="btnGrout" class="top-panel-button top-panel-button-product">@lang('Grout')</button>
@@ -48,24 +51,45 @@
         </div>
        @endif
 
-        <div id="topPanelContentFreeDesign" class="top-panel-box">
-            <div>
+        <div id="topPanelContentFreeDesign" class="top-panel-box row top-panel-box-cmn-br">
+          
+            <div class="col-md-12 col-xs-12">
+              <div class="d-flex flex-wrap row align-items-center">
+                <div class="lbl-fd col-md-6 col-sm-6 col-xs-8">
+                  
                 <label for="topPanelCheckFreeDesign" class="top-panel-label stiled-checkbox-text">@lang('Free Design')</label>
+               </div>
+               <div class="stiled-checkbox-wrap col-md-6 col-sm-6  col-xs-4 text-right">
+                
                 <div class="stiled-checkbox">
                     <input type="checkbox" id="topPanelCheckFreeDesign" />
                     <label for="topPanelCheckFreeDesign"></label>
+            </div>
                 </div>
             </div>
-            <div id="topPanelCheckFreeDesignRotateBox">
+            
+            </div>
+            
+            <div id="topPanelCheckFreeDesignRotateBox" class="top-panel-box ">
+          
+              <div class="d-flex flex-wrap row rotate-set align-items-center">
+                <div class="lbl-fd col-md-6 col-sm-6 col-xs-8">
+            
                 <label for="topPanelCheckFreeDesignRotate" class="top-panel-label stiled-checkbox-text">@lang('Rotate By Click')</label>
+            </div>
+            <div class="stiled-checkbox-wrap col-md-6 col-sm-6  col-xs-4 text-right">
                 <div class="stiled-checkbox">
                     <input type="checkbox" id="topPanelCheckFreeDesignRotate" />
                     <label for="topPanelCheckFreeDesignRotate"></label>
                 </div>
+            
+            </div>
+            </div>
+            
             </div>
         </div>
 
-        <div class="top-panel-box radio-surface-pattern">
+        <div class="top-panel-box radio-surface-pattern top-panel-box-cmn-br">
             <input id="topPanelSurfacePattern_0" type="radio" name="radioSurfacePattern" value="0">
             <label for="topPanelSurfacePattern_0">
                 <img src="/img/square.png" alt="" class="pattern-image-icon">
@@ -104,15 +128,24 @@
     </div>
 
     <div id="topPanelGrout" class="top-panel-option-box" style="display: none;">
-        <div id="topPanelContentSurfaceTabGroutSizeBody" class="top-panel-box">
-            <span class="top-panel-label stiled-checkbox-text">@lang('Grout Size')</span>
-            <input id="topPanelGroutSizeRange" type="range" min="0" max="24" value="4">
+        <div id="topPanelContentSurfaceTabGroutSizeBody" class="top-panel-box top-panel-box-cmn-br row">
+            <div class="col-md-12">
+                <div class="row d-flex flex-wrap">
+                    <div class="col-md-4 col-xs-12">
+            <span class="top-panel-label stiled-checkbox-text">@lang('Size')</span>
+        </div>
+        <div class="col-md-8 col-xs-12 text-right xs-left range-slider">
+             <span id="" class="span-width">0</span>
+            <input id="topPanelGroutSizeRange" type="range" min="0" max="24" value="4" class="slider">
             <span id="topPanelGroutSizeText" class="top-panel-label stiled-checkbox-text">4 mm</span>
         </div>
-        <div class="top-panel-box">
-            <span class="top-panel-label stiled-checkbox-text">@lang('Grout Color')</span>
-            <div id="grout-color-picker" class="top-panel-select-color" data-color="#ffffff" title="Grout Color"></div>
-
+        </div>
+        </div>
+        </div>
+        <div class="top-panel-box top-panel-box-cmn-br row">
+            <!-- <span class="top-panel-label stiled-checkbox-text">@lang('Grout Color')</span> -->
+           
+         <div class="col-md-12">
             <?php
             $grout_colors = config('app.grout_colors');
             if (count($grout_colors) > 0 && $grout_colors[0]) {
@@ -123,10 +156,14 @@
                 echo '</div>';
             }
             ?>
+            </div>
+            <div class="col-md-12">
+             <div id="grout-color-picker" class="top-panel-select-color" data-color="#ffffff" title="Grout Color"></div>
+        </div>
         </div>
     </div>
 
-    <div id="topPanelFilter" class="top-panel-box top-panel-option-box top-panel-box-overflow-y" style="display: none;"></div>
+   
 
     <div class="top-panel-box row radio-surface-rotation top-panel-box-cmn-br mt-0 d-flex flex-wrap">
        
@@ -185,3 +222,5 @@
         <ul id="topPanelTilesListUl"></ul>
     </div>
 </div>
+
+

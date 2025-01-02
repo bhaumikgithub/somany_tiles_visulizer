@@ -1,6 +1,6 @@
 *{
     font-family: "Rethink Sans", sans-serif;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
 }
 h1{
     font-size: 50px;
@@ -633,7 +633,9 @@ background: transparent;
     border-top:1px solid #cbc6c6;
     padding:15px 0px;
 }
-
+.top-panel-product{
+    width: 450px;
+}
 .top-panel-button{
     font-weight: 400;
     line-height: 1.5;
@@ -676,6 +678,7 @@ background: transparent;
 .mt-0{
     margin-top: 0px;
 }
+
 .w-100{
     width: 100%;
 }
@@ -703,11 +706,256 @@ background: transparent;
     border-radius: 20px;
     padding:5px;
 }
+.top-panel-btn-filter{
+    background: transparent;
+    border: none;
+    padding: 0px;
+    margin: 0px;
+}
+.top-panel-btn-filter img{
+    border-radius: 20px;
+}
+.top-panel-btn-filter:hover{
+    background: transparent;
+    border: none;
+    padding: 0px;
+    margin: 0px;
 
-@media (max-width:520px) {
+}
 
-.top-panel-product{
-    width: 320px;
+.filter-top-panel{
+    padding: 0px;
+    width: 100%;
+}
+.filter-top-panel .filter-block{
+ display: flex;
+ flex-wrap: wrap ;
+ margin:5px 0px;
+ font-size: 12px;
+
+}
+
+.filter-top-panel .-header{
+    margin-bottom: 5px;
+}
+.filter-top-panel .-body{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-bottom: 5px;
+}
+.filter-item-checkbox{
+    width: auto;
+    margin-left: 0px;
+    margin-right: 10px;
+}
+.filter-block label{
+    font-size: 12px;
+}
+.filter-item-checkbox:last-child{
+
+    margin-right: 8px;
+}
+.filter-top-panel .filter-block .-header-box{
+    margin-bottom: 5px;
+   
+}
+
+.filter-item-checkbox{
+    position: relative;
+}
+.filter-item-checkbox input[type=checkbox]:checked + label:after {
+    background-color: #555;
+    content: '\2714';
+    font-size: 11px;
+    left: 0px;
+    padding:1px 2px 0px 4px;
+    position: absolute;
+    top: 0px;
+    color: #fff;
+    border-radius: 2px;
+    height: 17px;
+    width: 17px;
+}
+
+.filter-item-checkbox input[type=checkbox]{
+    margin:0px;
+    background-color: #fff;
+    border:1px solid #555;
+    border-radius:2px;
+    height: 17px;
+    width: 17px;
+    background:transparent;
+}
+/* .filter-item-checkbox input[type=checkbox] + label:before{
+    background-color: #fff;
+    border:1px solid #555;
+    border-radius:6px;
+   
+
+    
+} */
+.filter-item-checkbox{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.filter-item-checkbox  label{
+    margin-left: 6px;
+}
+
+.filter-block-support-buttons{
+    font-size: 12px;
+}
+.filter-block-support-buttons span{
+    display: inline-block;
+    margin-right: 5px;
+    font-weight: bold;
+}
+.filter-block-support-buttons span:last-child{
+    margin-right: 0px;
+}
+.top-panel-label{
+  font-size: 12px;
+  margin-left:0px;
+
+}
+.stiled-checkbox:after {
+    content: '' !important;
+}
+
+
+.stiled-checkbox{
+    width: 52px;
+    height: 26px;
+    border-radius: 26px;
+    background-color: #ccc;
+}
+.stiled-checkbox label{
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    top: 3px;
+    background-color: white;
+    position: relative;
+}
+.rotate-set{
+    margin-top: 50px;
+}
+
+.stiled-checkbox input[type=checkbox]:checked+label{
+    background-color: #000;
+    left:26px;
+
+}
+.stiled-checkbox:before , .stiled-checkbox:after{
+    content: '';
+}
+.radio-surface-pattern label{
+
+    width: 29%;
+
+}
+.radio-surface-pattern input[type=radio]:checked+label{
+    background-color: transparent;
+    border-radius: 20px;
+    border:1px solid #000;
+}
+.radio-surface-pattern .pattern-image-icon{
+width:84px;
+height: 84px;
+border-radius: 20px;
+}
+.radio-surface-pattern p{
+    font-size: 12px;
+}
+.radio-surface-pattern label:hover{
+    background-color: transparent;
+}
+.radio-skew-size label{
+    border:none !important;
+}
+
+#topPanelGroutSizeRange{
+    width: 150px;
+}
+ 
+
+#topPanelGroutSizeText{
+    width: 53px;
+    display: inline-block;
+}
+#grout-color-picker{
+    width: 100%;
+    margin-top: 10px;
+    height:30px
+}
+
+#grout-predefined-color{
+    margin-left: 0px;
+    width: 100%;
+}
+#grout-predefined-color button{
+
+    border:none;
+    height: 50px;
+    width: 22%;
+    border-radius: 20px;
+}
+
+.-btn.active {
+    border: 2px solid #000; /* Highlight active button */
+    box-shadow: 0 0 5px #000;
+  }
+  #topPanelTilesListUl{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  #topPanelTilesListUl li{
+    width: 33%;
+    background-color: transparent;
+    border-radius: none;
+  }
+  #topPanelTilesListUl .tile-list-text{
+   display: block !important;
+  }
+  #topPanelTilesListUl  .tile-list-thumbnail-image-holder{
+     width: max-content !important;
+     height: max-content !important;
+     line-height: unset !important;
+  }
+  #topPanelTilesListUl  .tile-list-thumbnail-image-holder img{
+    height: 100px;
+    width:100px;
+     max-width: 100%;
+     max-height: 100%;
+     border-radius: 20px;
+  }
+
+  .tile-list-text .-caption{
+    border-bottom: none;
+    margin-top:10px !important;
+    font-size: 13px !important;
+    margin-bottom: 0px;
+  }
+  .tile-list-text p{
+     font-size: 10px;
+     text-transform: lowercase !important;
+     margin-top: 0px;
+  }
+  .tile-list-text p:first-letter {
+    text-transform: capitalize !important;
+  }
+  @media (max-width:767px) {
+    .top-panel-product{
+        width: 400px;
+    }
+  .range-slider{
+    margin-top: 10px;
+  }
+
+  #topPanelTilesListUl li{
+    width: 100%;
 }
 .top-panel-button-product{
     margin-bottom: 10px;
@@ -716,5 +964,48 @@ background: transparent;
     margin-bottom: 5px;
     display: inline-block;
 }
+.top-panel-hide-button-product{
+    height: 30px;
+    width: 30px;
+    
+    margin-left: -35px;
+}
+#topPanelHideIcon{
+    font-size: 15px;
+}
+.top-panel-button{
+    padding: 8px 10px;
+    font-size: 13px;
+}
+.radio-surface-pattern label{
+    width: 100%;
+}
+
+.radio-surface-pattern{
+    justify-content: center;
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+.radio-surface-pattern label {
+    width: 100%;
+}
+.radio-skew-size{
+    display: flex;
+}
+
+#grout-predefined-color button{
+    width: 46%;
+    height: 58px;
+}
+
+
+  }
+@media (max-width:520px) {
+
+.top-panel-product{
+    width: 280px;
+}
 
 }
+
