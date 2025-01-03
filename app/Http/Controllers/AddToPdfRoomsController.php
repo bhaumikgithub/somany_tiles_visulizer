@@ -175,7 +175,7 @@ class AddToPdfRoomsController extends Controller
         //$pdf = PDF::loadView('pdf.template', $data);
 
         // Return the PDF for viewing in a new tab
-        $fileName = 'tiles_selection_'.$request->random_key."_".Carbon::parse(now())->format('d-m-Y').'.pdf';
+        $fileName = 'somany_tiles_selection_'.$request->random_key."_".Carbon::parse(now())->format('d-m-Y').'.pdf';
         //return $pdf->stream($fileName);
 
         return $pdf->download($fileName);
