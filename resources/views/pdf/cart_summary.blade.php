@@ -87,8 +87,7 @@
                                         @endif
                                             <?php $getPrice = Helper::getTilePrice($tile_detail->id); ?>
                                             <input type="hidden" value="{{( $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">
-                                            <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl"
-                                                id="{{$index . '_' . $loop->index . '_'. 'price'}}">
+                                            <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl" id="{{$index . '_' . $loop->index . '_'. 'price'}}">
                                                 @if($getPrice === NULL )
                                                     Price not given
                                                 @else
@@ -97,7 +96,7 @@
                                             </h5>
                                             </button>
                                             @if( isset($pincode) )
-                                            <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}">Update Price
+                                                <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}">Update Price
                                             </button>
                                         @endif
                                     </div>
