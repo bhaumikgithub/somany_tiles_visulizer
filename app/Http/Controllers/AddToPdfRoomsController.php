@@ -193,4 +193,10 @@ class AddToPdfRoomsController extends Controller
         // Return success response
         return response()->json(['success' => true, 'price' => $tile->price]);
     }
+
+    public function updateTileCalculation(Request $request): JsonResponse
+    {
+        $requestData = $request->except('_token');
+        dd(json_encode($requestData));
+    }
 }

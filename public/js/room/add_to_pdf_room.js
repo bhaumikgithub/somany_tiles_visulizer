@@ -279,6 +279,7 @@ $('#tilecal').on('show.bs.modal', function (event) {
 
     let tile_par_carton = $('#tile'+tile+' input#tiles_par_carton').val();
     $('#calc_tiles_par_carton').val(tile_par_carton);
+    $('#calc_cart_item_id').val($('#cart_item_id').val());
 });
 
 //Tiles calc
@@ -323,6 +324,33 @@ $("#calculate_btn").click(function () {
         $('div#tile' + tile_id + ' div.tiles_carton_wrapper span.tiles_needed').text(tilesNeeded);
         $('div#tile' + tile_id + ' div.tiles_carton_wrapper span.require_box').text(boxNeeded);
     }
+
+    //Save data into db
+    $.ajax({
+        url: '/update-tile-calc', // URL to the controller method for updating the price
+        type: 'POST',
+        data: {
+            tile_id: tile_id,
+            totalAreaSqMeter: totalAreaSqMeter.toFixed(2),
+            totalArea: totalArea.toFixed(2),
+            wastage: wastageOfTilesArea,
+            tilesIn1Box:( tilesIn1Box !== null ) ? tilesIn1Box : 0,
+            tilesNeeded:tilesNeeded,
+            boxNeeded:boxNeeded,
+            _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
+        },
+        success: function(response) {
+
+        },
+        error: function(xhr) {
+            // When the response has errors, this block will be executed
+            let response = xhr.responseJSON;  // Get the JSON response
+            if (response.errors && response.errors.price) {
+                // Show the error message for 'price'
+                $('#price-error').text(response.errors.price[0]);  // Assuming you have a span or div with id="price-error"
+            }
+        }
+    });
 
     // displayResult("#area_covered_meter","Total Area covered : <b>" + totalAreaSqMeter.toFixed(2)+"</b> Sq. Meter");
     // displayResult("#area_covered_feet","Total Area covered : <b>" + totalArea.toFixed(2)+"</b> Sq. Feet");

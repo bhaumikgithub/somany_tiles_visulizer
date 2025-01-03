@@ -233,6 +233,7 @@
                                 <div class="btn-div d-flex flex-wrap">
                                     <input type="hidden" value="" id="calc_tiles_par_carton" name="calc_tiles_par_carton">
                                     <input type="hidden" value="" id="calc_tile_id" name="calc_tile_id">
+                                    <input type="hidden" value="" id="calc_cart_item_id" name="calc_cart_item_id">
                                     <a href="javascript:void(0);" id="calculate_btn" class="btn modify-btn tile-cal-btn">Calculate</a>
                                     <a href="javascript:void(0);" id="reset_btn" class="btn modify-btn ml-3 tile-cal-btn ml-10 reset_btn">Reset</a>
                                 </div>
