@@ -23,7 +23,7 @@
                     <p>Pincode: <span>{{$pincode}}</span></p>
                 @endif
                 <p>Here are the products you’ve selected from our collection. Visit more on
-                    <a class="cmn_link" target="_blank" href="https://www.somanyceramics.com/">www.somanyceramics.com/</a>
+                    <a class="cmn_link" target="_blank" href="https://www.somanyceramics.com/">www.somanyceramics.com</a>
                 </p>
             </div>
             <div class="col-md-3 col-sm-12 col-xs-12">
