@@ -52,6 +52,10 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
     width: 20%;
 }
 
+body{
+    overflow-x: hidden;
+}
+
 .image1{
     background-image: url(../images/4.jpg);
     background-size: cover;
@@ -260,6 +264,10 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
     .body-selection-item-image {
         height: 160px !important;
     }
+    .mobile-index-main a{
+        background-color: red;
+    }
+  
 }
 
 .desktop-div{
