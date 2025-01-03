@@ -100,5 +100,6 @@
     @endif
 
     <script src="/js/room/add_to_pdf_room.js"></script>
+    <script src="/js/room/custom.js"></script>
 </body>
 </html>
