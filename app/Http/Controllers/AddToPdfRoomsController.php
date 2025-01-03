@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Tile;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -160,10 +161,24 @@ class AddToPdfRoomsController extends Controller
             'last_name' => $request->lastName,
             'contact_no' => $request->mobileNumber,
         ];
+        // Data to be passed to the PDF
+//        $data = [
+//            'allProduct' => $allProduct,
+//            'getCartId' => $getCartId,
+//            'basic_info' => $basic_info
+//        ];
 
-        $html = view('pdf.template',compact('allProduct','basic_info'))->render(); // Get HTML content for the PDF
+        $html = view('pdf.template',compact('allProduct','basic_info')); // Get HTML content for the PDF
         $pdf = PDF::loadHTML($html);
-        return $pdf->download('product-selection.pdf');
+
+        // Load a Blade view into the PDF
+        //$pdf = PDF::loadView('pdf.template', $data);
+
+        // Return the PDF for viewing in a new tab
+        $fileName = 'tiles_selection_'.$request->random_key."_".Carbon::parse(now())->format('d-m-Y').'.pdf';
+        //return $pdf->stream($fileName);
+
+        return $pdf->download($fileName);
     }
 
     public function updateTilePrice(Request $request): JsonResponse
