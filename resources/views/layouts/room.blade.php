@@ -54,7 +54,7 @@
 
 
     @yield('content')
-
+    @include('common.pincode_modal')
 
     @include('common.logo')
 
@@ -99,5 +99,6 @@
     <script src="/js/room/vfs_fonts.js"></script>
     @endif
     <script src="/js/room/add_to_pdf_room.js"></script>
+    <script src="/js/room/pincode.js"></script>
 </body>
 </html>
