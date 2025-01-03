@@ -332,6 +332,7 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
     position: absolute;
     bottom: 0%;
     left: 15%;
+    
 }
 
 .cms-element-text{
@@ -407,11 +408,15 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
       border-color: #333 !important;
   }
 
-.close.cartpanelclose{
+.close{
 	color: #ce1f22;
 	opacity: 1;
 	font-size: 30px;
     margin-top: -8px;
+}
+.close:hover{
+    opacity: 1;
+    color: #ce1f22;
 }
 .top-panel-content-tiles-list-item-product .tile-list-text{
  color: #3F3F46;
@@ -427,6 +432,9 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
   text-decoration: underline;
   margin-top:10px;
 
+}
+.room-canvas{
+    z-index:2;
 }
 
 /* width */
@@ -457,6 +465,8 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
 .w-100{
     width: 100%;
 }
+
+
 @media (max-width:991px) {
 
     h1{
@@ -548,7 +558,7 @@ box-shadow: inset 0px 36px 63px 0px rgba(0, 0, 0, 1); */
     border-bottom-left-radius: 20px;
     padding: 10px 5px;
     color: #555;
-   
+   z-index: 3;
 }
 .top-panel-box{
     margin:0px;
@@ -907,9 +917,11 @@ border-radius: 20px;
 }
 
 .-btn.active {
-    border: 2px solid #000; /* Highlight active button */
-    box-shadow: 0 0 5px #000;
-  }
+    
+    border: 1px solid #000 !important;
+ 
+    border-radius: 20px;
+}
   .panel_list{
     display: flex;
     flex-wrap: wrap;
@@ -957,16 +969,28 @@ border-radius: 20px;
     bottom: 8%;
     left: 7%;
     width: 86%;
+    z-index: 3;
 }
 .cmn-room-btn{
 
-    background:#cdc7bf;
+    background:#D6D0C8;
     border:1px solid #3F3F46;
     padding:10px;
     border-radius: 20px;
-    color:#3F3F46;
+    color:#3F3F46 !important;
+    text-decoration: none !important;
+    cursor: pointer;
+  
     /* box-shadow: rgba(0, 0, 0, 0.24) 0 0 10px; */
 }
+.cmn-room-btn:hover{
+
+    color: #3F3F46 !important;
+    text-decoration: none !important;
+
+}
+
+
 .cmn-room-btn.back-btn{
     padding:20px 12px 20px 20px;
     height: 60px;
@@ -978,6 +1002,7 @@ border-radius: 20px;
 .btn-text-set{
     margin-left: 10px;
     display: inline-block;
+    font-size: 15px;
 }
 .img-responsive{
     max-width: 100%;
@@ -990,11 +1015,96 @@ border-radius: 20px;
     width: 22px;
 }
 
+.share-div {
+    border: 1px solid  #3F3F46;
+    background: #D6D0C8;
+    backdrop-filter: blur(45.79999923706055px);
+    color: #3F3F46;
+    display: flex;
+    padding: 16px;
+    gap: 20px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+}
+
 .cn-img-set{
-    border-radius:20px;
+    border-radius:100%;
     padding: 8px;
     border:2px solid #3F3F46;
 }
+.share-div a{
+    color: #3F3F46;
+}
+.share-link img{
+width: 18px;
+}
+
+.close {
+    color: #ce1f22;
+    opacity: 1;
+    font-size: 30px;
+    margin-top: -8px;
+}
+.add-sec-header{
+    padding:15px 15px 0px 15px;
+}
+.panel_list .top-panel-content-tiles-list-item:hover{
+ 
+    border:1px solid #000;
+    background: transparent;
+    border-radius: 20px;
+
+}
+
+.button-radio-btn {
+    float: left;
+    margin: 0 5px 0 0;
+   width: 100px;
+   height: 40px;
+    position: relative;
+  }
+  
+  .button-radio-btn  label,
+  .button-radio-btn  input {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  .button-radio-btn  input[type="radio"] {
+    opacity: 0.011;
+    z-index: 100;
+  }
+  
+  .button-radio-btn  input[type="radio"]:checked + label {
+    background: #20b8be;
+    border-radius: 4px;
+  }
+  
+  .button-radio-btn  label {
+    cursor: pointer;
+    z-index: 90;
+    line-height: 1.8em;
+  }
+.surface-select{
+    z-index: 1;
+}
+
+.yes-no-btn{
+    padding: 9px 12px !important;
+    height: auto !important;
+    width: 100px;
+}
+.mb-15{
+    margin-bottom: 10px;
+}
+.mr-15{
+    margin-right: 15px;
+}
+
   @media (max-width:767px) {
     .top-panel-product{
         width: 400px;
@@ -1048,8 +1158,27 @@ border-radius: 20px;
     height: 58px;
 }
 
+.cmn-room-btn.back-btn , .cmn-room-btn.cn-btn{
+    height: 50px !important;
+    padding: 5px 15px !important;
+}
+.detail-section{
+    bottom: 15%;
+}
+.share-btn-img {
+    padding: 12px;
+}
+.share-btn-close{
+    position: absolute;
+    top: -15px;
+    right: -6px;
+    background: #D6D0C8;
+    padding: 8px;
+    border-radius: 20px;
+    border:1px solid #3F3F46;
+}
 
-  }
+}
 @media (max-width:520px) {
 
 .top-panel-product{

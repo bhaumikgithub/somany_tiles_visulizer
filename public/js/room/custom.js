@@ -3,8 +3,7 @@
 
 $('#grout-predefined-color .-btn').on('click', function () {
 
-    alert("hello");
-    // Remove 'active' class from all buttons
+     // Remove 'active' class from all buttons
     $('#grout-predefined-color .-btn').removeClass('active');
 
     // Add 'active' class to the clicked button
@@ -12,29 +11,21 @@ $('#grout-predefined-color .-btn').on('click', function () {
   });
 
 
-  $('.share-btn-img').click(function(){
+  $('.share-btn-img').on('click', function () {
     $('.share-div').css('display','flex');
     $(this).hide();
     $('.share-btn-close').show();
 });
-$('.share-btn-close').click(function(){
+$('.share-btn-close').on('click', function () {
+   
     $('.share-div').css('display','none');
     $(this).hide();
     $('.share-btn-img').show();
 });
 
-$('.continue-btn-img').click(function(){
-    $('.continue-div').css('display','flex');
-    $(this).hide();
-    $('.continue-btn-close').show();
-});
-$('.continue-btn-close').click(function(){
-    $('.continue-div').css('display','none');
-    $(this).hide();
-    $('.continue-btn-img').show();
-});
 
-$('.rotate-font').click(function(){
-    $('.rotate-font').removeClass('active');
-    $(this).addClass('active');
-});
+
+// $('.rotate-font').on('click', function () {
+//     $('.rotate-font').removeClass('active');
+//     $(this).addClass('active');
+// });
