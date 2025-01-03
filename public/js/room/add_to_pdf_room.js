@@ -1,5 +1,5 @@
 function addToPDF(){
-    'use strict';
+    'ue strict';
     let current_room_id = $('#current_room_id').val();
     let current_room_name = $('#current_room_name').val();
     let current_room_type = $("#current_room_type").val();
@@ -272,47 +272,65 @@ $('#tilecal').on('show.bs.modal', function (event) {
     let tile = button.data('tile-id');
     let height = $('#tile'+tile+' input#tiles_height').val();
     let width = $('#tile'+tile+' input#tiles_width').val();
-    $('#tiles_size').val(`${width} * ${height} mm`);
+    $('#tiles_size').val(`${width} x ${height} mm`);
     // Set the modal content
-    $('#tileHeight').val(`${height}`);
-    $('#tileWidth').val(`${width}`);
+    $('#sizes').val(`${width}x${height}`);
+    $('#calc_tile_id').val(tile);
+
+    let tile_par_carton = $('#tile'+tile+' input#tiles_par_carton').val();
+    $('#calc_tiles_par_carton').val(tile_par_carton);
 });
 
 //Tiles calc
 
-let tilesIn1Box = 4; //pieces this should come from DB
-let lb = "<br/>"
-
 $("#calculate_btn").click(function () {
-    if(validationCheck()==false){
+    if(validationCheck()===false){
         return false;
     }
 
+    let tilesIn1Box = $('#calc_tiles_par_carton').val(); //pieces this should come from DB
+
+    let tile_id = $('#calc_tile_id').val();
     let widthInFeet = $("#width_feet").val();
     let heightInFeet = $("#length_feet").val();
 
     let wastage = $("#wast_per").val();
 
     let totalArea =  widthInFeet * heightInFeet;
+
     let totalAreaSqMeter = totalArea/10.764;
 
-    var wastageOfTilesArea = (totalArea * wastage)/100;
-    var actualWallFloorArea = Number(totalArea + wastageOfTilesArea);
+    let wastageOfTilesArea = (totalArea * wastage)/100;
+    let actualWallFloorArea = Number(totalArea + wastageOfTilesArea);
 
-    var tileWidthInFeet = getSizeOfTiles("#tiles_size","LEFT");
-    var tileHeightInFeet = getSizeOfTiles("#tiles_size","RIGHT");
+    let tileWidthInFeet = getSizeOfTiles("#sizes","LEFT");
+    let tileHeightInFeet = getSizeOfTiles("#sizes","RIGHT");
 
-    var tilesArea =  (tileWidthInFeet * tileHeightInFeet );
+    let tilesArea =  (tileWidthInFeet * tileHeightInFeet );
 
-    var tilesNeeded =  Math.ceil(actualWallFloorArea/tilesArea);
-    var boxNeeded = Math.ceil(tilesNeeded/tilesIn1Box);
+    let tilesNeeded =  Math.ceil(actualWallFloorArea/tilesArea);
+    let boxNeeded = Math.ceil(tilesNeeded/tilesIn1Box);
 
+    $('div#tile' + tile_id + ' div.tiles_calculation_wrapper').css('display','block');
+    // $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.width_feet').text(widthInFeet);
+    // $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.height_feet').text(heightInFeet);
+    $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.total_area_covered_meter').text(totalAreaSqMeter.toFixed(2));
+    $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.total_area_covered_feet').text(totalArea.toFixed(2));
+    $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.tiles_wastage').text(wastageOfTilesArea);
 
-    displayResult("#area_covered_meter","Total Area covered : <b>" + totalAreaSqMeter.toFixed(2)+"</b> Sq. Meter");
-    displayResult("#area_covered_feet","Total Area covered : <b>" + totalArea.toFixed(2)+"</b> Sq. Feet");
-    displayResult("#required_tiles","Required Tiles : <b>" + tilesNeeded+"</b> Tiles");
-    displayResult("#required_box","Required Boxes : <b>" + boxNeeded+"</b> <small>(1 box have "+tilesIn1Box+" Tiles)</small>");
-    $('#tilecal').modal('show');
+    if( tilesIn1Box !== null ) {
+        $('div#tile' + tile_id + ' div.tiles_carton_wrapper').css('display','block');
+        $('div#tile' + tile_id + ' div.tiles_carton_wrapper span.tiles_needed').text(tilesNeeded);
+        $('div#tile' + tile_id + ' div.tiles_carton_wrapper span.require_box').text(boxNeeded);
+    }
+
+    // displayResult("#area_covered_meter","Total Area covered : <b>" + totalAreaSqMeter.toFixed(2)+"</b> Sq. Meter");
+    // displayResult("#area_covered_feet","Total Area covered : <b>" + totalArea.toFixed(2)+"</b> Sq. Feet");
+    // displayResult("#required_tiles","Required Tiles : <b>" + tilesNeeded+"</b> Tiles");
+    // displayResult("#required_box","Required Boxes : <b>" + boxNeeded+"</b> <small>(1 box have "+tilesIn1Box+" Tiles)</small>");
+    $('#tilecal').modal('hide');
+    $('.modal-backdrop').remove();  // Remove the backdrop manually
+    $('body').removeClass('modal-open');  // Remove the 'modal-open' class from body
 
 
 })
@@ -320,7 +338,6 @@ $("#calculate_btn").click(function () {
 $("#reset_btn").click(function(){
     $("#width_feet").val("");
     $("#length_feet").val("");
-    $("#tiles_size").val("");
     $("#wast_per").val("");
 
     displayResult("#area_covered_meter","");
@@ -330,18 +347,18 @@ $("#reset_btn").click(function(){
 });
 
 function getSizeOfTiles(p_sizeId,p_side){
-    var sizeString = $(p_sizeId).val();
-    var arr = sizeString.split("x");
-    if(p_side=="LEFT"){
+    let sizeString = $(p_sizeId).val();
+    let arr = sizeString.split("x");
+    if(p_side==="LEFT"){
         return (arr[0]/10)*0.0328;//mm to feet
     }
-    if(p_side=="RIGHT"){
+    if(p_side==="RIGHT"){
         return (arr[1]/10)*0.0328;//mm to feet
     }
 }
 
 function displayResult(p_displayid,p_message){
-    var html = $(p_displayid).html();
+    let html = $(p_displayid).html();
     $(p_displayid).html(p_message);
 }
 

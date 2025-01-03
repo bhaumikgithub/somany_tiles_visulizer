@@ -9,11 +9,11 @@
                 <div class="logo d-flex flex-column">
                     <img src="{{asset('img/tiles_visu_logo.png')}}" alt="Tiles Logo">
                 </div>
-                <div class="intro d-flex flex-column">
-                    <p>Your space reflects your personality; make it impressive. We bring to you an exclusive selection
-                        of tiles that are engineered to perfection. Explore designs that make every space memorable.
-                    </p>
-                </div>
+{{--                <div class="intro d-flex flex-column">--}}
+{{--                    <p>Your space reflects your personality; make it impressive. We bring to you an exclusive selection--}}
+{{--                        of tiles that are engineered to perfection. Explore designs that make every space memorable.--}}
+{{--                    </p>--}}
+{{--                </div>--}}
             </div>
         </div>
 
@@ -22,10 +22,10 @@
             <div class="col-md-9 col-sm-12 col-xs-12">
                 <h3 class="product-title font-bold">Your Product Selection</h3>
                 <p>Date: <span>{{\Carbon\Carbon::now()->format('d-m-Y')}}</span></p>
-                <p>Name: <span class="font-bold">customer name</span></p>
-                <p>Number: <span class="font-bold">customer number</span></p>
-                <p>Here are the products you’ve selected from our collection. Visit more on <a class="cmn_link"
-                                                                                               href="https://tilevisualizer.com/">www.tilesvisualizer.com</a>
+{{--                <p>Name: <span class="font-bold">customer name</span></p>--}}
+{{--                <p>Number: <span class="font-bold">customer number</span></p>--}}
+                <p>Here are the products you’ve selected from our collection. Visit more on
+                    <a class="cmn_link" href="https://tilevisualizer.com/" target="_blank">www.tilesvisualizer.com</a>
                 </p>
             </div>
             <div class="col-md-3 col-sm-12 col-xs-12">
@@ -60,12 +60,21 @@
                                         <input type="hidden" value="{{$tile_detail->width}}" id="tiles_width">
                                         <input type="hidden" value="{{$tile_detail->height}}" id="tiles_height">
                                         <div class="tiles_calculation_wrapper" style="display: none;">
-                                            <p>Width: <span class="width_feet"></span></p>
-                                            <p>Height: <span class="height_feet"></span></p>
-                                            <p>Wastage: <span class="tiles_wastage"></span></p>
-                                            <p>Number of Box Required: <span class="require_box"></span></p>
+                                            <p>Total Area: <span class="total_area_covered_meter"></span> Sq. Meter</p>
+                                            <p>Total Area: <span class="total_area_covered_feet"></span> Sq. Feet</p>
+{{--                                            <p>Width: <span class="width_feet"></span> ft</p>--}}
+{{--                                            <p>Height: <span class="height_feet"></span> ft</p>--}}
+                                            <p>Wastage: <span class="tiles_wastage"></span> %</p>
                                         </div>
-                                        <p>Tiles in 1 Box: <span class="tiles_in_box">2</span></p>
+                                        <?php $tiles_par_box = Helper::getTilesParCarton($tile_detail->id);?>
+                                        <input type="hidden" value="{{$tiles_par_box}}" id="tiles_par_carton">
+                                        @if( $tiles_par_box !== NULL )
+                                            <div class="tiles_carton_wrapper" style="display: none;">
+                                                <p>Tiles Needed: <span class="tiles_needed"></span></p>
+                                                <p>Number of Box Required: <span class="require_box"></span></p>
+                                            </div>
+                                            <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
+                                        @endif
                                         <button class="tile-cal-link" id="tile_cal" data-toggle="modal"
                                                 data-target="#tilecal" data-tile-id="{{$tile_detail->id}}">Open Tiles Calculator
                                         </button>
@@ -187,30 +196,21 @@
                                 <div class="row">
                                     <div class="col-sm-12 col-xs-12">
                                         <div class="form-group">
-                                            <label for="width_feet">Enter Floor/wall's Width
-                                            </label>
-                                            <input type="number" class="form-control" id="width_feet" name="width_feet"
-                                                   placeholder="Width in Feet">
+                                            <label for="width_feet">Enter Floor/wall's Width</label>
+                                            <input type="number" class="form-control" id="width_feet" name="width_feet" placeholder="Width in Feet">
                                         </div>
                                         <div class="form-group">
-                                            <label for="length_feet">Enter Floor/wall's Length/Height
-                                            </label>
-                                            <input type="number" class="form-control" id="length_feet"
-                                                   name="length_feet" placeholder="Length/Height">
+                                            <label for="length_feet">Enter Floor/wall's Length/Height</label>
+                                            <input type="number" class="form-control" id="length_feet" name="length_feet" placeholder="Length/Height">
                                         </div>
                                         <div class="form-group">
                                             <label for="tiles_size">Tiles Size</label>
-                                            <input type="hidden" value="" id="tileWidth">
-                                            <input type="hidden" value="" id="tileHeight">
-                                            <input type="text" class="form-control" id="tiles_size"
-                                            name="tiles_size" readonly="readonly">
+                                            <input type="hidden" value="" id="sizes" name="sizes">
+                                            <input type="text" class="form-control" id="tiles_size" name="tiles_size" readonly="readonly">
                                         </div>
                                         <div class="form-group">
-                                            <label for="wast_per">Wastage in Percentage
-
-                                            </label>
-                                            <input type="number" class="form-control" id="wast_per" name="length_feet"
-                                                   placeholder="Percentage">
+                                            <label for="wast_per">Wastage in Percentage</label>
+                                            <input type="number" class="form-control" id="wast_per" name="length_feet" placeholder="Percentage">
                                         </div>
 
                                     </div>
@@ -219,30 +219,22 @@
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <div class="row">
                                     <div class="col-sm-12 col-xs-12 result-main">
-                                        <div id="result" class="col-12 result_clas">
-                                        </div>
-
+                                        <div id="result" class="col-12 result_clas"></div>
                                         <div class="form-label" id="area_covered_meter"></div>
-
                                         <div class="form-label" id="area_covered_feet"></div>
-
-
                                         <div class="form-label" id="required_tiles"></div>
-
                                         <div class="form-label" id="required_box"></div>
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <div class="btn-div d-flex flex-wrap ">
-                                    <!-- <button class="btn modify-btn tile-cal-btn" id="calculate_btn">Calculate</button>
-                                    <button class="btn modify-btn ml-3 tile-cal-btn ml-10" id="reset_btn" >Reset</button> -->
-                                    <a href="#" id="calculate_btn" class="btn modify-btn tile-cal-btn">Calculate</a>
-                                    <a href="#" id="reset_btn" class="btn modify-btn ml-3 tile-cal-btn ml-10 reset_btn">Reset</a>
+                                <div class="btn-div d-flex flex-wrap">
+                                    <input type="hidden" value="" id="calc_tiles_par_carton" name="calc_tiles_par_carton">
+                                    <input type="hidden" value="" id="calc_tile_id" name="calc_tile_id">
+                                    <a href="javascript:void(0);" id="calculate_btn" class="btn modify-btn tile-cal-btn">Calculate</a>
+                                    <a href="javascript:void(0);" id="reset_btn" class="btn modify-btn ml-3 tile-cal-btn ml-10 reset_btn">Reset</a>
                                 </div>
                             </div>
                         </div>
