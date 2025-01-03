@@ -18,7 +18,9 @@
         </label>
 </div>
 
+
 <div id="bottomPanelMenu">
+
     <button id="bottomMenuRoomSelect" class="bottom-menu-text" title="@lang('Select Room')" onclick="window.$('#dialogRoomSelect').modal('show');">
         @lang('Select Room')
     </button>
