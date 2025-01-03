@@ -60,14 +60,18 @@
                                         <p>Wastage: 10%</p>
                                         <p>Number of Box Required: 10</p>
                                         <p>Tiles in 1 Box: 2</p>
-                                        <button type="button" class="tile-cal-link" id="tile_cal" data-toggle="modal"
-                                                data-target="#tilecal">Open Tiles Calculator
-                                        </button>
+                                        @if( isset($pincode) )
+                                            <button type="button" class="tile-cal-link" id="tile_cal" data-toggle="modal"
+                                                    data-target="#tilecal">Open Tiles Calculator
+                                            </button>
+                                        @endif
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper"
                                          data-price-tile-id="{{$tile_detail->id}}">
-                                        <button id="update_price_btn" data-toggle="modal" data-target="#updateprice"
-                                           data-tile-id="{{$tile_detail->id}}">
+                                        @if( isset($pincode) )
+                                            <button id="update_price_btn" data-toggle="modal" data-target="#updateprice"
+                                               data-tile-id="{{$tile_detail->id}}">
+                                        @endif
                                             <?php $getPrice = Helper::getTilePrice($tile_detail->id); ?>
                                             <input type="hidden" value="{{( $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">
                                             <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl"
@@ -78,9 +82,10 @@
                                                     Rs. <span class="price-update">{{$getPrice}}</span>/sq.ft
                                                 @endif
                                             </h5>
-</button>
-                                        <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}">Update Price
-                                        </button>
+</button>                               @if( isset($pincode) )
+                                            <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}">Update Price
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
