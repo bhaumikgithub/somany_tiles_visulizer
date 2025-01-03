@@ -1,4 +1,27 @@
 // return '<div class="tile-list-text">\n                <p class="-caption">' + this.name + '</p>\n                ' + this.getExtraOptionsText().replace('product code: ', '') + '\n                ' + size.replace('Size: ', '') + ' ' + shape + ' ' + finish + ' ' + rotoPrintSet + '\n                ' + this.getPriceText() + ' ' + url + ' ' + usedColors + '\n            </div>';
+// set canvas height
+function AdjustCanvasWidthHeight(){
+  var windowWidth = $(window).width();
+  var windowHeight = $(window).height();
+  var newWidth = windowHeight * 1.78;
+  var newLeft = Math.round((windowWidth - newWidth) / 2);
+
+  $("#roomCanvas").height(windowHeight);
+  $("#roomCanvas").width(newWidth);
+  $("#container").css({left: newLeft });
+}
+function updateDivWidth() {
+  var canvasWidth = $("#roomCanvas").width();
+  $(".detail-section").width(canvasWidth);
+}
+$(window).on('load', function() {
+  AdjustCanvasWidthHeight();
+  updateDivWidth();
+});
+$(window).on('resize', function() {
+  AdjustCanvasWidthHeight();
+  updateDivWidth();
+});
 
 
 $('#grout-predefined-color .-btn').on('click', function () {

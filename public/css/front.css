@@ -973,13 +973,15 @@ border-radius: 20px;
   .detail-section {
     position: fixed;
     bottom: 8%;
-    left: 7%;
-    width: 86%;
+    left: 50%;  /* Center horizontally by setting left to 50% */
+    bottom: 10%;  
+    width: 100%;
     z-index: 3;
+    transform: translateX(-50%);
 }
 .cmn-room-btn{
 
-    background:#D6D0C8;
+    background:#D6D0C880;
     border:1px solid #3F3F46;
     padding:10px;
     border-radius: 20px;
@@ -1020,11 +1022,14 @@ border-radius: 20px;
 .share-btn-img img{
     width: 22px;
 }
+.back-con-div-wrap{
+    width:50%;
+}
 
 .share-div {
     border: 1px solid  #3F3F46;
-    background: #D6D0C8;
-    backdrop-filter: blur(45.79999923706055px);
+    background: #D6D0C880;
+    
     color: #3F3F46;
     display: flex;
     padding: 16px;

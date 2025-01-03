@@ -101,5 +101,20 @@
 
     <script src="/js/room/add_to_pdf_room.js"></script>
     <script src="/js/room/custom.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        
+       $(window).resize(function() {
+      var windowWidth = $(window).width();
+      var windowHeight = $(window).height();
+      var newWidth = windowHeight * 1.78;
+      var newLeft = Math.round((windowWidth-newWidth)/2);
+      $("#roomCanvas").height(windowHeight);
+      $("#roomCanvas").width(newWidth);
+      $("#container").css({left:newLeft });
+      });
+      });
+        
+    </script>
 </body>
 </html>

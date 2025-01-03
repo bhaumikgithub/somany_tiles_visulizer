@@ -26,12 +26,16 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-8 col-sm-8 col-xs-5">
+                            <div class="col-md-12 col-xs-12">
+                                <div class="back-cn-main d-flex flex-wrap w-100">
+                            <div class="back-con-div-wrap ">
                             <button class="cmn-room-btn back-btn d-flex flex-wrap align-items-center" > <img src="/img/arrow-back.png" alt="arrow-back" class="img-responsive"> <span class="btn-text-set">Back </span> </button>
                             </div>
-                            <div class="col-md-4 col-sm-4 col-xs-7 text-right cn-btn-set d-flex flex-wrap justify-content-end">
+                            <div class="back-con-div-wrap d-flex flex-wrap justify-content-end">
                             <button class="cmn-room-btn cn-btn d-flex flex-wrap align-items-center" data-toggle="modal" data-target="#continue-modal" > <div class="cn-img-set"> <img src="/img/arrow-cn.png" alt="arrow-continue" class="img-responsive"> </div> <span class="btn-text-set">continue </span> </button>
                             </div>
+                           </div>
+                           </div>
                         </div>
                     </div>
 </div>
@@ -66,8 +70,8 @@
                     <div class="col-md-12 col-xs-12">
                         <label class="mb-15">Would you like to add more Selection?</label>
                         <div class="d-flex flex-wrap align-items-center">
-                        <a class="cmn-room-btn  d-flex  align-items-center yes-no-btn mr-15" href="#"><img src="/img/yes.png" alt="yes" class="img-responsive"> <span class="btn-text-set">Yes </span></a>
-                        <a class="cmn-room-btn  d-flex  align-items-center yes-no-btn" data-dismiss="modal"><img src="/img/no.png" alt="no" class="img-responsive"> <span class="btn-text-set">No </span></a>
+                        <a class="cmn-room-btn  d-flex  align-items-center yes-no-btn mr-15" data-dismiss="modal"><img src="/img/yes.png" alt="yes" class="img-responsive"> <span class="btn-text-set">Yes </span></a>
+                        <a class="cmn-room-btn  d-flex  align-items-center yes-no-btn" href="#"><img src="/img/no.png" alt="no" class="img-responsive"> <span class="btn-text-set">No </span></a>
 
                         </div>
                     </div>
