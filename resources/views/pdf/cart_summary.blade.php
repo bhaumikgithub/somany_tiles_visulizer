@@ -9,11 +9,6 @@
                 <div class="logo d-flex flex-column">
                     <img src="{{asset('img/somany-logo-new.jpg')}}" alt="Somany Logo">
                 </div>
-                <div class="intro d-flex flex-column">
-                    <p>Your space reflects your personality; make it impressive. We bring to you an exclusive selection
-                        of tiles that are engineered to perfection. Explore designs that make every space memorable.
-                    </p>
-                </div>
             </div>
         </div>
 
@@ -22,14 +17,17 @@
             <div class="col-md-9 col-sm-12 col-xs-12">
                 <h3 class="product-title font-bold">Your Product Selection</h3>
                 <p>Date: <span>{{\Carbon\Carbon::now()->format('d-m-Y')}}</span></p>
-                <p>Name: <span class="font-bold">customer name</span></p>
-                <p>Number: <span class="font-bold">customer number</span></p>
-                <p>Here are the products you’ve selected from our collection. Visit more on <a class="cmn_link"
-                                                                                               href="https://www.somanyceramics.com/">www.somanyceramics.com/</a>
+{{--                <p>Name: <span class="font-bold">customer name</span></p>--}}
+{{--                <p>Number: <span class="font-bold">customer number</span></p>--}}
+                @if( isset($pincode) )
+                    <p>Pincode: <span>{{$pincode}}</span></p>
+                @endif
+                <p>Here are the products you’ve selected from our collection. Visit more on
+                    <a class="cmn_link" target="_blank" href="https://www.somanyceramics.com/">www.somanyceramics.com/</a>
                 </p>
             </div>
             <div class="col-md-3 col-sm-12 col-xs-12">
-                <button class="btn btn-danger modify-btn" onclick="window.location.href='{{url('/')}}';">Add More or
+                <button class="btn btn-danger modify-btn" onclick="window.location.href='{{url('/room2d/'.$allProduct[0]->room_id)}}';">Add More or
                     Modify Selection
                 </button>
             </div>

@@ -146,7 +146,9 @@ class AddToPdfRoomsController extends Controller
     {
         $getCartId = Cart::where('random_key',$randomKey)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
-        return view('pdf.cart_summary',compact('allProduct','randomKey'));
+        // Retrieve the pincode from the session
+        $pincode = session('pincode', null); // Default to null if not set
+        return view('pdf.cart_summary',compact('allProduct','randomKey','pincode'));
     }
 
     public function downlaodPdf(Request $request): \Illuminate\Http\Response
