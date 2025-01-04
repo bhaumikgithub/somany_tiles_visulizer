@@ -6,10 +6,10 @@
     <canvas id="roomCanvas" class="room-canvas"></canvas>
     <div class="detail-section">
                     <div class="row">
-                        <div class="col-md-2 col-sm-2 col-xs-12">
-                       </div>
-                        <div class="col-md-10 col-sm-10 col-xs-12">
-                            <div style="float:right;">
+                        <div class="col-md-12 col-xs-12">
+                       
+                       <div class="back-cn-main d-flex flex-wrap w-100">
+                            <div class="share_btn_wrap">
                                 <button class="share-btn-img cmn-room-btn">
                                 <img src="/img/share.png" alt="share-button" class="img-responsive">
                                 </button>
@@ -23,7 +23,8 @@
                                 </div>
                             </div>
                         </div>
-                        </div>
+                    </div>
+                    </div>
 
                         <div class="row">
                             <div class="col-md-12 col-xs-12">
@@ -58,7 +59,7 @@
 
  <!-- contine modal start -->
  <div class="modal fade" id="continue-modal" role="dialog" data-keyboard="false" data-backdrop="static">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header add-sec-header">
