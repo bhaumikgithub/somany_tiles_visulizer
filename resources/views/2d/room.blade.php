@@ -8,7 +8,7 @@
                     <div class="row">
                         <div class="col-md-12 col-xs-12">
                        
-                       <div class="back-cn-main d-flex flex-wrap w-100">
+                       <div class="back-cn-main d-flex flex-wrap justify-content-end">
                             <div class="share_btn_wrap">
                                 <button class="share-btn-img cmn-room-btn">
                                 <img src="/img/share.png" alt="share-button" class="img-responsive">
