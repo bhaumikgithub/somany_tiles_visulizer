@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    <div class="container pr-0 mt-2 mobile-div" style="padding-right: 0;">
+    <div class="container pr-0 mt-2 mobile-div">
         <div class="">
             <div class=" mobile-index-main">
                 <a href="{{url('/listing/livingroom')}}">
