@@ -87,7 +87,12 @@
     <!-- Scripts -->
     <script src="/js/app.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
+    @if (config('app.js_as_module'))
+        <script type="module" src="/js/src/2d/interior2d.js"></script>
+    @else
+        <script src="/js/room/2d.min.js"></script>
 
+    @endif
     <script src="/modules/color-picker/color-picker.min.js"></script>
 
     @if (config('app.js_pdf_lib') == 'jsPDF' || config('app.tiles_designer'))

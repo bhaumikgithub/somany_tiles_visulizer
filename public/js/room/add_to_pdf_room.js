@@ -30,6 +30,8 @@ function addToPDF(){
                 $('#addToCartInfoPanel').modal('show');
                 $('#addToCartInfoPanel #cartInfoTilesList').html(response.body);
                 $("body").css('overflow', "hidden");
+                // Update the href attribute of the link in the modal
+                $('#continue-modal a#cart_url').attr('href', data.url);
             },
             error: function (xhr, status, error) {
                 alert('Failed to stored!');
@@ -385,4 +387,132 @@ function validationCheck(){
         alert(errorMessage);
         return false;
     }
+}
+
+function canvasImage() {
+
+    let canvas = document.getElementById('roomCanvas');
+
+    let imageCanvas = document.createElement('canvas');
+
+    imageCanvas.width = canvas.width;
+
+    imageCanvas.height = canvas.height;
+
+
+
+    var imageCanvasContext = imageCanvas.getContext('2d');
+
+    imageCanvasContext.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+
+
+
+    var companyLogo = document.getElementById('companyLogo');
+
+    imageCanvasContext.drawImage(companyLogo, 20, 20, companyLogo.clientWidth, companyLogo.clientHeight);
+
+
+
+    if (imageCanvas.msToBlob) {
+
+        // for IE
+
+        var blob = imageCanvas.msToBlob();
+
+        window.navigator.msSaveBlob(blob, document.title + '.png');
+
+    } else {
+
+        var imgDataUrl = imageCanvas.toDataURL('image/jpeg');
+
+        var link = document.createElement('a');
+
+        if (typeof link.download === 'string') {
+
+            document.body.appendChild(link);
+
+            link.href = changeDpiDataUrl(imgDataUrl, 300);
+
+            link.download = document.title + '.jpg';
+
+            link.click();
+
+            document.body.removeChild(link);
+
+        }
+
+    }
+
+}
+
+var JPEG = 'image/jpeg';
+
+
+
+function changeDpiOnArray(dataArray, dpi, format) {
+
+    if (format === JPEG) {
+
+        dataArray[13] = 1; // 1 pixel per inch or 2 pixel per cm
+
+        dataArray[14] = dpi >> 8; // dpiX high byte
+
+        dataArray[15] = dpi & 0xff; // dpiX low byte
+
+        dataArray[16] = dpi >> 8; // dpiY high byte
+
+        dataArray[17] = dpi & 0xff; // dpiY low byte
+
+        return dataArray;
+
+    }
+
+}
+
+
+
+function changeDpiDataUrl(base64Image, dpi) {
+
+    var dataSplitted = base64Image.split(',');
+
+    var format = dataSplitted[0];
+
+
+
+    if (format.indexOf(JPEG) !== -1) {
+
+        var type = JPEG;
+
+        var headerLength = 18 / 3 * 4;
+
+        var body = dataSplitted[1];
+
+
+
+        var stringHeader = body.substring(0, headerLength);
+
+        var restOfData = body.substring(headerLength);
+
+        var headerBytes = atob(stringHeader);
+
+        var dataArray = new Uint8Array(headerBytes.length);
+
+        for (var i = 0; i < dataArray.length; i += 1) {
+
+            dataArray[i] = headerBytes.charCodeAt(i);
+
+        }
+
+        var finalArray = changeDpiOnArray(dataArray, dpi, type);
+
+        var base64Header = btoa(String.fromCharCode.apply(String, _toConsumableArray(finalArray)));
+
+        return [format, ',', base64Header, restOfData].join('');
+
+    }
+
+
+
+    return base64Image;
+
 }
