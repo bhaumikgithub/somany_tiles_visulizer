@@ -129,15 +129,15 @@
 
     <div id="topPanelFilter" class="top-panel-box top-panel-option-box top-panel-box-overflow-y"></div>
 
-    <div class="top-panel-box dropdown-tiles-sort" style="display: none;">
-        <span class="top-panel-label">@lang('Sort tiles'):</span>
-        <select id="topPanelTilesSort" name="topPanelTilesSort">
-            <option value="a-z">A-Z</option>
-            <option value="z-a">Z-A</option>
-            <option value="newest first">@lang('Newest first')</option>
-            <option value="oldest first">@lang('Oldest first')</option>
-        </select>
-    </div>
+{{--    <div class="top-panel-box dropdown-tiles-sort" style="display: none;">--}}
+{{--        <span class="top-panel-label">@lang('Sort tiles'):</span>--}}
+{{--        <select id="topPanelTilesSort" name="topPanelTilesSort">--}}
+{{--            <option value="a-z">A-Z</option>--}}
+{{--            <option value="z-a">Z-A</option>--}}
+{{--            <option value="newest first">@lang('Newest first')</option>--}}
+{{--            <option value="oldest first">@lang('Oldest first')</option>--}}
+{{--        </select>--}}
+{{--    </div>--}}
 
     <div id="topPanelTilesListBox" class="top-panel-box tiles-list">
         <div id="loadTilesAnimationContainer">
