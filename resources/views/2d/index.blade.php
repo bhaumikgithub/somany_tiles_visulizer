@@ -1,6 +1,6 @@
 @extends('layouts.front')
 @section('content')
-    <div class="container-fluid mt-2 desktop-div" style="padding-right: 2px;">
+    <div class="container-fluid mt-2 desktop-div" style="padding-right: 2px;display: none;">
         <div class="grow hover_1 first_width hover_2">
             <a href="{{url('/listing/livingroom')}}">
                 <div class="image1" style="writing-mode: vertical-rl;">

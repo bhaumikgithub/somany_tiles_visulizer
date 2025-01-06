@@ -6,6 +6,7 @@ window.onload = function() {
         .then(data => {
             if (!data.pincode_saved) {
                 $('#pincode').modal('show');
+                $('.desktop-div').css('display','block');
             }
         });
 
