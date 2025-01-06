@@ -63,12 +63,12 @@
                                             {{--                                            <p>Width: <span class="width_feet"></span> ft</p>--}}
                                             {{--                                            <p>Height: <span class="height_feet"></span> ft</p>--}}
                                             <p>Wastage: <span class="tiles_wastage"></span> %</p>
+                                            <p>Tiles Needed: <span class="tiles_needed"></span></p>
                                         </div>
                                             <?php $tiles_par_box = Helper::getTilesParCarton($tile_detail->id);?>
                                         <input type="hidden" value="{{$tiles_par_box}}" id="tiles_par_carton">
                                         @if( $tiles_par_box !== NULL )
                                             <div class="tiles_carton_wrapper" style="display: none;">
-                                                <p>Tiles Needed: <span class="tiles_needed"></span></p>
                                                 <p>Number of Box Required: <span class="require_box"></span></p>
                                             </div>
                                             <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
@@ -79,26 +79,24 @@
                                             </button>
                                         @endif
                                     </div>
-                                    <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper"
-                                         data-price-tile-id="{{$tile_detail->id}}">
+                                    <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper" data-price-tile-id="{{$tile_detail->id}}">
                                         @if( isset($pincode) )
-                                            <button id="update_price_btn" data-toggle="modal" data-target="#updateprice"
-                                               data-tile-id="{{$tile_detail->id}}">
+                                            <button id="update_price_btn" data-toggle="modal" data-target="#updateprice" data-tile-id="{{$tile_detail->id}}">
                                         @endif
-                                            <?php $getPrice = Helper::getTilePrice($tile_detail->id); ?>
-                                            <input type="hidden" value="{{( $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">
-                                            <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl" id="{{$index . '_' . $loop->index . '_'. 'price'}}">
-                                                @if($getPrice === NULL )
-                                                    Price not given
-                                                @else
-                                                    Rs. <span class="price-update">{{$getPrice}}</span>/sq.ft
-                                                @endif
-                                            </h5>
+                                             <?php $getPrice = Helper::getTilePrice($tile_detail->id); ?>
+                                                <input type="hidden" value="{{( $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">
+                                                <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl" id="{{$index . '_' . $loop->index . '_'. 'price'}}">
+                                                    @if($getPrice === NULL )
+                                                        Price not given
+                                                    @else
+                                                        Rs. <span class="price-update">{{$getPrice}}</span>/sq.ft
+                                                    @endif
+                                                </h5>
                                             </button>
                                             @if( isset($pincode) )
                                                 <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}">Update Price
-                                            </button>
-                                        @endif
+                                                </button>
+                                            @endif
                                     </div>
                                 </div>
                             </div>
@@ -226,7 +224,7 @@
                                         <div class="form-label" id="area_covered_meter"></div>
                                         <div class="form-label" id="area_covered_feet"></div>
                                         <div class="form-label" id="required_tiles"></div>
-                                        <div class="form-label" id="required_box"></div>
+                                        <div class="form-label" id="required_box" style="display: none;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -236,6 +234,7 @@
                                 <div class="btn-div d-flex flex-wrap">
                                     <input type="hidden" value="" id="calc_tiles_par_carton" name="calc_tiles_par_carton">
                                     <input type="hidden" value="" id="calc_tile_id" name="calc_tile_id">
+                                    <input type="hidden" value="" id="calc_cart_item_id" name="calc_cart_item_id">
                                     <a href="javascript:void(0);" id="calculate_btn" class="btn modify-btn tile-cal-btn">Calculate</a>
                                     <a href="javascript:void(0);" id="reset_btn" class="btn modify-btn ml-3 tile-cal-btn ml-10 reset_btn">Reset</a>
                                 </div>
@@ -279,6 +278,7 @@
                             <div class="col-xs-12">
                                 <div class="btn-div d-flex flex-wrap ">
                                     <input type="hidden" id="tile_id" name="tile_id">
+                                    <input type="hidden" id="cart_item_id" name="cart_item_id">
                                     <button type="button" class="btn btn-danger modify-btn tile-cal-btn mt-0"
                                             id="submit_btn">Submit
                                     </button>

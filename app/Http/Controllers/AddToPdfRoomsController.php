@@ -188,11 +188,22 @@ class AddToPdfRoomsController extends Controller
             'price' => 'required|numeric|min:0',
         ]);
 
+        $cartItemId = $request->input('cart_item_id');
+        $tileId = $request->input('tile_id');
+        $newPrice = $request->input('price');
+
+
         $tile = Tile::findOrFail($request->tile_id);
         $tile->price = $validated['price'];
         $tile->save();
 
         // Return success response
         return response()->json(['success' => true, 'price' => $tile->price]);
+    }
+
+    public function updateTileCalculation(Request $request): JsonResponse
+    {
+        $requestData = $request->except('_token');
+        dd(json_encode($requestData));
     }
 }

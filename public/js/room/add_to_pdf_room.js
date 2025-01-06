@@ -205,6 +205,7 @@ $("#price").on("input", function(evt) {
 $('#updateprice').on('show.bs.modal', function (event) {
     let button = $(event.relatedTarget); // Button that triggered the modal
     let tileId = button.data('tile-id'); // Extract tile ID
+    let cartItemId = button.data('cart-item-id'); // Extract tile ID
     let modal = $(this);
     $('#price').val(''); // Clear the input field
     const priceLabelText = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"]').find('.price_lbl').text();
@@ -216,6 +217,7 @@ $('#updateprice').on('show.bs.modal', function (event) {
         priceInput.val(priceLabelText1);
     }
     modal.find('#tile_id').val(tileId); // Set the tile ID in the modal input
+    modal.find('#cart_item_id').val(cartItemId);
 });
 
 $('#submit_btn').on('click', function(e) {
@@ -231,6 +233,7 @@ $('#submit_btn').on('click', function(e) {
 // Submit the form via AJAX
 $('.confirm_update').on('click', function() {
     const tileId = $(this).data('confirm-tile-id'); // Get the ID of the clicked tile
+    const cartItemId = $(this).data('confirm-cart-item-id'); // Get the ID of the clicked tile
     let price = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"] input#confirm_price').val();
     if (price === ""){
         alert("- Please enter Price\n");
@@ -267,6 +270,8 @@ $('.cartpanelclose').on('click', function(e) {
 
 // Open modal and populate the fields with data attributes
 $('#tilecal').on('show.bs.modal', function (event) {
+    clearForm();
+
     // Get the button that triggered the modal
     const button = $(event.relatedTarget);
 
@@ -281,6 +286,7 @@ $('#tilecal').on('show.bs.modal', function (event) {
 
     let tile_par_carton = $('#tile'+tile+' input#tiles_par_carton').val();
     $('#calc_tiles_par_carton').val(tile_par_carton);
+    $('#calc_cart_item_id').val($('#cart_item_id').val());
 });
 
 //Tiles calc
@@ -291,7 +297,6 @@ $("#calculate_btn").click(function () {
     }
 
     let tilesIn1Box = $('#calc_tiles_par_carton').val(); //pieces this should come from DB
-
     let tile_id = $('#calc_tile_id').val();
     let widthInFeet = $("#width_feet").val();
     let heightInFeet = $("#length_feet").val();
@@ -314,30 +319,60 @@ $("#calculate_btn").click(function () {
     let boxNeeded = Math.ceil(tilesNeeded/tilesIn1Box);
 
     $('div#tile' + tile_id + ' div.tiles_calculation_wrapper').css('display','block');
-    // $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.width_feet').text(widthInFeet);
-    // $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.height_feet').text(heightInFeet);
     $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.total_area_covered_meter').text(totalAreaSqMeter.toFixed(2));
     $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.total_area_covered_feet').text(totalArea.toFixed(2));
     $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.tiles_wastage').text(wastageOfTilesArea);
+    $('div#tile'+ tile_id + ' div.tiles_calculation_wrapper span.tiles_needed').text(tilesNeeded);
 
-    if( tilesIn1Box !== null ) {
-        $('div#tile' + tile_id + ' div.tiles_carton_wrapper').css('display','block');
-        $('div#tile' + tile_id + ' div.tiles_carton_wrapper span.tiles_needed').text(tilesNeeded);
+    if( tilesIn1Box !== "" ) {
         $('div#tile' + tile_id + ' div.tiles_carton_wrapper span.require_box').text(boxNeeded);
+        $('#required_box').show();
+        displayResult("#required_box","Required Boxes : <b>" + boxNeeded+"</b> <small>(1 box have "+tilesIn1Box+" Tiles)</small>");
     }
 
-    // displayResult("#area_covered_meter","Total Area covered : <b>" + totalAreaSqMeter.toFixed(2)+"</b> Sq. Meter");
-    // displayResult("#area_covered_feet","Total Area covered : <b>" + totalArea.toFixed(2)+"</b> Sq. Feet");
-    // displayResult("#required_tiles","Required Tiles : <b>" + tilesNeeded+"</b> Tiles");
-    // displayResult("#required_box","Required Boxes : <b>" + boxNeeded+"</b> <small>(1 box have "+tilesIn1Box+" Tiles)</small>");
-    $('#tilecal').modal('hide');
-    $('.modal-backdrop').remove();  // Remove the backdrop manually
-    $('body').removeClass('modal-open');  // Remove the 'modal-open' class from body
+    //Save data into db
+    $.ajax({
+        url: '/update-tile-calc', // URL to the controller method for updating the price
+        type: 'POST',
+        data: {
+            tile_id: tile_id,
+            totalAreaSqMeter: totalAreaSqMeter.toFixed(2),
+            totalArea: totalArea.toFixed(2),
+            wastage: wastageOfTilesArea,
+            tilesIn1Box:( tilesIn1Box !== null ) ? tilesIn1Box : 0,
+            tilesNeeded:tilesNeeded,
+            boxNeeded:boxNeeded,
+            _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
+        },
+        success: function(response) {
+
+        },
+        error: function(xhr) {
+            // When the response has errors, this block will be executed
+            let response = xhr.responseJSON;  // Get the JSON response
+            if (response.errors && response.errors.price) {
+                // Show the error message for 'price'
+                $('#price-error').text(response.errors.price[0]);  // Assuming you have a span or div with id="price-error"
+            }
+        }
+    });
+
+    displayResult("#area_covered_meter","Total Area covered : <b>" + totalAreaSqMeter.toFixed(2)+"</b> Sq. Meter");
+    displayResult("#area_covered_feet","Total Area covered : <b>" + totalArea.toFixed(2)+"</b> Sq. Feet");
+    displayResult("#required_tiles","Required Tiles : <b>" + tilesNeeded+"</b> Tiles");
+
+    // $('#tilecal').modal('hide');
+    // $('.modal-backdrop').remove();  // Remove the backdrop manually
+    // $('body').removeClass('modal-open');  // Remove the 'modal-open' class from body
 
 
 })
 
 $("#reset_btn").click(function(){
+    clearForm();
+});
+
+function clearForm() {
     $("#width_feet").val("");
     $("#length_feet").val("");
     $("#wast_per").val("");
@@ -346,7 +381,7 @@ $("#reset_btn").click(function(){
     displayResult("#area_covered_feet","");
     displayResult("#required_tiles","");
     displayResult("#required_box","");
-});
+}
 
 function getSizeOfTiles(p_sizeId,p_side){
     let sizeString = $(p_sizeId).val();
