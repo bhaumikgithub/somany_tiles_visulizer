@@ -1,6 +1,6 @@
 *{
     font-family: "Rethink Sans", sans-serif;
-    letter-spacing: 1px;
+    letter-spacing: 0px;
 }
 h1{
     font-size: 50px;
@@ -1243,3 +1243,8 @@ width: 18px;
     
     }
 
+
+.top-panel{
+    top: 10px !important;
+    max-height:calc(100% - 20px) !important;
+}
