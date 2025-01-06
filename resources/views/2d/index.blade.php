@@ -26,7 +26,7 @@
         </div>
 
         <div class="grow hover_2" >
-            <a href="#">
+            <a href="{{url('/listing/bathroom')}}">
                 <div class="image4" style="writing-mode: vertical-rl;">
                     <h1 style="text-orientation: mixed;padding: 60px 5px 5px 5px;">Bathroom</h1>
                 </div>
@@ -76,7 +76,7 @@
                 <h1 class="mobile_h1">Kitchen</h1>
             </div>
         </a>
-        <a href="#">
+        <a href="{{url('/listing/bathroom')}}">
             <div class="mobile_grow mobile_image4 mobile_hover_2 " >
                 <h1 class="mobile_h1">Bathroom</h1>
             </div>
