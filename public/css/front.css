@@ -678,7 +678,7 @@ background: transparent;
     line-height: 1.5;
     text-align: center;
     color: #000;
-    background-color: #ccc;
+    background-color: #eeeeef;
     border-color: #3F3F46;
     width: auto;
     height: auto;
@@ -691,8 +691,8 @@ background: transparent;
 }
 .top-panel-button:hover{
     
-    border-color: #fff;
-    background-color: #f8f9fa;
+    border-color: #3F3F46;
+    background-color: #eeeeef;
 
 }
 
