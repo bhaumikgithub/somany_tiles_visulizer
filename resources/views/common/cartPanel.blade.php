@@ -24,7 +24,7 @@
         <div class="col-md-8 col-xs-12 text-right xs-left">
         <a href="#" target="_blank" class="btn modify-btn xs-w-100 csp-btn"  onclick="window.location.href='{{@$url}}';">Continue to Summary Page</a>
         </div>  
-</div>     
+</div>
 
 
 
