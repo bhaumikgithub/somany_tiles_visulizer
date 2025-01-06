@@ -21,7 +21,7 @@
                                             <img src="/img/share.png" alt="share" class="img-responsive"> <span class="btn-text-set">share </span>
                                         </a>
                                     @endif
-                                    <button class="share-link d-flex flex-wrap align-items-center"onclick="canvasImage();"><img src="/img/download.png" alt="share" class="img-responsive"> <span class="btn-text-set">download </span></button>
+                                    <button class="share-link d-flex flex-wrap align-items-center"onclick="downloadImage();"><img src="/img/download.png" alt="share" class="img-responsive"> <span class="btn-text-set">download </span></button>
                                     <button class="share-link d-flex flex-wrap align-items-center" onclick="addToPDF();"><img src="/img/add_section.png" alt="add_section" class="img-responsive"> <span class="btn-text-set">Add to Selection </span></button>
                                     <button href=""  class="share-link d-flex flex-wrap align-items-center share-btn-close"><img src="/img/close.png" alt="close" class="img-responsive"></button>
                                 </div>
