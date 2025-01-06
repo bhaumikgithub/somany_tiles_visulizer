@@ -80,7 +80,7 @@
                                         </button>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper"
-                                         data-price-tile-id="{{$tile_detail->id}}">
+                                         data-price-tile-id="{{$tile_detail->id}}" data-cart-item-id="{{$item->id}}">
                                         <button id="update_price_btn" data-toggle="modal" data-target="#updateprice" data-tile-id="{{$tile_detail->id}}">
                                               <?php $getPrice = Helper::getTilePrice($tile_detail->id); ?>
                                                 <input type="hidden" value="{{( $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">
@@ -93,7 +93,7 @@
                                                 @endif
                                             </h5>
                                         </button>
-                                        <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}">Update Price
+                                        <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}" data-confirm-cart-item-id="{{$item->id}}">Update Price
                                         </button>
                                     </div>
                                 </div>
@@ -276,6 +276,7 @@
                             <div class="col-xs-12">
                                 <div class="btn-div d-flex flex-wrap ">
                                     <input type="hidden" id="tile_id" name="tile_id">
+                                    <input type="hidden" id="cart_item_id" name="cart_item_id">
                                     <button type="button" class="btn btn-danger modify-btn tile-cal-btn mt-0"
                                             id="submit_btn">Submit
                                     </button>

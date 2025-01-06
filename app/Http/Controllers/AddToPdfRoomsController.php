@@ -186,6 +186,11 @@ class AddToPdfRoomsController extends Controller
             'price' => 'required|numeric|min:0',
         ]);
 
+        $cartItemId = $request->input('cart_item_id');
+        $tileId = $request->input('tile_id');
+        $newPrice = $request->input('price');
+
+
         $tile = Tile::findOrFail($request->tile_id);
         $tile->price = $validated['price'];
         $tile->save();

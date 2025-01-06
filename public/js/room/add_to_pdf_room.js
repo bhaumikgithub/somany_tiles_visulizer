@@ -205,6 +205,7 @@ $("#price").on("input", function(evt) {
 $('#updateprice').on('show.bs.modal', function (event) {
     let button = $(event.relatedTarget); // Button that triggered the modal
     let tileId = button.data('tile-id'); // Extract tile ID
+    let cartItemId = button.data('cart-item-id'); // Extract tile ID
     let modal = $(this);
     $('#price').val(''); // Clear the input field
     const priceLabelText = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"]').find('.price_lbl').text();
@@ -216,6 +217,7 @@ $('#updateprice').on('show.bs.modal', function (event) {
         priceInput.val(priceLabelText1);
     }
     modal.find('#tile_id').val(tileId); // Set the tile ID in the modal input
+    modal.find('#cart_item_id').val(cartItemId);
 });
 
 $('#submit_btn').on('click', function(e) {
@@ -231,6 +233,7 @@ $('#submit_btn').on('click', function(e) {
 // Submit the form via AJAX
 $('.confirm_update').on('click', function() {
     const tileId = $(this).data('confirm-tile-id'); // Get the ID of the clicked tile
+    const cartItemId = $(this).data('confirm-cart-item-id'); // Get the ID of the clicked tile
     let price = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"] input#confirm_price').val();
     if (price === ""){
         alert("- Please enter Price\n");
