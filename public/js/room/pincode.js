@@ -6,6 +6,11 @@ window.onload = function() {
         .then(data => {
             if (!data.pincode_saved) {
                 $('#pincode').modal('show');
+                setTimeout(function() {
+                    $('.onLoadWrapper').css('display','block');
+                }, 3000);
+            } else {
+                $('.onLoadWrapper').css('display','block');
             }
         });
 
