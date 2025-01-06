@@ -270,6 +270,8 @@ $('.cartpanelclose').on('click', function(e) {
 
 // Open modal and populate the fields with data attributes
 $('#tilecal').on('show.bs.modal', function (event) {
+    clearForm();
+
     // Get the button that triggered the modal
     const button = $(event.relatedTarget);
 
@@ -368,6 +370,10 @@ $("#calculate_btn").click(function () {
 })
 
 $("#reset_btn").click(function(){
+    clearForm();
+});
+
+function clearForm() {
     $("#width_feet").val("");
     $("#length_feet").val("");
     $("#wast_per").val("");
@@ -376,7 +382,7 @@ $("#reset_btn").click(function(){
     displayResult("#area_covered_feet","");
     displayResult("#required_tiles","");
     displayResult("#required_box","");
-});
+}
 
 function getSizeOfTiles(p_sizeId,p_side){
     let sizeString = $(p_sizeId).val();
