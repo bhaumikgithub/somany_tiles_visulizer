@@ -29,7 +29,7 @@
                 </p>
             </div>
             <div class="col-md-3 col-sm-12 col-xs-12">
-                <button class="btn btn-danger modify-btn" onclick="window.location.href='{{url('/')}}';">Add More or
+                <button class="btn btn-danger modify-btn" onclick="window.location.href='{{url('/room2d/'.@$allProduct[0]->room_id)}}';">Add More or
                     Modify Selection
                 </button>
             </div>
