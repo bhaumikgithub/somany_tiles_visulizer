@@ -21,7 +21,7 @@
             
             <div id="topPanelSearchResult" style="display: none"></div>
            
-            <p class="ds-text">Displaying 3,123 of 3123</p>
+{{--            <p class="ds-text">Displaying 3,123 of 3123</p>--}}
 
             <div id="topPanelFilter" class="top-panel-box top-panel-option-box top-panel-box-overflow-y filter-top-panel" style="display: none;"></div>
            
