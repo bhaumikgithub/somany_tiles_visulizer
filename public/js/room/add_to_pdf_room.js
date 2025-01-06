@@ -419,7 +419,7 @@ function validationCheck(){
     }
 }
 
-function canvasImage() {
+function downloadImage() {
 
     let canvas = document.getElementById('roomCanvas');
 
