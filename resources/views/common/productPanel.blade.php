@@ -34,7 +34,7 @@
          <div class="col-md-12 col-xs-12">
                 <div class="d-flex flex-wrap w-100">
                
-                  <button id="btnProduct" class="top-panel-button top-panel-button-product">@lang('Product')</button>
+                  <button id="btnProduct" class="top-panel-button top-panel-button-product">@lang('Tiles')</button>
                   <button id="btnLayout" class="top-panel-button top-panel-button-product">@lang('Layout')</button>
                   <button id="btnGrout" class="top-panel-button top-panel-button-product">@lang('Grout')</button>
                 </div>
@@ -195,19 +195,19 @@
         </div>
     </div>
 
-    @if (!config('app.hide_top_panel_sort'))
-    <div class="row top-panel-box dropdown-tiles-sort top-panel-box-cmn-br mt-0 d-flex flex-wrap">
-    <div class="col-md-12">
-        <span class="top-panel-label rotate-font-title">@lang('Sort tiles'):</span>
-        <select id="topPanelTilesSort" name="topPanelTilesSort" class="tile-sort-select">
-            <option value="a-z">A-Z</option>
-            <option value="z-a">Z-A</option>
-            <option value="newest first">@lang('Newest first')</option>
-            <option value="oldest first">@lang('Oldest first')</option>
-        </select>
-    </div>
-    </div>
-    @endif
+{{--    @if (!config('app.hide_top_panel_sort'))--}}
+{{--    <div class="row top-panel-box dropdown-tiles-sort top-panel-box-cmn-br mt-0 d-flex flex-wrap">--}}
+{{--    <div class="col-md-12">--}}
+{{--        <span class="top-panel-label rotate-font-title">@lang('Sort tiles'):</span>--}}
+{{--        <select id="topPanelTilesSort" name="topPanelTilesSort" class="tile-sort-select">--}}
+{{--            <option value="a-z">A-Z</option>--}}
+{{--            <option value="z-a">Z-A</option>--}}
+{{--            <option value="newest first">@lang('Newest first')</option>--}}
+{{--            <option value="oldest first">@lang('Oldest first')</option>--}}
+{{--        </select>--}}
+{{--    </div>--}}
+{{--    </div>--}}
+{{--    @endif--}}
 
     <div id="topPanelTilesListBox" class="top-panel-box">
         <div id="loadTilesAnimationContainer">
