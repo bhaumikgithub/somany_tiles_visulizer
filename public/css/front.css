@@ -665,6 +665,7 @@ background: transparent;
 .top-panel-box-cmn-br{
     border-top:1px solid #cbc6c6;
     padding:15px 0px;
+    margin: 5px;
 }
 .top-panel-product{
     width: 450px;

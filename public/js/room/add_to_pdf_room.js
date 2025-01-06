@@ -318,16 +318,15 @@ $("#calculate_btn").click(function () {
     let boxNeeded = Math.ceil(tilesNeeded/tilesIn1Box);
 
     $('div#tile' + tile_id + ' div.tiles_calculation_wrapper').css('display','block');
-    // $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.width_feet').text(widthInFeet);
-    // $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.height_feet').text(heightInFeet);
     $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.total_area_covered_meter').text(totalAreaSqMeter.toFixed(2));
     $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.total_area_covered_feet').text(totalArea.toFixed(2));
     $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.tiles_wastage').text(wastageOfTilesArea);
+    $('div#tile'+ tile_id + ' div.tiles_calculation_wrapper span.tiles_needed').text(tilesNeeded);
 
-    if( tilesIn1Box !== null ) {
-        $('div#tile' + tile_id + ' div.tiles_carton_wrapper').css('display','block');
-        $('div#tile' + tile_id + ' div.tiles_carton_wrapper span.tiles_needed').text(tilesNeeded);
+    if( tilesIn1Box !== "" ) {
+        console.log("here");
         $('div#tile' + tile_id + ' div.tiles_carton_wrapper span.require_box').text(boxNeeded);
+        displayResult("#required_box","Required Boxes : <b>" + boxNeeded+"</b> <small>(1 box have "+tilesIn1Box+" Tiles)</small>");
     }
 
     //Save data into db
@@ -357,13 +356,13 @@ $("#calculate_btn").click(function () {
         }
     });
 
-    // displayResult("#area_covered_meter","Total Area covered : <b>" + totalAreaSqMeter.toFixed(2)+"</b> Sq. Meter");
-    // displayResult("#area_covered_feet","Total Area covered : <b>" + totalArea.toFixed(2)+"</b> Sq. Feet");
-    // displayResult("#required_tiles","Required Tiles : <b>" + tilesNeeded+"</b> Tiles");
-    // displayResult("#required_box","Required Boxes : <b>" + boxNeeded+"</b> <small>(1 box have "+tilesIn1Box+" Tiles)</small>");
-    $('#tilecal').modal('hide');
-    $('.modal-backdrop').remove();  // Remove the backdrop manually
-    $('body').removeClass('modal-open');  // Remove the 'modal-open' class from body
+    displayResult("#area_covered_meter","Total Area covered : <b>" + totalAreaSqMeter.toFixed(2)+"</b> Sq. Meter");
+    displayResult("#area_covered_feet","Total Area covered : <b>" + totalArea.toFixed(2)+"</b> Sq. Feet");
+    displayResult("#required_tiles","Required Tiles : <b>" + tilesNeeded+"</b> Tiles");
+
+    // $('#tilecal').modal('hide');
+    // $('.modal-backdrop').remove();  // Remove the backdrop manually
+    // $('body').removeClass('modal-open');  // Remove the 'modal-open' class from body
 
 
 })

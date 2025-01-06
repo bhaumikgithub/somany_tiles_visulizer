@@ -65,12 +65,12 @@
 {{--                                            <p>Width: <span class="width_feet"></span> ft</p>--}}
 {{--                                            <p>Height: <span class="height_feet"></span> ft</p>--}}
                                             <p>Wastage: <span class="tiles_wastage"></span> %</p>
+                                            <p>Tiles Needed: <span class="tiles_needed"></span></p>
                                         </div>
                                         <?php $tiles_par_box = Helper::getTilesParCarton($tile_detail->id);?>
                                         <input type="hidden" value="{{$tiles_par_box}}" id="tiles_par_carton">
                                         @if( $tiles_par_box !== NULL )
                                             <div class="tiles_carton_wrapper" style="display: none;">
-                                                <p>Tiles Needed: <span class="tiles_needed"></span></p>
                                                 <p>Number of Box Required: <span class="require_box"></span></p>
                                             </div>
                                             <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
@@ -222,7 +222,7 @@
                                         <div class="form-label" id="area_covered_meter"></div>
                                         <div class="form-label" id="area_covered_feet"></div>
                                         <div class="form-label" id="required_tiles"></div>
-                                        <div class="form-label" id="required_box"></div>
+                                        <div class="form-label" id="required_box" style="display: none;"></div>
                                     </div>
                                 </div>
                             </div>
