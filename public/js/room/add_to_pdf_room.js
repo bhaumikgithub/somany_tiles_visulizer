@@ -297,7 +297,6 @@ $("#calculate_btn").click(function () {
     }
 
     let tilesIn1Box = $('#calc_tiles_par_carton').val(); //pieces this should come from DB
-
     let tile_id = $('#calc_tile_id').val();
     let widthInFeet = $("#width_feet").val();
     let heightInFeet = $("#length_feet").val();
@@ -326,8 +325,8 @@ $("#calculate_btn").click(function () {
     $('div#tile'+ tile_id + ' div.tiles_calculation_wrapper span.tiles_needed').text(tilesNeeded);
 
     if( tilesIn1Box !== "" ) {
-        console.log("here");
         $('div#tile' + tile_id + ' div.tiles_carton_wrapper span.require_box').text(boxNeeded);
+        $('#required_box').show();
         displayResult("#required_box","Required Boxes : <b>" + boxNeeded+"</b> <small>(1 box have "+tilesIn1Box+" Tiles)</small>");
     }
 
