@@ -677,7 +677,7 @@ background: transparent;
     line-height: 1.5;
     text-align: center;
     color: #000;
-    background-color: #f8f9fa;
+    background-color: #ccc;
     border-color: #3F3F46;
     width: auto;
     height: auto;
@@ -699,8 +699,8 @@ background: transparent;
     
   
     color: #f8f9fa ;
-    background-color: #000;
-    border-color: #000;
+    background-color: #3F3F46;
+    border-color: #fff;
     width: auto;
     height: auto;
     
@@ -708,8 +708,8 @@ background: transparent;
 }
 
 .top-panel-button-active:hover{
-    border-color: #000;
-    background-color: #000;
+    border-color: #fff;
+    background-color: #3F3F46;
 }
 .mt-0{
     margin-top: 0px;
@@ -901,7 +901,7 @@ background: transparent;
 width:84px;
 height: 84px;
 border-radius: 20px;
-border:1px solid #000;
+border:1px solid #3F3F46;
 }
 .radio-surface-pattern p{
     font-size: 12px;
@@ -958,6 +958,7 @@ border:1px solid #000;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+      border :1px solid #eeeeef;
 
   }
   .panel_list .tile-list-text{
@@ -967,7 +968,7 @@ border:1px solid #000;
      width: max-content !important;
      height: max-content !important;
      line-height: unset !important;
-     border: 2px solid #9d9d9d;
+     /*border: 2px solid #9d9d9d;*/
      border-radius: 20px;
   }
   .panel_list  .tile-list-thumbnail-image-holder img{
@@ -1141,7 +1142,7 @@ width: 18px;
 .yes-no-btn{
     padding: 9px 12px !important;
     height: auto !important;
-    width: 100px;
+    /*width: 100px;*/
 }
 .mb-15{
     margin-bottom: 10px;

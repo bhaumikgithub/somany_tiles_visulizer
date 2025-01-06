@@ -34,7 +34,7 @@
          <div class="col-md-12 col-xs-12">
                 <div class="d-flex flex-wrap w-100">
                
-                  <button id="btnProduct" class="top-panel-button top-panel-button-product">@lang('Product')</button>
+                  <button id="btnProduct" class="top-panel-button top-panel-button-product">@lang('Tiles')</button>
                   <button id="btnLayout" class="top-panel-button top-panel-button-product">@lang('Layout')</button>
                   <button id="btnGrout" class="top-panel-button top-panel-button-product">@lang('Grout')</button>
                 </div>
