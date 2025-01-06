@@ -117,7 +117,7 @@ class AddToPdfRoomsController extends Controller
         $url = '/pdf-summary/'.$getCartId->random_key;
         return response()->json([
             'body' => view('common.cartPanel',compact('allProduct','count','url'))->render(),
-            'data' => ['product_info'=> $allProduct, 'all_selection' => $count],
+            'data' => ['product_info'=> $allProduct, 'all_selection' => $count,'url'=>$url],
             'success' => 'success']);
     }
 

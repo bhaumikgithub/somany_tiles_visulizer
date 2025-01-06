@@ -3,6 +3,10 @@
 body{
 	overflow-x: hidden !important;
 }
+.modal-dialog {
+    width: 600px;
+    margin: 21px auto 21px auto;
+}
 .pdf-summary-container p{
     margin: 0 0 10px !important;
 }
@@ -38,6 +42,8 @@ body{
 .details-card img {
    max-width: 100%;
     border-radius: 8px;
+	min-width: 100px;
+	min-height: 100px;
 }
 .details-card h5 {
     font-size: 16px;
@@ -225,6 +231,9 @@ body{
 		}
 		.xs-margin-top-20{
 			margin-top: 20px;
+		}
+		.modal-dialog {
+			width: 95%;
 		}
 		
 

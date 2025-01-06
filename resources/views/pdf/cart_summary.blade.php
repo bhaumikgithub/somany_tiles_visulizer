@@ -29,7 +29,7 @@
                 </p>
             </div>
             <div class="col-md-3 col-sm-12 col-xs-12">
-                <button class="btn btn-danger modify-btn" onclick="window.location.href='{{url('/')}}';">Add More or
+                <button class="btn btn-danger modify-btn" onclick="window.location.href='{{url('/room2d/'.@$allProduct[0]->room_id)}}';">Add More or
                     Modify Selection
                 </button>
             </div>
@@ -81,11 +81,10 @@
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper"
                                          data-price-tile-id="{{$tile_detail->id}}">
-                                        <button id="update_price_btn" data-toggle="modal" data-target="#updateprice"
-                                                data-tile-id="{{$tile_detail->id}}">
-                                            <?php $getPrice = Helper::getTilePrice($tile_detail->id); ?>
-                                            <input type="hidden" value="{{( $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">
-                                            <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl"
+                                        <button id="update_price_btn" data-toggle="modal" data-target="#updateprice" data-tile-id="{{$tile_detail->id}}">
+                                              <?php $getPrice = Helper::getTilePrice($tile_detail->id); ?>
+                                                <input type="hidden" value="{{( $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">
+                                                <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl"
                                                 id="{{$index . '_' . $loop->index . '_'. 'price'}}">
                                                 @if($getPrice === NULL )
                                                     Price not given
