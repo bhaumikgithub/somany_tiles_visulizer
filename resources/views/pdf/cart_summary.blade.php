@@ -59,14 +59,21 @@
                                     <div id="tile{{$tile_detail->id}}" class="col-md-3 col-sm-3 col-xs-12 col-pad-set xs-margin-set" data-weight="{{$tile_detail->width}}" data-height="{{$tile_detail->height}}">
                                         <input type="hidden" value="{{$tile_detail->width}}" id="tiles_width">
                                         <input type="hidden" value="{{$tile_detail->height}}" id="tiles_height">
-                                        <div class="tiles_calculation_wrapper" style="display: none;">
-                                            <p>Total Area: <span class="total_area_covered_meter"></span> Sq. Meter</p>
-                                            <p>Total Area: <span class="total_area_covered_feet"></span> Sq. Feet</p>
-{{--                                            <p>Width: <span class="width_feet"></span> ft</p>--}}
-{{--                                            <p>Height: <span class="height_feet"></span> ft</p>--}}
-                                            <p>Wastage: <span class="tiles_wastage"></span> %</p>
-                                            <p>Tiles Needed: <span class="tiles_needed"></span></p>
+
+                                        @if( isset($tile_detail->total_area_sq_meter) && $tile_detail->total_area_sq_meter !== null )
+                                            <div class="tiles_calculation_wrapper tiles_calculation_wrapper_from_db">
+                                                <input type="hidden" value="{{$tile_detail->width_in_feet}}" id="width_in_feet">
+                                                <input type="hidden" value="{{$tile_detail->height_in_feet}}" id="height_in_feet">
+                                                <input type="hidden" value="{{$tile_detail->wastage}}" id="tiles_wastage">
+                                        @else
+                                            <div class="tiles_calculation_wrapper" style="display: none;">
+                                        @endif
+                                            <p>Total Area: <span class="total_area_covered_meter">{{@$tile_detail->total_area_sq_meter}}</span> Sq. Meter</p>
+                                            <p>Total Area: <span class="total_area_covered_feet">{{@$tile_detail->total_area}}</span> Sq. Feet</p>
+                                            <p>Wastage: <span class="tiles_wastage">{{@$tile_detail->wastage}}</span> %</p>
+                                            <p>Tiles Needed: <span class="tiles_needed">{{@$tile_detail->tiles_needed}}</span></p>
                                         </div>
+
                                         <?php $tiles_par_box = Helper::getTilesParCarton($tile_detail->id);?>
                                         <input type="hidden" value="{{$tiles_par_box}}" id="tiles_par_carton">
                                         @if( $tiles_par_box !== NULL )
@@ -183,7 +190,7 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" id="closeTileCalcModal">&times;</button>
                     <h4 class="modal-title">Tiles Calculator
                     </h4>
                 </div>
@@ -229,6 +236,10 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="btn-div d-flex flex-wrap">
+                                    <input type="hidden" value="" id="calc_area_covered_meter" name="calc_area_covered_meter">
+                                    <input type="hidden" value="" id="calc_area_covered" name="calc_area_covered_meter">
+                                    <input type="hidden" value="" id="calc_wastage" name="calc_wastage">
+                                    <input type="hidden" value="" id="calc_tiles_needed" name="calc_tiles_needed">
                                     <input type="hidden" value="" id="calc_tiles_par_carton" name="calc_tiles_par_carton">
                                     <input type="hidden" value="" id="calc_tile_id" name="calc_tile_id">
                                     <input type="hidden" value="" id="calc_cart_item_id" name="calc_cart_item_id">

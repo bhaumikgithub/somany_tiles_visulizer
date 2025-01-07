@@ -304,16 +304,27 @@ $('#tilecal').on('show.bs.modal', function (event) {
 
     // Get the tile ID from the button's data attribute
     let tile = button.data('tile-id');
+    let cart_item_id = button.data('calculate-cart-item-id');
     let height = $('#tile'+tile+' input#tiles_height').val();
     let width = $('#tile'+tile+' input#tiles_width').val();
+
+    let wastage = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db input#tiles_wastage').val();
+    let width_in_feet = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db input#width_in_feet').val();
+    let height_in_feet = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db input#height_in_feet').val();
+
+
     $('#tiles_size').val(`${width} x ${height} mm`);
     // Set the modal content
     $('#sizes').val(`${width}x${height}`);
     $('#calc_tile_id').val(tile);
+    $("#wast_per").val(wastage);
+    $("#width_feet").val(width_in_feet);
+    $("#length_feet").val(height_in_feet);
+
 
     let tile_par_carton = $('#tile'+tile+' input#tiles_par_carton').val();
     $('#calc_tiles_par_carton').val(tile_par_carton);
-    $('#calc_cart_item_id').val($('#cart_item_id').val());
+    $('#calc_cart_item_id').val(cart_item_id);
 });
 
 //Tiles calc
@@ -325,7 +336,6 @@ $("#calculate_btn").click(function () {
 
     let tilesIn1Box = $('#calc_tiles_par_carton').val(); //pieces this should come from DB
     let tile_id = $('#calc_tile_id').val();
-    let cart_item_id = $('#calc_tile_id').val();
     let widthInFeet = $("#width_feet").val();
     let heightInFeet = $("#length_feet").val();
 
@@ -351,6 +361,10 @@ $("#calculate_btn").click(function () {
     $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.total_area_covered_feet').text(totalArea.toFixed(2));
     $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.tiles_wastage').text(wastageOfTilesArea);
     $('div#tile'+ tile_id + ' div.tiles_calculation_wrapper span.tiles_needed').text(tilesNeeded);
+    $('#calc_area_covered_meter').val(totalAreaSqMeter.toFixed(2));
+    $('#calc_area_covered').val(totalArea.toFixed(2));
+    $('#calc_wastage').val(wastage);
+    $('#calc_tiles_needed').val(tilesNeeded);
 
     if( tilesIn1Box !== "" ) {
         $('div#tile' + tile_id + ' div.tiles_carton_wrapper span.require_box').text(boxNeeded);
@@ -358,32 +372,6 @@ $("#calculate_btn").click(function () {
         displayResult("#required_box","Required Boxes : <b>" + boxNeeded+"</b> <small>(1 box have "+tilesIn1Box+" Tiles)</small>");
     }
 
-    //Save data into db
-    $.ajax({
-        url: '/update-tile-calc', // URL to the controller method for updating the price
-        type: 'POST',
-        data: {
-            tile_id: tile_id,
-            totalAreaSqMeter: totalAreaSqMeter.toFixed(2),
-            totalArea: totalArea.toFixed(2),
-            wastage: wastageOfTilesArea,
-            tilesIn1Box:( tilesIn1Box !== null ) ? tilesIn1Box : 0,
-            tilesNeeded:tilesNeeded,
-            boxNeeded:boxNeeded,
-            _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
-        },
-        success: function(response) {
-
-        },
-        error: function(xhr) {
-            // When the response has errors, this block will be executed
-            let response = xhr.responseJSON;  // Get the JSON response
-            if (response.errors && response.errors.price) {
-                // Show the error message for 'price'
-                $('#price-error').text(response.errors.price[0]);  // Assuming you have a span or div with id="price-error"
-            }
-        }
-    });
 
     displayResult("#area_covered_meter","Total Area covered : <b>" + totalAreaSqMeter.toFixed(2)+"</b> Sq. Meter");
     displayResult("#area_covered_feet","Total Area covered : <b>" + totalArea.toFixed(2)+"</b> Sq. Feet");
@@ -395,6 +383,54 @@ $("#calculate_btn").click(function () {
 
 
 })
+
+
+$('#closeTileCalcModal').click(function() {
+
+    let tilesIn1Box = $('#calc_tiles_par_carton').val(); //pieces this should come from DB
+    let tile_id = $('#calc_tile_id').val();
+    let cart_item_id = $('#calc_cart_item_id').val();
+    let widthInFeet = $("#width_feet").val();
+    let heightInFeet = $("#length_feet").val();
+    let totalAreaSqMeter = $('#calc_area_covered_meter').val();
+    let totalArea = $('#calc_area_covered').val();
+    let wastageOfTilesArea = $('#calc_wastage').val();
+    let tilesNeeded = $('#calc_tiles_needed').val();
+    let boxNeeded = $('div#tile' + tile_id + ' div.tiles_carton_wrapper span.require_box').text();
+
+    //Save data into db
+    $.ajax({
+        url: '/update-tile-calc', // URL to the controller method for updating the price
+        type: 'POST',
+        data: {
+            tile_id: tile_id,
+            cart_item_id:cart_item_id,
+            widthInFeet:widthInFeet,
+            heightInFeet:heightInFeet,
+            totalAreaSqMeter: totalAreaSqMeter,
+            totalArea: totalArea,
+            wastage: wastageOfTilesArea,
+            tilesIn1Box:( tilesIn1Box !== null ) ? tilesIn1Box : 0,
+            tilesNeeded:tilesNeeded,
+            boxNeeded:boxNeeded,
+            _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
+        },
+        success: function(response) {
+            $('div#tile' + tile_id + ' div.tiles_calculation_wrapper').css('display','block');
+        },
+        error: function(xhr) {
+            // When the response has errors, this block will be executed
+            let response = xhr.responseJSON;  // Get the JSON response
+            if (response.errors && response.errors.price) {
+                // Show the error message for 'price'
+                $('#price-error').text(response.errors.price[0]);  // Assuming you have a span or div with id="price-error"
+            }
+        }
+    });
+});
+
+
+
 
 $("#reset_btn").click(function(){
     clearForm();
