@@ -14,7 +14,7 @@
 
         <!-- Main Content -->
         <div class="row mt-20">
-            <div class="col-md-9 col-sm-12 col-xs-12">
+            <div class="col-md-12 col-sm-12 col-xs-12">
                 <h3 class="product-title font-bold">Your Product Selection</h3>
                 <p>Date: <span>{{\Carbon\Carbon::now()->format('d-m-Y')}}</span></p>
 {{--                <p>Name: <span class="font-bold">customer name</span></p>--}}
@@ -26,11 +26,11 @@
                     <a class="cmn_link" target="_blank" href="https://www.somanyceramics.com/">www.somanyceramics.com</a>
                 </p>
             </div>
-            <div class="col-md-3 col-sm-12 col-xs-12">
+            <!-- <div class="col-md-3 col-sm-12 col-xs-12" >
                 <button class="btn btn-danger modify-btn" onclick="window.location.href='{{url('/room2d/'.@$allProduct[0]->room_id)}}';">Add More or
                     Modify Selection
                 </button>
-            </div>
+            </div> -->
         </div>
         <div class="row">
             <div class="col-md-9 col-sm-12 col-xs-12">
