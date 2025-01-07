@@ -1046,6 +1046,23 @@ border:1px solid #3F3F46;
     height: 60px;
     width: 100px !important;
 }
+
+.cmn-back-btn{
+    padding:20px 12px 20px 20px;
+    height: 60px;
+    width: 100px !important;
+    background:#D6D0C880;
+    border:1px solid #3F3F46;
+    padding:10px;
+    border-radius: 20px;
+    color:#3F3F46 !important;
+    text-decoration: none !important;
+    cursor: pointer;
+    position: absolute;
+    bottom: 10%;
+    left:12px;
+
+}
 .cmn-room-btn.cn-btn{
     padding:20px 20px 20px 12px;
     height: 60px;
