@@ -1010,16 +1010,16 @@ border:1px solid #3F3F46;
   .panel_list .tile-list-text p:first-letter {
     text-transform: capitalize !important;
   }
-  .detail-section {
+  /* .detail-section {
     position: fixed;
     bottom: 8%;
-    left: 50%;  /* Center horizontally by setting left to 50% */
+    left: 50%;  
     bottom: 10%;  
     width: 100%;
     z-index: 3;
     transform: translateX(-50%);
     
-}
+} */
 .cmn-room-btn{
 
     background:#D6D0C880;
@@ -1045,6 +1045,10 @@ border:1px solid #3F3F46;
     padding:20px 12px 20px 20px;
     height: 60px;
     width: 100px !important;
+    z-index: 3;
+    position: fixed;
+    bottom: 10%;
+    margin-left: 15px;
 }
 
 .cmn-back-btn{
@@ -1066,6 +1070,10 @@ border:1px solid #3F3F46;
 .cmn-room-btn.cn-btn{
     padding:20px 20px 20px 12px;
     height: 60px;
+    z-index: 3;
+    position: fixed;
+    bottom: 10%;
+    
 }
 .btn-text-set{
     margin-left: 10px;
@@ -1274,8 +1282,14 @@ width: 18px;
     .cmn-room-btn.back-btn, .cmn-room-btn.cn-btn {
        
         padding: 5px 8px !important;
+        width: auto !important;
     }
-    
+    .cmn-room-btn.back-btn{
+        left:0px !important;
+    }
+    .cmn-room-btn.cn-btn{
+        right:0px !important;
+    }
     }
 
 
