@@ -94,13 +94,29 @@
                                         <p style="margin: 5px 0; font-size: 12px;">Sap Code: 12312321312</p>
                                     </td>
                                     <td style="width: 20%; border: 1px solid #000; padding: 10px;">
-                                        <p style="margin: 5px 0; font-size: 12px;">Width: {{$tile_detail->width}} ft</p>
-                                        <p style="margin: 5px 0; font-size: 12px;">Height: {{$tile_detail->height}} ft</p>
-                                        <p style="margin: 5px 0; font-size: 12px;">Wastage: 10%</p>
-                                        <p style="margin: 5px 0; font-size: 12px;">Number of Box Required: 10</p>
-                                        <p style="margin: 5px 0; font-size: 12px;">Tiles in 1 Box: 2</p>
+                                        @if( isset($tile_detail->total_area_sq_meter) )
+                                            <p style="margin: 5px 0; font-size: 12px;">Total Area: {{@$tile_detail->total_area_sq_meter}} ft </p>
+                                        @endif
+
+                                        @if( isset($tile_detail->total_area) )
+                                            <p style="margin: 5px 0; font-size: 12px;">Total Area: {{@$tile_detail->total_area}} ft </p>
+                                        @endif
+
+                                        @if( isset($tile_detail->wastage) )
+                                            <p style="margin: 5px 0; font-size: 12px;">Wastage: {{@$tile_detail->wastage}} % </p>
+                                        @endif
+
+                                        @if( isset($tile_detail->tiles_needed) )
+                                            <p style="margin: 5px 0; font-size: 12px;">Tiles Needed: {{@$tile_detail->tiles_needed}}</p>
+                                        @endif
+
+                                        <?php $tiles_par_box = Helper::getTilesParCarton($tile_detail->id);?>
+                                        @if( $tiles_par_box !== NULL )
+                                            <p style="margin: 5px 0; font-size: 12px;">Number of Box Required: {{@$tile_detail->box_needed}}</p>
+                                            <p style="margin: 5px 0; font-size: 12px;">Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
+                                        @endif
                                         <p style="margin: 5px 0; font-size: 12px; color: red;">
-                                            <?php $getPrice = Helper::getTilePrice($tile_detail->id); ?>
+                                             <?php $getPrice = Helper::getTilePrice($tile_detail->id,$item->id); ?>
                                             @if($getPrice === NULL )
                                                 Price not given
                                             @else
