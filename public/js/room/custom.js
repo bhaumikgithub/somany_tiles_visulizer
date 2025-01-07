@@ -32,15 +32,47 @@ function applyCanvasAdjustments() {
     }
   }
 }
-
+function setTopPanelHeight() {
+  const viewportHeight = $(window).height(); // Get viewport height using jQuery
+  $('.top-panel').css('height', viewportHeight - 20 + 'px'); // Set height dynamically
+}
 $(window).on('load', function() {
   applyCanvasAdjustments();
+  setTopPanelHeight();
 });
 
 $(window).on('resize', function() {
   applyCanvasAdjustments();
   $(".detail-section").css({ "margin-left": "0px" }); // Ensure consistent margin reset on resize
+  setTopPanelHeight();
 });
+
+$("#btnProduct").addClass("top-panel-button-active");
+
+$('#btnProduct').on('click', function () {
+  $('#topPanelTilesListBox').show();
+  $('#topPanelLayout').hide();
+  $('#topPanelGrout').hide();
+ 
+ 
+});
+$('#btnLayout').on('click', function () {
+  $('#topPanelLayout').show();
+  $('#topPanelTilesListBox').hide();
+  $('#topPanelGrout').hide();
+  $('.radio-surface-rotation').hide();
+
+  
+
+});
+$('#btnGrout').on('click', function () {
+  $('#topPanelGrout').show();
+  $('#topPanelTilesListBox').hide();
+  $('#topPanelLayout').hide();
+  $('.radio-surface-rotation').hide();
+
+});
+
 
 $('#grout-predefined-color .-btn').on('click', function () {
 
