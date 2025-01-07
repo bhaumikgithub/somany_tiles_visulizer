@@ -203,16 +203,17 @@ $("#price").on("input", function(evt) {
 
 // Open modal and populate the fields with data attributes
 $('#updateprice').on('show.bs.modal', function (event) {
+    $('body').addClass('modal-open');  // Remove the 'modal-open' class from body
     let button = $(event.relatedTarget); // Button that triggered the modal
     let tileId = button.data('tile-id'); // Extract tile ID
-    let cartItemId = button.data('cart-item-id'); // Extract tile ID
+    let cartItemId = button.data('price-update-cart-item-id'); // Extract tile ID
     let modal = $(this);
     $('#price').val(''); // Clear the input field
-    const priceLabelText = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"]').find('.price_lbl').text();
+    const priceLabelText = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"][data-cart-item-id="' + cartItemId + '"]').find('.price_lbl').text();
     const priceLabelText1 = priceLabelText.replace(/Rs\.|\/sq\.ft/g, '').trim();
     const priceInput = modal.find('input.set_price'); // Assuming there's an input field with class 'price_input'
-    if (priceLabelText.trim() == 'Price not given') {
-        priceInput.val(0);
+    if (priceLabelText.trim() === 'Price not given') {
+        priceInput.val();
     } else {
         priceInput.val(priceLabelText1);
     }
@@ -221,20 +222,45 @@ $('#updateprice').on('show.bs.modal', function (event) {
 });
 
 $('#submit_btn').on('click', function(e) {
+    e.preventDefault();
     let tileId = $('#tile_id').val();
+    let cartItemId = $('#cart_item_id').val();
     let price = $('#price').val();
-    $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"] .price_lbl').text(`Rs. ${price}/sq.ft`);
-    $('#updateprice').modal('hide');
-    $('.modal-backdrop').remove();  // Remove the backdrop manually
-    $('body').removeClass('modal-open');  // Remove the 'modal-open' class from body
-    $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"] input#confirm_price').val(price);
+    let priceError = $('#price-error');
+
+    // Clear any previous error message
+    priceError.text('');
+    if (price === "" || isNaN(price) || price <= 0) {
+        priceError.text('Please enter a valid price.');
+    } else{
+        $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"][data-cart-item-id="' + cartItemId + '"] .price_lbl').text(`Rs. ${price}/sq.ft`);
+        $('#updateprice').modal('hide');
+        // $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"][data-cart-item-id="' + cartItemId + '"] button.confirm_update').show();
+        $('.modal-backdrop').remove();
+        $('#price-error').text(''); // Clear any error messages
+        $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"][data-cart-item-id="' + cartItemId + '"] input#confirm_price').val(price);
+    }
+
+});
+
+// Handle dynamic validation on input field
+$('#price').on('input', function() {
+    let price = $(this).val().trim();
+    let priceError = $('#price-error');
+
+    // Clear the error message if input is valid
+    if (price !== "" && !isNaN(price) && price > 0) {
+        priceError.text('');
+    } else {
+        priceError.text('Please enter a valid price.');
+    }
 });
 
 // Submit the form via AJAX
 $('.confirm_update').on('click', function() {
     const tileId = $(this).data('confirm-tile-id'); // Get the ID of the clicked tile
     const cartItemId = $(this).data('confirm-cart-item-id'); // Get the ID of the clicked tile
-    let price = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"] input#confirm_price').val();
+    let price = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"][data-cart-item-id="' + cartItemId + '"] input#confirm_price').val();
     if (price === ""){
         alert("- Please enter Price\n");
     } else{
@@ -243,12 +269,13 @@ $('.confirm_update').on('click', function() {
             type: 'POST',
             data: {
                 tile_id: tileId,
+                cartItemId:cartItemId,
                 price: price,
                 _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
             },
             success: function(response) {
                 // On success, update the price in the table
-                let row = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"]');
+                let row = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"][data-cart-item-id="' + cartItemId + '"]');
                 row.find('.price-update').text(price); // Update price in the table cell
                 alert("Price Updated Successfully!")
             },
@@ -298,6 +325,7 @@ $("#calculate_btn").click(function () {
 
     let tilesIn1Box = $('#calc_tiles_par_carton').val(); //pieces this should come from DB
     let tile_id = $('#calc_tile_id').val();
+    let cart_item_id = $('#calc_tile_id').val();
     let widthInFeet = $("#width_feet").val();
     let heightInFeet = $("#length_feet").val();
 

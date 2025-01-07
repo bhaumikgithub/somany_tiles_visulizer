@@ -76,17 +76,16 @@
                                             <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
                                         @endif
                                         <button class="tile-cal-link" id="tile_cal" data-toggle="modal"
-                                                data-target="#tilecal" data-tile-id="{{$tile_detail->id}}">Open Tiles Calculator
+                                                data-target="#tilecal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}">Open Tiles Calculator
                                         </button>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper"
                                          data-price-tile-id="{{$tile_detail->id}}" data-cart-item-id="{{$item->id}}">
-                                        <button id="update_price_btn" data-toggle="modal" data-target="#updateprice" data-tile-id="{{$tile_detail->id}}">
-                                              <?php $getPrice = Helper::getTilePrice($tile_detail->id); ?>
-                                                <input type="hidden" value="{{( $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">
-                                                <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl"
-                                                id="{{$index . '_' . $loop->index . '_'. 'price'}}">
-                                                @if($getPrice === NULL )
+                                        <button id="update_price_btn" data-toggle="modal" data-target="#updateprice" data-tile-id="{{$tile_detail->id}}" data-price-update-cart-item-id="{{$item->id}}">
+                                              <?php $getPrice = Helper::getTilePrice($tile_detail->id,$item->id); ?>
+                                                <input type="hidden" value="{{( $getPrice === "" || $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">
+                                                <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl" id="{{$index . '_' . $loop->index . '_'. 'price'}}">
+                                                @if($getPrice === "" || $getPrice === NULL )
                                                     Price not given
                                                 @else
                                                     Rs. <span class="price-update">{{$getPrice}}</span>/sq.ft
@@ -287,7 +286,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div tabindex="-1">
 
 @endsection
 

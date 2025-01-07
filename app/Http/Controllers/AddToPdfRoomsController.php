@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -186,22 +187,43 @@ class AddToPdfRoomsController extends Controller
             'price' => 'required|numeric|min:0',
         ]);
 
-        $cartItemId = $request->input('cart_item_id');
+        $cartItemId = $request->input('cartItemId');
         $tileId = $request->input('tile_id');
         $newPrice = $request->input('price');
 
+        // Fetch the cart item
+        $cartItem = DB::table('cart_items')->where('id', $cartItemId)->first();
 
-        $tile = Tile::findOrFail($request->tile_id);
-        $tile->price = $validated['price'];
-        $tile->save();
+        if ($cartItem) {
+            // Decode the JSON data
+            $tilesData = json_decode($cartItem->tiles_json, true);
+
+            // Update the price for the specific tile
+            foreach ($tilesData as &$tile) {
+                if ($tile['id'] == $tileId) {
+                    $tile['price'] = $newPrice;
+                    break;
+                }
+            }
+
+            // Re-encode the JSON data
+            $updatedTilesData = json_encode($tilesData);
+
+            // Update the database
+            DB::table('cart_items')
+                ->where('id', $cartItemId)
+                ->update(['tiles_json' => $updatedTilesData]);
+
+            return response()->json(['success' => true, 'message' => 'Tile price updated successfully!' , 'price' => $newPrice]);
+        }
 
         // Return success response
-        return response()->json(['success' => true, 'price' => $tile->price]);
+        return response()->json(['success' => false, 'message' => 'Cart item not found.']);
     }
 
     public function updateTileCalculation(Request $request): JsonResponse
     {
         $requestData = $request->except('_token');
-        dd(json_encode($requestData));
+        dd($requestData);
     }
 }
