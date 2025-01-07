@@ -43,6 +43,25 @@
         
     </div>
 
+    <div class="top-panel-box row radio-surface-rotation top-panel-box-cmn-br mt-0 d-flex flex-wrap">
+       
+       <div class="col-md-4">
+   <span class="top-panel-label rotate-font-title">@lang('Rotate'):</span>
+   </div>
+   <div class="col-md-8 text-right">
+   <input id="topPanelSurfaceRotation_0" type="radio" name="radioSurfaceRotation" value="0" checked="checked">
+       <label for="topPanelSurfaceRotation_0">0°</label>
+   <input id="topPanelSurfaceRotation_45" type="radio" name="radioSurfaceRotation" value="45">
+       <label id="topPanelSurfaceRotationLabel_45" for="topPanelSurfaceRotation_45">45°</label>
+   <input id="topPanelSurfaceRotation_90" type="radio" name="radioSurfaceRotation" value="90">
+       <label for="topPanelSurfaceRotation_90">90°</label>
+   <input id="topPanelSurfaceRotation_135" type="radio" name="radioSurfaceRotation" value="135">
+       <label id="topPanelSurfaceRotationLabel_135" for="topPanelSurfaceRotation_135">135°</label>
+   <input id="topPanelSurfaceRotation_180" type="radio" name="radioSurfaceRotation" value="180">
+       <label for="topPanelSurfaceRotation_180">180°</label>
+   </div>
+</div>
+
     <div id="topPanelLayout" class="top-panel-option-box top-panel-box-overflow-y" style="display: none;">
         @if ($view_name == '3d.room')
         <div class="top-panel-box">
@@ -127,7 +146,7 @@
         </div>
     </div>
 
-    <div id="topPanelGrout" class="top-panel-option-box" style="display: none;">
+    <div id="topPanelGrout" class="top-panel-option-box top-panel-box-overflow-y" style="display: none;">
         <div id="topPanelContentSurfaceTabGroutSizeBody" class="top-panel-box top-panel-box-cmn-br row">
             <div class="col-md-12">
                 <div class="row d-flex flex-wrap">
@@ -165,24 +184,7 @@
 
    
 
-    <div class="top-panel-box row radio-surface-rotation top-panel-box-cmn-br mt-0 d-flex flex-wrap">
-       
-            <div class="col-md-4">
-        <span class="top-panel-label rotate-font-title">@lang('Rotate'):</span>
-        </div>
-        <div class="col-md-8 text-right">
-        <input id="topPanelSurfaceRotation_0" type="radio" name="radioSurfaceRotation" value="0" checked="checked">
-            <label for="topPanelSurfaceRotation_0">0°</label>
-        <input id="topPanelSurfaceRotation_45" type="radio" name="radioSurfaceRotation" value="45">
-            <label id="topPanelSurfaceRotationLabel_45" for="topPanelSurfaceRotation_45">45°</label>
-        <input id="topPanelSurfaceRotation_90" type="radio" name="radioSurfaceRotation" value="90">
-            <label for="topPanelSurfaceRotation_90">90°</label>
-        <input id="topPanelSurfaceRotation_135" type="radio" name="radioSurfaceRotation" value="135">
-            <label id="topPanelSurfaceRotationLabel_135" for="topPanelSurfaceRotation_135">135°</label>
-        <input id="topPanelSurfaceRotation_180" type="radio" name="radioSurfaceRotation" value="180">
-            <label for="topPanelSurfaceRotation_180">180°</label>
-        </div>
-        </div>
+
     
 
     <div id="topPanelAccordionFilter" class="top-panel-box" style="display: none;">

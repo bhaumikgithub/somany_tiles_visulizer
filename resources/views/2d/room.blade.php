@@ -37,7 +37,7 @@
                             <a href="{{url('listing/'.@$room_type)}}" class="cmn-room-btn back-btn d-flex flex-wrap align-items-center" style="width: 125px;"> <img src="/img/arrow-back.png" alt="arrow-back" class="img-responsive"> <span class="btn-text-set">Back </span> </a>
                             </div>
                             <div class="back-con-div-wrap d-flex flex-wrap justify-content-end">
-                            <button class="cmn-room-btn cn-btn d-flex flex-wrap align-items-center" data-toggle="modal" data-target="#continue-modal" > <div class="cn-img-set"> <img src="/img/arrow-cn.png" alt="arrow-continue" class="img-responsive"> </div> <span class="btn-text-set">continue </span> </button>
+                            <button class="cmn-room-btn cn-btn d-flex flex-wrap align-items-center" data-toggle="modal" data-target="#continue-modal" ><img src="/img/arrow-cn.png" alt="arrow-continue" class="img-responsive"> <span class="btn-text-set">Continue </span> </button>
                             </div>
                            </div>
                            </div>

@@ -573,7 +573,7 @@ body{
 }
 
 .top-panel-product{
-    background-color: #eeeeef !important;
+    background-color: rgba(255,255,255,0.9) !important;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
     padding: 10px 5px;
@@ -597,7 +597,7 @@ body{
     height: 70px;
 width: 45px;
 margin-top: 35px;
-margin-left: -49px;
+margin-left: -51px;
 
 }
 
@@ -666,7 +666,7 @@ background: transparent;
 }
 
 .top-panel-box-cmn-br{
-    border-top:1px solid #cbc6c6;
+    border-top:1px solid #A3A3A3;
     padding:15px 0px;
     margin: 5px;
 }
@@ -692,7 +692,7 @@ background: transparent;
 .top-panel-button:hover{
     
     border-color: #3F3F46;
-    background-color: #eeeeef;
+    background-color: #ccc;
 
 }
 
@@ -709,8 +709,9 @@ background: transparent;
 }
 
 .top-panel-button-active:hover{
-    border-color: #fff;
-    background-color: #3F3F46;
+    border-color: #3F3F46;
+    background-color: #eeeeef;
+    color: #000;
 }
 .mt-0{
     margin-top: 0px;
@@ -899,16 +900,22 @@ background: transparent;
     border:1px solid #000;
 }
 .radio-surface-pattern .pattern-image-icon{
-width:84px;
-height: 84px;
+width:100px;
+height: 100px;
 border-radius: 20px;
 border:1px solid #3F3F46;
 }
 .radio-surface-pattern p{
     font-size: 12px;
 }
+.radio-surface-pattern label{
+    border: 1px solid transparent;
+}
 .radio-surface-pattern label:hover{
     background-color: transparent;
+    background-color: transparent;
+    border-radius: 20px;
+    border:1px solid #9d9d9d;
 }
 .radio-skew-size label{
     border:none !important;
@@ -939,7 +946,12 @@ border:1px solid #3F3F46;
     height: 50px;
     width: 22%;
     border-radius: 20px;
-    border:1px solid #9d9d9d;
+    border: 1px solid transparent;
+   
+}
+
+#grout-predefined-color button:hover{
+    border: 1px solid #9d9d9d;
 }
 
 .-btn.active {
@@ -959,7 +971,8 @@ border:1px solid #3F3F46;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-      border :1px solid #eeeeef;
+    border :1px solid #ccc;
+    padding-top: 8px;
 
   }
   .panel_list .tile-list-text{
@@ -1016,6 +1029,7 @@ border:1px solid #3F3F46;
     color:#3F3F46 !important;
     text-decoration: none !important;
     cursor: pointer;
+   
   
     /* box-shadow: rgba(0, 0, 0, 0.24) 0 0 10px; */
 }
@@ -1030,9 +1044,27 @@ border:1px solid #3F3F46;
 .cmn-room-btn.back-btn{
     padding:20px 12px 20px 20px;
     height: 60px;
+    width: 100px !important;
+}
+
+.cmn-back-btn{
+    padding:20px 12px 20px 20px;
+    height: 60px;
+    width: 100px !important;
+    background:#D6D0C880;
+    border:1px solid #3F3F46;
+    padding:10px;
+    border-radius: 20px;
+    color:#3F3F46 !important;
+    text-decoration: none !important;
+    cursor: pointer;
+    position: absolute;
+    bottom: 10%;
+    left:12px;
+
 }
 .cmn-room-btn.cn-btn{
-    padding:10px 20px 20px 12px;
+    padding:20px 20px 20px 12px;
     height: 60px;
 }
 .btn-text-set{
@@ -1097,7 +1129,7 @@ width: 18px;
 }
 .panel_list .top-panel-content-tiles-list-item:hover{
  
-    border:1px solid #000;
+    border:1px solid #9d9d9d;
     background: transparent;
     border-radius: 20px;
 
@@ -1151,7 +1183,9 @@ width: 18px;
 .mr-15{
     margin-right: 15px;
 }
-
+.top-panel-box-overflow-y{
+    max-height: 100vh !important;
+}
   @media (max-width:767px) {
     .top-panel-product{
         width: 400px;
@@ -1174,7 +1208,7 @@ width: 18px;
     height: 30px;
     width: 30px;
     
-    margin-left: -35px;
+    margin-left: -37px;
 }
 #topPanelHideIcon{
     font-size: 15px;
@@ -1248,4 +1282,12 @@ width: 18px;
 .top-panel{
     top: 10px !important;
     max-height:calc(100% - 20px) !important;
+    border:1px solid #acacac;
+}
+
+.top-panel-content-tiles-list-item.selected{
+    border: 1px solid #000;
+    background: transparent;
+    border-radius: 20px;
+
 }
