@@ -82,8 +82,7 @@
                                             </div>
                                             <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
                                         @endif
-                                        <button class="tile-cal-link" id="tile_cal" data-toggle="modal"
-                                                data-target="#tilecal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}">Open Tiles Calculator
+                                        <button class="tile-cal-link" id="tile_cal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}">Open Tiles Calculator
                                         </button>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper"
