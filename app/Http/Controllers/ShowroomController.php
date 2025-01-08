@@ -12,7 +12,9 @@ class ShowroomController extends Controller
      */
     public function index()
     {
-        dd("This is For Showroom Page");
+        $showrooms = Showroom::paginate(10);
+        // dd($showrooms);
+        return view('showrooms.index', compact('showrooms'));
     }
 
     /**
@@ -28,7 +30,18 @@ class ShowroomController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'e_code' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'address' => 'required|string',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        Showroom::create($validated);
+
+        return redirect()->route('fetch_showroom.index');    
     }
 
     /**
@@ -61,5 +74,27 @@ class ShowroomController extends Controller
     public function destroy(Showroom $showroom)
     {
         //
+    }
+
+    public function showroomsDelete(Request $request) {
+        $showrooms = Showroom::find(json_decode($request->selectedRooms));
+        // dd($showrooms);
+        foreach($showrooms as $showroom ){
+            $showroom->delete();
+        }
+
+        return redirect('/fetch_showroom');
+    }
+
+
+    public function showroomsEnable(Request $request) {
+        // dd(json_decode($request->selectedRooms));
+        Showroom::whereIn('id', json_decode($request->selectedRooms))->update(['status' => "Active"]);
+        return redirect('/fetch_showroom');
+    }
+
+    public function showroomsdisable(Request $request) {
+        Showroom::whereIn('id', json_decode($request->selectedRooms))->update(['status' => "Inactive"]);
+        return redirect('/fetch_showroom');
     }
 }
