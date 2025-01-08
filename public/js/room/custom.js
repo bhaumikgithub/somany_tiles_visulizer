@@ -6,35 +6,44 @@ function AdjustCanvasWidthHeight() {
   var newWidth = windowHeight * 1.78;
   var newLeft = Math.round((windowWidth - newWidth) / 2);
   var newRight = Math.round((windowWidth - newLeft - newWidth));  // Calculate new right position
-  
+  var canvasHeight = windowHeight;
     
   $("#roomCanvas").height(windowHeight);
   $("#roomCanvas").width(newWidth);
 
   $("#container").css({ left: newLeft });
+  
   $(".back-btn").css({ left: newLeft }); 
   $(".cn-btn").css({ right: newRight }); 
-  if (windowWidth > 1300) {
+  $(".share-btn-img").css({ right: newRight }); 
+  $(".share-div").css({ right: newRight }); 
+
+  
+ 
   if (isInitialLoad) {
+    if (windowWidth > 1300) {
     $(".cn-btn").css("margin-right", "26px");
+    $(".share-btn-img").css("margin-right", "26px");
+    $(".share-div").css("margin-right", "26px");
+
+    }
     
    
     isInitialLoad = false; // Set flag to false after initial load
   } else {
     $(".cn-btn").css("margin-right", "15px"); // Remove margin-right for resize
+    $(".share-btn-img").css("margin-right", "15px");
+    $(".share-div").css("margin-right", "26px");
     
   }
+
+
 }
-
-}
-
-
 
 function applyCanvasAdjustments() {
   if ($(window).width() > 500) { // Only execute if screen width > 500px
     AdjustCanvasWidthHeight();
-    updateDivWidth();
-
+   
   }
 }
 function setTopPanelHeight() {
