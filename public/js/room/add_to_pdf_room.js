@@ -202,8 +202,7 @@ $("#price").on("input", function(evt) {
 });
 
 // Open modal and populate the fields with data attributes
-$('#updateprice').on('show.bs.modal', function (event) {
-    $('body').addClass('modal-open');  // Remove the 'modal-open' class from body
+$('#updateprice').off('show.bs.modal').on('show.bs.modal', function (event){
     let button = $(event.relatedTarget); // Button that triggered the modal
     let tileId = button.data('tile-id'); // Extract tile ID
     let cartItemId = button.data('price-update-cart-item-id'); // Extract tile ID
