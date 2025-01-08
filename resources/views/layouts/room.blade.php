@@ -8,6 +8,8 @@
     @if (config('app.sub_css'))<link href="/css/{{ config('app.sub_css') }}" type="text/css" rel="stylesheet">@endIf
 
     <link href="/modules/color-picker/color-picker.min.css" type="text/css" rel="stylesheet">
+    <link href="/css/front.css" type="text/css" rel="stylesheet">
+   
 
     <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.18"></script>
 
@@ -85,7 +87,12 @@
     <!-- Scripts -->
     <script src="/js/app.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
+    @if (config('app.js_as_module'))
+        <script type="module" src="/js/src/2d/interior2d.js"></script>
+    @else
+        <script src="/js/room/2d.min.js"></script>
 
+    @endif
     <script src="/modules/color-picker/color-picker.min.js"></script>
 
     @if (config('app.js_pdf_lib') == 'jsPDF' || config('app.tiles_designer'))
@@ -98,5 +105,21 @@
     @endif
 
     <script src="/js/room/add_to_pdf_room.js"></script>
+    <script src="/js/room/custom.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        
+       $(window).resize(function() {
+      var windowWidth = $(window).width();
+      var windowHeight = $(window).height();
+      var newWidth = windowHeight * 1.78;
+      var newLeft = Math.round((windowWidth-newWidth)/2);
+      $("#roomCanvas").height(windowHeight);
+      $("#roomCanvas").width(newWidth);
+      $("#container").css({left:newLeft });
+      });
+      });
+        
+    </script>
 </body>
 </html>

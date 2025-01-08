@@ -1,5 +1,12 @@
 
 /* pdf summary page css */
+body{
+	overflow-x: hidden !important;
+}
+.modal-dialog {
+    width: 600px;
+    margin: 21px auto 21px auto;
+}
 .pdf-summary-container p{
     margin: 0 0 10px !important;
 }
@@ -35,6 +42,8 @@
 .details-card img {
    max-width: 100%;
     border-radius: 8px;
+	min-width: 100px;
+	min-height: 100px;
 }
 .details-card h5 {
     font-size: 16px;
@@ -65,10 +74,8 @@
 	border-color:#ce1f22 !important;
     color: #fff;
     border: none;
-    font-weight: bold;
-  
+    font-weight: 500;
     padding: 10px 15px;
-   
     border-radius: 10px;
 }
 .modify-btn:hover , .modify-btn:focus{
@@ -83,7 +90,7 @@
 }
 
 .notes_ul li {
-    list-style-type: disc;
+    list-style-type: nu;
 	margin-bottom: 5px;
 }
 .product-title{
@@ -156,6 +163,17 @@
 	border-color: #333 !important;
 }
 
+.font-bold{
+	font-weight: bold;
+}
+.mt-0{
+	margin-top: 0px;
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+	background-color: transparent !important;
+}
+
 /* media query */
 
 @media (max-width:1200px) {
@@ -213,6 +231,9 @@
 		}
 		.xs-margin-top-20{
 			margin-top: 20px;
+		}
+		.modal-dialog {
+			width: 95%;
 		}
 		
 

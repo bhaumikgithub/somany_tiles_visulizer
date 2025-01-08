@@ -235,6 +235,7 @@ Route::post('/pdf-summary','App\Http\Controllers\AddToPdfRoomsController@pdf-sum
 Route::delete('/add-to-pdf-data/{id}', 'App\Http\Controllers\AddToPdfRoomsController@destroy')->name('add-to-pdf-data.destroy');
 Route::delete('/clear-items', 'App\Http\Controllers\AddToPdfRoomsController@removeAllItems')->name('add-to-pdf-data.remove-all-items');
 Route::post('/update-tile-price','App\Http\Controllers\AddToPdfRoomsController@updateTilePrice');
+Route::post('/update-tile-calc','App\Http\Controllers\AddToPdfRoomsController@updateTileCalculation');
 
 
 // Route::get('/test', 'App\Http\Controllers\HomeController@index');

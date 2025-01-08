@@ -5,7 +5,10 @@ body{
   font-optical-sizing: auto;
   font-size: 14px;
 }
-
+.modal-dialog {
+    width: 600px;
+    margin: 21px auto 21px auto;
+}
 .mt-10{
 	margin-top: 10px;
 }

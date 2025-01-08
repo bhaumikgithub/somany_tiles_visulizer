@@ -8,7 +8,7 @@
                         <div class="body-selection-item">
                             <a title="{{$aRoom->name}}" href="{{'/room2d/' . $aRoom->id}}">
                                 <div class="body-selection-item-text">{{$aRoom->name}}</div>
-                                <div style="background-image:url({{$aRoom->image}});" class="body-selection-item-image"></div>
+                                <div style="background-image:url({{$aRoom->icon}});" class="body-selection-item-image"></div>
                                <!-- <div style="background-image:url(../images/l-1.jpg);" class="body-selection-item-image"></div> -->
                             </a>
                         </div>
@@ -17,5 +17,5 @@
             @endforeach
         @endif
     </div>
-
+    <a href="{{ url('/') }}" class=" cmn-back-btn d-flex flex-wrap align-items-center" > <img src="/img/arrow-back.png" alt="arrow-back" class="img-responsive"> <span class="btn-text-set">Back </span> </a>
 @endsection
