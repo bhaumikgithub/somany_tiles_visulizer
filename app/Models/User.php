@@ -41,8 +41,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'show_room_ids' => 'array',  // Automatically convert JSON to an array
     ];
-
 
     public function hasRole($role) {
         if ($this->role === 'administrator') {

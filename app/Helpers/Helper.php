@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\CartItem;
 use App\Tile;
+use Illuminate\Support\Facades\DB;
 
 class Helper
 {
@@ -30,5 +31,13 @@ class Helper
     {
         $tile = Tile::find($tile_id);
         return $tile->tiles_per_carton;
+    }
+
+    public static function getShowRoomNames($showroom_id): string
+    {
+        // Fetch the skill names from the database based on the passed IDs
+        $show_room_names = DB::table('showrooms')->whereIn('id', $showroom_id)->pluck('name')->toArray();
+        // Return the skills as a comma-separated string
+        return implode(', ', $show_room_names);
     }
 }
