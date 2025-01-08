@@ -578,7 +578,7 @@ body{
     border-bottom-left-radius: 20px;
     padding: 10px 5px;
     color: #555;
-    z-index: 3;
+    z-index: 5;
 }
 .top-panel-box{
     margin:0px;
