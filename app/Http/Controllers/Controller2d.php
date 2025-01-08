@@ -43,11 +43,23 @@ class Controller2d extends Controller
 
         if (!$roomById && !$url) { abort(404); }
 
+        if( $url ){
+            $savedroom = Savedroom::where('url', $url)->first();
+            $room = Room2d::where('id', $savedroom->roomid)->first();
+            $id = $savedroom->roomid;
+            $name = $room->name;
+            $type = $room->type;
+        } else {
+            $id = $id;
+            $name = $roomById->name;
+            $type = $roomById->type;
+        }
+
         $userId = Auth::id();
         return view('2d.room', [
             'roomId' => $id,
-            'room_name' => $roomById->name,
-            'room_type'=> $roomById->type,
+            'room_name' => $name,
+            'room_type'=> $type,
             'savedRoomUrl' => $url,
             'rooms' => Room2d::roomsByType(),
             'saved_rooms' => Savedroom::getUserSavedRooms($userId),

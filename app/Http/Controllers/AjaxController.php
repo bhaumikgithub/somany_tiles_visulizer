@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Showroom;
+use App\Room2d;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Validator;
@@ -14,7 +13,6 @@ use App\SurfaceType;
 use App\RoomType;
 use App\Models\User;
 use App\Savedroom;
-use App\CustomTile;
 
 class AjaxController extends Controller
 {
@@ -108,6 +106,9 @@ class AjaxController extends Controller
 
     public function getSavedRoomByUrl($url) {
         $savedroom = Savedroom::where('url', $url)->first();
+        $room = Room2d::where('id', $savedroom->roomid)->first();
+        $savedroom->name = $room->name;
+        $savedroom->type = $room->type;
         return response()->json($savedroom);
     }
 

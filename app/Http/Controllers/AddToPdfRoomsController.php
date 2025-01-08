@@ -170,6 +170,36 @@ class AddToPdfRoomsController extends Controller
      * @throws PdfParserException
      * @throws FilterException
      */
+
+//    public function downlaodPdf(Request $request): \Illuminate\Http\Response
+//    {
+//        $getCartId = Cart::where('random_key',$request->random_key)->first();
+//        $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
+//        $basic_info = [
+//            'first_name' => $request->firstName,
+//            'last_name' => $request->lastName,
+//            'contact_no' => $request->mobileNumber,
+//        ];
+//        // Data to be passed to the PDF
+////        $data = [
+////            'allProduct' => $allProduct,
+////            'getCartId' => $getCartId,
+////            'basic_info' => $basic_info
+////        ];
+//
+//        $html = view('pdf.template',compact('allProduct','basic_info')); // Get HTML content for the PDF
+//        $pdf = PDF::loadHTML($html);
+//
+//        // Load a Blade view into the PDF
+//        //$pdf = PDF::loadView('pdf.template', $data);
+//
+//        // Return the PDF for viewing in a new tab
+//        $fileName = 'tiles_selection_'.$request->random_key."_".Carbon::parse(now())->format('d-m-Y').'.pdf';
+//        //return $pdf->stream($fileName);
+//
+//        return $pdf->download($fileName);
+//    }
+
     public function downlaodPdf(Request $request): \Illuminate\Http\Response
     {
         // Step 2: Load the second (existing) PDF

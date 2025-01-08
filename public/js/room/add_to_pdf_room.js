@@ -201,24 +201,21 @@ $("#price").on("input", function(evt) {
     }
 });
 
-// Open modal and populate the fields with data attributes
-$('#updateprice').on('show.bs.modal', function (event) {
-    $('body').addClass('modal-open');  // Remove the 'modal-open' class from body
-    let button = $(event.relatedTarget); // Button that triggered the modal
-    let tileId = button.data('tile-id'); // Extract tile ID
-    let cartItemId = button.data('price-update-cart-item-id'); // Extract tile ID
-    let modal = $(this);
+$('.update_price_btn').click(function() {
+    $('#updateprice').modal('show');
+    let tileId = $(this).data('tile-id'); // Extract tile ID
+    let cartItemId = $(this).data('price-update-cart-item-id'); // Extract tile ID
     $('#price').val(''); // Clear the input field
     const priceLabelText = $('div.update_price_wrapper[data-price-tile-id="' + tileId + '"][data-cart-item-id="' + cartItemId + '"]').find('.price_lbl').text();
     const priceLabelText1 = priceLabelText.replace(/Rs\.|\/sq\.ft/g, '').trim();
-    const priceInput = modal.find('input.set_price'); // Assuming there's an input field with class 'price_input'
+    const priceInput = $('#updateprice').find('input.set_price'); // Assuming there's an input field with class 'price_input'
     if (priceLabelText.trim() === 'Price not given') {
         priceInput.val();
     } else {
         priceInput.val(priceLabelText1);
     }
-    modal.find('#tile_id').val(tileId); // Set the tile ID in the modal input
-    modal.find('#cart_item_id').val(cartItemId);
+    $('#updateprice #tile_id').val(tileId); // Set the tile ID in the modal input
+    $('#updateprice #cart_item_id').val(cartItemId);
 });
 
 $('#submit_btn').on('click', function(e) {
@@ -295,13 +292,15 @@ $('.cartpanelclose').on('click', function(e) {
     $("body").css('overflow', "auto");
 });
 
-// Open modal and populate the fields with data attributes
-$('#tilecal').on('show.bs.modal', function (event) {
-    clearForm();
+$('.tile-cal-link').click(function() {
+    $('#tilecal').modal('show');
 
-    // Get the button that triggered the modal
-    const button = $(event.relatedTarget);
+    displayResult("#area_covered_meter","");
+    displayResult("#area_covered_feet","");
+    displayResult("#required_tiles","");
+    displayResult("#required_box","");
 
+    let button = $(this);
     // Get the tile ID from the button's data attribute
     let tile = button.data('tile-id');
     let cart_item_id = button.data('calculate-cart-item-id');
@@ -312,15 +311,14 @@ $('#tilecal').on('show.bs.modal', function (event) {
     let width_in_feet = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db input#width_in_feet').val();
     let height_in_feet = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db input#height_in_feet').val();
 
-
     $('#tiles_size').val(`${width} x ${height} mm`);
+
     // Set the modal content
     $('#sizes').val(`${width}x${height}`);
     $('#calc_tile_id').val(tile);
     $("#wast_per").val(wastage);
     $("#width_feet").val(width_in_feet);
     $("#length_feet").val(height_in_feet);
-
 
     let tile_par_carton = $('#tile'+tile+' input#tiles_par_carton').val();
     $('#calc_tiles_par_carton').val(tile_par_carton);
@@ -359,7 +357,7 @@ $("#calculate_btn").click(function () {
     $('div#tile' + tile_id + ' div.tiles_calculation_wrapper').css('display','block');
     $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.total_area_covered_meter').text(totalAreaSqMeter.toFixed(2));
     $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.total_area_covered_feet').text(totalArea.toFixed(2));
-    $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.tiles_wastage').text(wastageOfTilesArea);
+    $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.tiles_wastage').text(wastage);
     $('div#tile'+ tile_id + ' div.tiles_calculation_wrapper span.tiles_needed').text(tilesNeeded);
     $('#calc_area_covered_meter').val(totalAreaSqMeter.toFixed(2));
     $('#calc_area_covered').val(totalArea.toFixed(2));
