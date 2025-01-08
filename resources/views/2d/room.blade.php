@@ -11,7 +11,6 @@
                                 </button>
                                 <div class="share-div d-flex flex-wrap social-share" style="display: none;">
                                     @if (config('app.share_button_whatsapp'))
-                                       
                                         <a href="https://wa.me/?text={{ urlencode(__('SHARE_WHATSAPP_MESSAGE')) }}%20" title="@lang('Whatsapp Share')" target="_blank" class="share-link d-flex flex-wrap align-items-center">
                                             <img src="/img/share.png" alt="share" class="img-responsive"> <span class="btn-text-set">Share </span>
                                         </a>
