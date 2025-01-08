@@ -81,7 +81,7 @@
                                                         <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
                                                     @endif
                                                     @if( session()->has('pincode') )
-                                                        <button class="tile-cal-link" id="tile_cal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}">Open Tiles Calculator
+                                                        <button class="tile-cal-link tile_calculation" id="tile_cal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}">Open Tiles Calculator
                                                         </button>
                                                     @endif
                                             </div>

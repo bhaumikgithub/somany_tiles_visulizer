@@ -292,7 +292,7 @@ $('.cartpanelclose').on('click', function(e) {
     $("body").css('overflow', "auto");
 });
 
-$('.tile-cal-link').click(function() {
+$('.tile_calculation').click(function() {
     $('#tilecal').modal('show');
 
     displayResult("#area_covered_meter","");
@@ -300,10 +300,9 @@ $('.tile-cal-link').click(function() {
     displayResult("#required_tiles","");
     displayResult("#required_box","");
 
-    let button = $(this);
     // Get the tile ID from the button's data attribute
-    let tile = button.data('tile-id');
-    let cart_item_id = button.data('calculate-cart-item-id');
+    let tile = $('.tile-cal-link').data('tile-id');
+    let cart_item_id = $('.tile-cal-link').data('calculate-cart-item-id');
     let height = $('#tile'+tile+' input#tiles_height').val();
     let width = $('#tile'+tile+' input#tiles_width').val();
 
@@ -374,13 +373,7 @@ $("#calculate_btn").click(function () {
     displayResult("#area_covered_meter","Total Area covered : <b>" + totalAreaSqMeter.toFixed(2)+"</b> Sq. Meter");
     displayResult("#area_covered_feet","Total Area covered : <b>" + totalArea.toFixed(2)+"</b> Sq. Feet");
     displayResult("#required_tiles","Required Tiles : <b>" + tilesNeeded+"</b> Tiles");
-
-    // $('#tilecal').modal('hide');
-    // $('.modal-backdrop').remove();  // Remove the backdrop manually
-    // $('body').removeClass('modal-open');  // Remove the 'modal-open' class from body
-
-
-})
+});
 
 
 $('#closeTileCalcModal').click(function() {
@@ -414,7 +407,9 @@ $('#closeTileCalcModal').click(function() {
             _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
         },
         success: function(response) {
-            $('div#tile' + tile_id + ' div.tiles_calculation_wrapper').css('display','block');
+            if( response.success === true) {
+                $('div#tile' + tile_id + ' div.tiles_calculation_wrapper').css('display', 'block');
+            }
         },
         error: function(xhr) {
             // When the response has errors, this block will be executed
