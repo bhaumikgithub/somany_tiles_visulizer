@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('contact_no')->nullable()->after('role');
-            $table->json('show_room_ids')->nullable()->after('contact_no');// JSON column to store multiple selected skills
+            $table->json('showroom_id')->nullable()->after('contact_no');// JSON column to store multiple selected skills
         });
     }
 
@@ -23,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('contact_no');
+            $table->dropColumn(['contact_no','showroom_id']);
         });
     }
 };

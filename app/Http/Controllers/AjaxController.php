@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Showroom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Validator;
@@ -100,6 +101,8 @@ class AjaxController extends Controller
 
     public function getUser($id) {
         $user = User::findOrFail($id);
+        // Decode the JSON field to get the array of showroom IDs
+        $user->selectedShowroomIds = json_decode($user->show_room_ids, true);
         return response()->json($user);
     }
 

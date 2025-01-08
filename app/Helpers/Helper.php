@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\CartItem;
+use App\Models\Showroom;
 use App\Tile;
 use Illuminate\Support\Facades\DB;
 
@@ -36,7 +37,7 @@ class Helper
     public static function getShowRoomNames($showroom_id): string
     {
         // Fetch the skill names from the database based on the passed IDs
-        $show_room_names = DB::table('showrooms')->whereIn('id', $showroom_id)->pluck('name')->toArray();
+        $show_room_names = Showroom::whereIn('id', $showroom_id)->pluck('name')->toArray();
         // Return the skills as a comma-separated string
         return implode(', ', $show_room_names);
     }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -22,6 +23,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'contact_no',
+        'showroom_id',
     ];
 
     /**
@@ -41,7 +44,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'show_room_ids' => 'array',  // Automatically convert JSON to an array
+        'showroom_id' => 'array',  // Automatically convert JSON to an array
     ];
 
     public function hasRole($role) {
@@ -86,5 +89,10 @@ class User extends Authenticatable
         if ($avatar && strpos($avatar, 'http://') === false && strpos($avatar, 'https://') === false) {
             Storage::disk('public')->delete($avatar);
         }
+    }
+
+    public function showrooms(): BelongsToMany
+    {
+        return $this->belongsToMany(Showroom::class , 'showrooms' , 'user_id' , 'showroom_id');
     }
 }

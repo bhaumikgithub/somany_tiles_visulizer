@@ -789,7 +789,7 @@ class Controller extends BaseController
         $user = User::findOrFail($request->id);
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->show_room_ids = json_encode($request->show_rooms);  // Store selected skill IDs as JSON
+        $user->showroom_id = json_encode($request->show_rooms);  // Store selected skill IDs as JSON
 
         if ($request->hasFile('avatar')) {
             $user->deleteAvatarFile();

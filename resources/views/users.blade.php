@@ -30,9 +30,9 @@
                         window.$('#form-update-user-contact_no').val(user.contact_no);
 
                         // Check if show_room_ids is an array (even if it's an array of strings)
-                        if (user.show_room_ids && user.show_room_ids.length > 0) {
+                        if (user.showroom_id) {
                             // Ensure the values are an array and handle strings or numbers
-                            const showRoomIds = user.show_room_ids.map(id => String(id)); // Convert all to strings for comparison
+                            const showRoomIds = JSON.parse(user.showroom_id).map(id => String(id)); // Convert all to strings for comparison
                             window.$('#form-update-user-show-room').val(showRoomIds).trigger('change');
                         }
 
@@ -234,10 +234,7 @@
                         <select name="show_rooms[]" id="form-update-user-show-room" class="form-control" multiple>
                             @if(isset($show_rooms))
                                 @foreach($show_rooms as $showRoom)
-                                    <option value="{{$showRoom->id}}"
-                                    @if(in_array($showroom->id, old('show_room_ids', $user->showrooms->pluck('id')->toArray())))
-                                        selected
-                                    @endif>{{$showRoom->name}}</option>
+                                    <option value="{{$showRoom->id}}">{{$showRoom->name}}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -398,8 +395,8 @@
                             <td class="table-text">{{ $user->email }}</td>
                             <td class="table-text">{{ $user->contact_no }}</td>
                             <td class="table-text">
-                                @if($user->show_room_ids !== null )
-                                    {{ Helper::getShowRoomNames(json_decode($user->show_room_ids)) }}
+                                @if($user->showroom_id !== null )
+                                    {{ Helper::getShowRoomNames(json_decode($user->showroom_id)) }}
                                 @else
                                     -
                                 @endif
