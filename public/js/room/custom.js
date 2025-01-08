@@ -1,46 +1,105 @@
-// return '<div class="tile-list-text">\n                <p class="-caption">' + this.name + '</p>\n                ' + this.getExtraOptionsText().replace('product code: ', '') + '\n                ' + size.replace('Size: ', '') + ' ' + shape + ' ' + finish + ' ' + rotoPrintSet + '\n                ' + this.getPriceText() + ' ' + url + ' ' + usedColors + '\n            </div>';
-// set canvas height
-let isFirstLoad = true; // Flag to track first-time load
+var isInitialLoad = true; // Flag to track the initial load
 
 function AdjustCanvasWidthHeight() {
   var windowWidth = $(window).width();
   var windowHeight = $(window).height();
   var newWidth = windowHeight * 1.78;
-
   var newLeft = Math.round((windowWidth - newWidth) / 2);
-
+  var newRight = Math.round((windowWidth - newLeft - newWidth));  // Calculate new right position
+  var canvasHeight = windowHeight;
+    
   $("#roomCanvas").height(windowHeight);
   $("#roomCanvas").width(newWidth);
 
   $("#container").css({ left: newLeft });
-}
+  
+  $(".back-btn").css({ left: newLeft }); 
+  $(".cn-btn").css({ right: newRight }); 
+  $(".share-btn-img").css({ right: newRight }); 
+  $(".share-div").css({ right: newRight }); 
 
-function updateDivWidth() {
-  var canvasWidth = $("#roomCanvas").width();
-  $(".detail-section").width(canvasWidth);
+  
+ 
+  if (isInitialLoad) {
+    if (windowWidth > 1300) {
+    $(".cn-btn").css("margin-right", "26px");
+    $(".share-btn-img").css("margin-right", "26px");
+    $(".share-div").css("margin-right", "26px");
+
+    }
+    
+   
+    isInitialLoad = false; // Set flag to false after initial load
+  } else {
+    $(".cn-btn").css("margin-right", "15px"); // Remove margin-right for resize
+    $(".share-btn-img").css("margin-right", "15px");
+    $(".share-div").css("margin-right", "26px");
+    
+  }
+
+
 }
 
 function applyCanvasAdjustments() {
   if ($(window).width() > 500) { // Only execute if screen width > 500px
     AdjustCanvasWidthHeight();
-    updateDivWidth();
-
-    // Apply margin-left only on first load
-    if (isFirstLoad) {
-      $(".detail-section").css({ "margin-left": "-5px" });
-      isFirstLoad = false; // Mark as applied
-    }
+   
   }
 }
-
+function setTopPanelHeight() {
+  const viewportHeight = $(window).height(); // Get viewport height using jQuery
+  $('.top-panel').css('height', viewportHeight - 20 + 'px'); // Set height dynamically
+}
 $(window).on('load', function() {
+ 
   applyCanvasAdjustments();
+  setTopPanelHeight();
 });
 
 $(window).on('resize', function() {
   applyCanvasAdjustments();
-  $(".detail-section").css({ "margin-left": "0px" }); // Ensure consistent margin reset on resize
+  AdjustCanvasWidthHeight();
+ 
 });
+
+
+// $("#topPanelHideBtn").on('click', function () {
+//   var topPanel = $("#topPanel");
+
+//   // Check if the right property is 0
+//   if (topPanel.css("right") === "0px") {
+//     topPanel.addClass("panelclose"); // Add the class if right is 0
+//   } else {
+//     topPanel.removeClass("panelclose"); // Remove the class if right is not 0
+//   }
+// });
+
+$("#btnProduct").addClass("top-panel-button-active");
+
+$('#btnProduct').on('click', function () {
+  $('#topPanelTilesListBox').show();
+  $('#topPanelLayout').hide();
+  $('#topPanelGrout').hide();
+ 
+ 
+});
+$('#btnLayout').on('click', function () {
+  $('#topPanelLayout').show();
+  $('#topPanelTilesListBox').hide();
+  $('#topPanelGrout').hide();
+  $('.radio-surface-rotation').hide();
+
+  
+
+});
+$('#btnGrout').on('click', function () {
+  $('#topPanelGrout').show();
+  $('#topPanelTilesListBox').hide();
+  $('#topPanelLayout').hide();
+  $('.radio-surface-rotation').hide();
+
+});
+
 
 $('#grout-predefined-color .-btn').on('click', function () {
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Room;
+use App\Room2d;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Validator;
@@ -105,6 +107,9 @@ class AjaxController extends Controller
 
     public function getSavedRoomByUrl($url) {
         $savedroom = Savedroom::where('url', $url)->first();
+        $room = Room2d::where('id', $savedroom->roomid)->first();
+        $savedroom->name = $room->name;
+        $savedroom->type = $room->type;
         return response()->json($savedroom);
     }
 

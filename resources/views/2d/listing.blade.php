@@ -17,5 +17,5 @@
             @endforeach
         @endif
     </div>
-
+    <a href="{{ url('/') }}" class=" cmn-back-btn d-flex flex-wrap align-items-center" > <img src="/img/arrow-back.png" alt="arrow-back" class="img-responsive"> <span class="btn-text-set">Back </span> </a>
 @endsection
