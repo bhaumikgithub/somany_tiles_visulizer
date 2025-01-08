@@ -308,9 +308,9 @@ body{
     transition: -webkit-transform .5s ease;
     transition: transform .5s ease;
     -webkit-transition: -webkit-transform .5s ease;
-    box-shadow: inset 0px 64px 53px 0px rgba(0, 0, 0, 0.8);
-    -moz-box-shadow: inset 0px 64px 53px 0px rgba(0, 0, 0, 0.8);
-    box-shadow: inset 0px 64px 53px 0px rgba(0, 0, 0, 0.8);
+    box-shadow: inset 0px 64px 53px 0px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: inset 0px 64px 53px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: inset 0px 64px 53px 0px rgba(0, 0, 0, 0.5);
     width: 100%;
     position: relative;
     height: 320px;
@@ -601,6 +601,8 @@ body{
     margin-left: -51px;
 
 }
+
+
 
 #topPanelHideIcon{
     font-size: 18px;
@@ -1056,8 +1058,9 @@ body{
     color:#3F3F46 !important;
     text-decoration: none !important;
     cursor: pointer;
-    position: absolute;
-    bottom: 70px;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
     margin-left: 15px;
 
 }

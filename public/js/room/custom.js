@@ -62,6 +62,18 @@ $(window).on('resize', function() {
  
 });
 
+
+// $("#topPanelHideBtn").on('click', function () {
+//   var topPanel = $("#topPanel");
+
+//   // Check if the right property is 0
+//   if (topPanel.css("right") === "0px") {
+//     topPanel.addClass("panelclose"); // Add the class if right is 0
+//   } else {
+//     topPanel.removeClass("panelclose"); // Remove the class if right is not 0
+//   }
+// });
+
 $("#btnProduct").addClass("top-panel-button-active");
 
 $('#btnProduct').on('click', function () {
