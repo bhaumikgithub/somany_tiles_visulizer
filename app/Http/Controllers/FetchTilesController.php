@@ -3,16 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Company;
-use App\Tile;
 use Carbon\Carbon;
-use Exception;
-use GuzzleHttp\Client;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image as InterventionImage; // Import Intervention Image
 
@@ -34,7 +30,7 @@ class FetchTilesController extends Controller
         $endDate = $request->end_date;
 
         // Get tiles data
-        $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete?limit=20";
+        $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete?limit=4";
         $queryParams = http_build_query([
             's' => $startDate,
             'e' => $endDate,
@@ -64,15 +60,15 @@ class FetchTilesController extends Controller
         // Parse the response
         $data = json_decode($result, true);
         // Now you can process the data as needed (e.g., inserting or updating the database)
-        $total_records = $this->updateOrInsertMultiple($data,$endDate);
-        $updated_message = Carbon::parse($endDate)->format('d M Y') ." " ."( ". $total_records['count'].' records has been fetch '.")";
+        $total_records = $this->updateOrInsertMultiple($data,$endDate,count($data));
+        $updated_message = Carbon::parse($endDate)->format('d M Y') ." " ."( ". count($data).' records has been fetch '.")";
         return response()->json([
             'success' => true,
             'message' => 'Data processed successfully.',
             'total_records' => $total_records['count'],
             'new_date' => $endDate,
             'updated_message' => $updated_message,
-            'insertedCount' => $total_records['insertedCount'],
+            'insertedCount' => count($data),
             'updatedCount' => $total_records['updatedCount'],
             'unchangedCount' => $total_records['unchangedCount'],
         ]);
@@ -117,7 +113,7 @@ class FetchTilesController extends Controller
         return $responseData['token'];
     }
 
-    public function updateOrInsertMultiple($records,$endDate): array
+    public function updateOrInsertMultiple($records,$endDate,$totalCount): array
     {
         $count = 0;  // Variable to track the number of processed records
         $insertedCount = 0; // Track new insertions
@@ -137,39 +133,46 @@ class FetchTilesController extends Controller
                 \DB::table('companies')->update(['enabled' => 0]);
                 continue;
             }
-            $data = $this->prepareTileData($product,$creation_time);
-            // Check if record exists
-            $existing = \DB::table('tiles')->where('sku', $product['sku'])->first();
-            if ($existing) {
-                // Compare existing data with new data
-                $isDifferent = false;
-                foreach ($data as $key => $value) {
-                    if ($existing->$key != $value) {
-                        $isDifferent = true;
-                        break;
-                    }
-                }
 
-                if ($isDifferent) {
-                    // Update if data is different
-                    \DB::table('tiles')->where('sku', $product['sku'])->update($data);
-                    $updatedCount++;
+            // Check if the application is "Wall & Floor"
+            $applications = explode(' & ', $product['application']);
+            foreach ($applications as $surface) {
+                $product['surface'] = trim($surface);
+                $data = $this->prepareTileData($product, $creation_time);
+
+                // Debugging log to ensure both entries are processed
+                \Log::info('Processing SKU: ' . $product['sku'] . ' for Surface: ' . $surface);
+
+                $existing = \DB::table('tiles')->where('sku', $product['sku'])->where('surface', $surface)->first();
+                if ($existing) {
+                    $isDifferent = false;
+                    foreach ($data as $key => $value) {
+                        if ($existing->$key != $value) {
+                            $isDifferent = true;
+                            break;
+                        }
+                    }
+
+                    if ($isDifferent) {
+                        \DB::table('tiles')->where('sku', $product['sku'])->where('surface', $surface)->update($data);
+                        $updatedCount++;
+                    } else {
+                        $unchangedCount++;
+                    }
                 } else {
-                    $unchangedCount++;
+                    \DB::table('tiles')->insert($data);
+                    $insertedCount++;
                 }
-            } else {
-                // Use updateOrInsert to insert or update the record
-                \DB::table('tiles')->insert($data);
-                $insertedCount++;  // Increment the counter for each record processed
+                $count++;
             }
-            $count++;
         }
+
         // Update the last-fetched date
         \DB::table('companies')->update(
-            ['last_fetch_date_from_api' => $endDate , 'fetch_products_count' => $count,'updated_at' => now()]
+            ['last_fetch_date_from_api' => $endDate, 'fetch_products_count' => $totalCount, 'updated_at' => now()]
         );
 
-        return ['insertedCount' => $insertedCount, 'updatedCount' => $updatedCount,'count'=>$count,'unchangedCount'=>$unchangedCount];
+        return ['insertedCount' => $insertedCount, 'updatedCount' => $updatedCount, 'count' => $count, 'unchangedCount' => $unchangedCount];
     }
 
     protected function prepareTileData(array $product,$creation_time): array
@@ -181,7 +184,7 @@ class FetchTilesController extends Controller
             'width' => intval($product['size_wt']) ?? 0,
             'height' => intval($product['size_ht']) ?? 0,
             'size' => $product['size'] ?? null,
-            'surface' => $product['application'] ?? null,
+            'surface' => strtolower($product['surface']) ?? null,
             'finish' => $product['design_finish'] ?? null,
             'file' => $this->fetchAndSaveImage($imageURL),
             'image_variation_1' => $product['image_variation_1'] ?? null,
@@ -213,6 +216,7 @@ class FetchTilesController extends Controller
             'yes_no' => $product['yes_no'] ?? null,
             'record_creation_time' => $creation_time,
             'deletion' => $product['deletion'] ?? null,
+            'from_api' => '1',
             'updated_at' => now(),
         ];
     }
