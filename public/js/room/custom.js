@@ -14,15 +14,17 @@ function AdjustCanvasWidthHeight() {
   $("#container").css({ left: newLeft });
   $(".back-btn").css({ left: newLeft }); 
   $(".cn-btn").css({ right: newRight }); 
+  if (windowWidth > 1300) {
   if (isInitialLoad) {
     $(".cn-btn").css("margin-right", "26px");
     
    
     isInitialLoad = false; // Set flag to false after initial load
   } else {
-    $(".cn-btn").css("margin-right", "26px"); // Remove margin-right for resize
+    $(".cn-btn").css("margin-right", "15px"); // Remove margin-right for resize
     
   }
+}
 
 }
 
@@ -47,7 +49,8 @@ $(window).on('load', function() {
 
 $(window).on('resize', function() {
   applyCanvasAdjustments();
-  AdjustCanvasWidthHeight()
+  AdjustCanvasWidthHeight();
+ 
 });
 
 $("#btnProduct").addClass("top-panel-button-active");

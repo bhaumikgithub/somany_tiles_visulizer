@@ -1064,7 +1064,7 @@ border:1px solid #3F3F46;
     cursor: pointer;
     position: absolute;
     bottom: 10%;
-    left:12px;
+    margin-left: 15px;
 
 }
 .cmn-room-btn.cn-btn{
@@ -1073,6 +1073,7 @@ border:1px solid #3F3F46;
     z-index: 3;
     position: fixed;
     bottom: 10%;
+    margin-right: 15px;
     
 }
 .btn-text-set{
@@ -1276,9 +1277,7 @@ width: 18px;
 
 @media (max-width:500px) {
 
-    .detail-section{
-        width: 100% !important;
-    }
+   
     .cmn-room-btn.back-btn, .cmn-room-btn.cn-btn {
        
         padding: 5px 8px !important;
@@ -1289,6 +1288,7 @@ width: 18px;
     }
     .cmn-room-btn.cn-btn{
         right:0px !important;
+        margin-right: 15px !important;
     }
     }
 
