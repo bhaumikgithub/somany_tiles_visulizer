@@ -9,6 +9,9 @@ dist/
 vendor/
 .env
 
+#storage
+storage/debugbar
+
 # Compiled Java class files
 *.class
 

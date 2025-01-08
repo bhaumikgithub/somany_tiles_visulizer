@@ -4,6 +4,8 @@ use App\Http\Controllers\PincodeController;
 use App\Http\Controllers\ZipcodeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\ShowroomController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -261,6 +263,8 @@ Route::post('/update-tile-price','App\Http\Controllers\AddToPdfRoomsController@u
 Route::post('/update-tile-calc','App\Http\Controllers\AddToPdfRoomsController@updateTileCalculation');
 
 
+
+Route::resource('fetch_showroom', ShowroomController::class);
 
 // Route::get('/test', 'App\Http\Controllers\HomeController@index');
 // Route::get('/test', function () {
