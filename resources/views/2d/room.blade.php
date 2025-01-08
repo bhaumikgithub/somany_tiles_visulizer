@@ -4,19 +4,13 @@
 
 <div id="container" class="room-canvas-container">
     <canvas id="roomCanvas" class="room-canvas"></canvas>
-    <div class="detail-section">
-                    <div class="row">
-                        <div class="col-md-12 col-xs-12">
-                       
-                       <div class="back-cn-main d-flex flex-wrap justify-content-end">
-                            <div class="share_btn_wrap">
-                                <button class="share-btn-img cmn-room-btn">
+    
+
+                    <button class="share-btn-img cmn-room-btn">
                                 <img src="/img/share.png" alt="share-button" class="img-responsive">
                                 </button>
-                               
-                                <div class="share-div mb-3 d-flex flex-wrap social-share" style="display: none;">
+                                <div class="share-div d-flex flex-wrap social-share" style="display: none;">
                                     @if (config('app.share_button_whatsapp'))
-                                        <!-- https://web.whatsapp.com/send?text=message -->
                                         <a href="https://wa.me/?text={{ urlencode(__('SHARE_WHATSAPP_MESSAGE')) }}%20" title="@lang('Whatsapp Share')" target="_blank" class="share-link d-flex flex-wrap align-items-center">
                                             <img src="/img/share.png" alt="share" class="img-responsive"> <span class="btn-text-set">Share </span>
                                         </a>
@@ -25,25 +19,15 @@
                                     <button class="share-link d-flex flex-wrap align-items-center" onclick="addToPDF();"><img src="/img/add_section.png" alt="add_section" class="img-responsive"> <span class="btn-text-set">Add to Selection </span></button>
                                     <button href=""  class="share-link d-flex flex-wrap align-items-center share-btn-close"><img src="/img/close.png" alt="close" class="img-responsive"></button>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
 
-                        <div class="row">
-                            <div class="col-md-12 col-xs-12">
-                                <div class="back-cn-main d-flex flex-wrap w-100">
-                            <div class="back-con-div-wrap ">
-                            <a href="{{url('listing/'.@$room_type)}}" class="cmn-room-btn back-btn d-flex flex-wrap align-items-center" style="width: 125px;"> <img src="/img/arrow-back.png" alt="arrow-back" class="img-responsive"> <span class="btn-text-set">Back </span> </a>
-                            </div>
-                            <div class="back-con-div-wrap d-flex flex-wrap justify-content-end">
+                       
+                            <a href="{{url('listing/'.@$room_type)}}" class="cmn-room-btn back-btn d-flex flex-wrap align-items-center"> <img src="/img/arrow-back.png" alt="arrow-back" class="img-responsive"> <span class="btn-text-set">Back </span> </a>
+                          
+                           
                             <button class="cmn-room-btn cn-btn d-flex flex-wrap align-items-center" data-toggle="modal" data-target="#continue-modal" ><img src="/img/arrow-cn.png" alt="arrow-continue" class="img-responsive"> <span class="btn-text-set">Continue </span> </button>
-                            </div>
-                           </div>
-                           </div>
-                        </div>
-                    </div>
-</div>
+                           
+                        
+
 <input type="hidden" value="{{@$roomId}}" id="current_room_id">
 <input type="hidden" value="{{@$room_name}}" id="current_room_name">
 <input type="hidden" value="{{@$room_type}}" id="current_room_type">
