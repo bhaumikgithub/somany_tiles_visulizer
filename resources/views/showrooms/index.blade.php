@@ -175,7 +175,7 @@ function showBigIconImageModal(name, image) {
 
 
     <div class="form-group required">
-      <label for="form-room-type" class="col-sm-3 control-label">Category</label>
+      <label for="form-room-type" class="col-sm-3 control-label">Status</label>
       <div class="col-sm-6">
         <select name="status" id="form-room-type" class="form-control">
             <option value="Active" id="option-active" {{ old('status', isset($showroom) ? $showroom->status : '') == 'active' ? 'selected' : '' }}>Active</option>
