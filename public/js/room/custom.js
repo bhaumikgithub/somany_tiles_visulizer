@@ -79,8 +79,12 @@ $('#topPanelmainpanel').on('click', function () {
   $(this).hide();
 
 });
+
+
 let wallCount = 0;
 let floorCount = 0;
+let counterCount = 0;  // New variable for counter count
+let furnitureCount = 0;  // New variable for furniture count
 let lastRoomCanvasTitle = ''; // Variable to store the last room-canvas title
 
 // Function to update the h5 element text based on the current mode
@@ -93,15 +97,24 @@ function updateTopPanelText() {
     // Display the current floor count as a letter
     let floorLetter = String.fromCharCode(64 + floorCount); // Convert floorCount to letter
     $('#topPanel h5').text('Floor ' + floorLetter); // Space between "Floor" and the letter
+  } else if (lastRoomCanvasTitle === 'Change counter') {
+    // Display the current counter count as a letter
+    let counterLetter = String.fromCharCode(64 + counterCount); // Convert counterCount to letter
+    $('#topPanel h5').text('Counter ' + counterLetter); // Space between "Counter" and the letter
+  } else if (lastRoomCanvasTitle === 'Change furniture') {
+    // Display the current furniture count as a letter
+    let furnitureLetter = String.fromCharCode(64 + furnitureCount); // Convert furnitureCount to letter
+    $('#topPanel h5').text('Furniture ' + furnitureLetter); // Space between "Furniture" and the letter
   } else {
     // If no title is selected, display "Choose floor or wall"
     $('#topPanel h5').text('Choose Tiles');
   }
 }
 updateTopPanelText();
+
 // Track clicks on any li inside #topPanelTilesListUl
 $('#topPanelTilesListUl').on('click', 'li', function () {
-  // Check if #topPanelTilesListUl has the 'wallul' or 'floorul' class
+  // Check if #topPanelTilesListUl has the 'wallul', 'floorul', 'counterul', or 'furnitureul' class
   if ($('#topPanelTilesListUl').hasClass('wallul') && lastRoomCanvasTitle === 'Change wall') {
     // Increment the wall count only if the title is "Change wall"
     wallCount++;
@@ -111,6 +124,16 @@ $('#topPanelTilesListUl').on('click', 'li', function () {
     // Increment the floor count only if the title is "Change floor"
     floorCount++;
     console.log('Floor Click Count:', floorCount);
+    updateTopPanelText();
+  } else if ($('#topPanelTilesListUl').hasClass('counterul') && lastRoomCanvasTitle === 'Change counter') {
+    // Increment the counter count only if the title is "Change counter"
+    counterCount++;
+    console.log('Counter Click Count:', counterCount);
+    updateTopPanelText();
+  } else if ($('#topPanelTilesListUl').hasClass('furnitureul') && lastRoomCanvasTitle === 'Change furniture') {
+    // Increment the furniture count only if the title is "Change furniture"
+    furnitureCount++;
+    console.log('Furniture Click Count:', furnitureCount);
     updateTopPanelText();
   } else {
     console.log("Invalid action: Ensure the correct room-canvas is selected.");
@@ -128,10 +151,16 @@ $('.room-canvas').on('click', function () {
   // Update the h5 element or perform other actions based on the title
   if (title === 'Change wall') {
     $('#topPanel h5').text('Wall'); // Reset to "Wall"
-    $('#topPanelTilesListUl').addClass('wallul').removeClass('floorul');
+    $('#topPanelTilesListUl').addClass('wallul').removeClass('floorul counterul furnitureul');
   } else if (title === 'Change floor') {
     $('#topPanel h5').text('Floor'); // Reset to "Floor"
-    $('#topPanelTilesListUl').addClass('floorul').removeClass('wallul');
+    $('#topPanelTilesListUl').addClass('floorul').removeClass('wallul counterul furnitureul');
+  } else if (title === 'Change counter') {
+    $('#topPanel h5').text('Counter'); // Reset to "Counter"
+    $('#topPanelTilesListUl').addClass('counterul').removeClass('wallul floorul furnitureul');
+  } else if (title === 'Change furniture') {
+    $('#topPanel h5').text('Furniture'); // Reset to "Furniture"
+    $('#topPanelTilesListUl').addClass('furnitureul').removeClass('wallul floorul counterul');
   }
 
   // Update the topPanelH5 text after setting the class
