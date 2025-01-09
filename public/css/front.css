@@ -691,7 +691,12 @@ body{
     font-size: 14px;
     border: 1px solid #bbbbbb;
     line-height: unset;
+    margin-bottom: 0px !important;
+    margin-top: 5px;
 
+}
+#topPanelCheckFreeDesignRotateBox{
+    margin-top: -13px;
 }
 .top-panel-button:hover{
 
@@ -1208,6 +1213,7 @@ body{
     max-height:calc(100% - 20px) !important;
     /* border:1px solid #acacac;*/
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 10px 0px;
+    z-index: 10;
 }
 
 .top-panel-content-tiles-list-item.selected{
@@ -1221,6 +1227,29 @@ body{
     top:0px;
     left: 20px;
     z-index: 5;
+}
+
+#topPanelmainpanel{
+    position: fixed;
+    z-index: 7;
+    right: 0px;
+    background-color: rgba(255, 255, 255, 0.90);
+    height: 56px;
+    width: 46px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 10px 0px;
+    margin-top: 35px;
+    margin-left: -51px;
+    top:19px;
+    padding: 8px 0;
+    border-radius: 8px 0 0 8px;
+    cursor: pointer;
+    text-align: center;
+    cursor: pointer;
+}
+
+#mainpage-panel-btn {
+    font-size: 18px;
+    margin-top: 12px;
 }
 @media (max-width:767px) {
     .top-panel-product{
@@ -1241,13 +1270,22 @@ body{
         display: inline-block;
     }
     .top-panel-hide-button-product{
-        height: 30px;
-        width: 30px;
-
-        margin-left: -37px;
+        height: 37px;
+        width: 37px;
+        display: block;
+        margin-left: -42px;
+    }
+    #topPanelmainpanel{
+        height: 37px;
+        width: 37px;
+    }
+    #mainpage-panel-btn{
+        font-size: 15px;
+        margin-top:2px;
     }
     #topPanelHideIcon{
         font-size: 15px;
+        margin-top:2px;
     }
     .top-panel-button{
         padding: 8px 10px;
