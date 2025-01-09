@@ -41,4 +41,10 @@ class Helper
         // Return the skills as a comma-separated string
         return implode(', ', $show_room_names);
     }
+
+    public static function getSAPCode($tile_id)
+    {
+        $tile = Tile::find($tile_id);
+        return $tile->sku;
+    }
 }

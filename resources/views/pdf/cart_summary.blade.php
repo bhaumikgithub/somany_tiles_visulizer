@@ -52,7 +52,10 @@
                                         <p class=" cap-text">{{$tile_detail->name}}</p>
                                         <p class="">{{$tile_detail->width}} × {{$tile_detail->height}} MM</p>
                                         <p class="">{{$tile_detail->finish}}</p>
-                                        <p class="">Sap Code: 12312321312</p>
+                                            <?php $sku = Helper::getSAPCode($tile_detail->id);?>
+                                        @if( $sku !== null )
+                                            <p class="">Sap Code: {{$sku}}</p>
+                                        @endif
                                     </div>
                                     <div id="tile{{$tile_detail->id}}" class="col-md-3 col-sm-3 col-xs-12 col-pad-set xs-margin-set" data-weight="{{$tile_detail->width}}" data-height="{{$tile_detail->height}}">
                                         <input type="hidden" value="{{$tile_detail->width}}" id="tiles_width">
@@ -81,7 +84,7 @@
                                                         <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
                                                     @endif
                                                     @if( session()->has('pincode') )
-                                                        <button class="tile-cal-link" id="tile_cal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}">Open Tiles Calculator
+                                                        <button class="tile-cal-link tile_calculation" id="tile_cal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}">Open Tiles Calculator
                                                         </button>
                                                     @endif
                                             </div>

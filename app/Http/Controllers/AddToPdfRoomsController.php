@@ -315,57 +315,61 @@ class AddToPdfRoomsController extends Controller
     {
         $cartItemId = $request->input('cart_item_id');
         $tileId = $request->input('tile_id');
-        $newData = [
-            'total_area_sq_meter' => $request->input('totalAreaSqMeter'),
-            'total_area' => $request->input('totalArea'),
-            'width_in_feet' => $request->input('widthInFeet'),
-            'height_in_feet' => $request->input('heightInFeet'),
-            'wastage' => $request->input('wastage'),
-            'tile_in_box' => $request->input('tilesIn1Box'),
-            'tiles_needed' => $request->input('tilesNeeded'),
-            'box_needed' => $request->input('boxNeeded'),
-        ];
+        if( $request->widthInFeet !== null ) {
+            $newData = [
+                'total_area_sq_meter' => $request->input('totalAreaSqMeter'),
+                'total_area' => $request->input('totalArea'),
+                'width_in_feet' => $request->input('widthInFeet'),
+                'height_in_feet' => $request->input('heightInFeet'),
+                'wastage' => $request->input('wastage'),
+                'tile_in_box' => $request->input('tilesIn1Box'),
+                'tiles_needed' => $request->input('tilesNeeded'),
+                'box_needed' => $request->input('boxNeeded'),
+            ];
 
-        // Filter out empty values from $newData
-        $filteredData = array_filter($newData, function ($value) {
-            return $value !== null && $value !== ''; // Keep only non-null and non-empty values
-        });
+            // Filter out empty values from $newData
+            $filteredData = array_filter($newData, function ($value) {
+                return $value !== null && $value !== ''; // Keep only non-null and non-empty values
+            });
 
-        // Fetch the cart item
-        $cartItem = DB::table('cart_items')->where('id', $cartItemId)->first();
+            // Fetch the cart item
+            $cartItem = DB::table('cart_items')->where('id', $cartItemId)->first();
 
-        if ($cartItem) {
-            // Decode the JSON data
-            $tilesData = json_decode($cartItem->tiles_json, true);
+            if ($cartItem) {
+                // Decode the JSON data
+                $tilesData = json_decode($cartItem->tiles_json, true);
 
-            $tileExists = false;
+                $tileExists = false;
 
-            // Check if tile exists and update if it does
-            foreach ($tilesData as &$tile) {
-                if ($tile['id'] == $tileId) {
-                    $tile = array_merge($tile, $filteredData); // Update existing tile with filtered data
-                    $tileExists = true;
-                    break;
+                // Check if tile exists and update if it does
+                foreach ($tilesData as &$tile) {
+                    if ($tile['id'] == $tileId) {
+                        $tile = array_merge($tile, $filteredData); // Update existing tile with filtered data
+                        $tileExists = true;
+                        break;
+                    }
                 }
+
+                // If tile does not exist, add it
+                if (!$tileExists) {
+                    $newTile = array_merge(['id' => $tileId], $filteredData); // Include tile ID
+                    $tilesData[] = $newTile;
+                }
+
+                // Re-encode the JSON data
+                $updatedTilesData = json_encode($tilesData);
+
+                // Update the database
+                DB::table('cart_items')
+                    ->where('id', $cartItemId)
+                    ->update(['tiles_json' => $updatedTilesData]);
+
+                return response()->json(['success' => true, 'message' => 'Tile data added/updated successfully!']);
             }
 
-            // If tile does not exist, add it
-            if (!$tileExists) {
-                $newTile = array_merge(['id' => $tileId], $filteredData); // Include tile ID
-                $tilesData[] = $newTile;
-            }
-
-            // Re-encode the JSON data
-            $updatedTilesData = json_encode($tilesData);
-
-            // Update the database
-            DB::table('cart_items')
-                ->where('id', $cartItemId)
-                ->update(['tiles_json' => $updatedTilesData]);
-
-            return response()->json(['success' => true, 'message' => 'Tile data added/updated successfully!']);
+            return response()->json(['success' => false, 'message' => 'Cart item not found.']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Date not found.']);
         }
-
-        return response()->json(['success' => false, 'message' => 'Cart item not found.']);
     }
 }
