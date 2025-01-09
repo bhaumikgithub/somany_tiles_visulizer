@@ -220,7 +220,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="wast_per">Wastage in Percentage</label>
-                                            <input type="number" class="form-control" id="wast_per" name="length_feet" placeholder="Percentage">
+                                            <input type="number" class="form-control" id="wast_per" name="length_feet" placeholder="Percentage" value="10" readonly="readonly">
                                         </div>
 
                                     </div>
