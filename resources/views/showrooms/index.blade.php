@@ -42,7 +42,7 @@ function enableSelectedShowrooms() {
     if (checkedItems.length > 0) {
         window.$('#roomsForm').attr('action', '/showrooms/enable');
         window.$('#roomsFormSelectedRooms').val(JSON.stringify(checkedItems));
-        showConfirmDialog('Confirm enabling rooms', 'Please confirm enabling selected ' + checkedItems.length + ' rooms.', 'Enable Rooms');
+        showConfirmDialog('Confirm enabling Showrooms', 'Please confirm enabling selected ' + checkedItems.length + ' Showrooms.', 'Enable Showrooms');
     } else {
         window.$('#warningAlertBox').fadeIn();
     }
@@ -54,7 +54,7 @@ function disableSelectedShowrooms() {
     if (checkedItems.length > 0) {
         window.$('#roomsForm').attr('action', '/showrooms/disable');
         window.$('#roomsFormSelectedRooms').val(JSON.stringify(checkedItems));
-        showConfirmDialog('Confirm disabling rooms', 'Please confirm disabling selected ' + checkedItems.length + ' rooms.', 'Disable Rooms');
+        showConfirmDialog('Confirm disabling Showrooms', 'Please confirm disabling selected ' + checkedItems.length + ' Showrooms.', 'Disable Showrooms');
     } else {
         window.$('#warningAlertBox').fadeIn();
     }
@@ -66,7 +66,7 @@ function deleteSelectedShowrooms() {
     if (checkedItems.length > 0) {
         window.$('#roomsForm').attr('action', '/showrooms/delete');
         window.$('#roomsFormSelectedRooms').val(JSON.stringify(checkedItems));
-        showConfirmDialog('Confirm removing rooms', 'Please confirm removing selected ' + checkedItems.length + ' rooms.', 'Remove Rooms');
+        showConfirmDialog('Confirm removing Showrooms', 'Please confirm removing selected ' + checkedItems.length + ' Showrooms.', 'Remove Showrooms');
     } else {
         window.$('#warningAlertBox').fadeIn();
     }
@@ -87,34 +87,34 @@ function addRoom() {
     window.$('#addRoomFormBlock').slideToggle();
 }
 
-function editRoom(id) {
-    'use strict';
-    document.forms.updateRoomForm.reset();
-    window.$('#form-update-room-enabled').attr('checked', false);
-    window.$('#addRoomFormBlock').hide();
-    window.$('#form-update-room-icon-img').attr('src', '');
-    window.$('#form-update-room-shadow-img').attr('src', '');
-    window.$('#form-update-room-shadow-matt-img').attr('src', '');
+function editShowroom(id) {
+  console.log(id)
+    $.ajax({
+        url: '/fetch_showroom/' + id, // Use the resource route
+        method: 'GET', // Fetch the data
+        success: function(data) {
+          console.log(data.status);
+            // Populate the form with the showroom data
+            $('#name').val(data.name);
+            $('#e_code').val(data.e_code);
+            $('#city').val(data.city);
+            $('#address').val(data.address);
+            $('#form-room-type').val(data.status);
 
-    window.$.ajax({
-        url: '/get/room2d/' + id,
-        success: function (room) {
-            window.$('#form-update-room-id').val(room.id);
-            window.$('#form-update-room-name').val(room.name);
-            window.$('#form-update-room-type').val(room.type);
+            $('#addRoomForm').attr('action', '/fetch_showroom/' + data.id);
+            $('#addRoomForm').attr('method', 'POST');
 
-            if (Number(room.enabled)) { window.$('#form-update-room-enabled').attr('checked', true); }
-            window.$('#form-update-room-icon-img').attr('src', room.icon);
-            window.$('#form-update-room-image-img').attr('src', room.image);
-            window.$('#form-update-room-shadow-img').attr('src', room.shadow);
-            window.$('#form-update-room-shadow-matt-img').attr('src', room.shadow_matt);
+            $('input[name="_method"]').remove();
+            $('#addRoomForm').append('<input type="hidden" name="_method" value="PUT">');
 
-            window.$('#form-update-room-surfaces').attr('href', '/room2d/' + room.id + '/surfaces');
-
-            window.$('#updateRoomFormBlock').slideDown();
+            $('#addRoomFormBlock').slideDown();
+        },
+        error: function(xhr, status, error) {
+            alert('An error occurred while fetching showroom data.');
         }
     });
 }
+
 
 function showBigIconImageModal(name, image) {
     'use strict';
@@ -167,8 +167,8 @@ function showBigIconImageModal(name, image) {
       <label for="form-room-type" class="col-sm-3 control-label">Category</label>
       <div class="col-sm-6">
         <select name="status" id="form-room-type" class="form-control">
-            <option value="active" {{ old('status', isset($showroom) ? $showroom->status : '') == 'active' ? 'selected' : '' }}>Active</option>
-            <option value="inactive" {{ old('status', isset($showroom) ? $showroom->status : '') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+            <option value="Active" id="option-active" {{ old('status', isset($showroom) ? $showroom->status : '') == 'active' ? 'selected' : '' }}>Active</option>
+            <option value="Inactive" id="option-inactive" {{ old('status', isset($showroom) ? $showroom->status : '') == 'inactive' ? 'selected' : '' }}>Inactive</option>
         </select>
       </div>
     </div>
@@ -402,7 +402,7 @@ function showBigIconImageModal(name, image) {
           {{-- <td class="table-text">
             <img src="{{ $room->icon }}" alt="" class="img-thumbnail" style="max-width: 64px; max-height: 64px; cursor: pointer;" onclick="showBigIconImageModal('{{ $room->name }}', this.src);">
           </td> --}}
-          <td class="table-text bold"><a href="#" onclick="editRoom( {{ $showroom->id }} );" title="Edit">{{ $showroom->name }}</a></td>
+          <td class="table-text bold"><a href="#" onclick="editShowroom( {{ $showroom->id }} );" title="Edit">{{ $showroom->name }}</a></td>
           <td class="table-text bold">{{ $showroom->e_code }}</td>
           <td class="table-text bold">{{ $showroom->city }}</td>
           <td class="table-text bold">{{ $showroom->address }}</td>

@@ -36,7 +36,7 @@ class ShowroomController extends Controller
             'e_code' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'address' => 'required|string',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|in:Active,Inactive',
         ]);
 
         Showroom::create($validated);
@@ -47,9 +47,10 @@ class ShowroomController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Showroom $showroom)
+    public function show(Showroom $showroom , $id)
     {
-        //
+        $showroom = Showroom::findOrFail($id);
+        return response()->json($showroom);
     }
 
     /**
@@ -63,9 +64,25 @@ class ShowroomController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Showroom $showroom)
+    public function update(Request $request, Showroom $showroom ,$id)
     {
-        //
+        // dd($request->all());
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'e_code' => 'required|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:500',
+            'status' => 'required|string|in:Active,Inactive', // Validate status as Active/Inactive
+        ]);
+
+        $showroom = Showroom::findOrFail($id);
+        // dd($showroom);
+
+        $showroom->update($validated);
+
+        return redirect('/fetch_showroom');
+
     }
 
     /**
