@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Room;
 use App\Room2d;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +17,6 @@ use App\SurfaceType;
 use App\RoomType;
 use App\Models\User;
 use App\Savedroom;
-use App\CustomTile;
 
 class AjaxController extends Controller
 {
@@ -117,6 +114,8 @@ class AjaxController extends Controller
 
     public function getUser($id) {
         $user = User::findOrFail($id);
+        // Decode the JSON field to get the array of showroom IDs
+        $user->selectedShowroomIds = json_decode($user->show_room_ids, true);
         return response()->json($user);
     }
 
