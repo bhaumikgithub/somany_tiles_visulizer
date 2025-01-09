@@ -30,8 +30,9 @@ function addToPDF(){
                 $('#addToCartInfoPanel').modal('show');
                 $('#addToCartInfoPanel #cartInfoTilesList').html(response.body);
                 $("body").css('overflow', "hidden");
+
                 // Update the href attribute of the link in the modal
-                $('#continue-modal a#cart_url').attr('href', data.url);
+                $('#continue-modal a#cart_url').attr('href', response.url);
             },
             error: function (xhr, status, error) {
                 alert('Failed to stored!');
@@ -72,7 +73,7 @@ let ids = [];
 
 function getTileId(id){
     let current_room_type = $('#current_room_type').val();
-    if( current_room_type !== "kitchen"){
+    if( current_room_type !== "kitchen" || current_room_type !== "bedroom"){
         ids = [];
     }
     ids.push($('li#'+id).data('tile'));
