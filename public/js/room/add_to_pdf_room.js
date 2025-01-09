@@ -27,12 +27,18 @@ function addToPDF(){
             success: function (response) {
                 $('#dialogSaveModalBox').modal('hide');
                 $('.productCount').text(response.data.all_selection);
-                $('#addToCartInfoPanel').modal('show');
-                $('#addToCartInfoPanel #cartInfoTilesList').html(response.body);
+                $('#addToCartInfoPanelModal').modal('show');
+                $('#addToCartInfoPanelModal #cartInfoTilesList').html(response.body);
                 $("body").css('overflow', "hidden");
+                $('div.modal-backdrop').each(function () {
+                    if (!$(this).attr('id')) {
+                        // Hide the div
+                        $(this).hide();
+                    }
+                });
 
                 // Update the href attribute of the link in the modal
-                $('#continue-modal a#cart_url').attr('href', response.url);
+                //$('#continue-modal a#cart_url').attr('href', response.url);
             },
             error: function (xhr, status, error) {
                 alert('Failed to stored!');
@@ -82,6 +88,7 @@ function getTileId(id){
 }
 
 function removeProductFromCart(id) {
+    let totalProductCount = $('.productCount').text();
     window.$.ajax({
         url: `/add-to-pdf-data/${id}`, // Endpoint for deletion
         type: 'DELETE',
@@ -90,7 +97,8 @@ function removeProductFromCart(id) {
         },
         success: function (response) {
             alert(response.message);
-            $('.productCount').text(response.data);
+            let finalCount = parseInt(totalProductCount) - parseInt(response.data);
+            $('.productCount').text(finalCount);
             // Optionally remove the deleted item from the DOM
             $(`[data-prod-id="${id}"]`).closest('div').remove();
         },
@@ -112,12 +120,12 @@ function viewCartPdf() {
                 alert("Please choose tiles to add in PDF");
             } else {
                 $("body").css('overflow', "hidden");
-                $('#addToCartInfoPanel').css('overflow', "hidden");
-                $('#addToCartInfoPanel').modal('show');
+                $('#addToCartInfoPanelModal').css('overflow', "hidden");
+                $('#addToCartInfoPanelModal').modal('show');
               
                 if( response.data.all_selection > 0 )
                  $('.productCount').text(response.data.all_selection);
-                $('#addToCartInfoPanel #cartInfoTilesList').html(response.body);
+                $('#addToCartInfoPanelModal #cartInfoTilesList').html(response.body);
                 
             }
         },
@@ -129,7 +137,7 @@ function viewCartPdf() {
 }
 
 function hideCart() {
-    $('#addToCartInfoPanel').modal('hide');
+    $('#addToCartInfoPanelModal').modal('hide');
 }
 
 function clearAllItems() {
@@ -143,7 +151,7 @@ function clearAllItems() {
             alert(response.message); // Display success message
             // Optionally update the UI (e.g., empty the cart display)
             $('.productCount').text('');
-            $('#addToCartInfoPanel #cartInfoTilesList').html(''); // Assuming cart items are listed in #cart-items
+            $('#addToCartInfoPanelModal #cartInfoTilesList').html(''); // Assuming cart items are listed in #cart-items
           ;
         },
         error: function (xhr) {
