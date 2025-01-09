@@ -31,4 +31,10 @@ class Helper
         $tile = Tile::find($tile_id);
         return $tile->tiles_per_carton;
     }
+
+    public static function getSAPCode($tile_id)
+    {
+        $tile = Tile::find($tile_id);
+        return $tile->sku;
+    }
 }
