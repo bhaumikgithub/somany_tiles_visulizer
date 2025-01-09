@@ -228,6 +228,13 @@ Route::group(['middleware' => 'role:administrator'], function () {
     Route::post('/maximum_images/update', 'App\Http\Controllers\MaxImageController@update');
 
     Route::post('/fetch-data', 'App\Http\Controllers\FetchTilesController@fetchData')->name('fetch.data');
+
+
+    Route::resource('fetch_showroom', ShowroomController::class);
+    Route::post('/showrooms/enable', [ShowroomController::class, 'showroomsEnable']);
+    Route::post('/showrooms/disable', [ShowroomController::class, 'showroomsdisable']);
+    Route::post('/showrooms/delete', [ShowroomController::class, 'showroomsDelete']);
+
 });
 
 
@@ -262,9 +269,6 @@ Route::delete('/clear-items', 'App\Http\Controllers\AddToPdfRoomsController@remo
 Route::post('/update-tile-price','App\Http\Controllers\AddToPdfRoomsController@updateTilePrice');
 Route::post('/update-tile-calc','App\Http\Controllers\AddToPdfRoomsController@updateTileCalculation');
 
-
-
-Route::resource('fetch_showroom', ShowroomController::class);
 
 // Route::get('/test', 'App\Http\Controllers\HomeController@index');
 // Route::get('/test', function () {
