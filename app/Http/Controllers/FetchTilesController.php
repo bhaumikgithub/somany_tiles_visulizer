@@ -30,7 +30,7 @@ class FetchTilesController extends Controller
         $endDate = $request->end_date;
 
         // Get tiles data
-        $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete?limit=4";
+        $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete?limit=20";
         $queryParams = http_build_query([
             's' => $startDate,
             'e' => $endDate,
@@ -194,7 +194,7 @@ class FetchTilesController extends Controller
             'price' => $product['price'] ?? null,
             'expProps' => json_encode([
                 'thickness' => $product['thickness'] ?? null,
-                'finish' => $product['design_finish'] ?? null,
+                'product code' => $product['design_finish'] ?? null,
             ]), // Combined JSON field
             'rotoPrintSetName' => $product['vertical'] ?? null,
             'access_level' => $product['access_level'] ?? null,
