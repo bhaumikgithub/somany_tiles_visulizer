@@ -30,8 +30,9 @@ function addToPDF(){
                 $('#addToCartInfoPanel').modal('show');
                 $('#addToCartInfoPanel #cartInfoTilesList').html(response.body);
                 $("body").css('overflow', "hidden");
+
                 // Update the href attribute of the link in the modal
-                $('#continue-modal a#cart_url').attr('href', data.url);
+                $('#continue-modal a#cart_url').attr('href', response.url);
             },
             error: function (xhr, status, error) {
                 alert('Failed to stored!');
@@ -72,7 +73,7 @@ let ids = [];
 
 function getTileId(id){
     let current_room_type = $('#current_room_type').val();
-    if( current_room_type !== "kitchen"){
+    if( current_room_type !== "kitchen" || current_room_type !== "bedroom"){
         ids = [];
     }
     ids.push($('li#'+id).data('tile'));
@@ -294,15 +295,11 @@ $('.cartpanelclose').on('click', function(e) {
 
 $('.tile_calculation').click(function() {
     $('#tilecal').modal('show');
-
-    displayResult("#area_covered_meter","");
-    displayResult("#area_covered_feet","");
-    displayResult("#required_tiles","");
-    displayResult("#required_box","");
+    clearForm();
 
     // Get the tile ID from the button's data attribute
-    let tile = $('.tile-cal-link').data('tile-id');
-    let cart_item_id = $('.tile-cal-link').data('calculate-cart-item-id');
+    let tile = $(this).data('tile-id');
+    let cart_item_id = $(this).data('calculate-cart-item-id');
     let height = $('#tile'+tile+' input#tiles_height').val();
     let width = $('#tile'+tile+' input#tiles_width').val();
 
@@ -315,7 +312,6 @@ $('.tile_calculation').click(function() {
     // Set the modal content
     $('#sizes').val(`${width}x${height}`);
     $('#calc_tile_id').val(tile);
-    $("#wast_per").val(wastage);
     $("#width_feet").val(width_in_feet);
     $("#length_feet").val(height_in_feet);
 
@@ -422,9 +418,6 @@ $('#closeTileCalcModal').click(function() {
     });
 });
 
-
-
-
 $("#reset_btn").click(function(){
     clearForm();
 });
@@ -432,7 +425,6 @@ $("#reset_btn").click(function(){
 function clearForm() {
     $("#width_feet").val("");
     $("#length_feet").val("");
-    $("#wast_per").val("");
 
     displayResult("#area_covered_meter","");
     displayResult("#area_covered_feet","");
@@ -465,13 +457,6 @@ function validationCheck(){
         errorMessage += "- Please enter floor/wall length/height\n";
     }
 
-    if ($("#tiles_size").val() == "") {
-        errorMessage += "- Please select tiles size\n";
-    }
-
-    if ($("#wast_per").val() == "") {
-        errorMessage += "- Please enter wastage percentage\n";
-    }
     if(errorMessage == ""){
         return true;
     }

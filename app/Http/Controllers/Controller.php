@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -764,7 +765,8 @@ class Controller extends BaseController
 
     public function users() {
         $users = User::paginate(20);
-        return view('users', ['users' => $users]);
+        $show_rooms = DB::table('showrooms')->where('status','active')->get();
+        return view('users', ['users' => $users,'show_rooms' => $show_rooms]);
     }
 
     public function userUpdate(Request $request) {
@@ -774,6 +776,9 @@ class Controller extends BaseController
             'email' => 'required|email|max:100|unique:users,email,'.$request->id,
             'avatar' => 'nullable|image|max:1024|dimensions:max_width=1024,max_height=1024',
             'role' => 'required|in:guest,registered,editor,administrator',
+            'contact_no' => 'required|max:10',
+            'show_rooms' => 'required|array|min:1',  // Ensure at least one skill is selected
+            'show_rooms.*' => 'integer|exists:showrooms,id',  // Ensure each selected skill is valid
             'enabled' => 'nullable|boolean',
         ]);
 
@@ -784,6 +789,7 @@ class Controller extends BaseController
         $user = User::findOrFail($request->id);
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->showroom_id = json_encode($request->show_rooms);  // Store selected skill IDs as JSON
 
         if ($request->hasFile('avatar')) {
             $user->deleteAvatarFile();
@@ -792,6 +798,7 @@ class Controller extends BaseController
         }
 
         $user->role = $request->role;
+        $user->contact_no = $request->contact_no;
         if (isset($request->enabled)) { $user->enabled = 1; } else { $user->enabled = 0; }
         $user->save();
 
