@@ -83,8 +83,17 @@ function deleteShowRoom(id) {
 
 function addRoom() {
     'use strict';
-    window.$('#updateRoomFormBlock').hide();
-    window.$('#addRoomFormBlock').slideToggle();
+
+    $('#addRoomForm')[0].reset();
+
+    $('#addRoomForm').attr('action', '/fetch_showroom'); // Replace with your create route
+    $('#addRoomForm').attr('method', 'POST');
+
+    $('input[name="_method"]').remove();
+
+    $('#add-button').text('Add Showroom');
+
+    $('#addRoomFormBlock').slideToggle();
 }
 
 function editShowroom(id) {
@@ -94,7 +103,9 @@ function editShowroom(id) {
         method: 'GET', // Fetch the data
         success: function(data) {
           console.log(data.status);
-            // Populate the form with the showroom data
+
+            $('#add-button').text('Update Showoom');
+
             $('#name').val(data.name);
             $('#e_code').val(data.e_code);
             $('#city').val(data.city);
@@ -140,7 +151,7 @@ function showBigIconImageModal(name, image) {
       </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group required">
         <label for="form-room-name" class="col-sm-3 control-label">E_code</label>
         <div class="col-sm-6">
             <input type="text" name="e_code" id="e_code" class="form-control" value="{{ old('e_code', isset($showroom) ? $showroom->e_code : '') }}" required>        
@@ -148,14 +159,14 @@ function showBigIconImageModal(name, image) {
     </div> 
 
 
-    <div class="form-group">
+    <div class="form-group required">
         <label for="form-room-name" class="col-sm-3 control-label">City</label>
         <div class="col-sm-6">
             <input type="text" name="city" id="city" class="form-control" value="{{ old('city', isset($showroom) ? $showroom->city : '') }}" required>
         </div>
     </div> 
 
-    <div class="form-group">
+    <div class="form-group required">
         <label for="form-room-name" class="col-sm-3 control-label">Address</label>
         <div class="col-sm-6">
             <textarea name="address" id="address" class="form-control" rows="4" required>{{ old('address', isset($showroom) ? $showroom->address : '') }}</textarea>
@@ -163,7 +174,7 @@ function showBigIconImageModal(name, image) {
     </div> 
 
 
-    <div class="form-group">
+    <div class="form-group required">
       <label for="form-room-type" class="col-sm-3 control-label">Category</label>
       <div class="col-sm-6">
         <select name="status" id="form-room-type" class="form-control">
@@ -173,153 +184,16 @@ function showBigIconImageModal(name, image) {
       </div>
     </div>
 
-    {{-- <div class="form-group">
-      <label for="form-room-icon" class="col-sm-3 control-label">Room Icon</label>
-      <div class="col-sm-6">
-        <input type="file" name="icon" id="form-room-icon" accept="image/*" class="form-control">
-      </div>
-      <span class="col-sm-3 help-block">Image must be less than 1 MB and resolution less than 1024x1024 pixels.</span>
-    </div>
-
     <div class="form-group required">
-      <label for="form-room-image" class="col-sm-3 control-label">Room Image</label>
-      <div class="col-sm-6">
-        <input type="file" name="image" id="form-room-image" accept="image/*" class="form-control" required>
-      </div>
-      @if (!config('app.unlimited_image_size'))
-        <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
-      @endif
-    </div>
-
-    <div class="form-group">
-      <label for="form-room-shadow" class="col-sm-3 control-label">Room Shadow Glossy</label>
-      <div class="col-sm-6">
-        <input type="file" name="shadow" id="form-room-shadow" accept="image/*" class="form-control">
-      </div>
-      @if (!config('app.unlimited_image_size'))
-        <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
-      @endif
-    </div>
-
-    <div class="form-group">
-      <label for="form-room-shadow-matt" class="col-sm-3 control-label">Room Shadow Matt</label>
-      <div class="col-sm-6">
-        <input type="file" name="shadow_matt" id="form-room-shadow-matt" accept="image/*" class="form-control">
-      </div>
-      @if (!config('app.unlimited_image_size'))
-        <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
-      @endif
-    </div> --}}
-
-    <div class="form-group">
       <div class="col-sm-offset-3 col-sm-6">
         <div class="pull-right">
-          <button type="submit" class="btn btn-primary">Add room</button>
+          <button id="add-button" type="submit" class="btn btn-primary">Add Showroom</button>
           <button type="reset" class="btn btn-default" onclick="$('#addRoomFormBlock').slideUp();">Cancel</button>
         </div>
       </div>
     </div>
   </form>
 </div>
-
-
-{{-- <div id="updateRoomFormBlock" class="panel-body" style="display: none;">
-  <form id="updateRoomForm" action="/room2d/update" method="POST" enctype="multipart/form-data" class="form-horizontal">
-    {{ csrf_field() }}
-
-    <div class="form-group required">
-      <label for="form-update-room-id" class="col-sm-3 control-label">Id</label>
-      <div class="col-sm-3">
-        <input type="text" name="id" id="form-update-room-id" class="form-control" readonly="readonly" required>
-      </div>
-      <div class="col-sm-3">
-        <label><input type="checkbox" name="enabled" id="form-update-room-enabled" value="1"> Enabled</label>
-      </div>
-    </div>
-
-    <div class="form-group required">
-      <label for="form-update-room-name" class="col-sm-3 control-label">Name</label>
-      <div class="col-sm-6">
-        <input type="text" name="name" id="form-update-room-name" class="form-control" placeholder="Room name" required>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="form-update-room-type" class="col-sm-3 control-label">Category</label>
-      <div class="col-sm-6">
-        <select name="type" id="form-update-room-type" class="form-control">
-          @if (count($roomTypes) > 0)
-          @foreach ($roomTypes as $type => $display_name)
-            <option value="{{ $type }}">{{ $display_name }}</option>
-          @endforeach
-          @endif
-        </select>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="form-update-room-icon" class="col-sm-3 control-label">Room Icon</label>
-      <div class="col-sm-2">
-        <img id="form-update-room-icon-img" src="" alt="" class="img-thumbnail" style="max-width: 128px; max-height: 128px;cursor: pointer;" onclick="showBigIconImageModal(window.$('#form-update-room-name').val(), this.src);">
-      </div>
-      <div class="col-sm-4">
-        <input type="file" name="icon" id="form-update-room-icon" accept="image/*" class="form-control">
-      </div>
-      <span class="col-sm-3 help-block">Image must be less than 1 MB and resolution less than 1024x1024 pixels.</span>
-    </div>
-
-    <div class="form-group required">
-      <label for="form-update-room-image" class="col-sm-3 control-label">Room Image</label>
-      <div class="col-sm-2">
-        <img id="form-update-room-image-img" src="" alt="" class="img-thumbnail" style="max-width: 128px; max-height: 128px;cursor: pointer;" onclick="showBigIconImageModal(window.$('#form-update-room-name').val(), this.src);">
-      </div>
-      <div class="col-sm-4">
-        <input type="file" name="image" id="form-update-room-image" accept="image/*" class="form-control">
-      </div>
-      @if (!config('app.unlimited_image_size'))
-        <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
-      @endif
-    </div>
-
-    <div class="form-group required">
-      <label for="form-update-room-shadow" class="col-sm-3 control-label">Room Shadow</label>
-      <div class="col-sm-2">
-        <img id="form-update-room-shadow-img" src="" alt="" class="img-thumbnail" style="max-width: 128px; max-height: 128px;cursor: pointer;" onclick="showBigIconImageModal(window.$('#form-update-room-name').val(), this.src);">
-      </div>
-      <div class="col-sm-4">
-        <input type="file" name="shadow" id="form-update-room-shadow" accept="image/*" class="form-control">
-      </div>
-      @if (!config('app.unlimited_image_size'))
-        <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
-      @endif
-    </div>
-
-    <div class="form-group required">
-      <label for="form-update-room-shadow-matt" class="col-sm-3 control-label">Room Shadow Matt</label>
-      <div class="col-sm-2">
-        <img id="form-update-room-shadow-matt-img" src="" alt="" class="img-thumbnail" style="max-width: 128px; max-height: 128px;cursor: pointer;" onclick="showBigIconImageModal(window.$('#form-update-room-name').val(), this.src);">
-      </div>
-      <div class="col-sm-4">
-        <input type="file" name="shadow_matt" id="form-update-room-shadow-matt" accept="image/*" class="form-control">
-      </div>
-      @if (!config('app.unlimited_image_size'))
-        <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
-      @endif
-    </div>
-
-    <div class="form-group">
-      <div class="col-sm-offset-3 col-sm-6">
-        <button type="button" class="btn btn-default" onclick="deleteRoom(window.$('#form-update-room-id').val());" title="Remove Room"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
-        <a id="form-update-room-surfaces" href="#" class="btn btn-default">Edit Tiled Surfaces</a>
-        <span class="pull-right">
-          <button type="submit" class="btn btn-primary">Update room</button>
-          <button type="reset" class="btn btn-default" onclick="$('#updateRoomFormBlock').slideUp();">Cancel</button>
-        </span>
-      </div>
-    </div>
-  </form>
-</div> --}}
-
 
 <form id="roomsForm" action="" method="POST">
   {{ csrf_field() }}
@@ -364,7 +238,7 @@ function showBigIconImageModal(name, image) {
 
 <div class="panel panel-default">
   <div class="dropdown pull-right">
-    <button class="btn btn-default btn-sm" onclick="addRoom();">+ Add room</button>
+    <button class="btn btn-default btn-sm" onclick="addRoom();">+ Add Showroom</button>
     <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
       With selected
       <span class="caret"></span>
