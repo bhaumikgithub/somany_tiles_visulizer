@@ -27,11 +27,18 @@ function addToPDF(){
             success: function (response) {
                 $('#dialogSaveModalBox').modal('hide');
                 $('.productCount').text(response.data.all_selection);
-                $('#addToCartInfoPanel').modal('show');
-                $('#addToCartInfoPanel #cartInfoTilesList').html(response.body);
+                $('#addToCartInfoPanelModal').modal('show');
+                $('#addToCartInfoPanelModal #cartInfoTilesList').html(response.body);
                 $("body").css('overflow', "hidden");
+                $('div.modal-backdrop').each(function () {
+                    if (!$(this).attr('id')) {
+                        // Hide the div
+                        $(this).hide();
+                    }
+                });
+
                 // Update the href attribute of the link in the modal
-                $('#continue-modal a#cart_url').attr('href', data.url);
+                //$('#continue-modal a#cart_url').attr('href', response.url);
             },
             error: function (xhr, status, error) {
                 alert('Failed to stored!');
@@ -72,7 +79,7 @@ let ids = [];
 
 function getTileId(id){
     let current_room_type = $('#current_room_type').val();
-    if( current_room_type !== "kitchen"){
+    if( current_room_type !== "kitchen" || current_room_type !== "bedroom"){
         ids = [];
     }
     ids.push($('li#'+id).data('tile'));
@@ -81,6 +88,7 @@ function getTileId(id){
 }
 
 function removeProductFromCart(id) {
+    let totalProductCount = $('.productCount').text();
     window.$.ajax({
         url: `/add-to-pdf-data/${id}`, // Endpoint for deletion
         type: 'DELETE',
@@ -89,7 +97,8 @@ function removeProductFromCart(id) {
         },
         success: function (response) {
             alert(response.message);
-            $('.productCount').text(response.data);
+            let finalCount = parseInt(totalProductCount) - parseInt(response.data);
+            $('.productCount').text(finalCount);
             // Optionally remove the deleted item from the DOM
             $(`[data-prod-id="${id}"]`).closest('div').remove();
         },
@@ -111,12 +120,12 @@ function viewCartPdf() {
                 alert("Please choose tiles to add in PDF");
             } else {
                 $("body").css('overflow', "hidden");
-                $('#addToCartInfoPanel').css('overflow', "hidden");
-                $('#addToCartInfoPanel').modal('show');
+                $('#addToCartInfoPanelModal').css('overflow', "hidden");
+                $('#addToCartInfoPanelModal').modal('show');
               
                 if( response.data.all_selection > 0 )
                  $('.productCount').text(response.data.all_selection);
-                $('#addToCartInfoPanel #cartInfoTilesList').html(response.body);
+                $('#addToCartInfoPanelModal #cartInfoTilesList').html(response.body);
                 
             }
         },
@@ -128,7 +137,7 @@ function viewCartPdf() {
 }
 
 function hideCart() {
-    $('#addToCartInfoPanel').modal('hide');
+    $('#addToCartInfoPanelModal').modal('hide');
 }
 
 function clearAllItems() {
@@ -142,7 +151,7 @@ function clearAllItems() {
             alert(response.message); // Display success message
             // Optionally update the UI (e.g., empty the cart display)
             $('.productCount').text('');
-            $('#addToCartInfoPanel #cartInfoTilesList').html(''); // Assuming cart items are listed in #cart-items
+            $('#addToCartInfoPanelModal #cartInfoTilesList').html(''); // Assuming cart items are listed in #cart-items
           ;
         },
         error: function (xhr) {
@@ -294,15 +303,11 @@ $('.cartpanelclose').on('click', function(e) {
 
 $('.tile_calculation').click(function() {
     $('#tilecal').modal('show');
-
-    displayResult("#area_covered_meter","");
-    displayResult("#area_covered_feet","");
-    displayResult("#required_tiles","");
-    displayResult("#required_box","");
+    clearForm();
 
     // Get the tile ID from the button's data attribute
-    let tile = $('.tile-cal-link').data('tile-id');
-    let cart_item_id = $('.tile-cal-link').data('calculate-cart-item-id');
+    let tile = $(this).data('tile-id');
+    let cart_item_id = $(this).data('calculate-cart-item-id');
     let height = $('#tile'+tile+' input#tiles_height').val();
     let width = $('#tile'+tile+' input#tiles_width').val();
 
@@ -315,7 +320,6 @@ $('.tile_calculation').click(function() {
     // Set the modal content
     $('#sizes').val(`${width}x${height}`);
     $('#calc_tile_id').val(tile);
-    $("#wast_per").val(wastage);
     $("#width_feet").val(width_in_feet);
     $("#length_feet").val(height_in_feet);
 
@@ -422,9 +426,6 @@ $('#closeTileCalcModal').click(function() {
     });
 });
 
-
-
-
 $("#reset_btn").click(function(){
     clearForm();
 });
@@ -432,7 +433,6 @@ $("#reset_btn").click(function(){
 function clearForm() {
     $("#width_feet").val("");
     $("#length_feet").val("");
-    $("#wast_per").val("");
 
     displayResult("#area_covered_meter","");
     displayResult("#area_covered_feet","");
@@ -465,13 +465,6 @@ function validationCheck(){
         errorMessage += "- Please enter floor/wall length/height\n";
     }
 
-    if ($("#tiles_size").val() == "") {
-        errorMessage += "- Please select tiles size\n";
-    }
-
-    if ($("#wast_per").val() == "") {
-        errorMessage += "- Please enter wastage percentage\n";
-    }
     if(errorMessage == ""){
         return true;
     }

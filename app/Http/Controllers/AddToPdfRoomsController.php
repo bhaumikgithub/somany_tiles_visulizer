@@ -133,7 +133,7 @@ class AddToPdfRoomsController extends Controller
         $item->delete();
 
         return response()->json([
-            'data' => CartItem::count(),
+            'data' => 1,
             'message' => 'Item deleted successfully.']);
     }
 

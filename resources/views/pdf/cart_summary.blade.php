@@ -54,7 +54,7 @@
                                         <p class=" cap-text">{{$tile_detail->name}}</p>
                                         <p class="">{{$tile_detail->width}} × {{$tile_detail->height}} MM</p>
                                         <p class="">{{$tile_detail->finish}}</p>
-                                        <p class="">Sap Code: 12312321312</p>
+{{--                                        <p class="">Sap Code: 12312321312</p>--}}
                                     </div>
                                     <div id="tile{{$tile_detail->id}}" class="col-md-3 col-sm-3 col-xs-12 col-pad-set xs-margin-set" data-weight="{{$tile_detail->width}}" data-height="{{$tile_detail->height}}">
                                         <input type="hidden" value="{{$tile_detail->width}}" id="tiles_width">
@@ -214,7 +214,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="wast_per">Wastage in Percentage</label>
-                                            <input type="number" class="form-control" id="wast_per" name="length_feet" placeholder="Percentage">
+                                            <input type="number" class="form-control" id="wast_per" name="length_feet" placeholder="Percentage" value="10" readonly="readonly">
                                         </div>
 
                                     </div>
