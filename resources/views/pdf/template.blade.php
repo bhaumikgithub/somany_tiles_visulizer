@@ -91,6 +91,7 @@
                                         <p style="margin: 5px 0; font-size: 12px;">{{$tile_detail->name}}</p>
                                         <p style="margin: 5px 0; font-size: 12px;">{{$tile_detail->width}} × {{$tile_detail->height}} MM</p>
                                         <p style="margin: 5px 0; font-size: 12px;">{{ucfirst($tile_detail->finish)}}</p>
+                                            <?php $sku = Helper::getSAPCode($tile_detail->id);?>
                                         @if( $sku !== null )
                                             <p style="margin: 5px 0; font-size: 12px;">Sap Code: {{$sku}}</p>
                                         @endif
