@@ -87,11 +87,13 @@
                                         <img src="{{ public_path($tile_detail->icon) }}" alt="Wall A" style="width: 100%; max-width: 100px; height: auto;">
                                     </td>
                                     <td style="width: 60%; border: 1px solid #000; padding: 10px;">
-                                        <h5 style="margin: 5px 0; font-size: 14px;">{{$tile_detail->surface}}</h5>
+                                        <h5 style="margin: 5px 0; font-size: 14px;font-weight: bold">{{$tile_detail->surface}}</h5>
                                         <p style="margin: 5px 0; font-size: 12px;">{{$tile_detail->name}}</p>
                                         <p style="margin: 5px 0; font-size: 12px;">{{$tile_detail->width}} × {{$tile_detail->height}} MM</p>
-                                        <p style="margin: 5px 0; font-size: 12px;">{{$tile_detail->finish}}</p>
-                                        <p style="margin: 5px 0; font-size: 12px;">Sap Code: 12312321312</p>
+                                        <p style="margin: 5px 0; font-size: 12px;">{{ucfirst($tile_detail->finish)}}</p>
+                                        @if( $sku !== null )
+                                            <p style="margin: 5px 0; font-size: 12px;">Sap Code: {{$sku}}</p>
+                                        @endif
                                     </td>
                                     <td style="width: 20%; border: 1px solid #000; padding: 10px;">
                                         @if( isset($tile_detail->total_area_sq_meter) )
