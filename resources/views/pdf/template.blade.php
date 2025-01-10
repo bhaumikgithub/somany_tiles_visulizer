@@ -79,7 +79,10 @@
                 @foreach($allProduct as $index=>$item)
                     <div>
                         <h4 style="font-size: 16px; margin-bottom: 10px;">Selection {{$index+1}} of {{$allProduct->count()}}</h4>
-                        <img src="{{ public_path('storage/'.$item->current_room_design) }}" alt="Room" style="display: block; width: 640px; height: 320px; margin-bottom: 20px;">
+                            <?php $showImage = $item->show_main_image ;?>
+                        @if( $showImage === "yes")
+                            <img src="{{ public_path('storage/'.$item->current_room_design) }}" alt="Room" style="display: block; width: 640px; height: 320px; margin-bottom: 20px;">
+                        @endif
                         <table style="width: 100%; border-collapse: collapse;margin-bottom: 20px;">
                             @foreach(json_decode($item->tiles_json) as $tile_detail)
                                 <tr style="border: 1px solid #000;">

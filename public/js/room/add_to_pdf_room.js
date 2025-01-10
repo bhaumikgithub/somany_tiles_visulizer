@@ -611,7 +611,7 @@ $('#show_main_image').change(function() {
         imageWrapper.hide();
     }
     let cart_item_id = $(this).data('cart-item-id');
-    updatePreference($(this).is(':checked'),cart_item_id);
+    //updatePreference($(this).is(':checked'),cart_item_id);
 });
 
 function updatePreference(showImage,cart_item_id) {
