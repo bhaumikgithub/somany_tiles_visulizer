@@ -98,15 +98,20 @@ let lastRoomCanvasTitle = ''; // Variable to store the last room-canvas title
 // Function to update the h5 element text based on the current mode
 function updateTopPanelText() {
   if (lastRoomCanvasTitle === 'Change wall') {
-    $('#topPanel h5').text('Wall: ' + wallSelections.join(', ')); // Display all wall selections
+    const text = wallSelections.length > 0 ? wallSelections.join(', ') : 'Wall:';
+    $('#topPanel h5').text(text);
   } else if (lastRoomCanvasTitle === 'Change floor') {
-    $('#topPanel h5').text('Floor: ' + floorSelections.join(', ')); // Display all floor selections
+    const text = floorSelections.length > 0 ? floorSelections.join(', ') : 'Floor:';
+    $('#topPanel h5').text(text);
   } else if (lastRoomCanvasTitle === 'Change counter') {
-    $('#topPanel h5').text('Counter: ' + counterSelections.join(', ')); // Display all counter selections
+    const text = counterSelections.length > 0 ? counterSelections.join(', ') : 'Counter:';
+    $('#topPanel h5').text(text);
   } else if (lastRoomCanvasTitle === 'Change ceiling') {
-    $('#topPanel h5').text('Ceiling: ' + ceilingSelections.join(', ')); // Display all ceiling selections
+    const text = ceilingSelections.length > 0 ? ceilingSelections.join(', ') : 'Ceiling:';
+    $('#topPanel h5').text(text);
   } else if (lastRoomCanvasTitle === 'Change theme') {
-    $('#topPanel h5').text('Theme: ' + themeSelections.join(', ')); // Display all theme selections
+    const text = themeSelections.length > 0 ? themeSelections.join(', ') : 'Theme:';
+    $('#topPanel h5').text(text);
   } else {
     $('#topPanel h5').text('Choose Tiles');
   }
