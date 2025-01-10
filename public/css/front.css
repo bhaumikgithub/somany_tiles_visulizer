@@ -13,7 +13,7 @@ a{
     color: white;
     text-decoration: none;
 }
-a:hover{
+a:hover , a:focus{
     color: white;
     text-decoration: none;
 }
@@ -53,6 +53,7 @@ a:hover{
     /* box-shadow: inset 100px 200px 60px 42px rgba(0,0,0,0.1); */
 
 }
+
 .grow h1{
     text-shadow: 2px 2px 4px #000000;
 }
@@ -1071,6 +1072,10 @@ body{
 
     /* box-shadow: rgba(0, 0, 0, 0.24) 0 0 10px; */
 }
+.cmn-room-btn .span-icon{
+    font-size: 20px;
+      
+}
 .cmn-room-btn:hover{
 
     color: #3F3F46 !important;
@@ -1116,7 +1121,7 @@ body{
     
 }
 .btn-text-set{
-    margin-left: 10px;
+    margin-left: 5px;
     display: inline-block;
     font-size: 15px;
 }
@@ -1128,12 +1133,13 @@ body{
     text-align: right;
 }
 .share-btn-img{
-    padding:15px;
+    padding:10px;
     margin-bottom: 10px;
     z-index: 3;
     position: fixed;
     bottom: 130px;
-    margin-right:15px
+    margin-right:15px;
+    font-size: 30px;
     
 }
 .share-btn-img img{
