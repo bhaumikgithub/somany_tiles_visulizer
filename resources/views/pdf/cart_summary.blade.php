@@ -49,9 +49,9 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set">
-                                        <p class=" cap-text">{{$tile_detail->name}}</p>
+                                        <p class=" cap-text"><b>{{$tile_detail->name}}</b></p>
                                         <p class="">{{$tile_detail->width}} × {{$tile_detail->height}} MM</p>
-                                        <p class="">{{$tile_detail->finish}}</p>
+                                        <p class="">{{ucfirst($tile_detail->finish)}}</p>
                                             <?php $sku = Helper::getSAPCode($tile_detail->id);?>
                                         @if( $sku !== null )
                                             <p class="">Sap Code: {{$sku}}</p>
