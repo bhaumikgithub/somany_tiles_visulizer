@@ -139,7 +139,7 @@
                     <li>The visuals are for reference purposes only; actual colors, finishes, and tile dimensions may vary.</li>
                     <li>Shade variation is an inherent characteristic of tiles; therefore, physical inspection is
                         recommended for accurate selection</li>
-                    <li>Tiles with multiple faces feature varied pa0erns, resulting in natural design variations</li>
+                    <li>Tiles with multiple faces feature varied patterns, resulting in natural design variations</li>
                     <li>Prices quoted are subject to change without prior notice. The final price applicable at the time of
                         delivery will prevail.</li>
                 </ul>
