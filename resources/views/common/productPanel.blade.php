@@ -5,14 +5,22 @@
 
     <div class="row">
     <div class="col-md-12">
+        <!-- <div id="selectd-data">
+        <ul class="slected_tile">
+            <li>
 
+            </li>
+        </ul>
+
+        </div> -->
+    <div id="slected-panel">
     <div class="top-panel-box">
     <div  class="top-panel-hide-layer">
         <span id="topPanelHideIcon" class="glyphicon-menu-right glyphicon" aria-hidden="true"></span>
     </div>
         <h5 class="text-center panel-title" id="optionText"> </h5>
      </div> 
-     <div id="slected-panel">
+   
      <div class="top-panel-box">
         <div class="input-box d-flex flex-wrap serch-box-wrap">
             <div class="input-text-box-wrap" >

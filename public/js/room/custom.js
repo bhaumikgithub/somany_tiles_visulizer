@@ -112,6 +112,21 @@ function updateTopPanelText() {
 }
 updateTopPanelText();
 
+function selectedpaneltext(){
+
+  if (lastRoomCanvasTitle === 'Change wall' && wallCount === 0) {
+    alert(wallCount);
+    $('#slected-panel-data p').text('Please first choose data'); // Display this if no wall is selected
+  } else if (lastRoomCanvasTitle === 'Change floor' && floorCount === 0) {
+    $('#slected-panel-data p').text('Please first choose data'); // Display this if no wall is selected
+  } else if (lastRoomCanvasTitle === 'Change counter' && counterCount === 0) {
+    $('#slected-panel-data p').text('Please first choose data'); // Display this if no wall is selected
+  } else if (lastRoomCanvasTitle === 'Change furniture' && furnitureCount === 0) {
+    $('#slected-panel-data p').text('Please first choose data'); // Display this if no wall is selected
+  }
+
+}
+selectedpaneltext();
 // Track clicks on any li inside #topPanelTilesListUl
 $('#topPanelTilesListUl').on('click', 'li', function () {
   // Check if #topPanelTilesListUl has the 'wallul', 'floorul', 'counterul', or 'furnitureul' class
