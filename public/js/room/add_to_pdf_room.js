@@ -601,3 +601,33 @@ function changeDpiDataUrl(base64Image, dpi) {
     return base64Image;
 
 }
+
+$('#show_main_image').change(function() {
+    const imageWrapper = $('.show_main_image_wrapper');
+
+    if ($(this).is(':checked')) {
+        imageWrapper.show();
+    } else {
+        imageWrapper.hide();
+    }
+    let cart_item_id = $(this).data('cart-item-id');
+    updatePreference($(this).is(':checked'),cart_item_id);
+});
+
+function updatePreference(showImage,cart_item_id) {
+    $.ajax({
+        url: '/update-preference', // URL to the controller method for updating the price
+        method: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
+            show_image: ( showImage === false ) ? "no" : "yes",
+            cart_item_id: cart_item_id,
+        },
+        success: function(response) {
+            console.log('Preference updated successfully');
+        },
+        error: function(error) {
+            console.error('Error updating preference:', error);
+        }
+    });
+}

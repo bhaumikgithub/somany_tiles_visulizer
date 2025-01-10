@@ -311,4 +311,14 @@ class AddToPdfRoomsController extends Controller
             return response()->json(['success' => false, 'message' => 'Date not found.']);
         }
     }
+
+    public function updatePreference(Request $request)
+    {
+        $showImage = $request->input('show_image');
+
+        // Update the database
+        CartItem::where('id', $request->input('cart_item_id'))->update(['show_main_image' => $showImage]);
+
+        return response()->json(['success' => true]);
+    }
 }

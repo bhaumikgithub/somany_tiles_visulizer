@@ -39,8 +39,14 @@
                 @if( isset($allProduct))
                     @foreach($allProduct as $index=>$item)
                         <h4 class="selection-title">Selection {{$index+1}} of {{$allProduct->count()}}</h4>
-                        <img src="{{ asset('storage/'.$item->current_room_design) }}" alt="Room"
-                             class="img-responsive product-image">
+                        <?php $showImage = $item->show_main_image ;?>
+                        @if( $showImage === "yes")
+                            <div class="show_main_image_wrapper" style="display: {{ $showImage === "yes" ? 'block' : 'none' }}" >
+                                <img src="{{ asset('storage/'.$item->current_room_design) }}" alt="Room"
+                                     class="img-responsive product-image">
+                            </div>
+                            <input type="checkbox" value="yes" name="show_main_image" id="show_main_image" {{ $showImage ? 'checked' : '' }} data-cart-item-id="{{$item->id}}"> Show Image?
+                        @endif
                         @foreach(json_decode($item->tiles_json) as $tile_detail)
                             <h5 class="mt-20 font-bold dark-grey-font">{{ucfirst($tile_detail->surface)}}</h5>
                             <div class="details-card" id="{{$index . '_' . $loop->index}}">
