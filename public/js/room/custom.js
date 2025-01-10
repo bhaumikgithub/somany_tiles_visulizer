@@ -233,8 +233,16 @@ $('.share-btn-close').on('click', function () {
 });
 
 
+$('.open-panel').on('click', function () {
+  // Show the info panel
+  $('#selectd-data').hide();
+  $('#slected-panel').show();
+  
+});
 
-// $('.rotate-font').on('click', function () {
-//     $('.rotate-font').removeClass('active');
-//     $(this).addClass('active');
-// });
+$('.selcte-data-btn').on('click', function () {
+  // Show the info panel
+  $('#selectd-data').show();
+  $('#slected-panel').hide();
+  
+});

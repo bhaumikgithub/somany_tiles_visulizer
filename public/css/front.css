@@ -592,11 +592,39 @@ body{
     margin:0px;
     padding:0px 15px;
 }
-.panel-title{
+.h5-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Vertically center button and text */
+}
+
+.panel-title {
     font-size: 18px;
     color: #555;
     margin-bottom: 15px;
-    margin-top:15px;
+    margin-top: 15px;
+    width: max-content;
+}
+
+.selcte-data-btn {
+    margin-right: 10px; /* Add space between the button and text */
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    content: "\e257";
+    background-color: rgba(217, 217, 217, 1);
+    width: 25px;
+    height: 25px;
+    font-size: 11px;
+    border-radius: 20px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: scaleX(-1);
 }
 .top-panel-hide-button-product{
     /*background-color:rgba(163,163,163,1) ;*/
@@ -611,8 +639,6 @@ body{
     position: fixed;
 
 }
-
-
 
 #topPanelHideIcon{
     font-size: 18px;
@@ -1266,18 +1292,73 @@ body{
 }
 #topPanelTilesListBox{
     overflow-y: auto;
-    height: 88vh;
+    height: 70vh;
 }
 
 /* select data pannel css start */
 
 #selectd-data{
+
+    max-height: 94vh;
+    overflow-y: auto;
    
 }
 .slected_tile {
-    background: #fff;
+    background:rgba(255, 255, 255, 0.9);
+    border:1px solid rgba(163, 163, 163, 1);
+    padding: 6px;
+    border-radius: 20px;
+    margin:15px;
+    display: flex;
+    align-items: center;
+    color:#555;
+    position: relative;
 }
 
+.slected_tile .tile-list-thumbnail-image-holder{
+    width: max-content !important;
+    height: max-content !important;
+    line-height: unset !important;
+    border: 1px solid #c7c7c7;
+    border-radius: 20px;
+    margin-right: 3px; 
+}
+
+.slected_tile .tile-list-thumbnail-image-holder img {
+    height: 74px;
+    width: 74px;
+    /* max-width: 100%; */
+    max-height: 100%;
+    border-radius: 20px;
+    
+}
+
+.slected_tile p{
+    font-size: 13px;
+    letter-spacing: 0.25px;
+}
+.slected_tile .-caption{
+    border-bottom: none;
+    /* margin-top: 10px !important; */
+    font-size: 15px !important;
+    margin-bottom: 0px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 700;
+    text-transform: capitalize;
+
+}
+#open-panel{
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+}
+#slected-panel{
+    display: none;
+}
 /* select data pannel css end */
 @media (max-width:767px) {
     .top-panel-product{
