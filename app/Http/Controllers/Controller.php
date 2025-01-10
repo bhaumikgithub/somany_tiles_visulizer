@@ -124,6 +124,7 @@ class Controller extends BaseController
             'filterTileRotoPrintSetName' => 'nullable|string',
             'filterTileExpProps' => 'nullable|string',
             'filterTileEnabled' => 'nullable|string',
+            'filterTileFromApi' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -147,6 +148,7 @@ class Controller extends BaseController
                 'filterTileRotoPrintSetName' => $request->filterTileRotoPrintSetName,
                 'filterTileExpProps' => $request->filterTileExpProps,
                 'filterTileEnabled' => $request->filterTileEnabled,
+                'filterTileFromApi' => $request->filterTileFromApi,
             ];
             session($filterRequest);
         } else {
@@ -162,6 +164,7 @@ class Controller extends BaseController
                 'filterTileRotoPrintSetName' => session('filterTileRotoPrintSetName'),
                 'filterTileExpProps' => session('filterTileExpProps'),
                 'filterTileEnabled' => session('filterTileEnabled'),
+                'filterTileFromApi' => session('filterTileFromApi'),
             ];
         }
         return (object) $filterRequest;
@@ -180,6 +183,7 @@ class Controller extends BaseController
         if ($request->filterTileRotoPrintSetName) $filter[] = ['rotoPrintSetName', 'like', '%' . $request->filterTileRotoPrintSetName . '%'];
         if ($request->filterTileExpProps) $filter[] = ['expProps', 'like', '%' . $request->filterTileExpProps . '%'];
         if ($request->filterTileEnabled) $filter[] = ['enabled', '=', $request->filterTileEnabled];
+        if ($request->filterTileFromApi) $filter[] = ['from_api', '=', $request->filterTileFromApi];
 
         return $filter;
     }
