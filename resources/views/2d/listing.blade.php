@@ -1,5 +1,6 @@
 @extends('layouts.front')
 @section('content')
+ <div class="">
     <div class="mt-2 mb-2 row" style="padding: 0;margin-left:0.5%;margin-right: 0.5%;">
         @if(isset($rooms))
             @foreach($rooms as $aRoom)
@@ -17,5 +18,7 @@
             @endforeach
         @endif
     </div>
-    <a href="{{ url('/') }}" class=" cmn-back-btn d-flex flex-wrap align-items-center" > <img src="/img/arrow-back.png" alt="arrow-back" class="img-responsive"> <span class="btn-text-set">Back </span> </a>
+    <a href="{{ url('/') }}" class=" cmn-back-btn d-flex flex-wrap align-items-center" >  <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
+    </span> <span class="btn-text-set">Back </span> </a>
+</div>
 @endsection
