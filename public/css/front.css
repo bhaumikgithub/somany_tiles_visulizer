@@ -1390,6 +1390,9 @@ margin-left: 5px !important;
 .share-div .fa{
     font-size: 22px;
 }
+#loadAnimationContainer {
+position: fixed;
+}
 /* select data pannel css end */
 @media (max-width:767px) {
     .top-panel-product{

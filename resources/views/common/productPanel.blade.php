@@ -131,7 +131,7 @@
             <div class="fliter-btn-wrap">
             <button id="btnRefine" class="top-panel-button top-panel-btn-filter">@lang('
                
-            <i class="fa-solid fa-sliders"></i>
+                <i class="fa-solid fa-sliders"></i>
 
                 ')</button>
         
