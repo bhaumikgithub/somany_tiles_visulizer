@@ -9,10 +9,9 @@
         <span id="mainpage-panel-btn" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
     </div>
                     <button class="share-btn-img cmn-room-btn">
-                    <i class="fa fa-share-alt" aria-hidden="true"></i>
-
+                                <img src="/img/share.png" alt="share-button" class="img-responsive">
                                 </button>
-                                <div class="share-div d-flex flex-wrap social-share" style="display: none;">
+                                <div class="share-div d-flex flex-wrap social-share">
                                     @if (config('app.share_button_whatsapp'))
                                         <a href="https://wa.me/?text={{ urlencode(__('SHARE_WHATSAPP_MESSAGE')) }}%20" title="@lang('Whatsapp Share')" target="_blank" class="share-link d-flex flex-wrap align-items-center">
                                         <i class="fa fa-share-alt" aria-hidden="true"></i><span class="btn-text-set">Share </span>

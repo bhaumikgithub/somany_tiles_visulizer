@@ -601,3 +601,35 @@ function changeDpiDataUrl(base64Image, dpi) {
     return base64Image;
 
 }
+
+$('input[type="checkbox"]').change(function() {
+    const $checkbox = $(this);
+    const itemId = $checkbox.data('cart-item-id');
+    const $imageWrapper = $('#imageWrapper_' + itemId);
+    const isChecked = $checkbox.is(':checked');
+    const showImage = isChecked ? 'yes' : 'no';
+
+    $imageWrapper.toggle(isChecked);
+    $checkbox.val(showImage);
+
+    // You can call updatePreference here if needed
+    updatePreference(isChecked, itemId);
+});
+
+function updatePreference(showImage,cart_item_id) {
+    $.ajax({
+        url: '/update-preference', // URL to the controller method for updating the price
+        method: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
+            show_image: ( showImage === false ) ? "no" : "yes",
+            cart_item_id: cart_item_id,
+        },
+        success: function(response) {
+            console.log('Preference updated successfully');
+        },
+        error: function(error) {
+            console.error('Error updating preference:', error);
+        }
+    });
+}
