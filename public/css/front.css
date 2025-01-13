@@ -62,7 +62,7 @@ a:hover , a:focus{
 }
 
 body{
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 .grow h1{
@@ -794,14 +794,14 @@ body{
   
     border-radius: 16px;
     background-color: #7e7c7c;
-    padding: 5px;
+    padding: 8px 5px 5px 5px;
     margin: 0px;
     width: 40px;
     height: 40px;
 }
 .top-panel-btn-filter i{
     color: #fff;
-    font-size: 25px;
+    font-size: 22px;
 }
 .top-panel-btn-filter img{
     
@@ -1079,7 +1079,7 @@ body{
     /* box-shadow: rgba(0, 0, 0, 0.24) 0 0 10px; */
 }
 .cmn-room-btn .span-icon{
-    font-size: 20px;
+    font-size: 25px;
       
 }
 .cmn-room-btn:hover{
@@ -1091,7 +1091,7 @@ body{
 
 
 .cmn-room-btn.back-btn{
-    padding:20px 12px 20px 20px;
+    padding:16px 12px 20px 20px;
     height: 60px;
     width: 100px !important;
     z-index: 3;
@@ -1118,7 +1118,7 @@ body{
 
 }
 .cmn-room-btn.cn-btn{
-    padding:20px 20px 20px 12px;
+    padding:16px 20px 20px 12px;
     height: 60px;
     z-index: 3;
     position: fixed;
@@ -1127,7 +1127,7 @@ body{
     
 }
 .btn-text-set{
-    margin-left: 5px;
+    margin-left: 10px;
     display: inline-block;
     font-size: 15px;
 }
@@ -1139,7 +1139,7 @@ body{
     text-align: right;
 }
 .share-btn-img{
-    padding:10px;
+    padding:15px;
     margin-bottom: 10px;
     z-index: 3;
     position: fixed;
@@ -1186,7 +1186,12 @@ body{
 .share-link img{
     width: 18px;
 }
-
+.share-div i{
+font-size: 19px;
+}
+.share-div .btn-text-set{
+margin-left: 5px !important;
+} 
 .close {
     color: #ce1f22;
     opacity: 1;
@@ -1373,7 +1378,7 @@ body{
 }
 
 .share-div .fa{
-    font-size: 17px;
+    font-size: 22px;
 }
 /* select data pannel css end */
 @media (max-width:767px) {
@@ -1416,6 +1421,15 @@ body{
     .top-panel-button{
         padding: 8px 10px;
         font-size: 13px;
+    }
+    .top-panel-btn-filter{
+        padding: 8px 5px 5px 5px !important;
+        width: 35px;
+        height: 35px;
+        margin-left: 10px;
+    }
+    .top-panel-btn-filter i{
+        font-size: 19px;
     }
     .radio-surface-pattern label{
         width: 100%;
