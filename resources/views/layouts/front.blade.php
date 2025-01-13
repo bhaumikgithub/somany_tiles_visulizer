@@ -34,7 +34,7 @@
 @if (config('app.sub_css'))<link href="/css/{{ config('app.sub_css') }}" type="text/css" rel="stylesheet">@endIf
 
     <link href="/modules/color-picker/color-picker.min.css" type="text/css" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.18"></script>
 
     @if (config('app.room_font_family'))

@@ -1082,6 +1082,10 @@ body{
     font-size: 25px;
       
 }
+.cmn-back-btn .span-icon{
+    font-size: 25px;
+      
+}
 .cmn-room-btn:hover{
 
     color: #3F3F46 !important;
@@ -1101,14 +1105,20 @@ body{
 }
 
 .cmn-back-btn{
-    padding:20px 12px 20px 20px;
+    background: #ffffff80;
+    /* border: 1px solid #bfbfbf;*/
+    padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 10px 0px;
+    border-radius: 20px;
+    color: #484848 !important;
+    text-decoration: none !important;
+    cursor: pointer;
+    padding:16px 12px 20px 20px;
     height: 60px;
-    width: 90px !important;
-    background:#D6D0C880;
-    border:1px solid #3F3F46;
+    width: 100px !important;
     padding:10px;
     border-radius: 20px;
-    color:#3F3F46 !important;
+   
     text-decoration: none !important;
     cursor: pointer;
     position: fixed;
