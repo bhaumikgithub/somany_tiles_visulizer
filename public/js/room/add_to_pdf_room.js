@@ -602,16 +602,18 @@ function changeDpiDataUrl(base64Image, dpi) {
 
 }
 
-$('#show_main_image').change(function() {
-    const imageWrapper = $('.show_main_image_wrapper');
+$('input[type="checkbox"]').change(function() {
+    const $checkbox = $(this);
+    const itemId = $checkbox.data('cart-item-id');
+    const $imageWrapper = $('#imageWrapper_' + itemId);
+    const isChecked = $checkbox.is(':checked');
+    const showImage = isChecked ? 'yes' : 'no';
 
-    if ($(this).is(':checked')) {
-        imageWrapper.show();
-    } else {
-        imageWrapper.hide();
-    }
-    let cart_item_id = $(this).data('cart-item-id');
-    //updatePreference($(this).is(':checked'),cart_item_id);
+    $imageWrapper.toggle(isChecked);
+    $checkbox.val(showImage);
+
+    // You can call updatePreference here if needed
+    updatePreference(isChecked, itemId);
 });
 
 function updatePreference(showImage,cart_item_id) {
