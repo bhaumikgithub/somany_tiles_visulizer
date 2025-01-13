@@ -8,25 +8,28 @@
     <div id="topPanelmainpanel" class="">
         <span id="mainpage-panel-btn" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
     </div>
-                                <button class="share-btn-img cmn-room-btn" style="display: none;">
-                                    <img src="/img/share.png" alt="share-button" class="img-responsive">
+                    <button class="share-btn-img cmn-room-btn" style="display:none">
+                    <i class="fa-regular fa-share-from-square"></i>
+
                                 </button>
                                 <div class="share-div d-flex flex-wrap social-share">
                                     @if (config('app.share_button_whatsapp'))
                                         <a href="https://wa.me/?text={{ urlencode(__('SHARE_WHATSAPP_MESSAGE')) }}%20" title="@lang('Whatsapp Share')" target="_blank" class="share-link d-flex flex-wrap align-items-center">
-                                            <img src="/img/share.png" alt="share" class="img-responsive"> <span class="btn-text-set">Share </span>
+                                        <i class="fa-regular fa-share-from-square"></i><span class="btn-text-set">Share </span>
                                         </a>
                                     @endif
-                                    <button class="share-link d-flex flex-wrap align-items-center"onclick="downloadImage();"><img src="/img/download.png" alt="share" class="img-responsive"> <span class="btn-text-set">Download </span></button>
-                                    <button class="share-link d-flex flex-wrap align-items-center" onclick="addToPDF();"><img src="/img/add_section.png" alt="add_section" class="img-responsive"> <span class="btn-text-set">Add to Selection </span></button>
-                                    <button href=""  class="share-link d-flex flex-wrap align-items-center share-btn-close"><img src="/img/close.png" alt="close" class="img-responsive"></button>
+                                    <button class="share-link d-flex flex-wrap align-items-center"onclick="downloadImage();"><i class="fa-solid fa-download"></i> <span class="btn-text-set">Download </span></button>
+                                    <button class="share-link d-flex flex-wrap align-items-center" onclick="addToPDF();"><i class="fa-regular fa-file-lines"></i> <span class="btn-text-set">Add to Selection </span></button>
+                                    <button   class="share-link d-flex flex-wrap align-items-center share-btn-close"><i class="fa-solid fa-xmark"></i></button>
                                 </div>
 
                        
-                            <a href="{{url('listing/'.@$room_type)}}" class="cmn-room-btn back-btn d-flex flex-wrap align-items-center"> <img src="/img/arrow-back.png" alt="arrow-back" class="img-responsive"> <span class="btn-text-set">Back </span> </a>
+                            <a href="{{url('listing/'.@$room_type)}}" class="cmn-room-btn back-btn d-flex flex-wrap align-items-center"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
+                            </span> <span class="btn-text-set">Back </span> </a>
                           
                            
-                            <button class="cmn-room-btn cn-btn d-flex flex-wrap align-items-center" data-toggle="modal" data-target="#continue-modal" ><img src="/img/arrow-cn.png" alt="arrow-continue" class="img-responsive"> <span class="btn-text-set">Continue </span> </button>
+                            <button class="cmn-room-btn cn-btn d-flex flex-wrap align-items-center" data-toggle="modal" data-target="#continue-modal" > <span class="span-icon"><i class="fa-solid fa-arrow-right"></i>
+                            </span><span class="btn-text-set">Continue </span> </button>
                            
                         
 

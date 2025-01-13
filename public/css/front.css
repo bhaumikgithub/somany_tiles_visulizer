@@ -13,7 +13,7 @@ a{
     color: white;
     text-decoration: none;
 }
-a:hover{
+a:hover , a:focus{
     color: white;
     text-decoration: none;
 }
@@ -53,6 +53,7 @@ a:hover{
     /* box-shadow: inset 100px 200px 60px 42px rgba(0,0,0,0.1); */
 
 }
+
 .grow h1{
     text-shadow: 2px 2px 4px #000000;
 }
@@ -61,7 +62,7 @@ a:hover{
 }
 
 body{
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 .grow h1{
@@ -790,21 +791,27 @@ body{
     padding:5px;
 }
 .top-panel-btn-filter{
-    background: transparent;
-    border: none;
-    padding: 0px;
+  
+    border-radius: 16px;
+    background-color: #7e7c7c;
+    padding: 8px 5px 5px 5px;
     margin: 0px;
+    width: 40px;
+    height: 40px;
+}
+.top-panel-btn-filter i{
+    color: #fff;
+    font-size: 22px;
 }
 .top-panel-btn-filter img{
-    border-radius: 20px;
+    
 }
 .top-panel-btn-filter:hover{
-    background: transparent;
-    border: none;
-    padding: 0px;
-    margin: 0px;
-
+    background-color: #7e7c7c;
+   
 }
+
+
 
 .filter-top-panel{
     padding: 0px;
@@ -1071,6 +1078,10 @@ body{
 
     /* box-shadow: rgba(0, 0, 0, 0.24) 0 0 10px; */
 }
+.cmn-room-btn .span-icon{
+    font-size: 25px;
+      
+}
 .cmn-room-btn:hover{
 
     color: #3F3F46 !important;
@@ -1080,7 +1091,7 @@ body{
 
 
 .cmn-room-btn.back-btn{
-    padding:20px 12px 20px 20px;
+    padding:16px 12px 20px 20px;
     height: 60px;
     width: 100px !important;
     z-index: 3;
@@ -1107,7 +1118,7 @@ body{
 
 }
 .cmn-room-btn.cn-btn{
-    padding:20px 20px 20px 12px;
+    padding:16px 20px 20px 12px;
     height: 60px;
     z-index: 3;
     position: fixed;
@@ -1133,7 +1144,8 @@ body{
     z-index: 3;
     position: fixed;
     bottom: 130px;
-    margin-right:15px
+    margin-right:15px;
+    font-size: 30px;
     
 }
 .share-btn-img img{
@@ -1174,7 +1186,12 @@ body{
 .share-link img{
     width: 18px;
 }
-
+.share-div i{
+font-size: 19px;
+}
+.share-div .btn-text-set{
+margin-left: 5px !important;
+} 
 .close {
     color: #ce1f22;
     opacity: 1;
@@ -1359,6 +1376,10 @@ body{
 #slected-panel{
     display: none;
 }
+
+.share-div .fa{
+    font-size: 22px;
+}
 /* select data pannel css end */
 @media (max-width:767px) {
     .top-panel-product{
@@ -1400,6 +1421,15 @@ body{
     .top-panel-button{
         padding: 8px 10px;
         font-size: 13px;
+    }
+    .top-panel-btn-filter{
+        padding: 8px 5px 5px 5px !important;
+        width: 35px;
+        height: 35px;
+        margin-left: 10px;
+    }
+    .top-panel-btn-filter i{
+        font-size: 19px;
     }
     .radio-surface-pattern label{
         width: 100%;
