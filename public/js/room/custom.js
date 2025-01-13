@@ -98,19 +98,19 @@ let lastRoomCanvasTitle = ''; // Variable to store the last room-canvas title
 // Function to update the h5 element text based on the current mode
 function updateTopPanelText() {
   if (lastRoomCanvasTitle === 'Change wall') {
-    const text = wallSelections.length > 0 ? wallSelections.join(', ') : 'Wall:';
+    const text = wallSelections.length > 0 ? wallSelections[wallSelections.length - 1] : 'Wall:';
     $('#topPanel h5').text(text);
   } else if (lastRoomCanvasTitle === 'Change floor') {
-    const text = floorSelections.length > 0 ? floorSelections.join(', ') : 'Floor:';
+    const text = floorSelections.length > 0 ? floorSelections[floorSelections.length - 1] : 'Floor:';
     $('#topPanel h5').text(text);
   } else if (lastRoomCanvasTitle === 'Change counter') {
-    const text = counterSelections.length > 0 ? counterSelections.join(', ') : 'Counter:';
+    const text = counterSelections.length > 0 ? counterSelections[counterSelections.length - 1] : 'Counter:';
     $('#topPanel h5').text(text);
   } else if (lastRoomCanvasTitle === 'Change ceiling') {
-    const text = ceilingSelections.length > 0 ? ceilingSelections.join(', ') : 'Ceiling:';
+    const text = ceilingSelections.length > 0 ? ceilingSelections[ceilingSelections.length - 1] : 'Ceiling:';
     $('#topPanel h5').text(text);
   } else if (lastRoomCanvasTitle === 'Change theme') {
-    const text = themeSelections.length > 0 ? themeSelections.join(', ') : 'Theme:';
+    const text = themeSelections.length > 0 ? themeSelections[themeSelections.length - 1] : 'Theme:';
     $('#topPanel h5').text(text);
   } else {
     $('#topPanel h5').text('Choose Tiles');
@@ -140,7 +140,7 @@ $('#topPanelTilesListUl').on('click', 'li', function () {
     let wallLetter = String.fromCharCode(64 + wallCount); // Convert wallCount to letter
     wallSelections.push('Wall ' + wallLetter); // Add to wall selections
     console.log('Wall Click Count:', wallCount);
-    updateTopPanelText();
+    updateTopPanelText(); // Update the top panel to show WALL A, WALL B, etc.
   } else if ($('#topPanelTilesListUl').hasClass('floorul') && lastRoomCanvasTitle === 'Change floor') {
     floorCount++;
     let floorLetter = String.fromCharCode(64 + floorCount); // Convert floorCount to letter

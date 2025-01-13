@@ -8,7 +8,7 @@
     <div id="topPanelmainpanel" class="">
         <span id="mainpage-panel-btn" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
     </div>
-                    <button class="share-btn-img cmn-room-btn">
+                    <button class="share-btn-img cmn-room-btn" style="display:none">
                                 <img src="/img/share.png" alt="share-button" class="img-responsive">
                                 </button>
                                 <div class="share-div d-flex flex-wrap social-share">
