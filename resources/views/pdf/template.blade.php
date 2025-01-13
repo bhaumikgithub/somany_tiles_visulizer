@@ -79,7 +79,10 @@
                 @foreach($allProduct as $index=>$item)
                     <div>
                         <h4 style="font-size: 16px; margin-bottom: 10px;">Selection {{$index+1}} of {{$allProduct->count()}}</h4>
-                        <img src="{{ public_path('storage/'.$item->current_room_design) }}" alt="Room" style="display: block; width: 640px; height: 320px; margin-bottom: 20px;">
+                            <?php $showImage = $item->show_main_image ;?>
+                        @if( $showImage === "yes")
+                            <img src="{{ public_path('storage/'.$item->current_room_design) }}" alt="Room" style="display: block; width: 640px; height: 320px; margin-bottom: 20px;">
+                        @endif
                         <table style="width: 100%; border-collapse: collapse;margin-bottom: 20px;">
                             @foreach(json_decode($item->tiles_json) as $tile_detail)
                                 <tr style="border: 1px solid #000;">
@@ -139,7 +142,7 @@
                     <li>The visuals are for reference purposes only; actual colors, finishes, and tile dimensions may vary.</li>
                     <li>Shade variation is an inherent characteristic of tiles; therefore, physical inspection is
                         recommended for accurate selection</li>
-                    <li>Tiles with multiple faces feature varied pa0erns, resulting in natural design variations</li>
+                    <li>Tiles with multiple faces feature varied patterns, resulting in natural design variations</li>
                     <li>Prices quoted are subject to change without prior notice. The final price applicable at the time of
                         delivery will prevail.</li>
                 </ul>

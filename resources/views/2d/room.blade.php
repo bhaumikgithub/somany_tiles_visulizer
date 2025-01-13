@@ -8,10 +8,10 @@
     <div id="topPanelmainpanel" class="">
         <span id="mainpage-panel-btn" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
     </div>
-                    <button class="share-btn-img cmn-room-btn">
-                                <img src="/img/share.png" alt="share-button" class="img-responsive">
+                                <button class="share-btn-img cmn-room-btn" style="display: none;">
+                                    <img src="/img/share.png" alt="share-button" class="img-responsive">
                                 </button>
-                                <div class="share-div d-flex flex-wrap social-share" style="display: none;">
+                                <div class="share-div d-flex flex-wrap social-share">
                                     @if (config('app.share_button_whatsapp'))
                                         <a href="https://wa.me/?text={{ urlencode(__('SHARE_WHATSAPP_MESSAGE')) }}%20" title="@lang('Whatsapp Share')" target="_blank" class="share-link d-flex flex-wrap align-items-center">
                                             <img src="/img/share.png" alt="share" class="img-responsive"> <span class="btn-text-set">Share </span>
