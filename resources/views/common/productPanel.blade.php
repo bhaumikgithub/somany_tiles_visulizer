@@ -129,7 +129,12 @@
         </button>
             </div>
             <div class="fliter-btn-wrap">
-            <button id="btnRefine" class="top-panel-button top-panel-btn-filter">@lang('<img src="/img/icons/input-filter.png" alt="input-filter">')</button>
+            <button id="btnRefine" class="top-panel-button top-panel-btn-filter">@lang('
+                <!-- <img src="/img/icons/input-filter.png" alt="input-filter"> -->
+                <!-- <i class="fa fa-filter" aria-hidden="true"></i> -->
+                <i class="fa fa-sliders" aria-hidden="true"></i>
+
+                ')</button>
         
             </div>
             

@@ -791,21 +791,27 @@ body{
     padding:5px;
 }
 .top-panel-btn-filter{
-    background: transparent;
-    border: none;
-    padding: 0px;
+  
+    border-radius: 16px;
+    background-color: #7e7c7c;
+    padding: 5px;
     margin: 0px;
+    width: 40px;
+    height: 40px;
+}
+.top-panel-btn-filter i{
+    color: #fff;
+    font-size: 25px;
 }
 .top-panel-btn-filter img{
-    border-radius: 20px;
+    
 }
 .top-panel-btn-filter:hover{
-    background: transparent;
-    border: none;
-    padding: 0px;
-    margin: 0px;
-
+    background-color: #7e7c7c;
+   
 }
+
+
 
 .filter-top-panel{
     padding: 0px;
@@ -1364,6 +1370,10 @@ body{
 }
 #slected-panel{
     display: none;
+}
+
+.share-div .fa{
+    font-size: 17px;
 }
 /* select data pannel css end */
 @media (max-width:767px) {
