@@ -86,12 +86,14 @@ let floorCount = 0;
 let counterCount = 0;  // Counter count
 let ceilingCount = 0; // Ceiling count
 let themeCount = 0;   // Theme count
+let paintCount = 0;   // Theme count
 
 let wallSelections = [];   // Array to store wall selections
 let floorSelections = [];  // Array to store floor selections
 let counterSelections = []; // Array to store counter selections
 let ceilingSelections = []; // Array to store ceiling selections
 let themeSelections = [];   // Array to store theme selections
+let paintSelections = [];   // Array to store theme selections
 
 let lastRoomCanvasTitle = ''; // Variable to store the last room-canvas title
 
@@ -111,6 +113,9 @@ function updateTopPanelText() {
     $('#topPanel h5').text(text);
   } else if (lastRoomCanvasTitle === 'Change theme') {
     const text = themeSelections.length > 0 ? themeSelections[themeSelections.length - 1] : 'Theme:';
+    $('#topPanel h5').text(text);
+  } else if (lastRoomCanvasTitle === 'Change paint') {
+    const text = themeSelections.length > 0 ? themeSelections[themeSelections.length - 1] : 'Paint:';
     $('#topPanel h5').text(text);
   } else {
     $('#topPanel h5').text('Choose Tiles');
@@ -164,6 +169,12 @@ $('#topPanelTilesListUl').on('click', 'li', function () {
     let themeLetter = String.fromCharCode(64 + themeCount); // Convert themeCount to letter
     themeSelections.push('Theme ' + themeLetter); // Add to theme selections
     console.log('Theme Click Count:', themeCount);
+    updateTopPanelText();
+  } else if ($('#topPanelTilesListUl').hasClass('themeul') && lastRoomCanvasTitle === 'Change paint') {
+    paintCount++;
+    let paintLetter = String.fromCharCode(64 + themeCount); // Convert themeCount to letter
+    paintSelections.push('Theme ' + paintLetter); // Add to theme selections
+    console.log('Paint Click Count:', paintCount);
     updateTopPanelText();
   } else {
     console.log("Invalid action: Ensure the correct room-canvas is selected.");
