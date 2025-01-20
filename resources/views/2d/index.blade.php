@@ -35,9 +35,9 @@
             </div>
 
             <div class="grow hover_2" >
-                <a href="#">
+                <a href="{{url('/listing/prayer-room')}}">
                     <div class="image5" style="writing-mode: vertical-rl;">
-                        <h1 style="text-orientation: mixed;padding: 60px 5px 5px 5px;">Player Room</h1>
+                        <h1 style="text-orientation: mixed;padding: 60px 5px 5px 5px;">Prayer Room</h1>
                     </div>
                 </a>
             </div>
@@ -51,7 +51,7 @@
             </div>
 
             <div class="grow hover_2">
-                <a href="#">
+                <a href="{{url('/listing/commercial')}}">
                     <div class="image7" style="writing-mode: vertical-rl;">
                         <h1 style="text-orientation: mixed;padding: 60px 5px 5px 5px;">Commercial</h1>
                     </div>
@@ -69,7 +69,7 @@
                     </div>
                 </a>
                 <a href="{{url('/listing/bedroom')}}">
-                    <div class="mobile_grow mobile_image2 mobile_hover_2 col-md-12" >
+                    <div class="mobile_grow mobile_image2 mobile_hover_2 " >
                         <h1 class="mobile_h1">Bedroom</h1>
                     </div>
                 </a>
@@ -83,9 +83,9 @@
                         <h1 class="mobile_h1">Bathroom</h1>
                     </div>
                 </a>
-                <a href="#">
+                <a href="{{url('/listing/prayer-room')}}">
                     <div class="mobile_grow mobile_image5 mobile_hover_2 " >
-                        <h1 class="mobile_h1">Player Room</h1>
+                        <h1 class="mobile_h1">Prayer Room</h1>
                     </div>
                 </a>
                 <a href="{{url('/listing/outdoor')}}">
@@ -93,7 +93,7 @@
                         <h1 class="mobile_h1">Outdoor</h1>
                     </div>
                 </a>
-                <a href="#">
+                <a href="{{url('/listing/commercial')}}">
                     <div class="mobile_grow mobile_image7 mobile_hover_2 ">
                         <h1 class="mobile_h1">Commercial</h1>
                     </div>
