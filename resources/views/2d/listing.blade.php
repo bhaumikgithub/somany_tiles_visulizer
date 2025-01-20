@@ -1,6 +1,6 @@
 @extends('layouts.front')
 @section('content')
- <div class="">
+ <div class="room-content-container">
     <div class="mt-2 mb-2 row" style="padding: 0;margin-left:0.5%;margin-right: 0.5%;">
         @if(isset($rooms))
             @foreach($rooms as $aRoom)
