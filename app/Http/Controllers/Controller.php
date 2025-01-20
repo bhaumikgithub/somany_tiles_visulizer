@@ -125,6 +125,7 @@ class Controller extends BaseController
             'filterTileExpProps' => 'nullable|string',
             'filterTileEnabled' => 'nullable|string',
             'filterTileFromApi' => 'nullable|string',
+            'filterTileServiceGeography' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -149,6 +150,7 @@ class Controller extends BaseController
                 'filterTileExpProps' => $request->filterTileExpProps,
                 'filterTileEnabled' => $request->filterTileEnabled,
                 'filterTileFromApi' => $request->filterTileFromApi,
+                'filterTileServiceGeography' => $request->filterTileServiceGeography,
             ];
             session($filterRequest);
         } else {
@@ -165,6 +167,7 @@ class Controller extends BaseController
                 'filterTileExpProps' => session('filterTileExpProps'),
                 'filterTileEnabled' => session('filterTileEnabled'),
                 'filterTileFromApi' => session('filterTileFromApi'),
+                'filterTileServiceGeography' => session('filterTileServiceGeography'),
             ];
         }
         return (object) $filterRequest;
@@ -184,6 +187,7 @@ class Controller extends BaseController
         if ($request->filterTileExpProps) $filter[] = ['expProps', 'like', '%' . $request->filterTileExpProps . '%'];
         if ($request->filterTileEnabled) $filter[] = ['enabled', '=', $request->filterTileEnabled];
         if ($request->filterTileFromApi) $filter[] = ['from_api', '=', $request->filterTileFromApi];
+        if ($request->filterTileServiceGeography) $filter[] = ['service_geography', 'like', '%' . $request->filterTileServiceGeography . '%'];
 
         return $filter;
     }

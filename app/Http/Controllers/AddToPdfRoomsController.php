@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Showroom;
 use App\Tile;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
@@ -106,6 +107,38 @@ class AddToPdfRoomsController extends Controller
             $cart_id = $checkSessionId->id;
         }
 
+        if (auth()->check()) {
+
+            $loged_user = auth()->user();
+
+            $loged_showrooms_id = $loged_user->showroom_id ? json_decode($loged_user->showroom_id, true) : [];
+
+            if (is_array($loged_showrooms_id) && !empty($loged_showrooms_id)) {
+                // Fetch showrooms only if showroom IDs are present
+                $showrooms = Showroom::whereIn('id', $loged_showrooms_id)->get();
+            } else {
+                // No showroom IDs assigned
+                $showrooms = collect(); // Empty collection
+            }
+
+            // Prepare user and showroom JSON
+            $userShowroomInfo = [
+                'user' => $loged_user ? [
+                    'id' => $loged_user->id,
+                    'name' => $loged_user->name,
+                    'email' => $loged_user->email,
+                    'contact_no' => $loged_user->contact_no,
+                ] : null,
+                'showrooms' => $showrooms ? $showrooms->toArray() : [],
+            ];
+            
+        }else{
+            $userShowroomInfo = [
+                'user' => null,
+                'showrooms' => [],
+            ];
+        }
+        $user_showroom_Info = json_encode($userShowroomInfo);
         //Get tiles data
         $tiles = Tile::select('id','name','width','height','surface','finish','file','price')->whereIn('id', json_decode($request->data['selected_tiles_ids']))->get();
 
@@ -117,6 +150,7 @@ class AddToPdfRoomsController extends Controller
         $productInfo->current_room_design = $filePath1;
         $productInfo->current_room_thumbnail = $filePath;
         $productInfo->tiles_json = $tiles->toJson();
+        $productInfo->user_showroom_Info = $user_showroom_Info;
         $productInfo->cart_id = $cart_id;
         $productInfo->save();
 
@@ -128,7 +162,8 @@ class AddToPdfRoomsController extends Controller
         return response()->json([
             'body' => view('common.cartPanel',compact('allProduct','count','url'))->render(),
             'data' => ['product_info'=> $allProduct, 'all_selection' => $count,'url'=>$url],
-            'success' => 'success']);
+            'success' => 'success'
+        ]);
     }
 
     public function destroy($id): JsonResponse
@@ -157,9 +192,18 @@ class AddToPdfRoomsController extends Controller
     {
         $getCartId = Cart::where('random_key',$randomKey)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
-        // Retrieve the pincode from the session
+        $firstProduct = $allProduct->first(); // This returns the first CartItem model
+        // dd($firstProduct);
+        if ($firstProduct && $firstProduct->user_showroom_info) {
+            $userShowroomInfo = json_decode($firstProduct->user_showroom_info, true);
+        } else {
+            $userShowroomInfo = [
+                'user' => null,
+                'showrooms' => [],
+            ];
+        }        // Retrieve the pincode from the session
         $pincode = session('pincode', null); // Default to null if not set
-        return view('pdf.cart_summary',compact('allProduct','randomKey','pincode'));
+        return view('pdf.cart_summary',compact('allProduct','randomKey','pincode','userShowroomInfo'));
     }
 
     /**
