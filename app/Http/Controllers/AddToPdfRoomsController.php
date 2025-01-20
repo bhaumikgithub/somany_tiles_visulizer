@@ -259,9 +259,20 @@ class AddToPdfRoomsController extends Controller
             'contact_no' => $request->mobileNumber,
         ];
 
+        $firstProduct = $allProduct->first(); // This returns the first CartItem model
+        // dd($firstProduct);
+        if ($firstProduct && $firstProduct->user_showroom_info) {
+            $userShowroomInfo = json_decode($firstProduct->user_showroom_info, true);
+        } else {
+            $userShowroomInfo = [
+                'user' => null,
+                'showrooms' => [],
+            ];
+        }
+
         // Generate the second PDF (dynamic content) using mPDF (in landscape mode)
         $mpdf = new Mpdf(['mode' => 'utf-8', 'format' => 'A4-L']); // A4-L for landscape mode
-        $html = view('pdf.template', compact('allProduct', 'basic_info')); // Pass data to the Blade view
+        $html = view('pdf.template', compact('allProduct', 'basic_info', 'userShowroomInfo')); // Pass data to the Blade view
         $mpdf->WriteHTML($html);
         $mpdf->SetDisplayMode('real', 'default');
         $pdf2Content = $mpdf->Output('', 'S');  // Save the content as a string
