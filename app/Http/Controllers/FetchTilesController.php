@@ -30,7 +30,7 @@ class FetchTilesController extends Controller
         $endDate = $request->end_date;
 
         // Get tiles data
-        $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete?limit=20";
+        $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete?limit=4";
         $queryParams = http_build_query([
             's' => $startDate,
             'e' => $endDate,
@@ -177,6 +177,7 @@ class FetchTilesController extends Controller
 
     protected function prepareTileData(array $product,$creation_time): array
     {
+        $surface = strtolower($product['surface']);
         $imageURL = ($product['image'] ) ?? $product['image_variation_1'];
         return [
             'name' => $product['product_name'] ?? null,
@@ -184,12 +185,12 @@ class FetchTilesController extends Controller
             'width' => intval($product['size_wt']) ?? 0,
             'height' => intval($product['size_ht']) ?? 0,
             'size' => $product['size'] ?? null,
-            'surface' => strtolower($product['surface']) ?? null,
+            'surface' => $surface ?? null,
             'finish' => $product['design_finish'] ?? null,
             'file' => $this->fetchAndSaveImage($imageURL),
             'image_variation_1' => $product['image_variation_1'] ?? null,
             'image_variation_2' => $product['image_variation_2'] ?? null,
-            'grout' => $product['grout'] ?? null,
+            'grout' => ( $surface === "wall" || $surface === "floor" ) ? 1 : null,
             'url' => $product['url'] ?? null,
             'price' => $product['price'] ?? null,
             'expProps' => json_encode([
