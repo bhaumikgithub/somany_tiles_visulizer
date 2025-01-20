@@ -194,7 +194,7 @@ $('.room-canvas').on('click', function () {
     $('#topPanel h5').text('Wall');
     $('#topPanelTilesListUl').addClass('wallul').removeClass('floorul counterul ceilingul themeul');
   } else if (title === 'Change floor') {
-    $('#topPanel h5').text('Floor');
+    $('#topPanel h5').text('Floor124');
     $('#topPanelTilesListUl').addClass('floorul').removeClass('wallul counterul ceilingul themeul');
   } else if (title === 'Change counter') {
     $('#topPanel h5').text('Counter');
