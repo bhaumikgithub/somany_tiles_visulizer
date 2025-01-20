@@ -196,7 +196,7 @@ class FetchTilesController extends Controller
                 'thickness' => $product['thickness'] ?? null,
                 'product code' => $product['design_finish'] ?? null,
             ]), // Combined JSON field
-            'rotoPrintSetName' => $product['vertical'] ?? null,
+            'rotoPrintSetName' => str_replace(" FP", "", $product['product_name']) ?? null,
             'access_level' => $product['access_level'] ?? null,
             'sku' => $product['sku'] ?? null,
             'application_room_area' => $product['application_room_area'] ?? null,
