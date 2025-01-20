@@ -110,9 +110,16 @@ class AddToPdfRoomsController extends Controller
         if (auth()->check()) {
 
             $loged_user = auth()->user();
-            $loged_showrooms_id = json_decode($loged_user->showroom_id, true);
 
-            $showrooms = Showroom::whereIn('id' , $loged_showrooms_id)->get();
+            $loged_showrooms_id = $loged_user->showroom_id ? json_decode($loged_user->showroom_id, true) : [];
+
+            if (is_array($loged_showrooms_id) && !empty($loged_showrooms_id)) {
+                // Fetch showrooms only if showroom IDs are present
+                $showrooms = Showroom::whereIn('id', $loged_showrooms_id)->get();
+            } else {
+                // No showroom IDs assigned
+                $showrooms = collect(); // Empty collection
+            }
 
             // Prepare user and showroom JSON
             $userShowroomInfo = [
@@ -185,9 +192,11 @@ class AddToPdfRoomsController extends Controller
     {
         $getCartId = Cart::where('random_key',$randomKey)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
+        $firstProduct = $allProduct->first(); // This returns the first CartItem model
+        $userShowroomInfo = json_decode($firstProduct->user_showroom_info, true);
         // Retrieve the pincode from the session
         $pincode = session('pincode', null); // Default to null if not set
-        return view('pdf.cart_summary',compact('allProduct','randomKey','pincode'));
+        return view('pdf.cart_summary',compact('allProduct','randomKey','pincode','userShowroomInfo'));
     }
 
     /**

@@ -265,3 +265,8 @@ $('.selcte-data-btn').on('click', function () {
   $('#slected-panel').hide();
   
 });
+
+$('.cartpanelclose').on('click', function () {
+  $("body").css('overflow', "hidden");
+  
+});

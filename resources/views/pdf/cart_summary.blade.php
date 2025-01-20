@@ -163,14 +163,34 @@
         <!-- Footer Section -->
         <div class="footer-section row ">
             <div class="col-md-6 col-sm-6 col-xs-12">
-                <p><strong>Contact Person Details</strong></p>
-                <p><strong>Executive Name:</strong> <span>John Doe</span></p>
-                <p><strong>Executive Number:</strong> <span>+91-9876543210</span></p>
+                @if($userShowroomInfo['user'])
+                    <p><strong>Contact Person Details</strong></p>
+                    <p><strong>Executive Name:</strong> <span>{{ $userShowroomInfo['user']['name'] }}</span></p>
+                    <p><strong>Executive Number:</strong> <span>{{ $userShowroomInfo['user']['contact_no'] }}</span></p>
+                    <p><strong>Executive Email:</strong> <span>{{ $userShowroomInfo['user']['email'] }}</span></p>
+                @else
+                    <p><strong>No user information available.</strong></p>
+                @endif
+
             </div>
             <div class="col-md-6 col-sm-6 col-xs-12 text-right xs-text-left xs-margin-top-20">
-                <p><strong>Showroom Information</strong></p>
-                <p>Show Room Address, Showroom State, Showroom City</p>
-                <p>Show Room Pincode</p>
+                @if($userShowroomInfo['user'])
+                    @if($userShowroomInfo['showrooms'])
+                        @foreach($userShowroomInfo['showrooms'] as $showroom)
+                            <div class="showroom">
+                                <h3>Showroom {{ $loop->iteration }}</h3>
+                                <p><strong>Name:</strong> {{ $showroom['name'] }}</p>
+                                <p><strong>Code:</strong> {{ $showroom['e_code'] }}</p>
+                                <p><strong>City:</strong> {{ $showroom['city'] }}</p>
+                                <p><strong>Address:</strong> {{ $showroom['address'] }}</p>
+                                <p><strong>Status:</strong> {{ $showroom['status'] }}</p>
+                            </div>
+                        @endforeach
+                    @else
+                        <p><strong>This user currently does not have any showroom.</strong></p>
+                    @endif
+                @endif
+                        
             </div>
         </div>
         <hr style="border: 1px solid;">
