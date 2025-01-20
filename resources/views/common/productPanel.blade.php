@@ -17,7 +17,7 @@
 
             </li>
             <li class="slected_tile">
-            <div class="tile-list-thumbnail-image-holder"><img src="/storage/tiles/icons/66d7ec3154e316.22983802.jpg"></div><div class="tile-list-text">
+            <div class="tile-list-thumbnail-image-holder"><img src="/storage/tiles/icons/66d7ec3154e316.22983802.jpg"></div>inde<div class="tile-list-text">
                 <p class="-caption">Wall B</p>
                 <p>Ruston Kota Lit</p>
                 <p>(MATT)</p>
