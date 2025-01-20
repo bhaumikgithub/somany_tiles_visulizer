@@ -193,8 +193,14 @@ class AddToPdfRoomsController extends Controller
         $getCartId = Cart::where('random_key',$randomKey)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
         $firstProduct = $allProduct->first(); // This returns the first CartItem model
-        $userShowroomInfo = json_decode($firstProduct->user_showroom_info, true);
-        // Retrieve the pincode from the session
+        if ($firstProduct->user_showroom_info) {
+            $userShowroomInfo = json_decode($firstProduct->user_showroom_info, true);
+        } else {
+            $userShowroomInfo = [
+                'user' => null,
+                'showrooms' => [],
+            ];
+        }        // Retrieve the pincode from the session
         $pincode = session('pincode', null); // Default to null if not set
         return view('pdf.cart_summary',compact('allProduct','randomKey','pincode','userShowroomInfo'));
     }
