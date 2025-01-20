@@ -193,7 +193,8 @@ class AddToPdfRoomsController extends Controller
         $getCartId = Cart::where('random_key',$randomKey)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
         $firstProduct = $allProduct->first(); // This returns the first CartItem model
-        if ($firstProduct->user_showroom_info) {
+        // dd($firstProduct);
+        if ($firstProduct && $firstProduct->user_showroom_info) {
             $userShowroomInfo = json_decode($firstProduct->user_showroom_info, true);
         } else {
             $userShowroomInfo = [

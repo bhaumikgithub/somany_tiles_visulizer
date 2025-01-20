@@ -176,14 +176,14 @@
             <div class="col-md-6 col-sm-6 col-xs-12 text-right xs-text-left xs-margin-top-20">
                 @if($userShowroomInfo['user'])
                     @if($userShowroomInfo['showrooms'])
+                    <p><strong>showrooms Information</strong></p>
                         @foreach($userShowroomInfo['showrooms'] as $showroom)
                             <div class="showroom">
-                                <h3>Showroom {{ $loop->iteration }}</h3>
-                                <p><strong>Name:</strong> {{ $showroom['name'] }}</p>
-                                <p><strong>Code:</strong> {{ $showroom['e_code'] }}</p>
-                                <p><strong>City:</strong> {{ $showroom['city'] }}</p>
-                                <p><strong>Address:</strong> {{ $showroom['address'] }}</p>
-                                <p><strong>Status:</strong> {{ $showroom['status'] }}</p>
+                                <p>{{ $showroom['name'] }},
+                                    {{ $showroom['address'] }},
+                                    {{ $showroom['city'] }},
+                                    {{ $showroom['e_code'] }},
+                                </p>
                             </div>
                         @endforeach
                     @else
