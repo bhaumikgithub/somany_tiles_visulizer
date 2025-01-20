@@ -585,6 +585,7 @@ function clearTilesFilterForm() {
     window.$('#filterTileExpProps').val('');
     window.$('#filterTileEnabled').val('');
     window.$('#filterTileFromApi').val('');
+    window.$('#filterTileServiceGeography').val('');
 }
 
 function fillTilesFilterForm() {
@@ -607,6 +608,7 @@ function fillTilesFilterForm() {
     if (window.$('#filterTileExpProps').val() !== '') { window.$('#filterTileExpProps').css('background-color', '#aaffaa'); }
     if (window.$('#filterTileEnabled').val() !== '') { window.$('#filterTileEnabled').css('background-color', '#aaffaa'); }
     if (window.$('#filterTileFromApi').val() !== '') { window.$('#filterTileFromApi').css('background-color', '#aaffaa'); }
+    if (window.$('#filterTileServiceGeography').val() !== '') { window.$('#filterTileServiceGeography').css('background-color', '#aaffaa'); }
 }
 
 function changeFilterInputColor() {
@@ -1093,6 +1095,7 @@ Select All items on all pages
     <th>Variant Set</th>
     <th>Expandable Properties</th>
     <th>From API</th>
+    <th>Zone</th>
     @if (config('app.tiles_access_level'))<th>Access Level</th>@endif
     <th>Enabled</th>
     <th>&nbsp;</th>
@@ -1164,6 +1167,9 @@ Select All items on all pages
               <option value="0">No</option>
           </select>
       </td>
+      <td>
+          <input form="tilesFilterForm" type="text" name="filterTileServiceGeography" id="filterTileServiceGeography" @if (isset($filter)) value="{{ $filter->filterTileServiceGeography }}" @endif class="tiles-filter-input" style="width: 100%;">
+      </td>
 {{--    @if (config('app.tiles_access_level'))<td>&nbsp;</td>@endif--}}
     <td>
       <select form="tilesFilterForm" name="filterTileEnabled" id="filterTileEnabled" @if (isset($filter)) value="{{ $filter->filterTileEnabled }}" @endif style="height: 26px; width: 100%;" class="tiles-filter-input">
@@ -1199,6 +1205,7 @@ Select All items on all pages
     <td class="table-text" title="{{ $tile->rotoPrintSetName }}">@if ($tile->rotoPrintSetName) {{ substr($tile->rotoPrintSetName, 0, 8) }} @if (mb_strlen($tile->rotoPrintSetName) > 8) ... @endif @endif</td>
     <td class="table-text" title="{{ $tile->expProps }}">@if ($tile->expProps) {{ substr($tile->expProps, 0, 8) }} @if (mb_strlen($tile->expProps) > 8) ... @endif @endif</td>
     <td class="table-text">@if ($tile->from_api === '1' ) Yes @else <strong>No</strong> @endif</td>
+    <td class="table-text">@if ($tile->service_geography === NULL ) - @else {{$tile->service_geography}} @endif</td>
     <td class="table-text">@if ($tile->enabled) Yes @else <strong>No</strong> @endif</td>
     <?php if (config('app.tiles_access_level') && isset($tile->access_level)) {
         $roles = ['All', 'Guests', 'Registered', 'Editors', 'Administrators'];
