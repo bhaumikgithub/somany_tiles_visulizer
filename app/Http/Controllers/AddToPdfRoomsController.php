@@ -154,15 +154,14 @@ class AddToPdfRoomsController extends Controller
         foreach ($allProduct as $item) {
             // Decode the JSON data from the 'tile_json' column
             $tiles = json_decode($item->tiles_json, true);
-
             foreach ($tiles as $tile) {
                 // Check if 'total_area' exists
                 if (isset($tile['total_area'])) {
-                    if( isset($tile['tile_in_box'])){
+                    if( isset($tile['tile_in_box']) && isset($tile['box_needed'])){
                         $boxWH = $tile['width'] * $tile['height'];
                         $TotalWH = $boxWH * $tile['box_needed'];
                         $box_coverage_area_sq_ft = $TotalWH/305;
-                        $mrp_price = ( $box_coverage_area_sq_ft * $tile['price'] ) / $tile['price'];
+                        $mrp_price = ( $box_coverage_area_sq_ft * $tile['price'] );
                     } else {
                         $box_coverage_area_sq_ft = "-";
                         $mrp_price = 0 ;
@@ -172,9 +171,9 @@ class AddToPdfRoomsController extends Controller
                         'size' => "{$tile['width']} x {$tile['height']}",
                         'finish' => $tile['finish'],
                         'apply_on' => $tile['surface'],
-                        'area_sq_ft' => $tile['total_area'],
-                        'tiles_per_box' => ( isset($tile['tiles_per_box']) ) ? $tile['price'] : '-',
-                        'box_coverage_area_sq_ft' => $box_coverage_area_sq_ft,
+                        'area_sq_ft' => (int) $tile['total_area'],
+                        'tiles_per_box' => ( isset($tile['tile_in_box']) ) ? $tile['tile_in_box'] : '-',
+                        'box_coverage_area_sq_ft' => (int)$box_coverage_area_sq_ft,
                         'box_required' => ( isset($tile['box_needed']) ) ? $tile['box_needed'] : '-',
                         'mrp_per_sq_ft' => ( isset($tile['price']) ) ? $tile['price'] : 0,
                         'mrp_price' => $mrp_price
@@ -199,8 +198,30 @@ class AddToPdfRoomsController extends Controller
         // Group by 'name' and process to combine surfaces
         $groupedTiles = $tilesCollection->groupBy('name')->map(function ($items) {
             $combinedSurfaces = $items->pluck('apply_on')->unique()->implode(', ');
-            // Return the first item with updated 'apply_on' field
-            return array_merge($items->first(), ['apply_on' => $combinedSurfaces]);
+
+            $combinedAreaSqFt = $items->sum(function ($item) {
+                return (float) $item['area_sq_ft'];
+            });
+
+            $combinedTilesPerBox = $items->sum(function ($item) {
+                return (int) $item['tiles_per_box'];
+            });
+
+            $combinedBoxRequired = $items->sum(function ($item) {
+                return (int) $item['box_required'];
+            });
+
+            $combinedPrice = $items->sum(function ($item) {
+                return (int) $item['mrp_per_sq_ft'];
+            });
+            // Return the first item with updated and formatted fields
+            return array_merge($items->first(), [
+                'apply_on' => $combinedSurfaces,
+                'area_sq_ft' => $combinedAreaSqFt,
+                'tiles_per_box' => $combinedTilesPerBox,
+                'box_required' => $combinedBoxRequired,
+                'mrp_per_sq_ft' => $combinedPrice
+            ]);
         });
 
         return view('pdf.cart_summary',compact('allProduct','randomKey','groupedTiles'));

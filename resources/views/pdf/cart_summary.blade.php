@@ -60,12 +60,12 @@
                                             <p class="">{{ucfirst($tile_detail->finish)}}</p>
     {{--                                        <p class="">Sap Code: 12312321312</p>--}}
                                         </div>
-                                        <div id="tile{{$tile_detail->id}}" class="col-md-3 col-sm-3 col-xs-12 col-pad-set xs-margin-set" data-weight="{{$tile_detail->width}}" data-height="{{$tile_detail->height}}">
+                                        <div id="tile{{$tile_detail->id}}" class="col-md-3 col-sm-3 col-xs-12 col-pad-set xs-margin-set" data-weight="{{$tile_detail->width}}" data-height="{{$tile_detail->height}}" data-cart-item-id-wrap="{{$item->id}}">
                                             <input type="hidden" value="{{$tile_detail->width}}" id="tiles_width">
                                             <input type="hidden" value="{{$tile_detail->height}}" id="tiles_height">
 
                                             @if( isset($tile_detail->total_area_sq_meter) && $tile_detail->total_area_sq_meter !== null )
-                                                <div class="tiles_calculation_wrapper tiles_calculation_wrapper_from_db">
+                                                <div class="tiles_calculation_wrapper tiles_calculation_wrapper_from_db_{{$item->id}}">
                                                     <input type="hidden" value="{{$tile_detail->width_in_feet}}" id="width_in_feet">
                                                     <input type="hidden" value="{{$tile_detail->height_in_feet}}" id="height_in_feet">
                                                     <input type="hidden" value="{{$tile_detail->wastage}}" id="tiles_wastage">
@@ -81,8 +81,9 @@
                                             <?php $tiles_par_box = Helper::getTilesParCarton($tile_detail->id);?>
                                             <input type="hidden" value="{{$tiles_par_box}}" id="tiles_par_carton">
                                             @if( $tiles_par_box !== NULL )
-                                                <div class="tiles_carton_wrapper" style="display: none;">
-                                                    <p>Number of Box Required: <span class="require_box"></span></p>
+                                                <div class="tiles_carton_wrapper" style="display: <?php echo ($tiles_par_box !== NULL ) ? 'block' : 'none'; ?>">
+                                                    <input type="hidden" value="" id="require_box">
+                                                    <p>Number of Box Required: <span class="require_box">{{@$tile_detail->box_needed}}</span></p>
                                                 </div>
                                                 <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
                                             @endif
@@ -157,27 +158,41 @@
                         <th scope="col" class="text-center">Tiles/Box</th>
                         <th scope="col" class="text-center">Box Coverage<br>Area Sq. Ft.</th>
                         <th scope="col" class="text-center">Box<br> Required</th>
-                        <th scope="col">MRP/<br>Sq. Ft.</th>
-                        <th scope="col">MRP<br>Price</th>
+                        <th scope="col" class="text-center">MRP/<br>Sq. Ft.</th>
+                        <th scope="col" class="text-center">MRP<br>Price</th>
                     </tr>
                     </thead>
                     <tbody>
                         @if(isset($groupedTiles))
-                            @php $totalArea = 0; $totalBoxRequired = 0; $totalMrpPrice = 0; @endphp
+                            @php $totalArea = 0;
+                                $totalTilesPerBox = 0;
+                                $totalBoxCoverageAreaSqFt = 0;
+                                $totalBoxRequired = 0;
+                                $totalMrpPerSqFt = 0;
+                                $totalMrpPrice = 0;
+                            @endphp
                             @foreach($groupedTiles as $index => $tile)
                                 <tr>
-                                    <td>{{ (int)$index + (int)1 }}</td>
+                                    <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $tile['name'] }}</td>
                                     <td>{{ $tile['size'] }}</td>
                                     <td>{{ ucfirst($tile['finish']) }}</td>
                                     <td>{{ ucwords($tile['apply_on']) }}</td>
-                                    <td>{{ $tile['area_sq_ft'] }}</td>
-                                    <td>{{ $tile['tiles_per_box'] }}</td>
-                                    <td>{{ $tile['box_coverage_area_sq_ft'] }}</td>
-                                    <td>{{ $tile['box_required'] }}</td>
-                                    <td>{{ $tile['mrp_per_sq_ft'] }}</td>
-                                    <td>{{ $tile['mrp_price'] }}</td>
+                                    <td class="text-center">{{ ( $tile['area_sq_ft'] === "-" ) ? "-" : number_format($tile['area_sq_ft'])  }}</td>
+                                    <td class="text-center">{{ $tile['tiles_per_box'] }}</td>
+                                    <td class="text-center">{{ ( $tile['box_coverage_area_sq_ft'] === "-" ) ? "-" : number_format($tile['box_coverage_area_sq_ft'])  }}</td>
+                                    <td class="text-center">{{ $tile['box_required'] }}</td>
+                                    <td class="text-center">{{ $tile['mrp_per_sq_ft'] }}</td>
+                                    <td class="text-center">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
                                 </tr>
+                                @php
+                                    $totalArea += (int)$tile['area_sq_ft'];
+                                    $totalTilesPerBox += (int)$tile['tiles_per_box'];
+                                    $totalBoxCoverageAreaSqFt += (int)$tile['box_coverage_area_sq_ft'];
+                                    $totalBoxRequired += (int)$tile['box_required'];
+                                    $totalMrpPerSqFt += (int)$tile['mrp_per_sq_ft'];
+                                    $totalMrpPrice += (int)$tile['mrp_price'];
+                                @endphp
                             @endforeach
                             <tr class="table-active footer-table-text">
                                 <td></td>
@@ -185,12 +200,12 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td class="text-center">8,310</td>
-                                <td></td>
-                                <td class="text-center">9,420</td>
-                                <td class="text-center">20</td>
-                                <td></td>
-                                <td>Rs. 46,000</td>
+                                <td class="text-center">{{ ( $totalArea === 0 ) ? "" : number_format($totalArea) }}</td>
+                                <td class="text-center">{{ ( $totalTilesPerBox === 0 ) ? "" : $totalTilesPerBox }}</td>
+                                <td class="text-center">{{ ( $totalBoxCoverageAreaSqFt === 0 ) ? "" : number_format($totalBoxCoverageAreaSqFt) }}</td>
+                                <td class="text-center">{{ ( $totalBoxRequired === 0 ) ? "" : $totalBoxRequired }}</td>
+                                <td class="text-center">{{ ( $totalMrpPerSqFt === 0 ) ? "" : number_format($totalMrpPerSqFt) }}</td>
+                                <td class="text-center">{{ ( $totalMrpPrice === 0 ) ? "" : "Rs. ". number_format($totalMrpPrice) }}</td>
                             </tr>
                         @endif
                     </tbody>

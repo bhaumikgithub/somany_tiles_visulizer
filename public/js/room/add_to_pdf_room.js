@@ -313,9 +313,9 @@ $('.tile_calculation').click(function() {
     let height = $('#tile'+tile+' input#tiles_height').val();
     let width = $('#tile'+tile+' input#tiles_width').val();
 
-    let wastage = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db input#tiles_wastage').val();
-    let width_in_feet = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db input#width_in_feet').val();
-    let height_in_feet = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db input#height_in_feet').val();
+    let wastage = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db_'+cart_item_id+' input#tiles_wastage').val();
+    let width_in_feet = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db_'+cart_item_id+' input#width_in_feet').val();
+    let height_in_feet = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db_'+cart_item_id+' input#height_in_feet').val();
 
     $('#tiles_size').val(`${width} x ${height} mm`);
 
@@ -370,6 +370,8 @@ $("#calculate_btn").click(function () {
     $('#calc_tiles_needed').val(tilesNeeded);
 
     if( tilesIn1Box !== "" ) {
+        $('div#tile' + tile_id + ' div.tiles_carton_wrapper').css('display','block');
+        $('div#tile' + tile_id + ' div.tiles_carton_wrapper input#require_box').val(boxNeeded);
         $('div#tile' + tile_id + ' div.tiles_carton_wrapper span.require_box').text(boxNeeded);
         $('#required_box').show();
         displayResult("#required_box","Required Boxes : <b>" + boxNeeded+"</b> <small>(1 box have "+tilesIn1Box+" Tiles)</small>");
@@ -393,7 +395,7 @@ $('#closeTileCalcModal').click(function() {
     let totalArea = $('#calc_area_covered').val();
     let wastageOfTilesArea = $('#calc_wastage').val();
     let tilesNeeded = $('#calc_tiles_needed').val();
-    let boxNeeded = $('div#tile' + tile_id + ' div.tiles_carton_wrapper span.require_box').text();
+    let boxNeeded = $('div#tile' + tile_id + ' div.tiles_carton_wrapper input#require_box').val();
 
     //Save data into db
     $.ajax({
