@@ -90,22 +90,22 @@
                                             <button class="tile-cal-link tile_calculation" id="tile_cal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}">Open Tiles Calculator
                                             </button>
                                         </div>
-                                        <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper"
-                                             data-price-tile-id="{{$tile_detail->id}}" data-cart-item-id="{{$item->id}}">
-                                            <button id="update_price_btn" class="update_price_btn" data-tile-id="{{$tile_detail->id}}" data-price-update-cart-item-id="{{$item->id}}">
-                                                  <?php $getPrice = Helper::getTilePrice($tile_detail->id,$item->id); ?>
-                                                    <input type="hidden" value="{{( $getPrice === "" || $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">
-                                                    <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl" id="{{$index . '_' . $loop->index . '_'. 'price'}}">
-                                                    @if($getPrice === "" || $getPrice === NULL )
-                                                        Price not given
-                                                    @else
-                                                        Rs. <span class="price-update">{{$getPrice}}</span>/sq.ft
-                                                    @endif
-                                                </h5>
-                                            </button>
-                                            <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}" data-confirm-cart-item-id="{{$item->id}}">Update Price
-                                            </button>
-                                        </div>
+{{--                                        <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper"--}}
+{{--                                             data-price-tile-id="{{$tile_detail->id}}" data-cart-item-id="{{$item->id}}">--}}
+{{--                                            <button id="update_price_btn" class="update_price_btn" data-tile-id="{{$tile_detail->id}}" data-price-update-cart-item-id="{{$item->id}}">--}}
+{{--                                                  <?php $getPrice = Helper::getTilePrice($tile_detail->id,$item->id); ?>--}}
+{{--                                                    <input type="hidden" value="{{( $getPrice === "" || $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">--}}
+{{--                                                    <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl" id="{{$index . '_' . $loop->index . '_'. 'price'}}">--}}
+{{--                                                    @if($getPrice === "" || $getPrice === NULL )--}}
+{{--                                                        Price not given--}}
+{{--                                                    @else--}}
+{{--                                                        Rs. <span class="price-update">{{$getPrice}}</span>/sq.ft--}}
+{{--                                                    @endif--}}
+{{--                                                </h5>--}}
+{{--                                            </button>--}}
+{{--                                            <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}" data-confirm-cart-item-id="{{$item->id}}">Update Price--}}
+{{--                                            </button>--}}
+{{--                                        </div>--}}
                                     </div>
                                 </div>
                             @endif
@@ -145,7 +145,8 @@
         </div>
 
         <!-- Table structure -->
-            <div class="row summary-page-table-row">
+            @if(isset($groupedTiles))
+                <div class="row summary-page-table-row">
                 <table class="table summary-page-table">
                     <thead>
                         <tr class="table-active">
@@ -211,7 +212,7 @@
                     </tbody>
                 </table>
             </div>
-
+            @endif
             <div class="row">
             <div class="col-md-12 col-xs-12">
                 <h5 class="font-bold">Disclaimer:</h5>
