@@ -10,7 +10,7 @@
             </div>
     <div id="slected-panel">
     <div class="top-panel-box">
-    <div class="h5-wrapper">
+    <div class="h5-wrapper display_surface_name">
         <button class="selcte-data-btn">
         <span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span>
        </button>
