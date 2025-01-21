@@ -1,64 +1,64 @@
 var isInitialLoad = true; // Flag to track the initial load
 
 function AdjustCanvasWidthHeight() {
-  var windowWidth = $(window).width();
-  var windowHeight = $(window).height();
-  var newWidth = windowHeight * 1.78;
-  var newLeft = Math.round((windowWidth - newWidth) / 2);
-  var newRight = Math.round((windowWidth - newLeft - newWidth));  // Calculate new right position
-  var canvasHeight = windowHeight;
+    var windowWidth = $(window).width();
+    var windowHeight = $(window).height();
+    var newWidth = windowHeight * 1.78;
+    var newLeft = Math.round((windowWidth - newWidth) / 2);
+    var newRight = Math.round((windowWidth - newLeft - newWidth));  // Calculate new right position
+    var canvasHeight = windowHeight;
 
-  $("#roomCanvas").height(windowHeight);
-  $("#roomCanvas").width(newWidth);
+    $("#roomCanvas").height(windowHeight);
+    $("#roomCanvas").width(newWidth);
 
-  $("#container").css({ left: newLeft });
+    $("#container").css({ left: newLeft });
 
-  $(".back-btn").css({ left: newLeft });
-  $(".cn-btn").css({ right: newRight });
-  $(".share-btn-img").css({ right: newRight });
-  $(".share-div").css({ right: newRight });
+    $(".back-btn").css({ left: newLeft });
+    $(".cn-btn").css({ right: newRight });
+    $(".share-btn-img").css({ right: newRight });
+    $(".share-div").css({ right: newRight });
 
 
 
-  if (isInitialLoad) {
-    if (windowWidth > 1300) {
-      $(".cn-btn").css("margin-right", "26px");
-      $(".share-btn-img").css("margin-right", "26px");
-      $(".share-div").css("margin-right", "26px");
+    if (isInitialLoad) {
+        if (windowWidth > 1300) {
+            $(".cn-btn").css("margin-right", "26px");
+            $(".share-btn-img").css("margin-right", "26px");
+            $(".share-div").css("margin-right", "26px");
+
+        }
+
+
+        isInitialLoad = false; // Set flag to false after initial load
+    } else {
+        $(".cn-btn").css("margin-right", "15px"); // Remove margin-right for resize
+        $(".share-btn-img").css("margin-right", "15px");
+        $(".share-div").css("margin-right", "26px");
 
     }
-
-
-    isInitialLoad = false; // Set flag to false after initial load
-  } else {
-    $(".cn-btn").css("margin-right", "15px"); // Remove margin-right for resize
-    $(".share-btn-img").css("margin-right", "15px");
-    $(".share-div").css("margin-right", "26px");
-
-  }
 
 
 }
 
 function applyCanvasAdjustments() {
-  if ($(window).width() > 500) { // Only execute if screen width > 500px
-    AdjustCanvasWidthHeight();
+    if ($(window).width() > 500) { // Only execute if screen width > 500px
+        AdjustCanvasWidthHeight();
 
-  }
+    }
 }
 function setTopPanelHeight() {
-  const viewportHeight = $(window).height(); // Get viewport height using jQuery
-  $('.top-panel').css('height', viewportHeight - 20 + 'px'); // Set height dynamically
+    const viewportHeight = $(window).height(); // Get viewport height using jQuery
+    $('.top-panel').css('height', viewportHeight - 20 + 'px'); // Set height dynamically
 }
 $(window).on('load', function() {
 
-  applyCanvasAdjustments();
-  setTopPanelHeight();
+    applyCanvasAdjustments();
+    setTopPanelHeight();
 });
 
 $(window).on('resize', function() {
-  applyCanvasAdjustments();
-  AdjustCanvasWidthHeight();
+    applyCanvasAdjustments();
+    AdjustCanvasWidthHeight();
 
 });
 
@@ -75,8 +75,8 @@ $(window).on('resize', function() {
 // });
 $('#topPanelmainpanel').on('click', function () {
 
-  $('#topPanel').show(); // Toggle visibility of the topPanel
-  $(this).hide();
+    $('#topPanel').show(); // Toggle visibility of the topPanel
+    $(this).hide();
 
 });
 
@@ -125,19 +125,19 @@ function updateTopPanelText() {
 //updateTopPanelText();
 
 function selectedpaneltext() {
-  /*
-  if (lastRoomCanvasTitle === 'Change wall' && wallCount === 0) {
-    $('#slected-panel-data p').text('Please first choose data');
-  } else if (lastRoomCanvasTitle === 'Change floor' && floorCount === 0) {
-    $('#slected-panel-data p').text('Please first choose data');
-  } else if (lastRoomCanvasTitle === 'Change counter' && counterCount === 0) {
-    $('#slected-panel-data p').text('Please first choose data');
-  } else if (lastRoomCanvasTitle === 'Change ceiling' && ceilingCount === 0) {
-    $('#slected-panel-data p').text('Please first choose data');
-  } else if (lastRoomCanvasTitle === 'Change theme' && themeCount === 0) {
-    $('#slected-panel-data p').text('Please first choose data');
-  }
-    */
+    /*
+    if (lastRoomCanvasTitle === 'Change wall' && wallCount === 0) {
+      $('#slected-panel-data p').text('Please first choose data');
+    } else if (lastRoomCanvasTitle === 'Change floor' && floorCount === 0) {
+      $('#slected-panel-data p').text('Please first choose data');
+    } else if (lastRoomCanvasTitle === 'Change counter' && counterCount === 0) {
+      $('#slected-panel-data p').text('Please first choose data');
+    } else if (lastRoomCanvasTitle === 'Change ceiling' && ceilingCount === 0) {
+      $('#slected-panel-data p').text('Please first choose data');
+    } else if (lastRoomCanvasTitle === 'Change theme' && themeCount === 0) {
+      $('#slected-panel-data p').text('Please first choose data');
+    }
+      */
 }
 selectedpaneltext();
 
@@ -187,34 +187,34 @@ $('#topPanelTilesListUl').on('click', 'li', function () {
 
 // Store the last room-canvas title and update the class on room-canvas click
 $('.room-canvas').on('click', function () {
-  var title = $(this).attr('title');
+    var title = $(this).attr('title');
 
-  // Store the title in the variable
-  lastRoomCanvasTitle = title;
-  console.log('Last roomCanvas title set to:', lastRoomCanvasTitle);
+    // Store the title in the variable
+    lastRoomCanvasTitle = title;
+    console.log('Last roomCanvas title set to:', lastRoomCanvasTitle);
 
-  // Update the h5 element or perform other actions based on the title
-  /*
-  if (title === 'Change wall') {
-    $('#topPanel h5').text('Wall');
-    $('#topPanelTilesListUl').addClass('wallul').removeClass('floorul counterul ceilingul themeul');
-  } else if (title === 'Change floor') {
-    $('#topPanel h5').text('Floor124');
-    $('#topPanelTilesListUl').addClass('floorul').removeClass('wallul counterul ceilingul themeul');
-  } else if (title === 'Change counter') {
-    $('#topPanel h5').text('Counter');
-    $('#topPanelTilesListUl').addClass('counterul').removeClass('wallul floorul ceilingul themeul');
-  } else if (title === 'Change ceiling') {
-    $('#topPanel h5').text('Ceiling');
-    $('#topPanelTilesListUl').addClass('ceilingul').removeClass('wallul floorul counterul themeul');
-  } else if (title === 'Change theme') {
-    $('#topPanel h5').text('Theme');
-    $('#topPanelTilesListUl').addClass('themeul').removeClass('wallul floorul counterul ceilingul');
-  }
-    */
+    // Update the h5 element or perform other actions based on the title
+    /*
+    if (title === 'Change wall') {
+      $('#topPanel h5').text('Wall');
+      $('#topPanelTilesListUl').addClass('wallul').removeClass('floorul counterul ceilingul themeul');
+    } else if (title === 'Change floor') {
+      $('#topPanel h5').text('Floor124');
+      $('#topPanelTilesListUl').addClass('floorul').removeClass('wallul counterul ceilingul themeul');
+    } else if (title === 'Change counter') {
+      $('#topPanel h5').text('Counter');
+      $('#topPanelTilesListUl').addClass('counterul').removeClass('wallul floorul ceilingul themeul');
+    } else if (title === 'Change ceiling') {
+      $('#topPanel h5').text('Ceiling');
+      $('#topPanelTilesListUl').addClass('ceilingul').removeClass('wallul floorul counterul themeul');
+    } else if (title === 'Change theme') {
+      $('#topPanel h5').text('Theme');
+      $('#topPanelTilesListUl').addClass('themeul').removeClass('wallul floorul counterul ceilingul');
+    }
+      */
 
-  // Update the topPanelText after setting the class
-  //updateTopPanelText();
+    // Update the topPanelText after setting the class
+    //updateTopPanelText();
 });
 
 
@@ -222,68 +222,68 @@ $('.room-canvas').on('click', function () {
 $("#btnProduct").addClass("top-panel-button-active");
 
 $('#btnProduct').on('click', function () {
-  $('#topPanelTilesListBox').show();
-  $('#topPanelLayout').hide();
-  $('#topPanelGrout').hide();
+    $('#topPanelTilesListBox').show();
+    $('#topPanelLayout').hide();
+    $('#topPanelGrout').hide();
 
 
 });
 $('#btnLayout').on('click', function () {
-  $('#topPanelLayout').show();
-  $('#topPanelTilesListBox').hide();
-  $('#topPanelGrout').hide();
-  $('.radio-surface-rotation').hide();
+    $('#topPanelLayout').show();
+    $('#topPanelTilesListBox').hide();
+    $('#topPanelGrout').hide();
+    $('.radio-surface-rotation').hide();
 
 
 
 });
 $('#btnGrout').on('click', function () {
-  $('#topPanelGrout').show();
-  $('#topPanelTilesListBox').hide();
-  $('#topPanelLayout').hide();
-  $('.radio-surface-rotation').hide();
+    $('#topPanelGrout').show();
+    $('#topPanelTilesListBox').hide();
+    $('#topPanelLayout').hide();
+    $('.radio-surface-rotation').hide();
 
 });
 
 
 $('#grout-predefined-color .-btn').on('click', function () {
 
-  // Remove 'active' class from all buttons
-  $('#grout-predefined-color .-btn').removeClass('active');
+    // Remove 'active' class from all buttons
+    $('#grout-predefined-color .-btn').removeClass('active');
 
-  // Add 'active' class to the clicked button
-  $(this).addClass('active');
+    // Add 'active' class to the clicked button
+    $(this).addClass('active');
 });
 
 
 $('.share-btn-img').on('click', function () {
-  $('.share-div').css('display','flex');
-  $(this).hide();
-  $('.share-btn-close').show();
+    $('.share-div').css('display','flex');
+    $(this).hide();
+    $('.share-btn-close').show();
 });
 $('.share-btn-close').on('click', function () {
 
-  $('.share-div').css('display','none');
-  $(this).hide();
-  $('.share-btn-img').show();
+    $('.share-div').css('display','none');
+    $(this).hide();
+    $('.share-btn-img').show();
 });
 
 
 $('.open-panel').on('click', function () {
-  // Show the info panel
-  $('#selectd-data').hide();
-  $('#slected-panel').show();
+    // Show the info panel
+    $('#selectd-data').hide();
+    $('#slected-panel').show();
 
 });
 
 $('.selcte-data-btn').on('click', function () {
-  // Show the info panel
-  $('#selectd-data').show();
-  $('#slected-panel').hide();
+    // Show the info panel
+    $('#selectd-data').show();
+    $('#slected-panel').hide();
 
 });
 
 $('.cartpanelclose').on('click', function () {
-  $("body").css('overflow', "hidden");
+    $("body").css('overflow', "hidden");
 
 });

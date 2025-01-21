@@ -2,6 +2,8 @@ var alphabets = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"
 var allSurfacesData = [];
 var surfaceTypesDataTemp = [];
 var clickedHTML = "";
+var currentListId = "";
+
 window.onload = function getRoomSurface() {
     $.ajax({
         url: '/get_room_surface', // URL to the controller method for updating the price
@@ -11,9 +13,7 @@ window.onload = function getRoomSurface() {
             room_id: $('#current_room_id').val(),
         },
         success: function(response) {
-
             $('.show_selected_surface_data div#selectd-data').html(response.body);
-            //setTimeout(function(){$('.show_selected_surface_data div#selectd-data').html(loadAllFloorWallData());},3000);
         },
         error: function(error) {
             console.error('Error fetching room details', error);
@@ -23,61 +23,56 @@ window.onload = function getRoomSurface() {
 
 
 }
-function loadAllFloorWallData(){
-    var allSurfaces = currentRoom.tiledSurfaces; // Array
-    var htmlStr = '<ul>';
 
-    for(var i = 0;i<allSurfaces.length;i++){
-        var surfaceName = allSurfaces[i]._surfaceData.custom_surface_name;
-
-        htmlStr += '<li class="slected_tile" id="li_'+surfaceName+'">';
-        htmlStr += '<div class="tile-list-thumbnail-image-holder">';
-        htmlStr += '<img src="https://somany.easytrials.in/storage/no_tile.png">';
-        htmlStr += '</div>';
-        htmlStr += '<div class="tile-list-text">';
-        htmlStr += '<p class="-caption">'+ surfaceName +'</p>';
-        htmlStr += '<div class="tile_details"></div>';
-        htmlStr += '</div>';
-        htmlStr += '<button class="open-panel")><span class="glyphicon-menu-right glyphicon" aria-hidden="true" onclick="openTileSelectionPanel(\''+surfaceName+'\') ></span></button>';
-        htmlStr += '</li>';
-
-        // console.log("allSurfaces[i].custom_surface_name = " + allSurfaces[i]._surfaceData.custom_surface_name);
-
-
-    }
-    htmlStr+="</ul>";
-    return htmlStr;
-}
 //This function calling from the HTML of the wall A, wall B, Wall C, floor A, Floor B etc
 function openTileSelectionPanel(surface_name) {
-    console.log("openTileSelectionPanel");
-    console.log(surface_name);
-    //clickedHTML  = $("#li_"+surface_name);
-    //clickedHTML.find(".tile_details")[0].html("Test");
-    //$("#selectd-data").find(":contains('"+(surface_name)+"')").parent(".choosen_tile_updated_data");
-    console.log($("#li_"+surface_name));
-    console.log("look");
-    // Show the info panel
-    $('#selectd-data').hide();
-    $('#slected-panel').show();
-    $('#slected-panel .display_surface_name h5#optionText').text(convertFirstLetterCapital(surface_name));
 
-    var clickedSurface = findRoomSurfaceUsingName(convertFirstLetterCapital(surface_name));
-    //findRoomSurfaceNameFromAlphabet(surface_name);
+    setCurrentListID(surface_name);//List_wall_a
+
+    var newName = String(surface_name).split("_");
+    surface_name = convertFirstLetterCapital(newName[0] + " " + newName[1]);
+
+    // Show the info panel
+    showMainInfoPanel("MAINLISTING_HIDE");
+    $('#slected-panel .display_surface_name h5#optionText').text(surface_name);
+
+    var clickedSurface = findRoomSurfaceUsingName(surface_name);
 
     if(clickedSurface!=false){
         //This function directly go to 2d.min.js and set the current surface
-        console.log("_onSurfaceClick clickedSurface = ");
-        console.log(clickedSurface);
         currentRoom._onSurfaceClick(clickedSurface);
     }
 
 
 }
+function showMainInfoPanel(p_type){
+    console.log("showMainInfoPanel = " + p_type);
+    if(p_type=="MAINLISTING_HIDE"){
+        $('#selectd-data').hide();
+        $('#slected-panel').show();
+    }
+    else if(p_type=="MAINLISTING_SHOW"){
+        $('#selectd-data').show();
+        $('#slected-panel').hide();
+    }
+}
+
 function clickedTiles(p_tile,p_surfaceName){
-    console.log("Clicked Tiles");
-    console.log(p_tile);
+    //Wall A convert to wall_A
+    var temp = p_surfaceName.split(" ");
+    setCurrentListID(String(temp[0]).toLowerCase() + "_" + temp[1]);
+
+    console.log("p_tile.name = " + p_tile.name);
     console.log("p_surfaceName = " + p_surfaceName);
+    //Wall A
+    var detailDiv = currentListId.find(".detail")[0];
+    var imageDiv = currentListId.find("img")[0];
+    $(detailDiv).html( convertFirstLetterCapital(p_tile.name) + "<br><small>"+convertFirstLetterCapital(p_tile.finish)+"</small>");
+    $(imageDiv).attr("src",p_tile.icon);
+}
+
+function setCurrentListID(p_surfaceType){
+    currentListId = $("#list_" + p_surfaceType);
 }
 
 
