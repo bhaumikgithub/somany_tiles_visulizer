@@ -159,25 +159,30 @@
                 </ul>
             </div>
         </div>
-        <hr style="border: 1px solid;">
-        <!-- Footer Section -->
-        <div class="footer-section row ">
+        @if($userShowroomInfo['user'])
+            <hr style="border: 1px solid;">
+            <!-- Footer Section -->
+            <div class="footer-section row ">
             <div class="col-md-6 col-sm-6 col-xs-12">
                 @if($userShowroomInfo['user'])
                     <p><strong>Contact Person Details</strong></p>
                     <p><strong>Executive Name:</strong> <span>{{ $userShowroomInfo['user']['name'] }}</span></p>
-                    <p><strong>Executive Number:</strong> 
-                        <a href="tel:{{ $userShowroomInfo['user']['contact_no'] }}">
-                            {{ $userShowroomInfo['user']['contact_no'] }}
-                        </a>
-                    </p>
-                    <p><strong>Executive Email:</strong> 
-                        <a href="mailto:{{ $userShowroomInfo['user']['email'] }}">
-                            {{ $userShowroomInfo['user']['email'] }}
-                        </a>
-                    </p>
-                @else
-                    <p><strong>No user information available.</strong></p>
+                    @if( $userShowroomInfo['user']['contact_no'] )
+                        <p><strong>Executive Number:</strong>
+                            <a href="tel:{{ $userShowroomInfo['user']['contact_no'] }}">
+                                {{ $userShowroomInfo['user']['contact_no'] }}
+                            </a>
+                        </p>
+                    @endif
+                    @if( $userShowroomInfo['user']['email'] )
+                        <p><strong>Executive Email:</strong>
+                            <a href="mailto:{{ $userShowroomInfo['user']['email'] }}">
+                                {{ $userShowroomInfo['user']['email'] }}
+                            </a>
+                        </p>
+                    @endif
+{{--                @else--}}
+{{--                    <p><strong>No user information available.</strong></p>--}}
                 @endif
 
             </div>
@@ -196,9 +201,10 @@
                         <p><strong>This user currently does not have any showroom.</strong></p>
                     @endif
                 @endif
-                        
+
             </div>
         </div>
+        @endif
         <hr style="border: 1px solid;">
         <!-- Footer Section -->
         <div class="footer-section row ">

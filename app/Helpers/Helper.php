@@ -36,10 +36,13 @@ class Helper
 
     public static function getShowRoomNames($showroom_id): string
     {
-        // Fetch the skill names from the database based on the passed IDs
-        $show_room_names = Showroom::whereIn('id', $showroom_id)->pluck('name')->toArray();
-        // Return the skills as a comma-separated string
-        return implode(', ', $show_room_names);
+        if( $showroom_id ) {
+            // Fetch the skill names from the database based on the passed IDs
+            $show_room_names = Showroom::whereIn('id', $showroom_id)->pluck('name')->toArray();
+            // Return the skills as a comma-separated string
+            return implode(', ', $show_room_names);
+        } else
+            return true;
     }
 
     public static function getSAPCode($tile_id)

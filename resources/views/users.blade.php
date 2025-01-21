@@ -228,7 +228,7 @@
                     </div>
                 </div>
 
-                <div class="form-group required">
+                <div class="form-group">
                     <label for="form-update-user-contact_no" class="col-sm-3 control-label">Showrooms</label>
                     <div class="col-sm-6">
                         <select name="show_rooms[]" id="form-update-user-show-room" class="form-control" multiple>

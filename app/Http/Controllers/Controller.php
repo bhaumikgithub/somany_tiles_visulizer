@@ -785,8 +785,8 @@ class Controller extends BaseController
             'avatar' => 'nullable|image|max:1024|dimensions:max_width=1024,max_height=1024',
             'role' => 'required|in:guest,registered,editor,administrator',
             'contact_no' => 'required|max:10',
-            'show_rooms' => 'required|array|min:1',  // Ensure at least one skill is selected
-            'show_rooms.*' => 'integer|exists:showrooms,id',  // Ensure each selected skill is valid
+//            'show_rooms' => 'required|array|min:1',  // Ensure at least one skill is selected
+//            'show_rooms.*' => 'integer|exists:showrooms,id',  // Ensure each selected skill is valid
             'enabled' => 'nullable|boolean',
         ]);
 
@@ -797,7 +797,8 @@ class Controller extends BaseController
         $user = User::findOrFail($request->id);
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->showroom_id = json_encode($request->show_rooms);  // Store selected skill IDs as JSON
+        if( $request->show_rooms )
+            $user->showroom_id = json_encode($request->show_rooms);  // Store selected skill IDs as JSON
 
         if ($request->hasFile('avatar')) {
             $user->deleteAvatarFile();
