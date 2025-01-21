@@ -104,6 +104,7 @@
     @endif
     <script src="/js/room/add_to_pdf_room.js"></script>
     <script src="/js/room/pincode.js"></script>
+    <script src="/js/room/surface_area.js"></script>
     <script src="/js/room/custom.js"></script>
     <script type="text/javascript">
       $(document).ready(function() {
