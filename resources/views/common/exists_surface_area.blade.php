@@ -20,9 +20,10 @@
                 $suffix = $alphabets[$nameCounts[$name]];
                  // Construct the display name with the suffix
                 $displayName = $name . ' ' . $suffix;
+                $wallId = "list_".str_replace(" ","_",$displayName);
             @endphp
 
-            <li class="slected_tile choosen_tile_updated_data">
+            <li class="slected_tile choosen_tile_updated_data" id="{{$wallId}}">
                 <div class="tile-list-thumbnail-image-holder">
                     <img src="{{asset('/storage/no_tile.png')}}">
                 </div>
@@ -30,7 +31,7 @@
                     <p class="-caption">{{$displayName}}</p>
                     <div class="selected tile detail"></div>
                 </div>
-                <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true" onclick="openTileSelectionPanel('{{$displayName}}');"></span></button>
+                <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true" onclick="openTileSelectionPanel('{{str_replace(" ","_",$displayName)}}');"></span></button>
             </li>
         @endforeach
     @endif
