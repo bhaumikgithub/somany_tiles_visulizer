@@ -45,67 +45,69 @@
                         </div>
                         <input type="checkbox" value="{{$showImage}}"  name="show_main_image" id="show_main_image" {{ $showImage === "yes" ? 'checked' : '' }} data-cart-item-id="{{$item->id}}"> Show Image?
                         @foreach(json_decode($item->tiles_json) as $tile_detail)
-                            <h5 class="mt-20 font-bold dark-grey-font">{{ucfirst($tile_detail->surface)}}</h5>
-                            <div class="details-card" id="{{$index . '_' . $loop->index}}">
-                                <div class="row">
-                                    <div class="col-md-3 col-sm-3 col-pad-set">
-                                        <div class="img-wall-set">
-                                            <img src="{{ asset($tile_detail->icon) }}" alt="{{$tile_detail->surface}}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set">
-                                        <p class=" cap-text"><b>{{$tile_detail->name}}</b></p>
-                                        <p class="">{{$tile_detail->width}} × {{$tile_detail->height}} MM</p>
-                                        <p class="">{{ucfirst($tile_detail->finish)}}</p>
-{{--                                        <p class="">Sap Code: 12312321312</p>--}}
-                                    </div>
-                                    <div id="tile{{$tile_detail->id}}" class="col-md-3 col-sm-3 col-xs-12 col-pad-set xs-margin-set" data-weight="{{$tile_detail->width}}" data-height="{{$tile_detail->height}}">
-                                        <input type="hidden" value="{{$tile_detail->width}}" id="tiles_width">
-                                        <input type="hidden" value="{{$tile_detail->height}}" id="tiles_height">
-
-                                        @if( isset($tile_detail->total_area_sq_meter) && $tile_detail->total_area_sq_meter !== null )
-                                            <div class="tiles_calculation_wrapper tiles_calculation_wrapper_from_db">
-                                                <input type="hidden" value="{{$tile_detail->width_in_feet}}" id="width_in_feet">
-                                                <input type="hidden" value="{{$tile_detail->height_in_feet}}" id="height_in_feet">
-                                                <input type="hidden" value="{{$tile_detail->wastage}}" id="tiles_wastage">
-                                        @else
-                                            <div class="tiles_calculation_wrapper" style="display: none;">
-                                        @endif
-                                            <p>Total Area: <span class="total_area_covered_meter">{{@$tile_detail->total_area_sq_meter}}</span> Sq. Meter</p>
-                                            <p>Total Area: <span class="total_area_covered_feet">{{@$tile_detail->total_area}}</span> Sq. Feet</p>
-                                            <p>Wastage: <span class="tiles_wastage">{{@$tile_detail->wastage}}</span> %</p>
-                                            <p>Tiles Needed: <span class="tiles_needed">{{@$tile_detail->tiles_needed}}</span></p>
-                                        </div>
-
-                                        <?php $tiles_par_box = Helper::getTilesParCarton($tile_detail->id);?>
-                                        <input type="hidden" value="{{$tiles_par_box}}" id="tiles_par_carton">
-                                        @if( $tiles_par_box !== NULL )
-                                            <div class="tiles_carton_wrapper" style="display: none;">
-                                                <p>Number of Box Required: <span class="require_box"></span></p>
+                            @if( $tile_detail->surface !== "paint" )
+                                <h5 class="mt-20 font-bold dark-grey-font">{{ucfirst($tile_detail->surface)}}</h5>
+                                <div class="details-card" id="{{$index . '_' . $loop->index}}">
+                                    <div class="row">
+                                        <div class="col-md-3 col-sm-3 col-pad-set">
+                                            <div class="img-wall-set">
+                                                <img src="{{ asset($tile_detail->icon) }}" alt="{{$tile_detail->surface}}">
                                             </div>
-                                            <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
-                                        @endif
-                                        <button class="tile-cal-link tile_calculation" id="tile_cal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}">Open Tiles Calculator
-                                        </button>
-                                    </div>
-                                    <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper"
-                                         data-price-tile-id="{{$tile_detail->id}}" data-cart-item-id="{{$item->id}}">
-                                        <button id="update_price_btn" class="update_price_btn" data-tile-id="{{$tile_detail->id}}" data-price-update-cart-item-id="{{$item->id}}">
-                                              <?php $getPrice = Helper::getTilePrice($tile_detail->id,$item->id); ?>
-                                                <input type="hidden" value="{{( $getPrice === "" || $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">
-                                                <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl" id="{{$index . '_' . $loop->index . '_'. 'price'}}">
-                                                @if($getPrice === "" || $getPrice === NULL )
-                                                    Price not given
-                                                @else
-                                                    Rs. <span class="price-update">{{$getPrice}}</span>/sq.ft
-                                                @endif
-                                            </h5>
-                                        </button>
-                                        <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}" data-confirm-cart-item-id="{{$item->id}}">Update Price
-                                        </button>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set">
+                                            <p class=" cap-text"><b>{{$tile_detail->name}}</b></p>
+                                            <p class="">{{$tile_detail->width}} × {{$tile_detail->height}} MM</p>
+                                            <p class="">{{ucfirst($tile_detail->finish)}}</p>
+    {{--                                        <p class="">Sap Code: 12312321312</p>--}}
+                                        </div>
+                                        <div id="tile{{$tile_detail->id}}" class="col-md-3 col-sm-3 col-xs-12 col-pad-set xs-margin-set" data-weight="{{$tile_detail->width}}" data-height="{{$tile_detail->height}}">
+                                            <input type="hidden" value="{{$tile_detail->width}}" id="tiles_width">
+                                            <input type="hidden" value="{{$tile_detail->height}}" id="tiles_height">
+
+                                            @if( isset($tile_detail->total_area_sq_meter) && $tile_detail->total_area_sq_meter !== null )
+                                                <div class="tiles_calculation_wrapper tiles_calculation_wrapper_from_db">
+                                                    <input type="hidden" value="{{$tile_detail->width_in_feet}}" id="width_in_feet">
+                                                    <input type="hidden" value="{{$tile_detail->height_in_feet}}" id="height_in_feet">
+                                                    <input type="hidden" value="{{$tile_detail->wastage}}" id="tiles_wastage">
+                                            @else
+                                                <div class="tiles_calculation_wrapper" style="display: none;">
+                                            @endif
+                                                <p>Total Area: <span class="total_area_covered_meter">{{@$tile_detail->total_area_sq_meter}}</span> Sq. Meter</p>
+                                                <p>Total Area: <span class="total_area_covered_feet">{{@$tile_detail->total_area}}</span> Sq. Feet</p>
+                                                <p>Wastage: <span class="tiles_wastage">{{@$tile_detail->wastage}}</span> %</p>
+                                                <p>Tiles Needed: <span class="tiles_needed">{{@$tile_detail->tiles_needed}}</span></p>
+                                            </div>
+
+                                            <?php $tiles_par_box = Helper::getTilesParCarton($tile_detail->id);?>
+                                            <input type="hidden" value="{{$tiles_par_box}}" id="tiles_par_carton">
+                                            @if( $tiles_par_box !== NULL )
+                                                <div class="tiles_carton_wrapper" style="display: none;">
+                                                    <p>Number of Box Required: <span class="require_box"></span></p>
+                                                </div>
+                                                <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
+                                            @endif
+                                            <button class="tile-cal-link tile_calculation" id="tile_cal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}">Open Tiles Calculator
+                                            </button>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper"
+                                             data-price-tile-id="{{$tile_detail->id}}" data-cart-item-id="{{$item->id}}">
+                                            <button id="update_price_btn" class="update_price_btn" data-tile-id="{{$tile_detail->id}}" data-price-update-cart-item-id="{{$item->id}}">
+                                                  <?php $getPrice = Helper::getTilePrice($tile_detail->id,$item->id); ?>
+                                                    <input type="hidden" value="{{( $getPrice === "" || $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">
+                                                    <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl" id="{{$index . '_' . $loop->index . '_'. 'price'}}">
+                                                    @if($getPrice === "" || $getPrice === NULL )
+                                                        Price not given
+                                                    @else
+                                                        Rs. <span class="price-update">{{$getPrice}}</span>/sq.ft
+                                                    @endif
+                                                </h5>
+                                            </button>
+                                            <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}" data-confirm-cart-item-id="{{$item->id}}">Update Price
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
                         @endforeach
                     @endforeach
                 @endif
@@ -140,7 +142,62 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+
+        <!-- Table structure -->
+            <div class="row summary-page-table-row">
+                <table class="table summary-page-table">
+                    <thead>
+                        <tr class="table-active">
+                        <th scope="col" class="text-center">Sr. No</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Finish</th>
+                        <th scope="col">Apply<br>On</th>
+                        <th scope="col" class="text-center">Area<br>Sq. Ft.</th>
+                        <th scope="col" class="text-center">Tiles/Box</th>
+                        <th scope="col" class="text-center">Box Coverage<br>Area Sq. Ft.</th>
+                        <th scope="col" class="text-center">Box<br> Required</th>
+                        <th scope="col">MRP/<br>Sq. Ft.</th>
+                        <th scope="col">MRP<br>Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @if(isset($groupedTiles))
+                            @php $totalArea = 0; $totalBoxRequired = 0; $totalMrpPrice = 0; @endphp
+                            @foreach($groupedTiles as $index => $tile)
+                                <tr>
+                                    <td>{{ 1 }}</td>
+                                    <td>{{ $tile[0]['name'] }}</td>
+                                    <td>{{ $tile[0]['size'] }}</td>
+                                    <td>{{ $tile[0]['finish'] }}</td>
+                                    <td>{{ $tile[0]['apply_on'] }}</td>
+                                    <td>{{ $tile[0]['area_sq_ft'] }}</td>
+                                    <td>{{ $tile[0]['tiles_per_box'] }}</td>
+                                    <td>{{ $tile[0]['box_coverage_area_sq_ft'] }}</td>
+                                    <td>{{ $tile[0]['box_required'] }}</td>
+                                    <td>{{ $tile[0]['mrp_per_sq_ft'] }}</td>
+                                    <td>{{ $tile[0]['mrp_price'] }}</td>
+                                </tr>
+                            @endforeach
+                            <tr class="table-active footer-table-text">
+                                <td></td>
+                                <td><b>Total</b></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-center">8,310</td>
+                                <td></td>
+                                <td class="text-center">9,420</td>
+                                <td class="text-center">20</td>
+                                <td></td>
+                                <td>Rs. 46,000</td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row">
             <div class="col-md-12 col-xs-12">
                 <h5 class="font-bold">Disclaimer:</h5>
                 <ul class="notes_ul">
