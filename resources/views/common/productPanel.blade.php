@@ -4,116 +4,13 @@
     </div>
 
     <div class="row">
-    <div class="col-md-12">
-        <div id="selectd-data">
-        <ul >
-            <li class="slected_tile">
-            <div class="tile-list-thumbnail-image-holder"><img src="/storage/tiles/icons/66d7ec329a2ab3.43604796.jpg"></div><div class="tile-list-text">
-                <p class="-caption">Wall A</p>
-                <p>BALMA BIANCO</p>
-                <p>(MATT)</p>
+        <div class="col-md-12 show_selected_surface_data">
+            <div id="selectd-data">
+                @include('common.exists_surface_area')
             </div>
-            <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
-
-            </li>
-            <li class="slected_tile">
-            <div class="tile-list-thumbnail-image-holder"><img src="/storage/tiles/icons/66d7ec3154e316.22983802.jpg"></div>inde<div class="tile-list-text">
-                <p class="-caption">Wall B</p>
-                <p>Ruston Kota Lit</p>
-                <p>(MATT)</p>
-            </div>
-            <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
-          </li>
-          <li class="slected_tile">
-            <div class="tile-list-thumbnail-image-holder"><img src="/storage/tiles/icons/66d7ec329a2ab3.43604796.jpg"></div><div class="tile-list-text">
-                <p class="-caption">Wall A</p>
-                <p>BALMA BIANCO</p>
-                <p>(MATT)</p>
-            </div>
-            <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
-
-            </li>
-            <li class="slected_tile">
-            <div class="tile-list-thumbnail-image-holder"><img src="/storage/tiles/icons/66d7ec3154e316.22983802.jpg"></div><div class="tile-list-text">
-                <p class="-caption">Wall B</p>
-                <p>Ruston Kota Lit</p>
-                <p>(MATT)</p>
-            </div>
-            <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
-          </li>
-          <li class="slected_tile">
-            <div class="tile-list-thumbnail-image-holder"><img src="/storage/tiles/icons/66d7ec329a2ab3.43604796.jpg"></div><div class="tile-list-text">
-                <p class="-caption">Wall A</p>
-                <p>BALMA BIANCO</p>
-                <p>(MATT)</p>
-            </div>
-            <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
-
-            </li>
-            <li class="slected_tile">
-            <div class="tile-list-thumbnail-image-holder"><img src="/storage/tiles/icons/66d7ec3154e316.22983802.jpg"></div><div class="tile-list-text">
-                <p class="-caption">Wall B</p>
-                <p>Ruston Kota Lit</p>
-                <p>(MATT)</p>
-            </div>
-            <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
-          </li>
-          <li class="slected_tile">
-            <div class="tile-list-thumbnail-image-holder"><img src="/storage/tiles/icons/66d7ec329a2ab3.43604796.jpg"></div><div class="tile-list-text">
-                <p class="-caption">Wall A</p>
-                <p>BALMA BIANCO</p>
-                <p>(MATT)</p>
-            </div>
-            <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
-
-            </li>
-            <li class="slected_tile">
-            <div class="tile-list-thumbnail-image-holder"><img src="/storage/tiles/icons/66d7ec3154e316.22983802.jpg"></div><div class="tile-list-text">
-                <p class="-caption">Wall B</p>
-                <p>Ruston Kota Lit</p>
-                <p>(MATT)</p>
-            </div>
-            <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
-          </li>
-          <li class="slected_tile">
-            <div class="tile-list-thumbnail-image-holder"><img src="/storage/tiles/icons/66d7ec329a2ab3.43604796.jpg"></div><div class="tile-list-text">
-                <p class="-caption">Wall A</p>
-                <p>BALMA BIANCO</p>
-                <p>(MATT)</p>
-            </div>
-            <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
-
-            </li>
-            <li class="slected_tile">
-            <div class="tile-list-thumbnail-image-holder"><img src="/storage/tiles/icons/66d7ec3154e316.22983802.jpg"></div><div class="tile-list-text">
-                <p class="-caption">Wall B</p>
-                <p>Ruston Kota Lit</p>
-                <p>(MATT)</p>
-            </div>
-            <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
-          </li><li class="slected_tile">
-            <div class="tile-list-thumbnail-image-holder"><img src="/storage/tiles/icons/66d7ec329a2ab3.43604796.jpg"></div><div class="tile-list-text">
-                <p class="-caption">Wall A</p>
-                <p>BALMA BIANCO</p>
-                <p>(MATT)</p>
-            </div>
-            <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
-
-            </li>
-            <li class="slected_tile">
-            <div class="tile-list-thumbnail-image-holder"><img src="/storage/tiles/icons/66d7ec3154e316.22983802.jpg"></div><div class="tile-list-text">
-                <p class="-caption">Wall B</p>
-                <p>Ruston Kota Lit</p>
-                <p>(MATT)</p>
-            </div>
-            <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
-          </li>
-        </ul>
-
-        </div>
     <div id="slected-panel">
     <div class="top-panel-box">
-    <div class="h5-wrapper">
+    <div class="h5-wrapper display_surface_name">
         <button class="selcte-data-btn">
         <span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span>
        </button>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Support\Facades\Storage;
@@ -227,6 +228,21 @@ class Controller2d extends Controller
     {
         $rooms = Room2d::where('type', $room_type)->where('enabled', 1)->get();
         return view('2d.listing',compact('rooms'));
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getRoomSurface(Request $request): JsonResponse
+    {
+        $room = Room2d::findOrFail($request->room_id);
+        $surface = json_decode($room->surfaces,true);
+        return response()->json([
+            'body' => view('common.exists_surface_area',compact('surface'))->render(),
+            'data' => ['surface'=> $surface],
+            'success' => 'success'
+        ]);
     }
 
 }
