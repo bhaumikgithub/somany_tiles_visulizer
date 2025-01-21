@@ -203,7 +203,84 @@ class AddToPdfRoomsController extends Controller
             ];
         }        // Retrieve the pincode from the session
         $pincode = session('pincode', null); // Default to null if not set
-        return view('pdf.cart_summary',compact('allProduct','randomKey','pincode','userShowroomInfo'));
+
+        // Initialize an empty collection to store processed data
+        $tilesCollection = collect();
+
+        foreach ($allProduct as $item) {
+            // Decode the JSON data from the 'tile_json' column
+            $tiles = json_decode($item->tiles_json, true);
+            foreach ($tiles as $tile) {
+                // Check if 'total_area' exists
+                if (isset($tile['total_area'])) {
+                    if( isset($tile['tile_in_box']) && isset($tile['box_needed'])){
+                        $boxWH = $tile['width'] * $tile['height'];
+                        $TotalWH = $boxWH * $tile['box_needed'];
+                        $box_coverage_area_sq_ft = $TotalWH/305;
+                        $mrp_price = ( $box_coverage_area_sq_ft * $tile['price'] );
+                    } else {
+                        $box_coverage_area_sq_ft = "-";
+                        $mrp_price = 0 ;
+                    }
+                    $tilesCollection->push([
+                        'name' => $tile['name'],
+                        'size' => "{$tile['width']} x {$tile['height']}",
+                        'finish' => $tile['finish'],
+                        'apply_on' => $tile['surface'],
+                        'area_sq_ft' => (int) $tile['total_area'],
+                        'tiles_per_box' => ( isset($tile['tile_in_box']) ) ? $tile['tile_in_box'] : '-',
+                        'box_coverage_area_sq_ft' => (int)$box_coverage_area_sq_ft,
+                        'box_required' => ( isset($tile['box_needed']) ) ? $tile['box_needed'] : '-',
+                        'mrp_per_sq_ft' => ( isset($tile['price']) ) ? $tile['price'] : 0,
+                        'mrp_price' => $mrp_price
+                    ]);
+                } else {
+                    // Push default values or skip this tile
+                    $tilesCollection->push([
+                        'name' => $tile['name'],
+                        'size' => "{$tile['width']} x {$tile['height']}",
+                        'finish' => $tile['finish'],
+                        'apply_on' => $tile['surface'],
+                        'area_sq_ft' => '-',
+                        'tiles_per_box' => '-',
+                        'box_coverage_area_sq_ft' => '-',
+                        'box_required' => '-',
+                        'mrp_per_sq_ft' => '-',
+                        'mrp_price' => '-',
+                    ]);
+                }
+            }
+        }
+        // Group by 'name' and process to combine surfaces
+        $groupedTiles = $tilesCollection->groupBy('name')->map(function ($items) {
+            $combinedSurfaces = $items->pluck('apply_on')->unique()->implode(', ');
+
+            $combinedAreaSqFt = $items->sum(function ($item) {
+                return (float) $item['area_sq_ft'];
+            });
+
+            $combinedTilesPerBox = $items->sum(function ($item) {
+                return (int) $item['tiles_per_box'];
+            });
+
+            $combinedBoxRequired = $items->sum(function ($item) {
+                return (int) $item['box_required'];
+            });
+
+            $combinedPrice = $items->sum(function ($item) {
+                return (int) $item['mrp_per_sq_ft'];
+            });
+            // Return the first item with updated and formatted fields
+            return array_merge($items->first(), [
+                'apply_on' => $combinedSurfaces,
+                'area_sq_ft' => $combinedAreaSqFt,
+                'tiles_per_box' => $combinedTilesPerBox,
+                'box_required' => $combinedBoxRequired,
+                'mrp_per_sq_ft' => $combinedPrice
+            ]);
+        });
+
+        return view('pdf.cart_summary',compact('allProduct','randomKey','groupedTiles','pincode','userShowroomInfo'));
     }
 
     /**

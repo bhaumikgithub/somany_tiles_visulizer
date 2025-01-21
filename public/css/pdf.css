@@ -178,6 +178,29 @@ input[type=checkbox]{
     cursor: pointer;
 }
 
+.summary-page-table-row {
+	background: #f8f9fa;
+	margin-top: 20px;
+}
+
+.col {
+	border: solid 1px #6c757d;
+	padding: 10px;
+}
+.summary-page-table th{
+	font-size:11px;
+}
+summary-page-table td{
+	font-size:11px;
+}
+.footer-table-text{
+	font-weight:bold;
+}
+
+.table-active, .table-active > th, .table-active > td {
+	background-color: rgba(0, 0, 0, 0.075);
+}
+
 /* media query */
 
 @media (max-width:1200px) {
