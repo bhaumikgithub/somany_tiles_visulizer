@@ -184,7 +184,7 @@
             <div class="col-md-6 col-sm-6 col-xs-12 text-right xs-text-left xs-margin-top-20">
                 @if($userShowroomInfo['user'])
                     @if($userShowroomInfo['showrooms'])
-                    <p><strong>showrooms Information</strong></p>
+                    <p><strong>Showroom Information</strong></p>
                         @foreach($userShowroomInfo['showrooms'] as $showroom)
                             <div class="showroom">
                                 <p>{{ $showroom['name'] }},
