@@ -166,17 +166,17 @@
                             @php $totalArea = 0; $totalBoxRequired = 0; $totalMrpPrice = 0; @endphp
                             @foreach($groupedTiles as $index => $tile)
                                 <tr>
-                                    <td>{{ 1 }}</td>
-                                    <td>{{ $tile[0]['name'] }}</td>
-                                    <td>{{ $tile[0]['size'] }}</td>
-                                    <td>{{ $tile[0]['finish'] }}</td>
-                                    <td>{{ $tile[0]['apply_on'] }}</td>
-                                    <td>{{ $tile[0]['area_sq_ft'] }}</td>
-                                    <td>{{ $tile[0]['tiles_per_box'] }}</td>
-                                    <td>{{ $tile[0]['box_coverage_area_sq_ft'] }}</td>
-                                    <td>{{ $tile[0]['box_required'] }}</td>
-                                    <td>{{ $tile[0]['mrp_per_sq_ft'] }}</td>
-                                    <td>{{ $tile[0]['mrp_price'] }}</td>
+                                    <td>{{ (int)$index + (int)1 }}</td>
+                                    <td>{{ $tile['name'] }}</td>
+                                    <td>{{ $tile['size'] }}</td>
+                                    <td>{{ ucfirst($tile['finish']) }}</td>
+                                    <td>{{ ucwords($tile['apply_on']) }}</td>
+                                    <td>{{ $tile['area_sq_ft'] }}</td>
+                                    <td>{{ $tile['tiles_per_box'] }}</td>
+                                    <td>{{ $tile['box_coverage_area_sq_ft'] }}</td>
+                                    <td>{{ $tile['box_required'] }}</td>
+                                    <td>{{ $tile['mrp_per_sq_ft'] }}</td>
+                                    <td>{{ $tile['mrp_price'] }}</td>
                                 </tr>
                             @endforeach
                             <tr class="table-active footer-table-text">

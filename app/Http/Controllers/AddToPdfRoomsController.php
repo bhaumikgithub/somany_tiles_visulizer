@@ -149,50 +149,59 @@ class AddToPdfRoomsController extends Controller
         $getCartId = Cart::where('random_key',$randomKey)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
         // Initialize an empty collection to store processed data
-        $processedData = collect();
+        $tilesCollection = collect();
 
         foreach ($allProduct as $item) {
             // Decode the JSON data from the 'tile_json' column
             $tiles = json_decode($item->tiles_json, true);
 
             foreach ($tiles as $tile) {
-                // Check if 'box_coverage_area_sq_ft' exists
-                if (isset($tile['box_coverage_area_sq_ft'])) {
-                    $areaSqFt = $tile['width'] * $tile['height'] * $tile['tiles_needed'] / 144; // Convert sq inches to sq feet
-                    $boxRequired = ceil($areaSqFt / $tile['box_coverage_area_sq_ft']);
-                    $mrpPrice = $boxRequired * $tile['mrp_per_box'];
-
-                    $processedData->push([
-                        'name' => $tile['name'],
-                        'size' => "{$tile['width']} x {$tile['height']}",
-                        'finish' => $tile['finish'],
-                        'apply_on' => $tile['apply_on'],
-                        'area_sq_ft' => $areaSqFt,
-                        'tiles_per_box' => $tile['tiles_per_box'],
-                        'box_coverage_area_sq_ft' => $tile['box_coverage_area_sq_ft'],
-                        'box_required' => $boxRequired,
-                        'mrp_per_sq_ft' => $tile['mrp_per_sq_ft'],
-                        'mrp_price' => $mrpPrice,
-                    ]);
-                } else {
-                    // Push default values or skip this tile
-                    $processedData->push([
+                // Check if 'total_area' exists
+                if (isset($tile['total_area'])) {
+                    if( isset($tile['tile_in_box'])){
+                        $boxWH = $tile['width'] * $tile['height'];
+                        $TotalWH = $boxWH * $tile['box_needed'];
+                        $box_coverage_area_sq_ft = $TotalWH/305;
+                        $mrp_price = ( $box_coverage_area_sq_ft * $tile['price'] ) / $tile['price'];
+                    } else {
+                        $box_coverage_area_sq_ft = "-";
+                        $mrp_price = 0 ;
+                    }
+                    $tilesCollection->push([
                         'name' => $tile['name'],
                         'size' => "{$tile['width']} x {$tile['height']}",
                         'finish' => $tile['finish'],
                         'apply_on' => $tile['surface'],
-                        'area_sq_ft' => null,
-                        'tiles_per_box' => null,
-                        'box_coverage_area_sq_ft' => null,
-                        'box_required' => null,
-                        'mrp_per_sq_ft' => null,
-                        'mrp_price' => null,
+                        'area_sq_ft' => $tile['total_area'],
+                        'tiles_per_box' => ( isset($tile['tiles_per_box']) ) ? $tile['price'] : '-',
+                        'box_coverage_area_sq_ft' => $box_coverage_area_sq_ft,
+                        'box_required' => ( isset($tile['box_needed']) ) ? $tile['box_needed'] : '-',
+                        'mrp_per_sq_ft' => ( isset($tile['price']) ) ? $tile['price'] : 0,
+                        'mrp_price' => $mrp_price
+                    ]);
+                } else {
+                    // Push default values or skip this tile
+                    $tilesCollection->push([
+                        'name' => $tile['name'],
+                        'size' => "{$tile['width']} x {$tile['height']}",
+                        'finish' => $tile['finish'],
+                        'apply_on' => $tile['surface'],
+                        'area_sq_ft' => '-',
+                        'tiles_per_box' => '-',
+                        'box_coverage_area_sq_ft' => '-',
+                        'box_required' => '-',
+                        'mrp_per_sq_ft' => '-',
+                        'mrp_price' => '-',
                     ]);
                 }
             }
         }
-        // Group the tiles by their 'name' attribute
-        $groupedTiles = $processedData->groupBy('name');
+        // Group by 'name' and process to combine surfaces
+        $groupedTiles = $tilesCollection->groupBy('name')->map(function ($items) {
+            $combinedSurfaces = $items->pluck('apply_on')->unique()->implode(', ');
+            // Return the first item with updated 'apply_on' field
+            return array_merge($items->first(), ['apply_on' => $combinedSurfaces]);
+        });
 
         return view('pdf.cart_summary',compact('allProduct','randomKey','groupedTiles'));
     }

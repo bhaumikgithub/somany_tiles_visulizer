@@ -79,7 +79,7 @@ let ids = [];
 
 function getTileId(id){
     let current_room_type = $('#current_room_type').val();
-    const excludedRoomTypes = ["kitchen", "bedroom", "prayer-room", "commercial"];
+    const excludedRoomTypes = ["kitchen", "bedroom", "prayer-room", "commercial",'livingroom'];
 
     if (!excludedRoomTypes.includes(current_room_type)) {
         ids = [];
@@ -337,7 +337,7 @@ $("#calculate_btn").click(function () {
         return false;
     }
 
-    let tilesIn1Box = $('#calc_tiles_par_carton').val(); //pieces this should come from DB
+    let tilesIn1Box = $('#calc_tiles_par_carton').val(); // this should come from DB
     let tile_id = $('#calc_tile_id').val();
     let widthInFeet = $("#width_feet").val();
     let heightInFeet = $("#length_feet").val();
