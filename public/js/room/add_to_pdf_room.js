@@ -79,7 +79,9 @@ let ids = [];
 
 function getTileId(id){
     let current_room_type = $('#current_room_type').val();
-    if( current_room_type !== "kitchen" && current_room_type !== "bedroom"){
+    const excludedRoomTypes = ["kitchen", "bedroom", "prayer-room", "commercial"];
+
+    if (!excludedRoomTypes.includes(current_room_type)) {
         ids = [];
     }
     ids.push($('li#'+id).data('tile'));
