@@ -166,8 +166,16 @@
                 @if($userShowroomInfo['user'])
                     <p><strong>Contact Person Details</strong></p>
                     <p><strong>Executive Name:</strong> <span>{{ $userShowroomInfo['user']['name'] }}</span></p>
-                    <p><strong>Executive Number:</strong> <span>{{ $userShowroomInfo['user']['contact_no'] }}</span></p>
-                    <p><strong>Executive Email:</strong> <span>{{ $userShowroomInfo['user']['email'] }}</span></p>
+                    <p><strong>Executive Number:</strong> 
+                        <a href="tel:{{ $userShowroomInfo['user']['contact_no'] }}">
+                            {{ $userShowroomInfo['user']['contact_no'] }}
+                        </a>
+                    </p>
+                    <p><strong>Executive Email:</strong> 
+                        <a href="mailto:{{ $userShowroomInfo['user']['email'] }}">
+                            {{ $userShowroomInfo['user']['email'] }}
+                        </a>
+                    </p>
                 @else
                     <p><strong>No user information available.</strong></p>
                 @endif
@@ -180,9 +188,7 @@
                         @foreach($userShowroomInfo['showrooms'] as $showroom)
                             <div class="showroom">
                                 <p>{{ $showroom['name'] }},
-                                    {{ $showroom['address'] }},
-                                    {{ $showroom['city'] }},
-                                    {{ $showroom['e_code'] }},
+                                    {{ $showroom['address'] }}.
                                 </p>
                             </div>
                         @endforeach
