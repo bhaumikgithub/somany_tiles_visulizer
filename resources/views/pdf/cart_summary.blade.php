@@ -146,6 +146,77 @@
                 </div>
             </div>
         </div>
+
+        <!-- Table structure -->
+        @if(isset($groupedTiles))
+            <div class="row summary-page-table-row">
+                <table class="table summary-page-table">
+                    <thead>
+                    <tr class="table-active">
+                        <th scope="col" class="text-center">Sr. No</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Finish</th>
+                        <th scope="col">Apply<br>On</th>
+                        <th scope="col" class="text-center">Area<br>Sq. Ft.</th>
+                        <th scope="col" class="text-center">Tiles/Box</th>
+                        <th scope="col" class="text-center">Box Coverage<br>Area Sq. Ft.</th>
+                        <th scope="col" class="text-center">Box<br> Required</th>
+                        <th scope="col" class="text-center">MRP/<br>Sq. Ft.</th>
+                        <th scope="col" class="text-center">MRP<br>Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if(isset($groupedTiles))
+                        @php $totalArea = 0;
+                            $totalTilesPerBox = 0;
+                            $totalBoxCoverageAreaSqFt = 0;
+                            $totalBoxRequired = 0;
+                            $totalMrpPerSqFt = 0;
+                            $totalMrpPrice = 0;
+                        @endphp
+                        @foreach($groupedTiles as $index => $tile)
+                            <tr>
+                                <td class="text-center">{{ $loop->iteration }}</td>
+                                <td>{{ $tile['name'] }}</td>
+                                <td>{{ $tile['size'] }}</td>
+                                <td>{{ ucfirst($tile['finish']) }}</td>
+                                <td>{{ ucwords($tile['apply_on']) }}</td>
+                                <td class="text-center">{{ ( $tile['area_sq_ft'] === "-" ) ? "-" : number_format($tile['area_sq_ft'])  }}</td>
+                                <td class="text-center">{{ $tile['tiles_per_box'] }}</td>
+                                <td class="text-center">{{ ( $tile['box_coverage_area_sq_ft'] === "-" ) ? "-" : number_format($tile['box_coverage_area_sq_ft'])  }}</td>
+                                <td class="text-center">{{ $tile['box_required'] }}</td>
+                                <td class="text-center">{{ $tile['mrp_per_sq_ft'] }}</td>
+                                <td class="text-center">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
+                            </tr>
+                            @php
+                                $totalArea += (int)$tile['area_sq_ft'];
+                                $totalTilesPerBox += (int)$tile['tiles_per_box'];
+                                $totalBoxCoverageAreaSqFt += (int)$tile['box_coverage_area_sq_ft'];
+                                $totalBoxRequired += (int)$tile['box_required'];
+                                $totalMrpPerSqFt += (int)$tile['mrp_per_sq_ft'];
+                                $totalMrpPrice += (int)$tile['mrp_price'];
+                            @endphp
+                        @endforeach
+                        <tr class="table-active footer-table-text">
+                            <td></td>
+                            <td><b>Total</b></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-center">{{ ( $totalArea === 0 ) ? "" : number_format($totalArea) }}</td>
+                            <td class="text-center">{{ ( $totalTilesPerBox === 0 ) ? "" : $totalTilesPerBox }}</td>
+                            <td class="text-center">{{ ( $totalBoxCoverageAreaSqFt === 0 ) ? "" : number_format($totalBoxCoverageAreaSqFt) }}</td>
+                            <td class="text-center">{{ ( $totalBoxRequired === 0 ) ? "" : $totalBoxRequired }}</td>
+                            <td class="text-center">{{ ( $totalMrpPerSqFt === 0 ) ? "" : number_format($totalMrpPerSqFt) }}</td>
+                            <td class="text-center">{{ ( $totalMrpPrice === 0 ) ? "" : "Rs. ". number_format($totalMrpPrice) }}</td>
+                        </tr>
+                    @endif
+                    </tbody>
+                </table>
+            </div>
+        @endif
+
         <div class="row">
             <div class="col-md-12 col-xs-12">
                 <h5 class="font-bold">Disclaimer:</h5>
