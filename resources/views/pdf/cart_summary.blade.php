@@ -46,7 +46,10 @@
                         <input type="checkbox" value="{{$showImage}}"  name="show_main_image" id="show_main_image" {{ $showImage === "yes" ? 'checked' : '' }} data-cart-item-id="{{$item->id}}"> Show Image?
                         @php
                             $tiles = collect(json_decode($item->tiles_json));
-                            $tilesData = ( isset($tile_detail->surface_title) ) ? $tiles->sortBy('surface_title')->values() : $tiles;
+                            // Check if the first item has the surface_title key
+                            $tilesData = $tiles->isNotEmpty() && isset($tiles->first()->surface_title)
+                                ? $tiles->sortBy('surface_title')->values()
+                                : $tiles;
                         @endphp
                         @foreach($tilesData as $tile_detail)
                             @if( $tile_detail->surface !== "paint" )
