@@ -422,4 +422,14 @@ class AddToPdfRoomsController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function checkSelectionHasData(Request $request)
+    {
+        $cart = Cart::where('user_id',$request->input('session_id'))->get();
+        if( $cart->count() === 0 ){
+            return response()->json(['success' => false, 'message' => 'No selection in Cart Found.','count'=>$cart->count()]);
+        } else {
+            return response()->json(['success' => true,'message' => 'selection in Cart.','count'=>$cart->count()]);
+        }
+    }
 }

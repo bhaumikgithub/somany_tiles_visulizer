@@ -239,6 +239,8 @@ Route::post('/update-tile-price','App\Http\Controllers\AddToPdfRoomsController@u
 Route::post('/update-tile-calc','App\Http\Controllers\AddToPdfRoomsController@updateTileCalculation');
 Route::post('/update-preference', 'App\Http\Controllers\AddToPdfRoomsController@updatePreference')->name('update-preference');
 
+
+Route::post('check-selection-has-data','App\Http\Controllers\AddToPdfRoomsController@checkSelectionHasData');
 // Route::get('/test', 'App\Http\Controllers\HomeController@index');
 // Route::get('/test', function () {
 //     return response($_SERVER['SERVER_NAME']);

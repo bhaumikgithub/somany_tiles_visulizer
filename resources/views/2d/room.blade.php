@@ -37,6 +37,8 @@
 <input type="hidden" value="{{@$room_name}}" id="current_room_name">
 <input type="hidden" value="{{@$room_type}}" id="current_room_type">
 <input type="hidden" value="" id="selected_tile_ids">
+<input type="hidden" value="{{ session()->getId() }}" id="currentSessionId">
+
 @if (config('view.visualizer_layout') != 'iorena.')
     @include('common.' . config('app.bottom_menu') . 'bottomMenu2d')
 @endif
@@ -44,30 +46,57 @@
 <script src="/js/room/three.min.js"></script>
  <!-- contine modal start -->
  <div class="modal fade" id="continue-modal" role="dialog" data-keyboard="false" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header add-sec-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="add-sec-title">Add More Selection</h4>
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header add-sec-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="add-sec-title">Add This view to Selection</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <label class="mb-15">Would you like to add this room view in to Selection?</label>
+                    <div class="d-flex flex-wrap align-items-center">
+                        <a class="cmn-room-btn  d-flex  align-items-center yes-no-btn mr-15" onclick="checkSelectionHasData();"><img src="/img/yes.png" alt="yes" class="img-responsive"> <span class="btn-text-set">Yes </span></a>
+                        <a class="cmn-room-btn  d-flex  align-items-center yes-no-btn" href="javascript:void(0)" id="cart_url" onclick="confirmationToAddToPDF();"><img src="/img/no.png" alt="no" class="img-responsive"> <span class="btn-text-set">No </span></a>
+                    </div>
                 </div>
-                <div class="modal-body">
-                  <div class="row">
+
+              </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- show confirmation popup on click on No button from continue modal -->
+<div class="modal fade" id="confirmation-no-continue-modal" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header add-sec-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="add-sec-title">Add Current Design to selection</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
                     <div class="col-md-12 col-xs-12">
-                        <label class="mb-15">Would you like to add more Selection?</label>
+                        <label class="mb-15">Would you like to add current Design into Selection ?</label>
                         <div class="d-flex flex-wrap align-items-center">
-                        <a class="cmn-room-btn  d-flex  align-items-center yes-no-btn mr-15" data-dismiss="modal"><img src="/img/yes.png" alt="yes" class="img-responsive"> <span class="btn-text-set">Yes </span></a>
-                        <a class="cmn-room-btn  d-flex  align-items-center yes-no-btn" href="javascript:void(0)" id="cart_url" onclick="viewCartPdf();"><img src="/img/no.png" alt="no" class="img-responsive"> <span class="btn-text-set">No </span></a>
+                            <a class="cmn-room-btn  d-flex  align-items-center yes-no-btn mr-15" onclick="addToPDF();"><img src="/img/yes.png" alt="yes" class="img-responsive"> <span class="btn-text-set">Yes </span></a>
+                            <a class="cmn-room-btn  d-flex  align-items-center yes-no-btn" href="javascript:void(0)" id="cart_url" onclick="closeAllPopups();"><img src="/img/no.png" alt="no" class="img-responsive"> <span class="btn-text-set">No </span></a>
 
                         </div>
                     </div>
 
-                  </div>
-
-                    </form>
                 </div>
+
+                </form>
             </div>
         </div>
     </div>
+</div>
 
 @endsection
