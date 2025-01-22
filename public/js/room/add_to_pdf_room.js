@@ -77,14 +77,29 @@ function canvasImage() {
 // Initialize an empty array
 let ids = [];
 
+// Initialize an empty array
 function getTileId(id){
+    let surface_title = $('#slected-panel .display_surface_name h5#optionText').text();
     let current_room_type = $('#current_room_type').val();
     const excludedRoomTypes = ["kitchen", "bedroom", "prayer-room", "commercial",'livingroom'];
 
+    // Retrieve and parse the existing array from the hidden field
+    let ids = JSON.parse($('#selected_tile_ids').val() || '[]');
+
     if (!excludedRoomTypes.includes(current_room_type)) {
+        // Filter out any existing entries with the same surfaceTitle
         ids = [];
+    } else {
+        ids = ids.filter(tile => tile.surfaceTitle !== surface_title);
     }
-    ids.push($('li#'+id).data('tile'));
+
+    // Add the new object to the array
+    ids.push({
+        tileId: $('li#' + id).data('tile'),
+        surfaceTitle: surface_title
+    });
+
+    // Store the updated array in the hidden field
     $('#selected_tile_ids').val(JSON.stringify(ids));
 
 }
