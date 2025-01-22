@@ -667,25 +667,25 @@ function checkSelectionHasData(){
     let selection_tile_id = $('#selected_tile_ids').val();
     if ( selection_tile_id.length < 0 ){
         $('#confirmation-no-continue-modal').modal('hide');
-    }
-    window.$.ajax({
-        url: `/check-selection-has-data`, // Endpoint for deletion,
-        type: 'POST',
-        data: {
-            session_id : $('#currentSessionId').val(),
-            _token: $('meta[name="csrf-token"]').attr('content') // Include CSRF token
-        },
-        success: function (response) {
-            if( response.success === true && response.count === 1 ) {
-                $('#continue-modal').modal('hide');
-                viewCartPdf();
-            } else {
-                $('#continue-modal').modal('hide');
-                addToPDF();
+    } else{
+        window.$.ajax({
+            url: `/check-selection-has-data`, // Endpoint for deletion,
+            type: 'POST',
+            data: {
+                session_id : $('#currentSessionId').val(),
+                _token: $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+            },
+            success: function (response) {
+                if( response.success === true && response.count === 1 ) {
+                    $('#continue-modal').modal('hide');
+                    viewCartPdf();
+                } else {
+                    $('#continue-modal').modal('hide');
+                    addToPDF();
+                }
             }
-        }
-    });
-    //Here need to check if anything in the selection popup of adding to cart then simple show selection popup
+        });
+    }
 
 }
 
