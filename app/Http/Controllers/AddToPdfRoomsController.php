@@ -97,8 +97,32 @@ class AddToPdfRoomsController extends Controller
             $cart_id = $checkSessionId->id;
         }
 
-        //Get tiles data
-        $tiles = Tile::select('id','name','width','height','surface','finish','file','price')->whereIn('id', json_decode($request->data['selected_tiles_ids']))->get();
+        // Decode the JSON string from the request
+        $selectedTiles = collect(json_decode($request->data['selected_tiles_ids'], true)); // Convert to a collection
+
+        // Fetch tiles data from the database using all tile IDs (including duplicates)
+        $tileIds = $selectedTiles->pluck('tileId')->all();
+
+        $tiles = Tile::select('id', 'name', 'width', 'height', 'surface', 'finish', 'file', 'price')
+            ->whereIn('id', $tileIds)
+            ->get();
+
+        // Map surface titles to each tile (considering duplicates)
+        $tilesWithSurfaceTitle = $selectedTiles->map(function ($selectedTile) use ($tiles) {
+            $tile = $tiles->firstWhere('id', $selectedTile['tileId']);
+            return [
+                'id' => $tile->id,
+                'name' => $tile->name,
+                'width' => $tile->width,
+                'height' => $tile->height,
+                'surface' => $tile->surface,
+                'surface_title' => $selectedTile['surfaceTitle'], // Directly map the surfaceTitle from the selectedTiles
+                'finish' => $tile->finish,
+                'file' => $tile->file,
+                'price' => $tile->price,
+                'icon' => $tile->icon, // Access the appended 'icon' attribute
+            ];
+        });
 
         // Save the file path to the database
         $productInfo = new CartItem();
@@ -107,7 +131,7 @@ class AddToPdfRoomsController extends Controller
         $productInfo->room_type = $request->data['room_type'];
         $productInfo->current_room_design = $filePath1;
         $productInfo->current_room_thumbnail = $filePath;
-        $productInfo->tiles_json = $tiles->toJson();
+        $productInfo->tiles_json = $tilesWithSurfaceTitle->toJson();
         $productInfo->cart_id = $cart_id;
         $productInfo->save();
 
@@ -148,6 +172,7 @@ class AddToPdfRoomsController extends Controller
     {
         $getCartId = Cart::where('random_key',$randomKey)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
+
         // Initialize an empty collection to store processed data
         $tilesCollection = collect();
 
