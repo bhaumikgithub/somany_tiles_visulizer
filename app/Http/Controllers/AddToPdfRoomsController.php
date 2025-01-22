@@ -218,7 +218,6 @@ class AddToPdfRoomsController extends Controller
         $getCartId = Cart::where('random_key',$randomKey)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
         $firstProduct = $allProduct->first(); // This returns the first CartItem model
-        // dd($firstProduct);
         if ($firstProduct && $firstProduct->user_showroom_info) {
             $userShowroomInfo = json_decode($firstProduct->user_showroom_info, true);
         } else {
@@ -569,5 +568,15 @@ class AddToPdfRoomsController extends Controller
         CartItem::where('id', $request->input('cart_item_id'))->update(['show_main_image' => $showImage]);
 
         return response()->json(['success' => true]);
+    }
+
+    public function checkSelectionHasData(Request $request)
+    {
+        $cart = Cart::where('user_id',$request->input('session_id'))->get();
+        if( $cart->count() === 0 ){
+            return response()->json(['success' => false, 'message' => 'No selection in Cart Found.','count'=>$cart->count()]);
+        } else {
+            return response()->json(['success' => true,'message' => 'selection in Cart.','count'=>$cart->count()]);
+        }
     }
 }

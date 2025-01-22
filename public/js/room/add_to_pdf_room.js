@@ -30,6 +30,12 @@ function addToPDF(){
                 $('#addToCartInfoPanelModal').modal('show');
                 $('#addToCartInfoPanelModal #cartInfoTilesList').html(response.body);
                 $("body").css('overflow', "hidden");
+                if( $('#continue-modal').length > 0 ) {
+                    $('#continue-modal').hide();
+                }
+                if( $('#confirmation-no-continue-modal').length > 0 ){
+                    $('#confirmation-no-continue-modal').hide();
+                }
                 $('div.modal-backdrop').each(function () {
                     if (!$(this).attr('id')) {
                         // Hide the div
@@ -76,8 +82,6 @@ function canvasImage() {
 
 // Initialize an empty array
 let ids = [];
-
-// Initialize an empty array
 function getTileId(id){
     let surface_title = $('#slected-panel .display_surface_name h5#optionText').text();
     let current_room_type = $('#current_room_type').val();
@@ -103,7 +107,6 @@ function getTileId(id){
     $('#selected_tile_ids').val(JSON.stringify(ids));
 
 }
-
 function removeProductFromCart(id) {
     let totalProductCount = $('.productCount').text();
     window.$.ajax({
@@ -137,13 +140,19 @@ function viewCartPdf() {
                 alert("Please choose tiles to add in PDF");
             } else {
                 $("body").css('overflow', "hidden");
+                $('div.modal-backdrop').each(function () {
+                    if (!$(this).attr('id')) {
+                        // Hide the div
+                        $(this).hide();
+                    }
+                });
                 $('#addToCartInfoPanelModal').css('overflow', "hidden");
                 $('#addToCartInfoPanelModal').modal('show');
-              
+
                 if( response.data.all_selection > 0 )
                  $('.productCount').text(response.data.all_selection);
                 $('#addToCartInfoPanelModal #cartInfoTilesList').html(response.body);
-                
+
             }
         },
         error: function (xhr) {
@@ -651,4 +660,56 @@ function updatePreference(showImage,cart_item_id) {
             console.error('Error updating preference:', error);
         }
     });
+}
+
+
+function checkSelectionHasData(){
+    window.$.ajax({
+        url: `/check-selection-has-data`, // Endpoint for deletion,
+        type: 'POST',
+        data: {
+            session_id : $('#currentSessionId').val(),
+            _token: $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+        },
+        success: function (response) {
+            if( response.success === true && response.count === 1 ) {
+                $('#continue-modal').modal('hide');
+                viewCartPdf();
+            } else {
+                $('#continue-modal').modal('hide');
+                addToPDF();
+            }
+        }
+    });
+    //Here need to check if anything in the selection popup of adding to cart then simple show selection popup
+
+}
+
+function confirmationToAddToPDF() {
+    let selection_tile_id = $('#selected_tile_ids').val();
+    if ( selection_tile_id.length > 0 ){
+        $('#confirmation-no-continue-modal').modal('show');
+    } else {
+        window.$.ajax({
+            url: `/add-to-pdf-data`, // Endpoint for deletion,
+            type: 'GET',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+            },
+            success: function (response) {
+                if (response.data.emptyCart === "unfilled") {
+                    alert("Please choose tiles to add in PDF");
+                } else {
+                    $('#confirmation-no-continue-modal').modal('show');
+                }
+            }
+        });
+    }
+
+
+}
+
+function closeAllPopups(){
+    $('#continue-modal').modal('hide');
+    $('#confirmation-no-continue-modal').modal('hide');
 }
