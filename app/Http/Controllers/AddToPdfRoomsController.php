@@ -362,7 +362,7 @@ class AddToPdfRoomsController extends Controller
         ];
 
         $firstProduct = $allProduct->first(); // This returns the first CartItem model
-        // dd($firstProduct);
+
         if ($firstProduct && $firstProduct->user_showroom_info) {
             $userShowroomInfo = json_decode($firstProduct->user_showroom_info, true);
         } else {
@@ -384,26 +384,29 @@ class AddToPdfRoomsController extends Controller
 
         // Import the pages from the uploaded PDF and fit them into landscape mode
         $pageCountExternal = $fpdi->setSourceFile(StreamReader::createByString($existingPdfContent));
+
         for ($i = 1; $i <= $pageCountExternal; $i++) {
-            $templateId = $fpdi->importPage($i);
-            $size = $fpdi->getTemplateSize($templateId);
-            $width = $size['width'];
-            $height = $size['height'];
+            if ($i == 1 ) { // Skip page 2 and 3 for now
+                $templateId = $fpdi->importPage($i);
+                $size = $fpdi->getTemplateSize($templateId);
+                $width = $size['width'];
+                $height = $size['height'];
 
-            // Add a new page in landscape mode
-            $fpdi->addPage('L');
+                // Add a new page in landscape mode
+                $fpdi->addPage('L');
 
-            // Calculate scale factor to fit content into landscape page (A4-L: 297 x 210mm)
-            $landscapeWidth = 297;
-            $landscapeHeight = 210;
-            $scale = min($landscapeWidth / $width, $landscapeHeight / $height);
+                // Calculate scale factor to fit content into landscape page (A4-L: 297 x 210mm)
+                $landscapeWidth = 297;
+                $landscapeHeight = 210;
+                $scale = min($landscapeWidth / $width, $landscapeHeight / $height);
 
-            // Center the scaled content
-            $x = ($landscapeWidth - ($width * $scale)) / 2;
-            $y = ($landscapeHeight - ($height * $scale)) / 2;
+                // Center the scaled content
+                $x = ($landscapeWidth - ($width * $scale)) / 2;
+                $y = ($landscapeHeight - ($height * $scale)) / 2;
 
-            // Use template with scaling and positioning to fit content into landscape mode
-            $fpdi->useTemplate($templateId, $x, $y, $width * $scale, $height * $scale);
+                // Use template with scaling and positioning to fit content into landscape mode
+                $fpdi->useTemplate($templateId, $x, $y, $width * $scale, $height * $scale);
+            }
         }
 
         // Import the pages from the dynamic PDF content
@@ -413,8 +416,36 @@ class AddToPdfRoomsController extends Controller
             $fpdi->addPage('L');  // Add each page in landscape mode
             $fpdi->useTemplate($templateId);
         }
+
+        $pageCountExternalAnotherPage = $fpdi->setSourceFile(StreamReader::createByString($existingPdfContent));
+
+        for ($i = 1; $i <= $pageCountExternalAnotherPage; $i++) {
+            if( $i !== 1 ) {
+                $templateId = $fpdi->importPage($i);
+                $size = $fpdi->getTemplateSize($templateId);
+                $width = $size['width'];
+                $height = $size['height'];
+
+                // Add a new page in landscape mode
+                $fpdi->addPage('L');
+
+                // Calculate scale factor to fit content into landscape page (A4-L: 297 x 210mm)
+                $landscapeWidth = 297;
+                $landscapeHeight = 210;
+                $scale = min($landscapeWidth / $width, $landscapeHeight / $height);
+
+                // Center the scaled content
+                $x = ($landscapeWidth - ($width * $scale)) / 2;
+                $y = ($landscapeHeight - ($height * $scale)) / 2;
+
+                // Use template with scaling and positioning to fit content into landscape mode
+                $fpdi->useTemplate($templateId, $x, $y, $width * $scale, $height * $scale);
+            }
+        }
+
+
         // Step 4: Set the new title for the combined PDF
-        $fpdi->SetTitle('Tiles Visualizer | PDF'); // Set the title for the new combined PDF
+        $fpdi->SetTitle('Somany Tiles Visualizer | PDF'); // Set the title for the new combined PDF
 
         // Output the final merged PDF
         $fileName = 'somany_tiles_selection_' . $request->random_key . "_" . Carbon::parse(now())->format('d-m-Y') . '.pdf';
