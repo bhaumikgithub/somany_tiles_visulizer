@@ -182,7 +182,9 @@
             <div style="margin-bottom: 20px;">
                 <h2 style="font-size: 16px; margin-bottom: 8px; border-bottom: 1px solid #000; padding-bottom: 5px;">Showroom Information</h2>
                     @foreach($userShowroomInfo['showrooms'] as $showroom)
-                        <p style="margin: 5px 0; font-size: 14px;">{{ $showroom['name'] }} , {{ $showroom['address'] }}.</p>
+                        <p style="margin: 5px 0; font-size: 14px;">
+                            <strong>Address:</strong>{{ $showroom['name'] }} , {{ $showroom['address'] }}.
+                        </p>
                   @endforeach
             </div>
         </div>
