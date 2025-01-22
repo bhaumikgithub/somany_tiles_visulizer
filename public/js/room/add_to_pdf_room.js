@@ -665,8 +665,8 @@ function updatePreference(showImage,cart_item_id) {
 
 function checkSelectionHasData(){
     let selection_tile_id = $('#selected_tile_ids').val();
-    if ( selection_tile_id.length < 0 ){
-        $('#confirmation-no-continue-modal').modal('hide');
+    if ( selection_tile_id.length <= 0 ){
+        $('#continue-modal').modal('hide');
     } else{
         window.$.ajax({
             url: `/check-selection-has-data`, // Endpoint for deletion,
