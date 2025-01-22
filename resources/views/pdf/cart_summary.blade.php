@@ -44,9 +44,22 @@
                             <img src="{{ asset('storage/'.$item->current_room_design) }}" alt="Room" class="img-responsive product-image">
                         </div>
                         <input type="checkbox" value="{{$showImage}}"  name="show_main_image" id="show_main_image" {{ $showImage === "yes" ? 'checked' : '' }} data-cart-item-id="{{$item->id}}"> Show Image?
-                        @foreach(json_decode($item->tiles_json) as $tile_detail)
+                        @php
+                            $tiles = collect(json_decode($item->tiles_json));
+                            // Check if the first item has the surface_title key
+                            $tilesData = $tiles->isNotEmpty() && isset($tiles->first()->surface_title)
+                                ? $tiles->sortBy('surface_title')->values()
+                                : $tiles;
+                        @endphp
+                        @foreach($tilesData as $tile_detail)
                             @if( $tile_detail->surface !== "paint" )
-                                <h5 class="mt-20 font-bold dark-grey-font">{{ucfirst($tile_detail->surface)}}</h5>
+                                <h5 class="mt-20 font-bold dark-grey-font">
+                                    @if( isset($tile_detail->surface_title ) )
+                                        {{ucfirst($tile_detail->surface_title)}}
+                                    @else
+                                        {{ucfirst($tile_detail->surface)}}
+                                    @endif
+                                </h5>
                                 <div class="details-card" id="{{$index . '_' . $loop->index}}">
                                     <div class="row">
                                         <div class="col-md-3 col-sm-3 col-pad-set">
