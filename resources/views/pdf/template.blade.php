@@ -84,13 +84,27 @@
                             <img src="{{ public_path('storage/'.$item->current_room_design) }}" alt="Room" style="display: block; width: 640px; height: 320px; margin-bottom: 20px;">
                         @endif
                         <table style="width: 100%; border-collapse: collapse;margin-bottom: 20px;">
-                            @foreach(json_decode($item->tiles_json) as $tile_detail)
-                                <tr style="border: 1px solid #000;">
+                            @php
+                                $tiles = collect(json_decode($item->tiles_json));
+                                // Check if the first item has the surface_title key
+                                $tilesData = $tiles->isNotEmpty() && isset($tiles->first()->surface_title)
+                                    ? $tiles->sortBy('surface_title')->values()
+                                    : $tiles;
+                            @endphp
+                            @foreach($tilesData as $tile_detail)
+                                @if( $tile_detail->surface !== "paint")
+                                    <tr style="border: 1px solid #000;">
                                     <td style="width: 20%; border: 1px solid #000; text-align: center; padding: 10px;">
                                         <img src="{{ public_path($tile_detail->icon) }}" alt="Wall A" style="width: 100%; max-width: 100px; height: auto;">
                                     </td>
                                     <td style="width: 60%; border: 1px solid #000; padding: 10px;">
-                                        <h5 style="margin: 5px 0; font-size: 14px;font-weight: bold">{{$tile_detail->surface}}</h5>
+                                        <h5 style="margin: 5px 0; font-size: 14px;font-weight: bold">
+                                            @if( isset($tile_detail->surface_title ) )
+                                                {{ucfirst($tile_detail->surface_title)}}
+                                            @else
+                                                {{ucfirst($tile_detail->surface)}}
+                                            @endif
+                                        </h5>
                                         <p style="margin: 5px 0; font-size: 12px;">{{$tile_detail->name}}</p>
                                         <p style="margin: 5px 0; font-size: 12px;">{{$tile_detail->width}} × {{$tile_detail->height}} MM</p>
                                         <p style="margin: 5px 0; font-size: 12px;">{{ucfirst($tile_detail->finish)}}</p>
@@ -128,6 +142,7 @@
                                         </p>
                                     </td>
                                 </tr>
+                                @endif
                             @endforeach
                         </table>
                     </div>
