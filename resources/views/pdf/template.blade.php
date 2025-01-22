@@ -149,36 +149,29 @@
             </div>
         </div>
     </div>
-    <hr style="border: 1px solid;">
-    <!-- Footer Section -->
-    <div style="page-break-inside: avoid;width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #000; padding: 10px;">
-        <div style="margin-bottom: 20px;">
-            <h2 style="font-size: 16px; margin-bottom: 8px; border-bottom: 1px solid #000; padding-bottom: 5px;">Contact Person Details</h2>
-                @if($userShowroomInfo['user'])
-                    <p><strong>Executive Name:</strong> <span>{{ $userShowroomInfo['user']['name'] }}</span></p>
-                    <p><strong>Executive Number:</strong> <span>{{ $userShowroomInfo['user']['contact_no'] }}</span></p>
-                    <p><strong>Executive Email:</strong> <span>{{ $userShowroomInfo['user']['email'] }}</span></p>
-                @else
-                    <p><strong>No user information available.</strong></p>
-                @endif
-        </div>
-        <div style="margin-bottom: 20px;">
-            @if($userShowroomInfo['user'])
-            <h2 style="font-size: 16px; margin-bottom: 8px; border-bottom: 1px solid #000; padding-bottom: 5px;">Showroom Information</h2>
-                @if($userShowroomInfo['showrooms'])
-                    @foreach($userShowroomInfo['showrooms'] as $showroom)
-                        <p style="margin: 5px 0; font-size: 14px;"><strong>Name:</strong>{{ $showroom['name'] }}</p>
-                        <p style="margin: 5px 0; font-size: 14px;"><strong>Address:</strong>{{ $showroom['address'] }}, {{ $showroom['city']  }}</p>
-                        <p style="margin: 5px 0; font-size: 14px;"><strong>Pincode:</strong>{{ $showroom['e_code'] }}</p>
-                        <br>
-                    @endforeach
-                @else
-                    <p><strong>This user currently does not have any showroom.</strong></p>
-                @endif
-            @endif
-        </div>
-    </div>
 
+    @if($userShowroomInfo['user'])
+        <hr style="border: 1px solid;">
+        <!-- Footer Section -->
+        <div style="page-break-inside: avoid;width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #000; padding: 10px;">
+            <div style="margin-bottom: 20px;">
+                <h2 style="font-size: 16px; margin-bottom: 8px; border-bottom: 1px solid #000; padding-bottom: 5px;">Contact Person Details</h2>
+                <p><strong>Executive Name:</strong> <span>{{ $userShowroomInfo['user']['name'] }}</span></p>
+                @if( $userShowroomInfo['user']['contact_no'] )
+                    <p><strong>Executive Number:</strong> <span>{{ $userShowroomInfo['user']['contact_no'] }}</span></p>
+                @endif
+                @if( $userShowroomInfo['user']['email'] )
+                    <p><strong>Executive Email:</strong> <span>{{ $userShowroomInfo['user']['email'] }}</span></p>
+                @endif
+            </div>
+            <div style="margin-bottom: 20px;">
+                <h2 style="font-size: 16px; margin-bottom: 8px; border-bottom: 1px solid #000; padding-bottom: 5px;">Showroom Information</h2>
+                    @foreach($userShowroomInfo['showrooms'] as $showroom)
+                        <p style="margin: 5px 0; font-size: 14px;">{{ $showroom['name'] }} , {{ $showroom['address'] }}.</p>
+                  @endforeach
+            </div>
+        </div>
+    @endif
     <br>
 
     <div style="page-break-inside: avoid;width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #000; padding: 10px;">
