@@ -186,7 +186,8 @@
                                 $totalMrpPrice = 0;
                             @endphp
                             @foreach($groupedTiles as $index => $tile)
-                                <tr>
+                                @if( $tile['apply_on'] !== "paint")
+                                    <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $tile['name'] }}</td>
                                     <td>{{ $tile['size'] }}</td>
@@ -199,6 +200,7 @@
                                     <td class="text-center">{{ $tile['mrp_per_sq_ft'] }}</td>
                                     <td class="text-center">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
                                 </tr>
+                                @endif
                                 @php
                                     $totalArea += (int)$tile['area_sq_ft'];
                                     $totalTilesPerBox += (int)$tile['tiles_per_box'];
