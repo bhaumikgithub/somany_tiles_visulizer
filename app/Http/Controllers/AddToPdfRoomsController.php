@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\UserPdfData;
 use App\Tile;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
@@ -296,6 +297,16 @@ class AddToPdfRoomsController extends Controller
 //            'getCartId' => $getCartId,
 //            'basic_info' => $basic_info
 //        ];
+        $userAccount = auth()->check() ? auth()->user()->name : 'Guest User';
+
+        $savedPdf = UserPdfData::create([
+            'name' => $request->firstName . ' ' . $request->lastName,
+            'last_name' => $request->lastName,
+            'mobile' => $request->mobileNumber,
+            'pincode' => '000000',
+            'user_account' => $userAccount,
+            'unique_id' => $request->random_key,
+        ]);
 
         $html = view('pdf.template',compact('allProduct','basic_info')); // Get HTML content for the PDF
         $pdf = PDF::loadHTML($html);

@@ -204,6 +204,9 @@ Route::group(['middleware' => 'role:administrator'], function () {
     Route::get('/storage-link', 'App\Http\Controllers\ControllerSystem@storageLink');
     Route::get('/maximum_images', 'App\Http\Controllers\MaxImageController@index');
     Route::post('/maximum_images/update', 'App\Http\Controllers\MaxImageController@update');
+
+    // Route::get('/user_pdf', 'App\Http\Controllers\MaxImageController@index'); //yash changes
+
 });
 
 
