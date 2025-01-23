@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Showroom;
@@ -235,6 +236,7 @@ class AddToPdfRoomsController extends Controller
             // Decode the JSON data from the 'tile_json' column
             $tiles = json_decode($item->tiles_json, true);
             foreach ($tiles as $tile) {
+                $tiles_per_carton = Helper::getTilesParCarton($tile['id']);
                 // Check if 'total_area' exists
                 if (isset($tile['total_area'])) {
                     if( isset($tile['tile_in_box']) && isset($tile['box_needed'])){
@@ -266,7 +268,7 @@ class AddToPdfRoomsController extends Controller
                         'finish' => $tile['finish'],
                         'apply_on' => $tile['surface'],
                         'area_sq_ft' => '-',
-                        'tiles_per_box' => '-',
+                        'tiles_per_box' => ( $tiles_per_carton !== null ) ? $tiles_per_carton : ( ( isset($tile['tile_in_box']) ) ? $tile['tile_in_box'] : '-' ),
                         'box_coverage_area_sq_ft' => '-',
                         'box_required' => '-',
                         'mrp_per_sq_ft' => '-',
