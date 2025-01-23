@@ -16,7 +16,7 @@
             margin-bottom: 20px;
         }
         .details-card {
-            border: 1px solid #ddd;
+            border: 1px solid #b7bab2;
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 20px;
@@ -60,21 +60,53 @@
 <body>
 <div class="container mt-4" style="margin-top: 5px;">
     <!-- Header Section -->
-    <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
-        <tr>
-            <td style="width: 40%; vertical-align: top; padding: 10px;">
-                <img src="{{ public_path('img/somany-logo-new.jpg') }}" alt="Tiles Logo" style="max-height: 80px;">
-            </td>
-        </tr>
-    </table>
-
     <div class="row mt-4">
         <div class="col-sm-8">
-            <h3>Your Product Selection</h3>
-            <p>Date: <span>{{\Carbon\Carbon::now()->format('d-m-Y')}}</span></p>
-            <p>Name: <span>{{$basic_info['first_name']. " ". $basic_info['last_name']}}</span></p>
-            <p>Number: <span>{{$basic_info['contact_no']}}</span></p>
-            <p>Here are the products you’ve selected from our collection. Visit more on <a href="www.somanyceramics.com">www.somanyceramics.com</a></p>
+            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
+                <tr>
+                    <td style="width: 40%; vertical-align: top; padding: 10px;">
+                        <img src="{{ public_path('img/somany-logo-new.jpg') }}" alt="Tiles Logo" style="max-height: 80px;">
+                    </td>
+                </tr>
+            </table>
+            <h3>Your Product(s) Selection</h3>
+            <p><span>{{\Carbon\Carbon::now()->format('d F Y')}}</span></p>
+            <p>Selection Code: <span>{{$randomKey}}</span></p>
+            <p><span>{{$basic_info['first_name']. " ". $basic_info['last_name']}}</span></p>
+            <p>{{$basic_info['contact_no']}}</span></p>
+            <p>{{$basic_info['state']}},{{$basic_info['city']}}</span></p>
+            @if( isset($basic_info['pincode']))
+                <p>{{$basic_info['pin_code']}}</span></p>
+            @endif
+            <p>Total Selection: <span>{{$allProduct->count()}}</span></p>
+            @if($userShowroomInfo['user'])
+                <hr style="border: 1px solid;">
+                <!-- Footer Section -->
+                <div style="page-break-inside: avoid;width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #000; padding: 10px;">
+                    <div style="margin-bottom: 20px;">
+                        <h2 style="font-size: 16px; margin-bottom: 8px; border-bottom: 1px solid #000; padding-bottom: 5px;">Contact Person Details</h2>
+                        <p><strong>Executive Name:</strong> <span>{{ $userShowroomInfo['user']['name'] }}</span></p>
+                        @if( $userShowroomInfo['user']['contact_no'] )
+                            <p><strong>Executive Number:</strong> <span>{{ $userShowroomInfo['user']['contact_no'] }}</span></p>
+                        @endif
+                        @if( $userShowroomInfo['user']['email'] )
+                            <p><strong>Executive Email:</strong> <span>{{ $userShowroomInfo['user']['email'] }}</span></p>
+                        @endif
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h2 style="font-size: 16px; margin-bottom: 8px; border-bottom: 1px solid #000; padding-bottom: 5px;">Showroom Information</h2>
+                        @foreach($userShowroomInfo['showrooms'] as $showroom)
+                            <p style="margin: 5px 0; font-size: 14px;">
+                                {{ $showroom['name'] }} , {{ $showroom['address'] }}.
+                            </p>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+    <div style='page-break-after:always'></div>
+    <div class="row mt-4">
             @if( isset($allProduct))
                 @foreach($allProduct as $index=>$item)
                     <div>
@@ -149,59 +181,114 @@
                             @endforeach
                         </table>
                     </div>
+                    @if(!$loop->last)
+                        <div style="page-break-after: always;"></div>
+                    @endif
                 @endforeach
             @endif
-            <div class="mt-4">
-                <h3>Disclaimer:</h3>
-                <ul class="notes_ul">
-                    <li>The visuals are for reference purposes only; actual colors, finishes, and tile dimensions may vary.</li>
-                    <li>Shade variation is an inherent characteristic of tiles; therefore, physical inspection is
-                        recommended for accurate selection</li>
-                    <li>Tiles with multiple faces feature varied patterns, resulting in natural design variations</li>
-                    <li>Prices quoted are subject to change without prior notice. The final price applicable at the time of
-                        delivery will prevail.</li>
-                </ul>
-            </div>
-        </div>
     </div>
 
-    @if($userShowroomInfo['user'])
-        <hr style="border: 1px solid;">
-        <!-- Footer Section -->
-        <div style="page-break-inside: avoid;width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #000; padding: 10px;">
-            <div style="margin-bottom: 20px;">
-                <h2 style="font-size: 16px; margin-bottom: 8px; border-bottom: 1px solid #000; padding-bottom: 5px;">Contact Person Details</h2>
-                <p><strong>Executive Name:</strong> <span>{{ $userShowroomInfo['user']['name'] }}</span></p>
-                @if( $userShowroomInfo['user']['contact_no'] )
-                    <p><strong>Executive Number:</strong> <span>{{ $userShowroomInfo['user']['contact_no'] }}</span></p>
-                @endif
-                @if( $userShowroomInfo['user']['email'] )
-                    <p><strong>Executive Email:</strong> <span>{{ $userShowroomInfo['user']['email'] }}</span></p>
-                @endif
+    <div style='page-break-after:always'></div>
+    <div class="row mt-4">
+        <div style="font-size: 18px;font-weight: bold;margin-bottom: 10px;">Summary Table:</div>
+        @if(isset($groupedTiles))
+            <div class="row summary-page-table-row">
+                <table style=" width: 100%;border-collapse: collapse;margin-top: 20px;">
+                    <thead>
+                        <tr>
+                        <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Sr. No</th>
+                        <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Name</th>
+                        <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Size</th>
+                        <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Finish</th>
+                        <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Apply<br>On</th>
+                        <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Area<br>Sq. Ft.</th>
+                        <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Tiles/Box</th>
+                        <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Box Coverage<br>Area Sq. Ft.</th>
+                        <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Box<br> Required</th>
+                        <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">MRP/<br>Sq. Ft.</th>
+                        <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">MRP<br>Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if(isset($groupedTiles))
+                        @php $totalArea = 0;
+                            $totalTilesPerBox = 0;
+                            $totalBoxCoverageAreaSqFt = 0;
+                            $totalBoxRequired = 0;
+                            $totalMrpPerSqFt = 0;
+                            $totalMrpPrice = 0;
+                        @endphp
+                        @foreach($groupedTiles as $index => $tile)
+                            @if( $tile['apply_on'] !== "paint")
+                                <tr>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $loop->iteration }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['name'] }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['size'] }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ ucfirst($tile['finish']) }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ ucwords($tile['apply_on']) }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ ( $tile['area_sq_ft'] === "-" ) ? "-" : number_format($tile['area_sq_ft'])  }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['tiles_per_box'] }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ ( $tile['box_coverage_area_sq_ft'] === "-" ) ? "-" : number_format($tile['box_coverage_area_sq_ft'])  }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['box_required'] }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['mrp_per_sq_ft'] }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
+                                </tr>
+                            @endif
+                            @php
+                                $totalArea += (int)$tile['area_sq_ft'];
+                                $totalTilesPerBox += (int)$tile['tiles_per_box'];
+                                $totalBoxCoverageAreaSqFt += (int)$tile['box_coverage_area_sq_ft'];
+                                $totalBoxRequired += (int)$tile['box_required'];
+                                $totalMrpPerSqFt += (int)$tile['mrp_per_sq_ft'];
+                                $totalMrpPrice += (int)$tile['mrp_price'];
+                            @endphp
+                        @endforeach
+                        <tr class="table-active footer-table-text">
+                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;"></th>
+                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;"><b>Total</b></th>
+                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;"></th>
+                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;"></th>
+                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;"></th>
+                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;">{{ ( $totalArea === 0 ) ? "" : number_format($totalArea) }}</th>
+                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;">{{ ( $totalTilesPerBox === 0 ) ? "" : $totalTilesPerBox }}</th>
+                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;">{{ ( $totalBoxCoverageAreaSqFt === 0 ) ? "" : number_format($totalBoxCoverageAreaSqFt) }}</th>
+                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;">{{ ( $totalBoxRequired === 0 ) ? "" : $totalBoxRequired }}</th>
+                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;">{{ ( $totalMrpPerSqFt === 0 ) ? "" : number_format($totalMrpPerSqFt) }}</th>
+                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;">{{ ( $totalMrpPrice === 0 ) ? "" : "Rs. ". number_format($totalMrpPrice) }}</th>
+                        </tr>
+                    @endif
+                    </tbody>
+                </table>
             </div>
-            <div style="margin-bottom: 20px;">
-                <h2 style="font-size: 16px; margin-bottom: 8px; border-bottom: 1px solid #000; padding-bottom: 5px;">Showroom Information</h2>
-                    @foreach($userShowroomInfo['showrooms'] as $showroom)
-                        <p style="margin: 5px 0; font-size: 14px;">
-                            {{ $showroom['name'] }} , {{ $showroom['address'] }}.
-                        </p>
-                  @endforeach
-            </div>
-        </div>
-    @endif
-    <br>
-
-    <div style="page-break-inside: avoid;width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #000; padding: 10px;">
-        <div style="margin-bottom: 20px;">
-            <p style="margin: 5px 0; font-size: 14px;"><strong>Toll Free Number:</strong> <a href="tel:1800-1030-004" class="tile-cal-link font-bold">1800-1030-004</a></p>
-            <p style="margin: 5px 0; font-size: 14px;">09:30 am to 6:30 pm</p>
-            <p style="margin: 5px 0; font-size: 14px;">Monday to Saturday</p>
-        </div>
-        <div style="margin-bottom: 20px;">
-            <p style="margin: 5px 0; font-size: 14px;"><strong>Email Tile Enquiries:</strong> <a href="mailto:customer.care@somanyceramics.com">customer.care@somanyceramics.com</a></p>
-            <p style="margin: 5px 0; font-size: 14px;"><strong>International Business Enquiries:</strong> <a href="mailto:export@somanyceramics.com">export@somanyceramics.com</a></p>
-        </div>
+        @endif
     </div>
+    <div style='page-break-after:always'></div>
+    <div class="mt-4">
+        <h3>MRP Disclaimer:</h3>
+        <p>The prices listed above are the Maximum Retail Price (MRP). Visit your nearest Somany store to unlock exclusive offers and discover deals that'll make your wallet smile! </p>
+    </div>
+    <div class="mt-4">
+        <h3>Disclaimer:</h3>
+        <ul class="notes_ul">
+            <li>The visuals are for reference purposes only; actual colors, finishes, and tile dimensions may vary.</li>
+            <li>Shade variation is an inherent characteristic of tiles; therefore, physical inspection is
+                recommended for accurate selection</li>
+            <li>Tiles with multiple faces feature varied patterns, resulting in natural design variations</li>
+            <li>Prices quoted are subject to change without prior notice. The final price applicable at the time of
+                delivery will prevail.</li>
+        </ul>
+    </div>
+{{--    <div style="page-break-inside: avoid;width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #000; padding: 10px;">--}}
+{{--        <div style="margin-bottom: 20px;">--}}
+{{--            <p style="margin: 5px 0; font-size: 14px;"><strong>Toll Free Number:</strong> <a href="tel:1800-1030-004" class="tile-cal-link font-bold">1800-1030-004</a></p>--}}
+{{--            <p style="margin: 5px 0; font-size: 14px;">09:30 am to 6:30 pm</p>--}}
+{{--            <p style="margin: 5px 0; font-size: 14px;">Monday to Saturday</p>--}}
+{{--        </div>--}}
+{{--        <div style="margin-bottom: 20px;">--}}
+{{--            <p style="margin: 5px 0; font-size: 14px;"><strong>Email Tile Enquiries:</strong> <a href="mailto:customer.care@somanyceramics.com">customer.care@somanyceramics.com</a></p>--}}
+{{--            <p style="margin: 5px 0; font-size: 14px;"><strong>International Business Enquiries:</strong> <a href="mailto:export@somanyceramics.com">export@somanyceramics.com</a></p>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 </div>
 </body>
 </html>
