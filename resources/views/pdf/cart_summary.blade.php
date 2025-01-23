@@ -95,8 +95,9 @@
                                                             <?php $tiles_par_box = Helper::getTilesParCarton($tile_detail->id);?>
                                                         <input type="hidden" value="{{$tiles_par_box}}" id="tiles_par_carton">
                                                         @if( $tiles_par_box !== NULL )
-                                                            <div class="tiles_carton_wrapper" style="display: none;">
-                                                                <p>Number of Box Required: <span class="require_box"></span></p>
+                                                            <div class="tiles_carton_wrapper" style="display: <?php echo ($tiles_par_box !== NULL ) ? 'block' : 'none'; ?>">
+                                                                <input type="hidden" value="" id="require_box">
+                                                                <p>Number of Box Required: <span class="require_box">{{@$tile_detail->box_needed}}</span></p>
                                                             </div>
                                                             <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
                                                         @endif
