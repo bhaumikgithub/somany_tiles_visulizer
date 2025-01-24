@@ -84,7 +84,7 @@ function canvasImage() {
 function getTileId(id){
     let surface_title = $('#slected-panel .display_surface_name h5#optionText').text();
     let current_room_type = $('#current_room_type').val();
-    const excludedRoomTypes = ["kitchen", "bedroom", "prayer-room", "commercial",'livingroom'];
+    const excludedRoomTypes = ["kitchen", "bedroom", "prayer-room", "commercial",'livingroom','bathroom','outdoor'];
 
     // Retrieve and parse the existing array from the hidden field
     let ids = JSON.parse($('#selected_tile_ids').val() || '[]');
