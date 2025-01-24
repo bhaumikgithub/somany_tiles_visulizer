@@ -224,7 +224,7 @@
                             <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;"></th>
                             <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;"></th>
                             <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;">{{ ( $totalArea === 0 ) ? "" : number_format($totalArea) }}</th>
-                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;">{{ ( $totalTilesPerBox === 0 ) ? "" : $totalTilesPerBox }}</th>
+                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;"></th>
                             <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;">{{ ( $totalBoxCoverageAreaSqFt === 0 ) ? "" : number_format($totalBoxCoverageAreaSqFt) }}</th>
                             <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;">{{ ( $totalBoxRequired === 0 ) ? "" : $totalBoxRequired }}</th>
                             <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;">{{ ( $totalMrpPerSqFt === 0 ) ? "" : number_format($totalMrpPerSqFt) }}</th>
