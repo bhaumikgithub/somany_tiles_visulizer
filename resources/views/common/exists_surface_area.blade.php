@@ -23,7 +23,7 @@
                 $wallId = "list_".str_replace(" ","_",$displayName);
             @endphp
 
-            <li class="slected_tile choosen_tile_updated_data" id="{{$wallId}}">
+            <li class="slected_tile choosen_tile_updated_data" id="{{$wallId}}" onclick="openTileSelectionPanel('{{str_replace(" ","_",$displayName)}}');" style="cursor: pointer">
                 <div class="tile-list-thumbnail-image-holder">
                     <img src="{{asset('/storage/no_tile.png')}}">
                 </div>
@@ -31,7 +31,7 @@
                     <p class="-caption">{{$displayName}}</p>
                     <div class="selected tile detail"></div>
                 </div>
-                <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true" onclick="openTileSelectionPanel('{{str_replace(" ","_",$displayName)}}');"></span></button>
+                <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
             </li>
         @endforeach
     @endif
