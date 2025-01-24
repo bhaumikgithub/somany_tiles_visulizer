@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserPdfController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -205,8 +206,9 @@ Route::group(['middleware' => 'role:administrator'], function () {
     Route::get('/maximum_images', 'App\Http\Controllers\MaxImageController@index');
     Route::post('/maximum_images/update', 'App\Http\Controllers\MaxImageController@update');
 
-    // Route::get('/user_pdf', 'App\Http\Controllers\MaxImageController@index'); //yash changes
-
+    Route::get('/user_pdf_list', [UserPdfController::class , 'viewUserPdfList']); //yash changes
+    Route::get('/user/pdf/{uniqueId}', [UserPdfController::class , 'showUserPdf']); //yash changes
+    
 });
 
 

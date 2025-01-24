@@ -305,10 +305,11 @@ class AddToPdfRoomsController extends Controller
             'name' => $request->firstName . ' ' . $request->lastName,
             'last_name' => $request->lastName,
             'mobile' => $request->mobileNumber,
-            'pincode' => '000000',
+            'pincode' => $request->pincode ? $request->pincode : '-',
             'user_account' => $userAccount,
             'unique_id' => $request->random_key,
         ]);
+
 
         $html = view('pdf.template',compact('allProduct','basic_info')); // Get HTML content for the PDF
         $pdf = PDF::loadHTML($html);
