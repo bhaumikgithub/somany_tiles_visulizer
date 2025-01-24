@@ -446,7 +446,20 @@ class AddToPdfRoomsController extends Controller
         });
 
         // Generate the second PDF (dynamic content) using mPDF (in landscape mode)
-        $mpdf = new Mpdf(['mode' => 'utf-8', 'format' => 'A4-L']); // A4-L for landscape mode
+        $mpdf = new \Mpdf\Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4-L',
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'margin_top' => 20,
+            'margin_bottom' =>20
+        ]);
+        $mpdf->SetHeader('');
+        $mpdf->SetFooter('');
+
+
+// Disable automatic page breaks
+        // $mpdf->SetAutoPageBreak(false, 0); 
         $html = view('pdf.template', compact('allProduct', 'basic_info', 'userShowroomInfo','randomKey','groupedTiles')); // Pass data to the Blade view
         $mpdf->WriteHTML($html);
         $mpdf->SetDisplayMode('real', 'default');
@@ -522,7 +535,7 @@ class AddToPdfRoomsController extends Controller
 
         // Output the final merged PDF
         $fileName = 'somany_tiles_selection_' . $request->random_key . "_" . Carbon::parse(now())->format('d-m-Y') . '.pdf';
-        $pdfContent = $fpdi->Output('D' , $fileName);  // Output as string //change d to s
+        $pdfContent = $fpdi->Output('S' , $fileName);  // Output as string //change d to s
         return response($pdfContent, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . $fileName . '"'

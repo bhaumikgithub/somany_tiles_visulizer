@@ -2,11 +2,19 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <title>Somany Tiles Visualizer | PDF</title>
     <style>
-        .header-section {
-            padding: 20px 15px;
+        body{
+            font-family: "Lato", serif;
         }
+        * {
+    margin: 0;
+    padding: 0;
+}
+      
         .selection-title {
             margin-top: 20px;
             font-weight: bold;
@@ -58,31 +66,30 @@
     </style>
 </head>
 <body>
-<div class="container mt-4" style="margin-top: 5px;">
+<div >
     <!-- Header Section -->
-    <div class="row mt-4">
-        <div class="col-sm-8">
-            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
-                <tr>
-                    <td style="width: 40%; vertical-align: top; padding: 10px;">
-                        <img src="{{ public_path('img/somany-logo-new.jpg') }}" alt="Tiles Logo" style="max-height: 80px;">
-                    </td>
-                </tr>
-            </table>
-            <h3>Your Product(s) Selection</h3>
+     <div>
+    
+        <div style="font-family: 'Lato', sans-serif; background-image: url('./img/pdf_back.png'); background-size: 100% 100%; background-repeat: no-repeat; height:100%;
+            background-position:100% 100%; padding:0px 30px 30px 30px;">
+        
+        <div>
+         <span style="background-color:#badbd3;margin: 0; width: fit-content;font-size:20px;diplay:inline-block;">Your Product(s) Selection</span>
+       </div>
             <p><span>{{\Carbon\Carbon::now()->format('d F Y')}}</span></p>
             <p>Selection Code: <span>{{$randomKey}}</span></p>
-            <p><span>{{$basic_info['first_name']. " ". $basic_info['last_name']}}</span></p>
-            <p>{{$basic_info['contact_no']}}</span></p>
-            <p>{{$basic_info['state']}},{{$basic_info['city']}}</span></p>
+            <p style="margin-bottom: 0px;"><span>{{$basic_info['first_name']. " ". $basic_info['last_name']}}</span></p>
+            <p style="margin-bottom:0px;">{{$basic_info['contact_no']}}</span></p>
+            <p style="margin-bottom:0px;">{{$basic_info['state']}},{{$basic_info['city']}}</span></p>
             @if( isset($basic_info['pincode']))
                 <p>{{$basic_info['pin_code']}}</span></p>
             @endif
-            <p>Total Selection: <span>{{$allProduct->count()}}</span></p>
+            <p style="font-weight:bold">Total Selection: <span>{{$allProduct->count()}}</span></p>
             @if($userShowroomInfo['user'])
                 <hr style="border: 1px solid;">
+
                 <!-- Footer Section -->
-                <div style="page-break-inside: avoid;width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #000; padding: 10px;">
+                <div style="page-break-inside: avoid;">
                     <div style="margin-bottom: 20px;">
                         <h2 style="font-size: 16px; margin-bottom: 8px; border-bottom: 1px solid #000; padding-bottom: 5px;">Contact Person Details</h2>
                         <p><strong>Executive Name:</strong> <span>{{ $userShowroomInfo['user']['name'] }}</span></p>
@@ -101,9 +108,12 @@
                             </p>
                         @endforeach
                     </div>
-                </div>
+                    
+               
             @endif
-        </div>
+       </div>
+    </div>
+       
     </div>
     <div style='page-break-after:always'></div>
     <div class="row mt-4">
