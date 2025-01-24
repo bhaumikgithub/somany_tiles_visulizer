@@ -222,7 +222,7 @@
                             <td></td>
                             <td></td>
                             <td class="text-center">{{ ( $totalArea === 0 ) ? "" : number_format($totalArea) }}</td>
-                            <td class="text-center">{{ ( $totalTilesPerBox === 0 ) ? "" : $totalTilesPerBox }}</td>
+                            <td class="text-center"></td>
                             <td class="text-center">{{ ( $totalBoxCoverageAreaSqFt === 0 ) ? "" : number_format($totalBoxCoverageAreaSqFt) }}</td>
                             <td class="text-center">{{ ( $totalBoxRequired === 0 ) ? "" : $totalBoxRequired }}</td>
                             <td class="text-center">{{ ( $totalMrpPerSqFt === 0 ) ? "" : number_format($totalMrpPerSqFt) }}</td>

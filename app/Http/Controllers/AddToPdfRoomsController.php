@@ -285,10 +285,6 @@ class AddToPdfRoomsController extends Controller
                 return (float) $item['area_sq_ft'];
             });
 
-            $combinedTilesPerBox = $items->sum(function ($item) {
-                return (int) $item['tiles_per_box'];
-            });
-
             $combinedBoxRequired = $items->sum(function ($item) {
                 return (int) $item['box_required'];
             });
@@ -300,7 +296,6 @@ class AddToPdfRoomsController extends Controller
             return array_merge($items->first(), [
                 'apply_on' => $combinedSurfaces,
                 'area_sq_ft' => $combinedAreaSqFt,
-                'tiles_per_box' => $combinedTilesPerBox,
                 'box_required' => $combinedBoxRequired,
                 'mrp_per_sq_ft' => $combinedPrice
             ]);
@@ -434,10 +429,6 @@ class AddToPdfRoomsController extends Controller
                 return (float) $item['area_sq_ft'];
             });
 
-            $combinedTilesPerBox = $items->sum(function ($item) {
-                return (int) $item['tiles_per_box'];
-            });
-
             $combinedBoxRequired = $items->sum(function ($item) {
                 return (int) $item['box_required'];
             });
@@ -449,7 +440,6 @@ class AddToPdfRoomsController extends Controller
             return array_merge($items->first(), [
                 'apply_on' => $combinedSurfaces,
                 'area_sq_ft' => $combinedAreaSqFt,
-                'tiles_per_box' => $combinedTilesPerBox,
                 'box_required' => $combinedBoxRequired,
                 'mrp_per_sq_ft' => $combinedPrice
             ]);
