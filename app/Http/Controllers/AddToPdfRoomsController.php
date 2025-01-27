@@ -247,7 +247,9 @@ class AddToPdfRoomsController extends Controller
             ]);
         });
 
-        return view('pdf.cart_summary',compact('allProduct','randomKey','groupedTiles'));
+        $isReadOnly = request()->query('readonly') === 'true';
+        $cc_date = $getCartId->created_at->format('d-m-y');
+        return view('pdf.cart_summary',compact('allProduct','randomKey','groupedTiles','isReadOnly','cc_date'));
     }
 
 //    public function downlaodPdf(Request $request): \Illuminate\Http\Response

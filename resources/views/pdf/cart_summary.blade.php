@@ -21,7 +21,7 @@
         <div class="row mt-20">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <h3 class="product-title font-bold">Your Product Selection</h3>
-                <p>Date: <span>{{\Carbon\Carbon::now()->format('d-m-Y')}}</span></p>
+                <p>Date: <span>{{ $cc_date }}</span></p>
 {{--                <p>Name: <span class="font-bold">customer name</span></p>--}}
 {{--                <p>Number: <span class="font-bold">customer number</span></p>--}}
                 <p>Here are the products you’ve selected from our collection. Visit more on
@@ -132,26 +132,26 @@
                         @csrf
                         <div class="form-group">
                             <label for="firstName">First Name</label>
-                            <input type="text" class="form-control" id="firstName" name="firstName">
+                            <input type="text" class="form-control" id="firstName" name="firstName" {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <div class="form-group">
                             <label for="lastName">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" name="lastName">
+                            <input type="text" class="form-control" id="lastName" name="lastName" {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <div class="form-group">
                             <label for="mobileNumber">Mobile Number</label>
-                            <input type="text" class="form-control" id="mobileNumber" name="mobileNumber">
+                            <input type="text" class="form-control" id="mobileNumber" name="mobileNumber" {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <div class="form-group">
                             <label for="state">State</label>
-                            <input type="text" class="form-control" id="state" name="state">
+                            <input type="text" class="form-control" id="state" name="state" {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <div class="form-group">
                             <label for="city">City</label>
-                            <input type="text" class="form-control" id="city" name="city">
+                            <input type="text" class="form-control" id="city" name="city" {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <input type="hidden" value="{{$randomKey}}" name="random_key">
-                        <button class="btn btn-danger download-btn" id="download_pdf" disabled>Download PDF</button>
+                        <button class="btn btn-danger download-btn" id="download_pdf" disabled {{ $isReadOnly ? 'readonly' : '' }}>Download PDF</button>
                     </form>
                 </div>
             </div>

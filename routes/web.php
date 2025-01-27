@@ -207,7 +207,6 @@ Route::group(['middleware' => 'role:administrator'], function () {
     Route::post('/maximum_images/update', 'App\Http\Controllers\MaxImageController@update');
 
     Route::get('/user_pdf_list', [UserPdfController::class , 'viewUserPdfList']); //yash changes
-    Route::get('/user/pdf/{uniqueId}', [UserPdfController::class , 'showUserPdf']); //yash changes
     
 });
 
