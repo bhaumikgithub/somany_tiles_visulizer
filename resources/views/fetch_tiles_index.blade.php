@@ -35,7 +35,7 @@
     @push('custom-scripts')
         <script>
             document.getElementById('fetch-now').addEventListener('click', function () {
-                const lastFetchedDate = ( $('#last_fetch_date_val').val() ) ? $('#last_fetch_date_val').val() : "2024-12-01"; // Replace with actual last fetched date
+                const lastFetchedDate = ( $('#last_fetch_date_val').val() ) ? $('#last_fetch_date_val').val() : "2000-01-01"; // Replace with actual last fetched date
                 const todayDate = new Date().toISOString().slice(0, 10); // Current date (YYYY-MM-DD)
 
                 const progressContainer = document.getElementById('progress-container');

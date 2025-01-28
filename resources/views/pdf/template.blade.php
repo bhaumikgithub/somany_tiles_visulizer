@@ -1,5 +1,5 @@
 @php use App\Helpers\Helper; @endphp
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html>
    <head>
       <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -332,39 +332,29 @@
          </ul>
       </div>
         </div>
-      {{--    
-      <div style="page-break-inside: avoid;width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #000; padding: 10px;">
-         --}}
-         {{--        
+       
+      <!-- <div style="page-break-inside: avoid;width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #000; padding: 10px;">
+              
          <div style="margin-bottom: 20px;">
-            --}}
-            {{--            
+                      
             <p style="margin: 5px 0; font-size: 14px;"><strong>Toll Free Number:</strong> <a href="tel:1800-1030-004" class="tile-cal-link font-bold">1800-1030-004</a></p>
-            --}}
-            {{--            
+                    
             <p style="margin: 5px 0; font-size: 14px;">09:30 am to 6:30 pm</p>
-            --}}
-            {{--            
+                    
             <p style="margin: 5px 0; font-size: 14px;">Monday to Saturday</p>
-            --}}
-            {{--        
+                 
          </div>
-         --}}
-         {{--        
+              
          <div style="margin-bottom: 20px;">
-            --}}
-            {{--            
+                    
             <p style="margin: 5px 0; font-size: 14px;"><strong>Email Tile Enquiries:</strong> <a href="mailto:customer.care@somanyceramics.com">customer.care@somanyceramics.com</a></p>
-            --}}
-            {{--            
+                      
             <p style="margin: 5px 0; font-size: 14px;"><strong>International Business Enquiries:</strong> <a href="mailto:export@somanyceramics.com">export@somanyceramics.com</a></p>
-            --}}
-            {{--        
+              
          </div>
-         --}}
-         {{--    
-      </div>
-      --}}
+          
+      </div> -->
+      
       </div>
    </body>
 </html>

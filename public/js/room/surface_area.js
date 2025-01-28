@@ -26,7 +26,7 @@ window.onload = function getRoomSurface() {
 
 //This function calling from the HTML of the wall A, wall B, Wall C, floor A, Floor B etc
 function openTileSelectionPanel(surface_name) {
-
+    let oldSurfaceName = surface_name;
     setCurrentListID(surface_name);//List_wall_a
 
     var newName = String(surface_name).split("_");
@@ -34,7 +34,11 @@ function openTileSelectionPanel(surface_name) {
 
     // Show the info panel
     showMainInfoPanel("MAINLISTING_HIDE");
-    $('#slected-panel .display_surface_name h5#optionText').text(surface_name);
+    if( oldSurfaceName != "theme") {
+        $('#slected-panel .display_surface_name h5#optionText').text(surface_name);
+    } else {
+        $('#slected-panel .display_surface_name h5#optionText').text("Themes");
+    }
 
     var clickedSurface = findRoomSurfaceUsingName(surface_name);
 
@@ -106,7 +110,10 @@ function getCustomNameOfSurfaceData(p_surfaceType){
         }
     }
     surfaceTypesDataTemp.push(p_surfaceType);
-    return convertFirstLetterCapital(p_surfaceType + " " + alphabets[cnt]);
+    if( p_surfaceType !== "Themes")
+        return convertFirstLetterCapital(p_surfaceType + " " + alphabets[cnt]);
+    else
+         return "Themes";
 
 }
 function convertFirstLetterCapital(p_str){

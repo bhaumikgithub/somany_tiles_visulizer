@@ -535,7 +535,7 @@ class AddToPdfRoomsController extends Controller
 
         // Output the final merged PDF
         $fileName = 'somany_tiles_selection_' . $request->random_key . "_" . Carbon::parse(now())->format('d-m-Y') . '.pdf';
-        $pdfContent = $fpdi->Output('S' , $fileName);  // Output as string //change d to s
+        $pdfContent = $fpdi->Output('D' , $fileName);  // Output as string //change d to s
         return response($pdfContent, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . $fileName . '"'
