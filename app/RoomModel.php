@@ -34,4 +34,64 @@ class RoomModel extends Model {
         }
     }
 
+    public function getTheme1Attribute($value) {
+        if ($value) {
+            return Storage::url($value);
+        }
+    }
+
+    public function getTheme2Attribute($value) {
+        if ($value) {
+            return Storage::url($value);
+        }
+    }
+
+    public function getTheme3Attribute($value) {
+        if ($value) {
+            return Storage::url($value);
+        }
+    }
+
+    public function getTheme4Attribute($value) {
+        if ($value) {
+            return Storage::url($value);
+        }
+    }
+
+    public function getTheme5Attribute($value) {
+        if ($value) {
+            return Storage::url($value);
+        }
+    }
+
+    public function getThemeThumbnail1Attribute($value) {
+        if ($value) {
+            return Storage::url($value);
+        }
+    }
+
+    public function getThemeThumbnail2Attribute($value) {
+        if ($value) {
+            return Storage::url($value);
+        }
+    }
+
+    public function getThemeThumbnail3Attribute($value) {
+        if ($value) {
+            return Storage::url($value);
+        }
+    }
+
+    public function getThemeThumbnail4Attribute($value) {
+        if ($value) {
+            return Storage::url($value);
+        }
+    }
+
+    public function getThemeThumbnail5Attribute($value) {
+        if ($value) {
+            return Storage::url($value);
+        }
+    }
+
 }

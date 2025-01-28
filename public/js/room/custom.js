@@ -1,4 +1,6 @@
 var isInitialLoad = true; // Flag to track the initial load
+var interval;
+document.getElementById("roomLoaderBackground").style.visibility = "hidden";
 
 function AdjustCanvasWidthHeight() {
     var windowWidth = $(window).width();
@@ -6,8 +8,6 @@ function AdjustCanvasWidthHeight() {
     var newWidth = windowHeight * 1.78;
     var newLeft = Math.round((windowWidth - newWidth) / 2);
     var newRight = Math.round((windowWidth - newLeft - newWidth));  // Calculate new right position
-    var canvasHeight = windowHeight;
-
     $("#roomCanvas").height(windowHeight);
     $("#roomCanvas").width(newWidth);
 
@@ -27,8 +27,6 @@ function AdjustCanvasWidthHeight() {
             $(".share-div").css("margin-right", "26px");
 
         }
-
-
         isInitialLoad = false; // Set flag to false after initial load
     } else {
         $(".cn-btn").css("margin-right", "15px"); // Remove margin-right for resize
@@ -36,28 +34,39 @@ function AdjustCanvasWidthHeight() {
         $(".share-div").css("margin-right", "26px");
 
     }
-
+}
+function allLoadCompleted(){
+    $(".cmn-room-btn").css('visibility', 'visible');
+    $("#topPanelmainpanel").css('visibility', 'visible');
+    $(".share-div").css('visibility', 'visible');
+    $(".room-canvas").css('visibility', 'visible');
 
 }
 
-function applyCanvasAdjustments() {
-    if ($(window).width() > 500) { // Only execute if screen width > 500px
-        AdjustCanvasWidthHeight();
-
-    }
-}
 function setTopPanelHeight() {
     const viewportHeight = $(window).height(); // Get viewport height using jQuery
     $('.top-panel').css('height', viewportHeight - 20 + 'px'); // Set height dynamically
 }
 $(window).on('load', function() {
 
-    applyCanvasAdjustments();
-    setTopPanelHeight();
+    interval = setInterval(function(){
+        if($("#sourceLoadProgressBarContainer").length>0){
+        }
+        else{
+            clearInterval(interval);
+            AdjustCanvasWidthHeight();
+            setTopPanelHeight();
+
+            setTimeout(function(){
+                allLoadCompleted()},19);
+        }
+    },500);
+
+
 });
 
 $(window).on('resize', function() {
-    applyCanvasAdjustments();
+
     AdjustCanvasWidthHeight();
 
 });

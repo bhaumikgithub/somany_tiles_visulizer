@@ -145,6 +145,7 @@
     <!-- Scripts -->
     <script src="/js/app.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
+    <script src="/js/add_theme_option_to_room.js"></script>
     @stack('custom-scripts')
 </body>
 </html>

@@ -4,79 +4,79 @@ body{
 	overflow-x: hidden !important;
 }
 .modal-dialog {
-    width: 600px;
-    margin: 21px auto 21px auto;
+	width: 600px;
+	margin: 21px auto 21px auto;
 }
 .pdf-summary-container p{
-    margin: 0 0 10px !important;
+	margin: 0 0 10px !important;
 }
 .logo{
 	width: 20%;
-    position: unset;
+	position: unset;
 }
 .intro{
 	width: 80%;
 	padding-left: 20px;
 }
 .logo img {
-    max-height: 80px;
+	max-height: 80px;
 }
 
 .selection-title {
-    margin-top: 20px;
-    font-weight: bold;
+	margin-top: 20px;
+	font-weight: bold;
 }
 .product-image {
-    border-radius: 10px;
-    margin-bottom: 40px;
+	border-radius: 10px;
+	margin-bottom: 40px;
 	/* max-height: 400px; */
 }
 .details-card {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 5px;
-    margin-bottom: 30px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	padding: 5px;
+	margin-bottom: 30px;
 	background-color: #F6F6F6;
-	
+
 }
 .details-card img {
-   max-width: 100%;
-    border-radius: 8px;
+	max-width: 100%;
+	border-radius: 8px;
 	min-width: 100px;
 	min-height: 100px;
 }
 .details-card h5 {
-    font-size: 16px;
+	font-size: 16px;
 }
 .right-panel {
-    background-color: #D9D9D9;
-    padding: 20px 15px;
-    border-radius: 10px;
+	background-color: #D9D9D9;
+	padding: 20px 15px;
+	border-radius: 10px;
 	margin-top: 45px;
 
 }
 .download-btn {
-    width: 100%;
-    background-color: #ce1f22;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 10px;
-    font-weight: bold;
+	width: 100%;
+	background-color: #ce1f22;
+	color: #fff;
+	border: none;
+	padding: 10px;
+	font-size: 16px;
+	border-radius: 10px;
+	font-weight: bold;
 }
 .footer-section {
-    margin-top: 30px;
+	margin-top: 30px;
 	margin-bottom: 20px;
 }
 .modify-btn{
-    background-color: #ce1f22;
+	background-color: #ce1f22;
 	border-color:#ce1f22 !important;
-    color: #fff;
-    border: none;
-    font-weight: 500;
-    padding: 10px 15px;
-    border-radius: 10px;
+	color: #fff;
+	border: none;
+	font-weight: 500;
+	padding: 10px 15px;
+	border-radius: 10px;
 }
 .modify-btn:hover , .modify-btn:focus{
 	color: #fff !important;
@@ -86,11 +86,11 @@ body{
 	background-color: #ce1f22 !important;
 }
 .notes_ul{
-    margin-left: 20px;
+	margin-left: 20px;
 }
 
 .notes_ul li {
-    list-style-type: nu;
+	list-style-type: nu;
 	margin-bottom: 5px;
 }
 .product-title{
@@ -112,7 +112,7 @@ body{
 	color: #3F3F46;
 	font-weight: 500;
 	margin-top:10px;
-    font-size: 14px;
+	font-size: 14px;
 	text-decoration: underline;
 	display: inline-block;
 	border:none;
@@ -128,7 +128,7 @@ body{
 }
 .tile-cal-btn{
 	min-width: 100px;
-    font-weight: 400 !important;
+	font-weight: 400 !important;
 }
 .btn-div{
 	margin-bottom: 10px;
@@ -148,14 +148,14 @@ body{
 	margin-top: 10px !important;
 }
 .modal-header .close {
-    margin-top: 1px !important;
+	margin-top: 1px !important;
 }
 .result-main .form-label{
 	margin-bottom: 10px;
 }
 .reset_btn{
 
-  background-color: #333 !important;
+	background-color: #333 !important;
 	border-color: #333 !important;
 }
 .reset_btn:hover , .reset_btn:focus{
@@ -175,7 +175,7 @@ body{
 }
 
 input[type=checkbox]{
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .summary-page-table-row {
@@ -200,7 +200,9 @@ summary-page-table td{
 .table-active, .table-active > th, .table-active > td {
 	background-color: rgba(0, 0, 0, 0.075);
 }
-
+.summary-page-table{
+	font-size:11px;
+}
 /* media query */
 
 @media (max-width:1200px) {
@@ -239,29 +241,29 @@ summary-page-table td{
 
 }
 
-	@media (max-width:768px) {
-		.img-wall-set{
-			margin-bottom: 20px;
-		}
-		.product-title{
-			font-size: 22px !important;
-		}
-		.xs-text-left{
-			text-align: left;
-		}
-		.xs-margin-set{
-			margin-top: 10px;
-		}
-		.tile-cal-link{
-			margin-top: 0px !important;
-			margin-bottom: 10px !important;
-		}
-		.xs-margin-top-20{
-			margin-top: 20px;
-		}
-		.modal-dialog {
-			width: 95%;
-		}
-		
-
+@media (max-width:768px) {
+	.img-wall-set{
+		margin-bottom: 20px;
 	}
+	.product-title{
+		font-size: 22px !important;
+	}
+	.xs-text-left{
+		text-align: left;
+	}
+	.xs-margin-set{
+		margin-top: 10px;
+	}
+	.tile-cal-link{
+		margin-top: 0px !important;
+		margin-bottom: 10px !important;
+	}
+	.xs-margin-top-20{
+		margin-top: 20px;
+	}
+	.modal-dialog {
+		width: 95%;
+	}
+
+
+}
