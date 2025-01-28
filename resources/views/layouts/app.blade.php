@@ -129,6 +129,7 @@
                                     <li class="divider"></li>
                                     <li><a href="/storage-link">Storage Link</a></li>
                                     <li><a href="{{url('maximum_images')}}">Maximum Tiles</a></li>
+                                    <li><a href="{{route('user_pdf-summary')}}">Pdf-Summary</a></li>
                                 </ul>
                             </li>
                         @endif
