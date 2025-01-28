@@ -191,7 +191,7 @@ function clearAllItems() {
             // Optionally update the UI (e.g., empty the cart display)
             $('.productCount').text('');
             $('#addToCartInfoPanelModal #cartInfoTilesList').html(''); // Assuming cart items are listed in #cart-items
-          ;
+            ;
         },
         error: function (xhr) {
             alert('Something went wrong!');
@@ -418,8 +418,39 @@ $("#calculate_btn").click(function () {
     displayResult("#area_covered_meter","Total Area covered : <b>" + totalAreaSqMeter.toFixed(2)+"</b> Sq. Meter");
     displayResult("#area_covered_feet","Total Area covered : <b>" + totalArea.toFixed(2)+"</b> Sq. Feet");
     displayResult("#required_tiles","Required Tiles : <b>" + tilesNeeded+"</b> Tiles");
-});
 
+
+
+    //calculateBoxCoverageArea();
+});
+//0 = Sr. No
+//1 = Name
+//2 = Size
+//3 = Finish
+
+function calculateBoxCoverageArea(){
+    var rows = $(".summary-page-table").find("tr");
+    for(var i=0;i<rows.length;i++){
+        var tileSizeInString= String(findDataFromTable(i,2)); // Size
+        if(tileSizeInString.length>2){
+            var value = tileSizeInString.split("x");
+            var tilesWidthinSqFt = (Number(value[0])/30)/10;
+            var tilesHeightinSqFt = (Number(value[1])/30)/10;
+            findDataFromTable(i,7,Number(tilesWidthinSqFt*tilesHeightinSqFt));//7 = Box Coverage Area in Sq ft
+        }
+    }
+}
+function findDataFromTable(p_row,p_col,p_value){
+    var rows = $(".summary-page-table").find("tr");
+    var row = $(rows).eq(p_row);
+    var foundedRowCol =  $(row).find("td")[p_col];//Size
+    if(p_value){
+        $(foundedRowCol).html(p_value);
+    }
+    else{
+        return $(foundedRowCol).html();
+    }
+}
 
 $('#closeTileCalcModal').click(function() {
 
@@ -697,3 +728,5 @@ function checkCartHasData(){
         });
     }
 }
+
+
