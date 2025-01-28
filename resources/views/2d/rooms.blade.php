@@ -94,6 +94,11 @@ function editRoom(id) {
     window.$('#form-update-room-icon-img').attr('src', '');
     window.$('#form-update-room-shadow-img').attr('src', '');
     window.$('#form-update-room-shadow-matt-img').attr('src', '');
+    window.$('#form-update-room-theme-1-img').attr('src', '');
+    window.$('#form-update-room-theme-2-img').attr('src', '');
+    window.$('#form-update-room-theme-3-img').attr('src', '');
+    window.$('#form-update-room-theme-4-img').attr('src', '');
+    window.$('#form-update-room-theme-5-img').attr('src', '');
 
     window.$.ajax({
         url: '/get/room2d/' + id,
@@ -110,6 +115,36 @@ function editRoom(id) {
 
             window.$('#form-update-room-surfaces').attr('href', '/room2d/' + room.id + '/surfaces');
 
+            window.$('#form-update-room-theme-1-img').attr('src', room.theme1);
+            window.$('#form-update-room-theme-thumbnail-1-img').attr('src', room.theme_thumbnail1);
+            window.$('#form-update-room-chosen-theme-1').val(room.theme1);
+            window.$('#form-update-room-chosen-thumbnail-1').val(room.theme_thumbnail1);
+            window.$('#form-update-room-text-1').val(room.text1);
+
+            window.$('#form-update-room-theme-2-img').attr('src', room.theme2);
+            window.$('#form-update-room-theme-thumbnail-2-img').attr('src', room.theme_thumbnail2);
+            window.$('#form-update-room-chosen-theme-2').val(room.theme2);
+            window.$('#form-update-room-chosen-thumbnail-2').val(room.theme_thumbnail2);
+            window.$('#form-update-room-text-2').val(room.text2);
+
+            window.$('#form-update-room-theme-3-img').attr('src', room.theme3);
+            window.$('#form-update-room-theme-thumbnail-3-img').attr('src', room.theme_thumbnail3);
+            window.$('#form-update-room-chosen-theme-3').val(room.theme3);
+            window.$('#form-update-room-chosen-thumbnail-3').val(room.theme_thumbnail3);
+            window.$('#form-update-room-text-3').val(room.text3);
+
+            window.$('#form-update-room-theme-4-img').attr('src', room.theme4);
+            window.$('#form-update-room-theme-thumbnail-4-img').attr('src', room.theme_thumbnail4);
+            window.$('#form-update-room-chosen-theme-4').val(room.theme4);
+            window.$('#form-update-room-chosen-thumbnail-4').val(room.theme_thumbnail4);
+            window.$('#form-update-room-text-4').val(room.text4);
+
+            window.$('#form-update-room-theme-5-img').attr('src', room.theme5);
+            window.$('#form-update-room-theme-thumbnail-5-img').attr('src', room.theme_thumbnail5);
+            window.$('#form-update-room-chosen-theme-5').val(room.theme5);
+            window.$('#form-update-room-chosen-thumbnail-5').val(room.theme_thumbnail5);
+            window.$('#form-update-room-text-5').val(room.text5);
+
             window.$('#updateRoomFormBlock').slideDown();
         }
     });
@@ -124,6 +159,7 @@ function showBigIconImageModal(name, image) {
     }
 }
 </script>
+
 
 @include('common.alerts')
 @include('common.errors')
@@ -189,6 +225,8 @@ function showBigIconImageModal(name, image) {
         <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
       @endif
     </div>
+
+      @include('2d.theme_options',['module'=>'add'])
 
     <div class="form-group">
       <div class="col-sm-offset-3 col-sm-6">
@@ -285,6 +323,8 @@ function showBigIconImageModal(name, image) {
         <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
       @endif
     </div>
+
+      @include('2d.theme_options',['module'=>'edit'])
 
     <div class="form-group">
       <div class="col-sm-offset-3 col-sm-6">

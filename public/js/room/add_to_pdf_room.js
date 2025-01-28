@@ -696,5 +696,3 @@ function checkCartHasData(){
         });
     }
 }
-
-
