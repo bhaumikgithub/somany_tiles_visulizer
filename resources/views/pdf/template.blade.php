@@ -1,5 +1,5 @@
 @php use App\Helpers\Helper; @endphp
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html>
 <head>
     <title>Somany Tiles Visualizer | PDF</title>
@@ -107,25 +107,25 @@
     </div>
     <div style='page-break-after:always'></div>
     <div class="row mt-4">
-            @if( isset($allProduct))
-                @foreach($allProduct as $index=>$item)
-                    <div>
-                        <h4 style="font-size: 16px; margin-bottom: 10px;">Selection {{$index+1}} of {{$allProduct->count()}}</h4>
-                            <?php $showImage = $item->show_main_image ;?>
-                        @if( $showImage === "yes")
-                            <img src="{{ public_path('storage/'.$item->current_room_design) }}" alt="Room" style="display: block; width: 640px; height: 320px; margin-bottom: 20px;">
-                        @endif
-                        <table style="width: 100%; border-collapse: collapse;margin-bottom: 20px;">
-                            @php
-                                $tiles = collect(json_decode($item->tiles_json));
-                                // Check if the first item has the surface_title key
-                                $tilesData = $tiles->isNotEmpty() && isset($tiles->first()->surface_title)
-                                    ? $tiles->sortBy('surface_title')->values()
-                                    : $tiles;
-                            @endphp
-                            @foreach($tilesData as $tile_detail)
-                                @if( $tile_detail->surface !== "paint")
-                                    <tr style="border: 1px solid #000;">
+        @if( isset($allProduct))
+            @foreach($allProduct as $index=>$item)
+                <div>
+                    <h4 style="font-size: 16px; margin-bottom: 10px;">Selection {{$index+1}} of {{$allProduct->count()}}</h4>
+                        <?php $showImage = $item->show_main_image ;?>
+                    @if( $showImage === "yes")
+                        <img src="{{ public_path('storage/'.$item->current_room_design) }}" alt="Room" style="display: block; width: 640px; height: 320px; margin-bottom: 20px;">
+                    @endif
+                    <table style="width: 100%; border-collapse: collapse;margin-bottom: 20px;">
+                        @php
+                            $tiles = collect(json_decode($item->tiles_json));
+                            // Check if the first item has the surface_title key
+                            $tilesData = $tiles->isNotEmpty() && isset($tiles->first()->surface_title)
+                                ? $tiles->sortBy('surface_title')->values()
+                                : $tiles;
+                        @endphp
+                        @foreach($tilesData as $tile_detail)
+                            @if( $tile_detail->surface !== "paint")
+                                <tr style="border: 1px solid #000;">
                                     <td style="width: 20%; border: 1px solid #000; text-align: center; padding: 10px;">
                                         <img src="{{ public_path($tile_detail->icon) }}" alt="Wall A" style="width: 100%; max-width: 100px; height: auto;">
                                     </td>
@@ -162,13 +162,13 @@
                                             <p style="margin: 5px 0; font-size: 12px;">Tiles Needed: {{@$tile_detail->tiles_needed}}</p>
                                         @endif
 
-                                        <?php $tiles_par_box = Helper::getTilesParCarton($tile_detail->id);?>
+                                            <?php $tiles_par_box = Helper::getTilesParCarton($tile_detail->id);?>
                                         @if( $tiles_par_box !== NULL )
                                             <p style="margin: 5px 0; font-size: 12px;">Number of Box Required: {{@$tile_detail->box_needed}}</p>
                                             <p style="margin: 5px 0; font-size: 12px;">Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
                                         @endif
                                         <p style="margin: 5px 0; font-size: 12px; color: red;">
-                                             <?php $getPrice = Helper::getTilePrice($tile_detail->id,$item->id); ?>
+                                                <?php $getPrice = Helper::getTilePrice($tile_detail->id,$item->id); ?>
                                             @if($getPrice === NULL )
                                                 Price not given
                                             @else
@@ -177,15 +177,15 @@
                                         </p>
                                     </td>
                                 </tr>
-                                @endif
-                            @endforeach
-                        </table>
-                    </div>
-                    @if(!$loop->last)
-                        <div style="page-break-after: always;"></div>
-                    @endif
-                @endforeach
-            @endif
+                            @endif
+                        @endforeach
+                    </table>
+                </div>
+                @if(!$loop->last)
+                    <div style="page-break-after: always;"></div>
+                @endif
+            @endforeach
+        @endif
     </div>
 
     <div style='page-break-after:always'></div>
@@ -195,7 +195,7 @@
             <div class="row summary-page-table-row">
                 <table style=" width: 100%;border-collapse: collapse;margin-top: 20px;">
                     <thead>
-                        <tr>
+                    <tr>
                         <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Sr. No</th>
                         <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Name</th>
                         <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Size</th>
@@ -278,17 +278,17 @@
                 delivery will prevail.</li>
         </ul>
     </div>
-{{--    <div style="page-break-inside: avoid;width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #000; padding: 10px;">--}}
-{{--        <div style="margin-bottom: 20px;">--}}
-{{--            <p style="margin: 5px 0; font-size: 14px;"><strong>Toll Free Number:</strong> <a href="tel:1800-1030-004" class="tile-cal-link font-bold">1800-1030-004</a></p>--}}
-{{--            <p style="margin: 5px 0; font-size: 14px;">09:30 am to 6:30 pm</p>--}}
-{{--            <p style="margin: 5px 0; font-size: 14px;">Monday to Saturday</p>--}}
-{{--        </div>--}}
-{{--        <div style="margin-bottom: 20px;">--}}
-{{--            <p style="margin: 5px 0; font-size: 14px;"><strong>Email Tile Enquiries:</strong> <a href="mailto:customer.care@somanyceramics.com">customer.care@somanyceramics.com</a></p>--}}
-{{--            <p style="margin: 5px 0; font-size: 14px;"><strong>International Business Enquiries:</strong> <a href="mailto:export@somanyceramics.com">export@somanyceramics.com</a></p>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    {{--    <div style="page-break-inside: avoid;width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #000; padding: 10px;">--}}
+    {{--        <div style="margin-bottom: 20px;">--}}
+    {{--            <p style="margin: 5px 0; font-size: 14px;"><strong>Toll Free Number:</strong> <a href="tel:1800-1030-004" class="tile-cal-link font-bold">1800-1030-004</a></p>--}}
+    {{--            <p style="margin: 5px 0; font-size: 14px;">09:30 am to 6:30 pm</p>--}}
+    {{--            <p style="margin: 5px 0; font-size: 14px;">Monday to Saturday</p>--}}
+    {{--        </div>--}}
+    {{--        <div style="margin-bottom: 20px;">--}}
+    {{--            <p style="margin: 5px 0; font-size: 14px;"><strong>Email Tile Enquiries:</strong> <a href="mailto:customer.care@somanyceramics.com">customer.care@somanyceramics.com</a></p>--}}
+    {{--            <p style="margin: 5px 0; font-size: 14px;"><strong>International Business Enquiries:</strong> <a href="mailto:export@somanyceramics.com">export@somanyceramics.com</a></p>--}}
+    {{--        </div>--}}
+    {{--    </div>--}}
 </div>
 </body>
 </html>

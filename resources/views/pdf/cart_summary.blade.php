@@ -17,8 +17,8 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <h3 class="product-title font-bold">Your Product Selection</h3>
                 <p>Date: <span>{{\Carbon\Carbon::now()->format('d-m-Y')}}</span></p>
-{{--                <p>Name: <span class="font-bold">customer name</span></p>--}}
-{{--                <p>Number: <span class="font-bold">customer number</span></p>--}}
+                {{--                <p>Name: <span class="font-bold">customer name</span></p>--}}
+                {{--                <p>Number: <span class="font-bold">customer number</span></p>--}}
                 @if( isset($pincode) )
                     <p>Pincode: <span>{{$pincode}}</span></p>
                 @endif
@@ -37,7 +37,7 @@
                 @if( isset($allProduct))
                     @foreach($allProduct as $index=>$item)
                         <h4 class="selection-title">Selection {{$index+1}} of {{$allProduct->count()}}</h4>
-                        <?php $showImage = $item->show_main_image ;?>
+                            <?php $showImage = $item->show_main_image ;?>
                         <div class="show_main_image_wrapper" id="imageWrapper_<?= $item->id ?>"  style="display: <?php echo ($showImage === 'yes') ? 'block' : 'none'; ?>;">
                             <img src="{{ asset('storage/'.$item->current_room_design) }}" alt="Room" class="img-responsive product-image">
                         </div>
@@ -106,208 +106,208 @@
                                                             </button>
                                                         @endif
                                                 </div>
-    {{--                                            <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper"--}}
-    {{--                                                 data-price-tile-id="{{$tile_detail->id}}" data-cart-item-id="{{$item->id}}">--}}
-    {{--                                                <button id="update_price_btn" class="update_price_btn" data-tile-id="{{$tile_detail->id}}" data-price-update-cart-item-id="{{$item->id}}">--}}
-    {{--                                                        <?php $getPrice = Helper::getTilePrice($tile_detail->id,$item->id); ?>--}}
-    {{--                                                    <input type="hidden" value="{{( $getPrice === "" || $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">--}}
-    {{--                                                    <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl" id="{{$index . '_' . $loop->index . '_'. 'price'}}">--}}
-    {{--                                                        @if($getPrice === "" || $getPrice === NULL )--}}
-    {{--                                                            Price not given--}}
-    {{--                                                        @else--}}
-    {{--                                                            Rs. <span class="price-update">{{$getPrice}}</span>/sq.ft--}}
-    {{--                                                        @endif--}}
-    {{--                                                    </h5>--}}
-    {{--                                                </button>--}}
-    {{--                                                @if( session()->has('pincode') )--}}
-    {{--                                                    <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}" data-confirm-cart-item-id="{{$item->id}}">Update Price--}}
-    {{--                                                    </button>--}}
-    {{--                                                @endif--}}
-    {{--                                            </div>--}}
+                                                {{--                                            <div class="col-md-3 col-sm-3 col-xs-12 col-pad-set text-right xs-text-left update_price_wrapper"--}}
+                                                {{--                                                 data-price-tile-id="{{$tile_detail->id}}" data-cart-item-id="{{$item->id}}">--}}
+                                                {{--                                                <button id="update_price_btn" class="update_price_btn" data-tile-id="{{$tile_detail->id}}" data-price-update-cart-item-id="{{$item->id}}">--}}
+                                                {{--                                                        <?php $getPrice = Helper::getTilePrice($tile_detail->id,$item->id); ?>--}}
+                                                {{--                                                    <input type="hidden" value="{{( $getPrice === "" || $getPrice === NULL ) ? "" : $getPrice }}" name="confirm_price" id="confirm_price">--}}
+                                                {{--                                                    <h5 class="font-bold dark-grey-font mt-0 mr-10 margin-bottom-5 price_lbl" id="{{$index . '_' . $loop->index . '_'. 'price'}}">--}}
+                                                {{--                                                        @if($getPrice === "" || $getPrice === NULL )--}}
+                                                {{--                                                            Price not given--}}
+                                                {{--                                                        @else--}}
+                                                {{--                                                            Rs. <span class="price-update">{{$getPrice}}</span>/sq.ft--}}
+                                                {{--                                                        @endif--}}
+                                                {{--                                                    </h5>--}}
+                                                {{--                                                </button>--}}
+                                                {{--                                                @if( session()->has('pincode') )--}}
+                                                {{--                                                    <button type="button" class="tile-cal-link mt-0 mr-10 confirm_update" data-confirm-tile-id="{{$tile_detail->id}}" data-confirm-cart-item-id="{{$item->id}}">Update Price--}}
+                                                {{--                                                    </button>--}}
+                                                {{--                                                @endif--}}
+                                                {{--                                            </div>--}}
                                         </div>
                                     </div>
-                            @endif
-                        @endforeach
-                    @endforeach
-                @endif
+                                    @endif
+                                    @endforeach
+                                    @endforeach
+                                    @endif
+                                </div>
+                                <div class="col-md-3 col-sm-12 col-xs-12">
+                                    <div class="right-panel form-container">
+                                        <form action="{{ route('generate-pdf') }}" name="fill_basic_form" method="post">
+                                            @csrf
+                                            <div class="form-group">
+                                                <label for="firstName">First Name</label>
+                                                <input type="text" class="form-control" id="firstName" name="firstName">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="lastName">Last Name</label>
+                                                <input type="text" class="form-control" id="lastName" name="lastName">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="mobileNumber">Mobile Number</label>
+                                                <input type="text" class="form-control" id="mobileNumber" name="mobileNumber">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="state">State</label>
+                                                <input type="text" class="form-control" id="state" name="state">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="city">City</label>
+                                                <input type="text" class="form-control" id="city" name="city">
+                                            </div>
+                                            <input type="hidden" value="{{$randomKey}}" name="random_key">
+                                            <button class="btn btn-danger download-btn" id="download_pdf" disabled>Download PDF</button>
+                                        </form>
+                                    </div>
+                                </div>
             </div>
-            <div class="col-md-3 col-sm-12 col-xs-12">
-                <div class="right-panel form-container">
-                    <form action="{{ route('generate-pdf') }}" name="fill_basic_form" method="post">
-                    @csrf
-                    <div class="form-group">
-                        <label for="firstName">First Name</label>
-                        <input type="text" class="form-control" id="firstName" name="firstName">
-                    </div>
-                    <div class="form-group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" class="form-control" id="lastName" name="lastName">
-                    </div>
-                    <div class="form-group">
-                        <label for="mobileNumber">Mobile Number</label>
-                        <input type="text" class="form-control" id="mobileNumber" name="mobileNumber">
-                    </div>
-                    <div class="form-group">
-                        <label for="state">State</label>
-                        <input type="text" class="form-control" id="state" name="state">
-                    </div>
-                    <div class="form-group">
-                        <label for="city">City</label>
-                        <input type="text" class="form-control" id="city" name="city">
-                    </div>
-                    <input type="hidden" value="{{$randomKey}}" name="random_key">
-                    <button class="btn btn-danger download-btn" id="download_pdf" disabled>Download PDF</button>
-                </form>
-                </div>
-            </div>
-        </div>
 
-        <!-- Table structure -->
-        @if(isset($groupedTiles))
-            <div class="row summary-page-table-row">
-                <table class="table summary-page-table">
-                    <thead>
-                    <tr class="table-active">
-                        <th scope="col" class="text-center">Sr. No</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Size</th>
-                        <th scope="col">Finish</th>
-                        <th scope="col">Apply<br>On</th>
-                        <th scope="col" class="text-center">Area<br>Sq. Ft.</th>
-                        <th scope="col" class="text-center">Tiles/Box</th>
-                        <th scope="col" class="text-center">Box Coverage<br>Area Sq. Ft.</th>
-                        <th scope="col" class="text-center">Box<br> Required</th>
-                        <th scope="col" class="text-center">MRP/<br>Sq. Ft.</th>
-                        <th scope="col" class="text-center">MRP<br>Price</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @if(isset($groupedTiles))
-                        @php $totalArea = 0;
+            <!-- Table structure -->
+            @if(isset($groupedTiles))
+                <div class="row summary-page-table-row">
+                    <table class="table summary-page-table">
+                        <thead>
+                        <tr class="table-active">
+                            <th scope="col" class="text-center">Sr. No</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Size</th>
+                            <th scope="col">Finish</th>
+                            <th scope="col">Apply<br>On</th>
+                            <th scope="col" class="text-center">Area<br>Sq. Ft.</th>
+                            <th scope="col" class="text-center">Tiles/Box</th>
+                            <th scope="col" class="text-center">Box Coverage<br>Area Sq. Ft.</th>
+                            <th scope="col" class="text-center">Box<br> Required</th>
+                            <th scope="col" class="text-center">MRP/<br>Sq. Ft.</th>
+                            <th scope="col" class="text-center">MRP<br>Price</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if(isset($groupedTiles))
+                            @php $totalArea = 0;
                             $totalTilesPerBox = 0;
                             $totalBoxCoverageAreaSqFt = 0;
                             $totalBoxRequired = 0;
                             $totalMrpPerSqFt = 0;
                             $totalMrpPrice = 0;
-                        @endphp
-                        @foreach($groupedTiles as $index => $tile)
-                            @if( $tile['apply_on'] !== "paint")
-                                <tr>
-                                <td class="text-center">{{ $loop->iteration }}</td>
-                                <td>{{ $tile['name'] }}</td>
-                                <td>{{ $tile['size'] }}</td>
-                                <td>{{ ucfirst($tile['finish']) }}</td>
-                                <td>{{ ucwords($tile['apply_on']) }}</td>
-                                <td class="text-center">{{ ( $tile['area_sq_ft'] === "-" ) ? "-" : number_format($tile['area_sq_ft'])  }}</td>
-                                <td class="text-center">{{ $tile['tiles_per_box'] }}</td>
-                                <td class="text-center">{{ ( $tile['box_coverage_area_sq_ft'] === "-" ) ? "-" : number_format($tile['box_coverage_area_sq_ft'])  }}</td>
-                                <td class="text-center">{{ $tile['box_required'] }}</td>
-                                <td class="text-center">{{ $tile['mrp_per_sq_ft'] }}</td>
-                                <td class="text-center">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
-                            </tr>
-                            @endif
-                            @php
-                                $totalArea += (int)$tile['area_sq_ft'];
-                                $totalTilesPerBox += (int)$tile['tiles_per_box'];
-                                $totalBoxCoverageAreaSqFt += (int)$tile['box_coverage_area_sq_ft'];
-                                $totalBoxRequired += (int)$tile['box_required'];
-                                $totalMrpPerSqFt += (int)$tile['mrp_per_sq_ft'];
-                                $totalMrpPrice += (int)$tile['mrp_price'];
                             @endphp
-                        @endforeach
-                        <tr class="table-active footer-table-text">
-                            <td></td>
-                            <td><b>Total</b></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="text-center">{{ ( $totalArea === 0 ) ? "" : number_format($totalArea) }}</td>
-                            <td class="text-center"></td>
-                            <td class="text-center">{{ ( $totalBoxCoverageAreaSqFt === 0 ) ? "" : number_format($totalBoxCoverageAreaSqFt) }}</td>
-                            <td class="text-center">{{ ( $totalBoxRequired === 0 ) ? "" : $totalBoxRequired }}</td>
-                            <td class="text-center">{{ ( $totalMrpPerSqFt === 0 ) ? "" : number_format($totalMrpPerSqFt) }}</td>
-                            <td class="text-center">{{ ( $totalMrpPrice === 0 ) ? "" : "Rs. ". number_format($totalMrpPrice) }}</td>
-                        </tr>
-                    @endif
-                    </tbody>
-                </table>
-            </div>
-        @endif
+                            @foreach($groupedTiles as $index => $tile)
+                                @if( $tile['apply_on'] !== "paint")
+                                    <tr>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td>{{ $tile['name'] }}</td>
+                                        <td>{{ $tile['size'] }}</td>
+                                        <td>{{ ucfirst($tile['finish']) }}</td>
+                                        <td>{{ ucwords($tile['apply_on']) }}</td>
+                                        <td class="text-center">{{ ( $tile['area_sq_ft'] === "-" ) ? "-" : number_format($tile['area_sq_ft'])  }}</td>
+                                        <td class="text-center">{{ $tile['tiles_per_box'] }}</td>
+                                        <td class="text-center">{{ ( $tile['box_coverage_area_sq_ft'] === "-" ) ? "-" : number_format($tile['box_coverage_area_sq_ft'])  }}</td>
+                                        <td class="text-center">{{ $tile['box_required'] }}</td>
+                                        <td class="text-center">{{ $tile['mrp_per_sq_ft'] }}</td>
+                                        <td class="text-center">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
+                                    </tr>
+                                @endif
+                                @php
+                                    $totalArea += (int)$tile['area_sq_ft'];
+                                    $totalTilesPerBox += (int)$tile['tiles_per_box'];
+                                    $totalBoxCoverageAreaSqFt += (int)$tile['box_coverage_area_sq_ft'];
+                                    $totalBoxRequired += (int)$tile['box_required'];
+                                    $totalMrpPerSqFt += (int)$tile['mrp_per_sq_ft'];
+                                    $totalMrpPrice += (int)$tile['mrp_price'];
+                                @endphp
+                            @endforeach
+                            <tr class="table-active footer-table-text">
+                                <td></td>
+                                <td><b>Total</b></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-center">{{ ( $totalArea === 0 ) ? "" : number_format($totalArea) }}</td>
+                                <td class="text-center"></td>
+                                <td class="text-center">{{ ( $totalBoxCoverageAreaSqFt === 0 ) ? "" : number_format($totalBoxCoverageAreaSqFt) }}</td>
+                                <td class="text-center">{{ ( $totalBoxRequired === 0 ) ? "" : $totalBoxRequired }}</td>
+                                <td class="text-center">{{ ( $totalMrpPerSqFt === 0 ) ? "" : number_format($totalMrpPerSqFt) }}</td>
+                                <td class="text-center">{{ ( $totalMrpPrice === 0 ) ? "" : "Rs. ". number_format($totalMrpPrice) }}</td>
+                            </tr>
+                        @endif
+                        </tbody>
+                    </table>
+                </div>
+            @endif
 
-        <div class="row">
-            <div class="col-md-12 col-xs-12">
-                <h5 class="font-bold">Disclaimer:</h5>
-                <ul class="notes_ul">
-                    <li>The visuals are for reference purposes only; actual colors, finishes, and tile dimensions may vary.</li>
-                    <li>Shade variation is an inherent characteristic of tiles; therefore, physical inspection is
-                    recommended for accurate selection</li>
-                    <li>Tiles with multiple faces feature varied patterns, resulting in natural design variations</li>
-                    <li>Prices quoted are subject to change without prior notice. The final price applicable at the time of
-                    delivery will prevail.</li>
-                </ul>
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <h5 class="font-bold">Disclaimer:</h5>
+                    <ul class="notes_ul">
+                        <li>The visuals are for reference purposes only; actual colors, finishes, and tile dimensions may vary.</li>
+                        <li>Shade variation is an inherent characteristic of tiles; therefore, physical inspection is
+                            recommended for accurate selection</li>
+                        <li>Tiles with multiple faces feature varied patterns, resulting in natural design variations</li>
+                        <li>Prices quoted are subject to change without prior notice. The final price applicable at the time of
+                            delivery will prevail.</li>
+                    </ul>
+                </div>
             </div>
-        </div>
-        @if($userShowroomInfo['user'])
+            @if($userShowroomInfo['user'])
+                <hr style="border: 1px solid;">
+                <!-- Footer Section -->
+                <div class="footer-section row ">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        @if($userShowroomInfo['user'])
+                            <p><strong>Contact Person Details</strong></p>
+                            <p><strong>Executive Name:</strong> <span>{{ $userShowroomInfo['user']['name'] }}</span></p>
+                            @if( $userShowroomInfo['user']['contact_no'] )
+                                <p><strong>Executive Number:</strong>
+                                    <a href="tel:{{ $userShowroomInfo['user']['contact_no'] }}">
+                                        {{ $userShowroomInfo['user']['contact_no'] }}
+                                    </a>
+                                </p>
+                            @endif
+                            @if( $userShowroomInfo['user']['email'] )
+                                <p><strong>Executive Email:</strong>
+                                    <a href="mailto:{{ $userShowroomInfo['user']['email'] }}">
+                                        {{ $userShowroomInfo['user']['email'] }}
+                                    </a>
+                                </p>
+                            @endif
+                            {{--                @else--}}
+                            {{--                    <p><strong>No user information available.</strong></p>--}}
+                        @endif
+
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 text-right xs-text-left xs-margin-top-20">
+                        @if($userShowroomInfo['user'])
+                            @if($userShowroomInfo['showrooms'])
+                                <p><strong>Showroom Information</strong></p>
+                                @foreach($userShowroomInfo['showrooms'] as $showroom)
+                                    <div class="showroom">
+                                        <p>{{ $showroom['name'] }},
+                                            {{ $showroom['address'] }}.
+                                        </p>
+                                    </div>
+                                @endforeach
+                            @else
+                                <p><strong>This user currently does not have any showroom.</strong></p>
+                            @endif
+                        @endif
+
+                    </div>
+                </div>
+            @endif
             <hr style="border: 1px solid;">
             <!-- Footer Section -->
             <div class="footer-section row ">
-            <div class="col-md-6 col-sm-6 col-xs-12">
-                @if($userShowroomInfo['user'])
-                    <p><strong>Contact Person Details</strong></p>
-                    <p><strong>Executive Name:</strong> <span>{{ $userShowroomInfo['user']['name'] }}</span></p>
-                    @if( $userShowroomInfo['user']['contact_no'] )
-                        <p><strong>Executive Number:</strong>
-                            <a href="tel:{{ $userShowroomInfo['user']['contact_no'] }}">
-                                {{ $userShowroomInfo['user']['contact_no'] }}
-                            </a>
-                        </p>
-                    @endif
-                    @if( $userShowroomInfo['user']['email'] )
-                        <p><strong>Executive Email:</strong>
-                            <a href="mailto:{{ $userShowroomInfo['user']['email'] }}">
-                                {{ $userShowroomInfo['user']['email'] }}
-                            </a>
-                        </p>
-                    @endif
-{{--                @else--}}
-{{--                    <p><strong>No user information available.</strong></p>--}}
-                @endif
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <p>Toll Free Number: <a href="tel:1800-1030-004" class="tile-cal-link font-bold">1800-1030-004</a></p>
+                    <p>09:30 am to 6:30 pm</p>
+                    <p>Monday to Saturday</p>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12 text-right xs-text-left xs-margin-top-20">
+                    <p><span>Email Tile Enquiries:</span><br/><a href="mailto:customer.care@somanyceramics.com" class="tile-cal-link font-bold mt-0">customer.care@somanyceramics.com</a></p>
+                    <p>International Business Enquiries:<br/><a href="mailto:export@somanyceramics.com" class="tile-cal-link font-bold mt-0">export@somanyceramics.com</a></p>
 
-            </div>
-            <div class="col-md-6 col-sm-6 col-xs-12 text-right xs-text-left xs-margin-top-20">
-                @if($userShowroomInfo['user'])
-                    @if($userShowroomInfo['showrooms'])
-                    <p><strong>Showroom Information</strong></p>
-                        @foreach($userShowroomInfo['showrooms'] as $showroom)
-                            <div class="showroom">
-                                <p>{{ $showroom['name'] }},
-                                    {{ $showroom['address'] }}.
-                                </p>
-                            </div>
-                        @endforeach
-                    @else
-                        <p><strong>This user currently does not have any showroom.</strong></p>
-                    @endif
-                @endif
-
+                </div>
             </div>
         </div>
-        @endif
-        <hr style="border: 1px solid;">
-        <!-- Footer Section -->
-        <div class="footer-section row ">
-            <div class="col-md-6 col-sm-6 col-xs-12">
-                <p>Toll Free Number: <a href="tel:1800-1030-004" class="tile-cal-link font-bold">1800-1030-004</a></p>
-                <p>09:30 am to 6:30 pm</p>
-                <p>Monday to Saturday</p>
-            </div>
-            <div class="col-md-6 col-sm-6 col-xs-12 text-right xs-text-left xs-margin-top-20">
-                <p><span>Email Tile Enquiries:</span><br/><a href="mailto:customer.care@somanyceramics.com" class="tile-cal-link font-bold mt-0">customer.care@somanyceramics.com</a></p>
-                <p>International Business Enquiries:<br/><a href="mailto:export@somanyceramics.com" class="tile-cal-link font-bold mt-0">export@somanyceramics.com</a></p>
-
-            </div>
-        </div>
-    </div>
     </div>
 
 

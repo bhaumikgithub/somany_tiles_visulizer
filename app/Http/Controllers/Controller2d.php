@@ -123,6 +123,49 @@ class Controller2d extends Controller
             $room->shadow_matt = $request->file('shadow_matt')->store('rooms2d', 'public');
         }
 
+        // Array of theme, thumbnail, and text field combinations
+        $fields = [
+            ['theme1', 'theme_thumbnail1', 'text1'],
+            ['theme2', 'theme_thumbnail2', 'text2'],
+            ['theme3', 'theme_thumbnail3', 'text3'],
+            ['theme4', 'theme_thumbnail4', 'text4'],
+            ['theme5', 'theme_thumbnail5', 'text5'],
+        ];
+
+        foreach ($fields as $fieldSet) {
+            // $fieldSet will contain an array with [themeX, theme_thumbnailX, textX]
+            $themeField = $fieldSet[0];
+            $thumbnailField = $fieldSet[1];
+            $textField = $fieldSet[2];
+
+            // Handle the theme field (image)
+            if ($request->hasFile($themeField)) {
+                // If the theme file exists, delete the old one from storage
+                if ($room->getOriginal($themeField)) {
+                    Storage::disk('public')->delete($room->getOriginal($themeField));
+                }
+
+                // Store the new theme file
+                $room->$themeField = $request->file($themeField)->store('rooms2d', 'public');
+            }
+
+            // Handle the thumbnail field (image)
+            if ($request->hasFile($thumbnailField)) {
+                // If the thumbnail file exists, delete the old one from storage
+                if ($room->getOriginal($thumbnailField)) {
+                    Storage::disk('public')->delete($room->getOriginal($thumbnailField));
+                }
+
+                // Store the new thumbnail file
+                $room->$thumbnailField = $request->file($thumbnailField)->store('rooms2d', 'public');
+            }
+
+            // Handle the text field (text input)
+            if ($request->has($textField)) {
+                $room->$textField = $request->$textField;
+            }
+        }
+
         $room->surfaces = '[]';
         $room->enabled = 1;
         $room->save();
@@ -142,6 +185,11 @@ class Controller2d extends Controller
             'shadow' => 'nullable|image' . $image_size_limit,
             'shadow_matt' => 'nullable|image' . $image_size_limit,
             'enabled' => 'nullable|boolean',
+            'theme1' => 'nullable|image' . $image_size_limit,
+            'theme2' => 'nullable|image' . $image_size_limit,
+            'theme3' => 'nullable|image' . $image_size_limit,
+            'theme4' => 'nullable|image' . $image_size_limit,
+            'theme5' => 'nullable|image' . $image_size_limit,
         ]);
 
         if ($validator->fails()) {
@@ -167,6 +215,49 @@ class Controller2d extends Controller
         if ($request->hasFile('shadow_matt')) {
             Storage::disk('public')->delete($room->getOriginal('shadow_matt'));
             $room->shadow_matt = $request->file('shadow_matt')->store('rooms2d', 'public');
+        }
+
+        // Array of theme, thumbnail, and text field combinations
+        $fields = [
+            ['theme1', 'theme_thumbnail1', 'text1'],
+            ['theme2', 'theme_thumbnail2', 'text2'],
+            ['theme3', 'theme_thumbnail3', 'text3'],
+            ['theme4', 'theme_thumbnail4', 'text4'],
+            ['theme5', 'theme_thumbnail5', 'text5'],
+        ];
+
+        foreach ($fields as $fieldSet) {
+            // $fieldSet will contain an array with [themeX, theme_thumbnailX, textX]
+            $themeField = $fieldSet[0];
+            $thumbnailField = $fieldSet[1];
+            $textField = $fieldSet[2];
+
+            // Handle the theme field (image)
+            if ($request->hasFile($themeField)) {
+                // If the theme file exists, delete the old one from storage
+                if ($room->getOriginal($themeField)) {
+                    Storage::disk('public')->delete($room->getOriginal($themeField));
+                }
+
+                // Store the new theme file
+                $room->$themeField = $request->file($themeField)->store('rooms2d', 'public');
+            }
+
+            // Handle the thumbnail field (image)
+            if ($request->hasFile($thumbnailField)) {
+                // If the thumbnail file exists, delete the old one from storage
+                if ($room->getOriginal($thumbnailField)) {
+                    Storage::disk('public')->delete($room->getOriginal($thumbnailField));
+                }
+
+                // Store the new thumbnail file
+                $room->$thumbnailField = $request->file($thumbnailField)->store('rooms2d', 'public');
+            }
+
+            // Handle the text field (text input)
+            if ($request->has($textField)) {
+                $room->$textField = $request->$textField;
+            }
         }
 
         if (isset($request->enabled)) { $room->enabled = 1; } else { $room->enabled = 0; }
