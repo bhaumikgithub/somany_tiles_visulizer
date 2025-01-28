@@ -170,7 +170,7 @@ function showBigIconImageModal(name, image) {
 </div> --}}
 
 
-  <h3 class="panel-heading">2D Rooms list</h3>
+  <h3 class="panel-heading">User's Pdf-Summary List</h3>
 
   <div class="panel-body">
     <table class="table table-striped">
