@@ -6,7 +6,7 @@
   <td class="table-text">{{ $user->mobile }}</td>
   <td class="table-text">{{ $user->pincode }}</td>
   <td class="table-text">
-    <a href="/pdf-summary/{{ $user->unique_id }}?readonly=true" target="_blank">{{ $user->unique_id }}</a>
+    <a href="/pdf-summary/{{ $user->unique_id }}?readonly=true&name={{ base64_encode($user->name) }}" target="_blank">{{ $user->unique_id }}</a>
   </td>
   <td class="table-text">{{ $user->date->format('d-m-y') }}</td>
 </tr>

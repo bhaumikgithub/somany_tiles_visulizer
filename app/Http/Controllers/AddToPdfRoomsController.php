@@ -248,8 +248,15 @@ class AddToPdfRoomsController extends Controller
         });
 
         $isReadOnly = request()->query('readonly') === 'true';
+        // dd(base64_decode(request()->query('name')));
+        $upform_data = null;
+
+        if($isReadOnly){
+            $upform_data = UserPdfData::where([['unique_id',$randomKey],['name',base64_decode(request()->query('name'))]])->get()->first();
+        }
+
         $cc_date = $getCartId->created_at->format('d-m-y');
-        return view('pdf.cart_summary',compact('allProduct','randomKey','groupedTiles','isReadOnly','cc_date'));
+        return view('pdf.cart_summary',compact('allProduct','randomKey','groupedTiles','upform_data','isReadOnly','cc_date'));
     }
 
 //    public function downlaodPdf(Request $request): \Illuminate\Http\Response
@@ -367,14 +374,17 @@ class AddToPdfRoomsController extends Controller
         $randomKey = $request->randomKey;        
         
         $userAccount = auth()->check() ? auth()->user()->name : 'Guest User';
-
+        // dd($request->state);
         $savedPdf = UserPdfData::create([
             'name' => $request->firstName . ' ' . $request->lastName,
+            'first_name' => $request->firstName,
             'last_name' => $request->lastName,
             'mobile' => $request->mobileNumber,
             'pincode' => $request->pincode ? $request->pincode : '-',
             'user_account' => $userAccount,
             'unique_id' => $request->random_key,
+            'state' => $request->state,
+            'city' => $request->city
         ]);
 
 

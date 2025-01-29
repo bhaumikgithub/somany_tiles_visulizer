@@ -152,24 +152,6 @@ function showBigIconImageModal(name, image) {
   </div>
 </div>
 
-{{-- <div id="bigIconImageModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 id="bigIconImageModalHeader" class="modal-title">Room image</h4>
-      </div>
-      <div class="modal-body" style="text-align: center;">
-        <img id="bigIconImageModalImg" src="" alt="" style="max-width: 512px; max-height: 512px;">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div> --}}
-
-
   <h3 class="panel-heading">User's Pdf-Summary List</h3>
 
   <div class="panel-body">

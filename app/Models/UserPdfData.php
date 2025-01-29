@@ -13,8 +13,12 @@ class UserPdfData extends Model
 
     protected $fillable = [
         'name',
+        'first_name',
+        'last_name',
         'mobile',
         'pincode',
+        'state',
+        'city',
         'user_account',
         'unique_id',
         'date',

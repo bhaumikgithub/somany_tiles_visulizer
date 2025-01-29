@@ -132,23 +132,28 @@
                         @csrf
                         <div class="form-group">
                             <label for="firstName">First Name</label>
-                            <input type="text" class="form-control" id="firstName" name="firstName" {{ $isReadOnly ? 'readonly' : '' }}>
+                            <input type="text" class="form-control" id="firstName" name="firstName" value="{{ old('firstName', $upform_data->first_name ?? '') }}"
+                            {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <div class="form-group">
                             <label for="lastName">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" name="lastName" {{ $isReadOnly ? 'readonly' : '' }}>
+                            <input type="text" class="form-control" id="lastName" name="lastName" value="{{ old('lastName', $upform_data->last_name ?? '') }}" 
+                            {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <div class="form-group">
                             <label for="mobileNumber">Mobile Number</label>
-                            <input type="text" class="form-control" id="mobileNumber" name="mobileNumber" {{ $isReadOnly ? 'readonly' : '' }}>
+                            <input type="text" class="form-control" id="mobileNumber" name="mobileNumber" value="{{ old('mobileNumber', $upform_data->mobile ?? '') }}"
+                            {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <div class="form-group">
                             <label for="state">State</label>
-                            <input type="text" class="form-control" id="state" name="state" {{ $isReadOnly ? 'readonly' : '' }}>
+                            <input type="text" class="form-control" id="state" name="state" value="{{ old('state', $upform_data->state ?? '') }}"
+                            {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <div class="form-group">
                             <label for="city">City</label>
-                            <input type="text" class="form-control" id="city" name="city" {{ $isReadOnly ? 'readonly' : '' }}>
+                            <input type="text" class="form-control" id="city" name="city" value="{{ old('city', $upform_data->city ?? '') }}"
+                            {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <input type="hidden" value="{{$randomKey}}" name="random_key">
                         <button class="btn btn-danger download-btn" id="download_pdf" disabled {{ $isReadOnly ? 'readonly' : '' }}>Download PDF</button>
