@@ -33,7 +33,7 @@ function openTileSelectionPanel(surface_name) {
     surface_name = convertFirstLetterCapital(newName[0] + " " + newName[1]);
 
     // Show the info panel
-    showMainInfoPanel("MAINLISTING_HIDE");
+    showMainInfoPanel("MAINLISTING_HIDE",oldSurfaceName);
     if( oldSurfaceName != "theme") {
         $('#slected-panel .display_surface_name h5#optionText').text(surface_name);
     } else {
@@ -49,16 +49,89 @@ function openTileSelectionPanel(surface_name) {
 
 
 }
-function showMainInfoPanel(p_type){
+function showMainInfoPanel(p_type,surface_name){
     console.log("showMainInfoPanel = " + p_type);
-    if(p_type=="MAINLISTING_HIDE"){
-        $('#selectd-data').hide();
-        $('#slected-panel').show();
+    if( surface_name === "theme"){
+        if(p_type=="MAINLISTING_HIDE"){
+            $('#selectd-data').hide();
+            $('#slected-panel').show();
+            $('.withoutThemePanelWrapper').hide();
+            //get theme data
+            let current_room_id = $('#current_room_id').val();
+            // Fetch data from room2d endpoint
+            $.ajax({
+                url: '/get/room2d/'+$('#current_room_id').val(), // Replace with the actual endpoint for room2d
+                success: function (themes) {
+                    $('#selected_panel_theme').show();
+                    // JSON data (you can replace this with data fetched from an AJAX call)
+                    const themeData = {
+                        theme_thumbnail1: themes.theme_thumbnail1,
+                        text1: themes.text1,
+                        theme_thumbnail2: themes.theme_thumbnail2,
+                        text2: themes.text2,
+                        theme_thumbnail3: themes.theme_thumbnail3,
+                        text3: themes.text3,
+                        theme_thumbnail4: themes.theme_thumbnail4,
+                        text4: themes.text4,
+                        theme_thumbnail5: themes.theme_thumbnail5,
+                        text5: themes.text5,
+                    };
+
+                    // Select the <ul> container
+                    const themeList = document.getElementById("topPanelThemeListUl");
+                    // Clear existing data
+                    themeList.innerHTML = "";
+                    // Iterate through theme data
+                    for (let i = 1; i <= 5; i++) {
+                        const thumbnail = themeData[`theme_thumbnail${i}`];
+                        const text = themeData[`text${i}`];
+
+                        // Only add <li> if both thumbnail and text are present
+                        if (thumbnail) {
+                            const li = document.createElement("li");
+                            li.className = "top-panel-content-tiles-list-item";
+
+                            // Add the inner HTML structure
+                            li.innerHTML = `
+                                    <div class="tile-list-thumbnail-image-holder">
+                                      <img src="${thumbnail}" alt="Theme Thumbnail ${i}">
+                                    </div>
+                                    <div class="tile-list-text">
+                                      <p class="-caption">${text || `Theme ${i}`}</p>
+                                    </div>
+                                  `;
+
+                            // Append the <li> to the <ul>
+                            themeList.appendChild(li);
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching themes:', error);
+                },
+            });
+        }
+        else if(p_type=="MAINLISTING_SHOW"){
+            $('#selectd-data').show();
+            $('#slected-panel').hide();
+            $('.withoutThemePanelWrapper').show();
+            $('#selected_panel_theme').hide();
+        }
+    } else {
+        if(p_type=="MAINLISTING_HIDE"){
+            $('#selectd-data').hide();
+            $('.withoutThemePanelWrapper').show();
+            $('#slected-panel').show();
+            $('#selected_panel_theme').hide();
+        }
+        else if(p_type=="MAINLISTING_SHOW"){
+            $('#selectd-data').show();
+            $('.withoutThemePanelWrapper').hide();
+            $('#slected-panel').hide();
+            $('#selected_panel_theme').hide();
+        }
     }
-    else if(p_type=="MAINLISTING_SHOW"){
-        $('#selectd-data').show();
-        $('#slected-panel').hide();
-    }
+
 }
 
 function clickedTiles(p_tile,p_surfaceName){
