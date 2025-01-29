@@ -446,7 +446,20 @@ class AddToPdfRoomsController extends Controller
         });
 
         // Generate the second PDF (dynamic content) using mPDF (in landscape mode)
-        $mpdf = new Mpdf(['mode' => 'utf-8', 'format' => 'A4-L']); // A4-L for landscape mode
+        $mpdf = new \Mpdf\Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4-L',
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'margin_top' => 20,
+            'margin_bottom' =>20
+        ]);
+        $mpdf->SetHeader('');
+        $mpdf->SetFooter('');
+
+
+// Disable automatic page breaks
+        // $mpdf->SetAutoPageBreak(false, 0); 
         $html = view('pdf.template', compact('allProduct', 'basic_info', 'userShowroomInfo','randomKey','groupedTiles')); // Pass data to the Blade view
         $mpdf->WriteHTML($html);
         $mpdf->SetDisplayMode('real', 'default');
