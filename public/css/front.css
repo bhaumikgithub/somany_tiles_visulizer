@@ -589,6 +589,7 @@ body{
     padding: 10px 5px;
     color: #555;
     z-index: 5;
+    width: 450px;
 }
 .top-panel-box{
     margin:0px;
@@ -713,9 +714,7 @@ body{
     padding:15px 0px;
     margin: 5px;
 }
-.top-panel-product{
-    width: 450px;
-}
+
 .top-panel-button{
     font-weight: 400;
     line-height: 1.5;
@@ -1409,7 +1408,9 @@ input[type=checkbox]{
 /* select data pannel css end */
 @media (max-width:767px) {
     .top-panel-product{
-        width: 400px;
+        /*width: 100%;*/
+        overflow-y: auto;
+        border-radius: 0px;
     }
     .range-slider{
         margin-top: 10px;
@@ -1429,7 +1430,7 @@ input[type=checkbox]{
         height: 37px;
         width: 37px;
         display: block;
-        margin-left: -42px;
+        /*margin-left: 0px;*/
 
     }
     #topPanelmainpanel{
@@ -1498,21 +1499,10 @@ input[type=checkbox]{
     }
 
 }
-@media (max-width:520px) {
 
-    .top-panel-product{
-        width: 280px;
-    }
-
-}
-
+/*
 @media (max-width:500px) {
-    .room-canvas{
 
-        width:100%;
-        height:100vh;
-        overflow-x: hidden;
-    }
 
     .cmn-room-btn.back-btn, .cmn-room-btn.cn-btn {
 
@@ -1533,4 +1523,4 @@ input[type=checkbox]{
     }
 
 
-}
+}*/

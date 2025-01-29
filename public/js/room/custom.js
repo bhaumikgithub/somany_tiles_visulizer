@@ -1,14 +1,26 @@
 var isInitialLoad = true; // Flag to track the initial load
 var interval;
+var topPanelCustomVisible = false;
 document.getElementById("roomLoaderBackground").style.visibility = "hidden";
 
 function AdjustCanvasWidthHeight() {
+
     var windowWidth = $(window).width();
     var windowHeight = $(window).height();
-    var newWidth = windowHeight * 1.78;
+    var newWidth = windowWidth;
+    var newHeight = windowHeight;
+
+    if(windowWidth > windowHeight){//landscape
+        newWidth = windowHeight * 1.78;
+    }
+    else{//Portrait
+        newHeight = windowWidth / 1.78;
+    }
+
     var newLeft = Math.round((windowWidth - newWidth) / 2);
     var newRight = Math.round((windowWidth - newLeft - newWidth));  // Calculate new right position
-    $("#roomCanvas").height(windowHeight);
+
+    $("#roomCanvas").height(newHeight);
     $("#roomCanvas").width(newWidth);
 
     $("#container").css({ left: newLeft });
@@ -18,7 +30,8 @@ function AdjustCanvasWidthHeight() {
     $(".share-btn-img").css({ right: newRight });
     $(".share-div").css({ right: newRight });
 
-
+    //$("#topPanel").css('top',newHeight + 'px');
+    $('.top-panel').css('height', newHeight - 20 + 'px'); // Set height dynamically
 
     if (isInitialLoad) {
         if (windowWidth > 1300) {
@@ -43,10 +56,7 @@ function allLoadCompleted(){
 
 }
 
-function setTopPanelHeight() {
-    const viewportHeight = $(window).height(); // Get viewport height using jQuery
-    $('.top-panel').css('height', viewportHeight - 20 + 'px'); // Set height dynamically
-}
+
 $(window).on('load', function() {
 
     interval = setInterval(function(){
@@ -55,7 +65,6 @@ $(window).on('load', function() {
         else{
             clearInterval(interval);
             AdjustCanvasWidthHeight();
-            setTopPanelHeight();
 
             setTimeout(function(){
                 allLoadCompleted()},19);
@@ -66,11 +75,22 @@ $(window).on('load', function() {
 });
 
 $(window).on('resize', function() {
-
     AdjustCanvasWidthHeight();
-
 });
 
+//This function calling from 2d.min.js
+function openTopPanel(){
+    topPanelCustomVisible = true;
+    window.$('#topPanel').animate({ 'right': 0 }, 'fast');
+    window.$('#topPanelHideIcon').removeClass('glyphicon glyphicon-menu-left').addClass('glyphicon glyphicon-menu-right');
+}
+function closeTopPanel(){
+    topPanelCustomVisible = false;
+    var width = window.$('#topPanel').width();
+    window.$('#topPanel').animate({ 'right': -(width + 10) }, 'fast');
+    window.$('#topPanelHideIcon').removeClass('glyphicon glyphicon-menu-right').addClass('glyphicon glyphicon-menu-left');
+}
+//END
 
 // $("#topPanelHideBtn").on('click', function () {
 //   var topPanel = $("#topPanel");
