@@ -107,12 +107,17 @@
                         <td style="border: 1px solid #000; border-radius: 4px; padding: 10px; vertical-align: top; width: 61%;margin-left:10px;">
                            <p style="font-size: 16px;font-weight:bold">Showroom Details</p>
                            <div style="visibility: hidden;">space  </div>
+                         
                            @foreach($userShowroomInfo['showrooms'] as $showroom)
-                           <p style="margin: 5px 0; font-size: 14px;">
-                              {{ $showroom['name'] }} , {{ $showroom['address'] }}.
-                           </p>
-                           <span style="visibility: hidden;font-size:4px;">space </span>
+                           <table>
+                              <tr>
+                                 <td style="width:3%;vertical-align:center;"><span style="font-size:30px;font-weight:bold;">.</span></td>
+                                 <td style="width:96%;vertical-align:center;">{{ $showroom['name'] }} , {{ $showroom['address'] }}.<span style="visibility: hidden;font-size:4px;">space </span></td>
+                              </tr>
+                          </table>
+                         
                            @endforeach
+                         
                         </td>
                      </tr>
                   </table>
@@ -135,13 +140,14 @@
              
              </div>
              <p>Selection {{$index+1}} of {{$allProduct->count()}}</p>
-             <table style="font-family: 'Lato', sans-serif;vertical-align-top">
-    <tr>
-        <td style="width: 49%;vertical-align:top;">
-            <?php $showImage = $item->show_main_image; ?>
+             <?php $showImage = $item->show_main_image; ?>
             @if($showImage === "yes")
-                <img src="{{ public_path('storage/'.$item->current_room_design) }}" alt="Room" style="display: block; width: 640px; height: 320px; margin-bottom: 20px;">
-            @endif
+              
+           
+             <table style="font-family: 'Lato', sans-serif;vertical-align-top">
+        <tr>
+        <td style="width: 49%;vertical-align:top;">
+        <img src="{{ public_path('storage/'.$item->current_room_design) }}" alt="Room" style="display: block; width: 640px; height: 320px; margin-bottom: 20px;">
         </td>
         <td style="width: 2%"></td>
         <td style="width: 49%; vertical-align: top;">
@@ -222,6 +228,89 @@
         </td>
     </tr>
 </table>
+
+@else
+
+<table style="font-family: 'Lato', sans-serif; vertical-align: top; width: 100%;  border-collapse: collapse; padding: 0; margin: 0;">
+    <tr>
+        @php
+            $tiles = collect(json_decode($item->tiles_json));
+            $tilesData = $tiles->isNotEmpty() && isset($tiles->first()->surface_title)
+                ? $tiles->sortBy('surface_title')->values()
+                : $tiles;
+            $columnCount = 0;
+        @endphp
+
+        @foreach($tilesData as $tile_detail)
+            @if($tile_detail->surface !== "paint")
+                @if($columnCount % 2 == 0 && $columnCount != 0)
+                    </tr><tr> <!-- Start new row every 2 columns -->
+                @endif
+
+                <td style="width: 50%; vertical-align: top; padding-right: 5px; box-sizing: border-box; ">
+                    <table style="width: 100%; border: 1px solid #d4c19b; border-collapse: collapse; margin-bottom: 20px;">
+                        <!-- Title Row -->
+                        <tr style="background: #ffffff;height: 100%;">
+                            <td colspan="2" style="padding: 10px;">
+                                <h5 style="font-size: 16px; font-weight: bold; color:#3e3e40;">
+                                    {{ ucfirst($tile_detail->surface_title ?? $tile_detail->surface) }} - {{$tile_detail->name}}
+                                </h5>
+                            </td>
+                        </tr>
+
+                        <!-- Tile Image and Details Row -->
+                        <tr style="background: #ffffff; width: 100%;height: 100%;">
+                            <td style="width: 60%; text-align: left; padding: 10px; vertical-align: top;">
+                                <img src="{{ public_path($tile_detail->icon) }}" alt="Tile Icon" style="width: 100%; max-width:180px; height: auto; border: 1px solid #cccccc;">
+                            </td>
+                            <td style="width: 40%; padding: 10px; vertical-align: top;">
+                                <img src="./img/QR.png" alt="QR Code" style="margin-bottom: 10px;">
+                                <p style="margin: 5px 0; color:#3e3e40; font-size:14px;">{{$tile_detail->width}} × {{$tile_detail->height}} MM</p>
+                                <p style="margin: 5px 0; color:#3e3e40; font-size:14px;">{{ ucfirst($tile_detail->finish) }}</p>
+
+                                <?php $sku = Helper::getSAPCode($tile_detail->id); ?>
+                                @if($sku !== null)
+                                    <p style="margin: 5px 0; color:#3e3e40;font-size:14px;">SAP Code: {{$sku}}</p>
+                                @endif
+
+                                @if(isset($tile_detail->total_area_sq_meter))
+                                    <p style="margin: 5px 0; color:#3e3e40;font-size:14px;">Total Area: {{$tile_detail->total_area_sq_meter}} ft²</p>
+                                @endif
+
+                                @if(isset($tile_detail->wastage))
+                                    <p style="margin: 5px 0; color:#3e3e40;font-size:14px;">Wastage: {{$tile_detail->wastage}} %</p>
+                                @endif
+
+                                <?php $tiles_par_box = Helper::getTilesParCarton($tile_detail->id); ?>
+                                @if($tiles_par_box !== NULL)
+                                    <p style="margin: 5px 0; color:#3e3e40;font-size:14px;">Number of Boxes Required: {{$tile_detail->box_needed}}</p>
+                                    <p style="margin: 5px 0; color:#3e3e40;font-size:14px;">Tiles in 1 Box: {{$tiles_par_box}}</p>
+                                @endif
+
+                                <p style="margin: 5px 0; font-size: 14px; color: red;">
+                                    <?php $getPrice = Helper::getTilePrice($tile_detail->id,$item->id); ?>
+                                    @if($getPrice === NULL)
+                                        Price not given
+                                    @else
+                                        Rs. <span class="price-update" style="font-size: 14px;color:#3e3e40;">{{$getPrice}}</span>/sq.ft
+                                    @endif
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+
+                @php $columnCount++; @endphp
+            @endif
+        @endforeach
+
+        <!-- Check if there's an odd number of tiles and add an empty td to balance the row -->
+        @if($columnCount % 2 != 0)
+        <td style="width: 50%; vertical-align: top; padding: 10px; box-sizing: border-box; height: 100%; display: inline-block;"></td>
+        @endif
+    </tr>
+</table>
+@endif
             
             
          </div>
@@ -314,24 +403,35 @@
          @endif
       
       
-      <div style="border:1px solid #000;padding:10px;margin-top:20px;">
+    
+        </div>
+        <div>
+            <div style="font-family: 'Lato', sans-serif; background-image: url('./img/pdf_back.png'); background-size: 100% 100%; background-repeat: no-repeat; height:100%;
+               background-position:100% 100%; padding:0px 30px 30px 30px;">
+               <div style="background-color:#badbd3;width:25%;padding:25px 5px 5px 5px;">
+             
+               <span style="background-color:#badbd3;  font-size: 20px;text-transform: uppercase;"> Disclaimer </span>
+                  <!-- <img src="./img/YOUR PRODUCT(S) SELECTION.png" alt="YOUR PRODUCT(S) SELECTION" > -->
+               </div>
+
+        <div style="border:1px solid #000;padding:10px;margin-top:20px;">
          <h3>MRP Disclaimer:</h3>
          <p>The prices listed above are the Maximum Retail Price (MRP). Visit your nearest Somany store to unlock exclusive offers and discover deals that'll make your wallet smile! </p>
       </div>
       <div style="border:1px solid #000;padding:10px;margin-top:20px;">
          <h3>Disclaimer:</h3>
-         <ul style="margin-left:0px;list-style:none;">
-            <li style="margin-left:-40px;">The visuals are for reference purposes only; actual colors, finishes, and tile dimensions may vary.</li>
-            <li>Shade variation is an inherent characteristic of tiles; therefore, physical inspection is
+         <ul style="margin-left:0px;list-style-type: square;">
+            <li style="margin-left:-25px;">The visuals are for reference purposes only; actual colors, finishes, and tile dimensions may vary.</li>
+            <li style="margin-left:-25px;">Shade variation is an inherent characteristic of tiles; therefore, physical inspection is
                recommended for accurate selection
             </li>
-            <li>Tiles with multiple faces feature varied patterns, resulting in natural design variations</li>
-            <li>Prices quoted are subject to change without prior notice. The final price applicable at the time of
+            <li style="margin-left:-25px;">Tiles with multiple faces feature varied patterns, resulting in natural design variations</li>
+            <li style="margin-left:-25px;">Prices quoted are subject to change without prior notice. The final price applicable at the time of
                delivery will prevail.
             </li>
          </ul>
       </div>
-        </div>
+      </div>
        
       <!-- <div style="page-break-inside: avoid;width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #000; padding: 10px;">
               
