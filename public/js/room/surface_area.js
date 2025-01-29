@@ -56,14 +56,13 @@ function showMainInfoPanel(p_type,surface_name){
             $('#selectd-data').hide();
             $('#slected-panel').show();
             $('.withoutThemePanelWrapper').hide();
-            $('#selected_panel_theme').show();
-
             //get theme data
             let current_room_id = $('#current_room_id').val();
             // Fetch data from room2d endpoint
             $.ajax({
                 url: '/get/room2d/'+$('#current_room_id').val(), // Replace with the actual endpoint for room2d
                 success: function (themes) {
+                    $('#selected_panel_theme').show();
                     // JSON data (you can replace this with data fetched from an AJAX call)
                     const themeData = {
                         theme_thumbnail1: themes.theme_thumbnail1,
@@ -80,7 +79,8 @@ function showMainInfoPanel(p_type,surface_name){
 
                     // Select the <ul> container
                     const themeList = document.getElementById("topPanelThemeListUl");
-
+                    // Clear existing data
+                    themeList.innerHTML = "";
                     // Iterate through theme data
                     for (let i = 1; i <= 5; i++) {
                         const thumbnail = themeData[`theme_thumbnail${i}`];
@@ -120,11 +120,15 @@ function showMainInfoPanel(p_type,surface_name){
     } else {
         if(p_type=="MAINLISTING_HIDE"){
             $('#selectd-data').hide();
+            $('.withoutThemePanelWrapper').show();
             $('#slected-panel').show();
+            $('#selected_panel_theme').hide();
         }
         else if(p_type=="MAINLISTING_SHOW"){
             $('#selectd-data').show();
+            $('.withoutThemePanelWrapper').hide();
             $('#slected-panel').hide();
+            $('#selected_panel_theme').hide();
         }
     }
 
