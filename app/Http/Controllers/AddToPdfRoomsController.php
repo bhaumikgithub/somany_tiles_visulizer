@@ -247,13 +247,19 @@ class AddToPdfRoomsController extends Controller
             ]);
         });
 
-        $isReadOnly = request()->query('readonly') === 'true';
-        // dd(base64_decode(request()->query('name')));
         $upform_data = null;
+        $isReadOnly = false;
 
-        if($isReadOnly){
-            $upform_data = UserPdfData::where([['unique_id',$randomKey],['name',base64_decode(request()->query('name'))]])->get()->first();
+        $savedUserpdfData = UserPdfData::where('unique_id',$randomKey)->get();
+
+        if($savedUserpdfData->isNotEmpty()){
+            $isReadOnly = true;
+            $upform_data = $savedUserpdfData->first();
         }
+
+        // if($isReadOnly){
+        //     $upform_data = UserPdfData::where([['unique_id',$randomKey],['name',base64_decode(request()->query('name'))]])->get()->first();
+        // }
 
         $cc_date = $getCartId->created_at->format('d-m-y');
         return view('pdf.cart_summary',compact('allProduct','randomKey','groupedTiles','upform_data','isReadOnly','cc_date'));
@@ -371,22 +377,27 @@ class AddToPdfRoomsController extends Controller
                 'mrp_per_sq_ft' => $combinedPrice
             ]);
         });
-        $randomKey = $request->randomKey;        
-        
+        $randomKey = $request->randomKey;    
+
         $userAccount = auth()->check() ? auth()->user()->name : 'Guest User';
         // dd($request->state);
-        $savedPdf = UserPdfData::create([
-            'name' => $request->firstName . ' ' . $request->lastName,
-            'first_name' => $request->firstName,
-            'last_name' => $request->lastName,
-            'mobile' => $request->mobileNumber,
-            'pincode' => $request->pincode ? $request->pincode : '-',
-            'user_account' => $userAccount,
-            'unique_id' => $request->random_key,
-            'state' => $request->state,
-            'city' => $request->city
-        ]);
+        $userPdfData = UserPdfData::where('unique_id',$request->random_key)->get();
 
+        if($userPdfData->isEmpty()){
+
+            $savedPdf = UserPdfData::create([
+                'name' => $request->firstName . ' ' . $request->lastName,
+                'first_name' => $request->firstName,
+                'last_name' => $request->lastName,
+                'mobile' => $request->mobileNumber,
+                'pincode' => $request->pincode ? $request->pincode : '-',
+                'user_account' => $userAccount,
+                'unique_id' => $request->random_key,
+                'state' => $request->state,
+                'city' => $request->city
+            ]);
+
+        }
 
         $html = view('pdf.template',compact('allProduct','basic_info','groupedTiles','randomKey')); // Get HTML content for the PDF
         $pdf = PDF::loadHTML($html);
