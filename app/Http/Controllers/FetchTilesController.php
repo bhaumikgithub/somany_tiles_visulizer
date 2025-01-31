@@ -30,7 +30,7 @@ class FetchTilesController extends Controller
         $endDate = $request->end_date;
 
         // Get tiles data
-        $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete?limit=4";
+        $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete?";
         $queryParams = http_build_query([
             's' => $startDate,
             'e' => $endDate,
