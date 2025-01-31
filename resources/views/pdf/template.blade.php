@@ -191,11 +191,12 @@
                             $totalBoxRequired = 0;
                             $totalMrpPerSqFt = 0;
                             $totalMrpPrice = 0;
+                            $i = 1;
                         @endphp
                         @foreach($groupedTiles as $index => $tile)
                             @if( $tile['apply_on'] !== "paint")
                                 <tr>
-                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $loop->iteration }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $i }}</td>
                                     <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['name'] }}</td>
                                     <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['size'] }}</td>
                                     <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ ucfirst($tile['finish']) }}</td>
@@ -215,6 +216,7 @@
                                 $totalBoxRequired += (int)$tile['box_required'];
                                 $totalMrpPerSqFt += (int)$tile['mrp_per_sq_ft'];
                                 $totalMrpPrice += (int)$tile['mrp_price'];
+                                $i++;
                             @endphp
                         @endforeach
                         <tr class="table-active footer-table-text">
