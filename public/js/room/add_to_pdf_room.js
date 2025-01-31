@@ -342,8 +342,6 @@ $('.cartpanelclose').on('click', function(e) {
 
 $('.tile_calculation').click(function() {
     $('#tilecal').modal('show');
-    clearForm();
-
     // Get the tile ID from the button's data attribute
     let tile = $(this).data('tile-id');
     let cart_item_id = $(this).data('calculate-cart-item-id');
@@ -353,6 +351,8 @@ $('.tile_calculation').click(function() {
     let wastage = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db_'+cart_item_id+' input#tiles_wastage').val();
     let width_in_feet = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db_'+cart_item_id+' input#width_in_feet').val();
     let height_in_feet = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db_'+cart_item_id+' input#height_in_feet').val();
+
+    console.log(width_in_feet)
 
     $('#tiles_size').val(`${width} x ${height} mm`);
 
