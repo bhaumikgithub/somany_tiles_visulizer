@@ -164,7 +164,7 @@
             <!-- Table structure -->
             @if(isset($groupedTiles))
                 <div class="row summary-page-table-row">
-                    <table class="table summary-page-table">
+                    <table class="table summary-page-table table-responsive">
                         <thead>
                         <tr class="table-active">
                             <th scope="col" class="text-center">Sr. No</th>
@@ -188,11 +188,12 @@
                             $totalBoxRequired = 0;
                             $totalMrpPerSqFt = 0;
                             $totalMrpPrice = 0;
+                            $i = 0;
                             @endphp
                             @foreach($groupedTiles as $index => $tile)
                                 @if( $tile['apply_on'] !== "paint")
                                     <tr>
-                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td class="text-center">{{ $i }}</td>
                                         <td>{{ $tile['name'] }}</td>
                                         <td>{{ $tile['size'] }}</td>
                                         <td>{{ ucfirst($tile['finish']) }}</td>
@@ -212,6 +213,7 @@
                                     $totalBoxRequired += (int)$tile['box_required'];
                                     $totalMrpPerSqFt += (int)$tile['mrp_per_sq_ft'];
                                     $totalMrpPrice += (int)$tile['mrp_price'];
+                                    $i++;
                                 @endphp
                             @endforeach
                             <tr class="table-active footer-table-text">
