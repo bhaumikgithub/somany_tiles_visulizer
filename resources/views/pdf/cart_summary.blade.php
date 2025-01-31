@@ -128,7 +128,7 @@
             </div>
             <div class="col-md-3 col-sm-12 col-xs-12">
                 <div class="right-panel form-container">
-                    <form action="{{ route('generate-pdf') }}" name="fill_basic_form" method="post">
+                    <form action="{{ route('generate-pdf') }}" name="fill_basic_form" method="post" onsubmit="reloadPage()">
                         @csrf
                         <div class="form-group">
                             <label for="firstName">First Name</label>
@@ -156,7 +156,7 @@
                             {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <input type="hidden" value="{{$randomKey}}" name="random_key">
-                        <button class="btn btn-danger download-btn" id="download_pdf" disabled {{ $isReadOnly ? 'readonly' : '' }}>Download PDF</button>
+                        <button class="btn btn-danger download-btn" id="download_pdf" disabled>Download PDF</button>
                     </form>
                 </div>
             </div>
@@ -393,6 +393,24 @@
             </div>
         </div>
     </div tabindex="-1">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof validateForm === 'function' && validateForm()) {
+                document.getElementById('download_pdf').disabled = false;
+                document.getElementById('download_pdf').classList.add('enabled');
+            }
+        });
+    </script>
+
+    <script>
+        function reloadPage() {
+            // After form submission, reload the page
+            setTimeout(function() {
+                location.reload();
+            }, 1000); // 1-second delay for the form submission to complete before reloading
+        }
+    </script>
 
 @endsection
 
