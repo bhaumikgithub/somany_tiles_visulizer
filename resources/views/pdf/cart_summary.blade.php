@@ -188,7 +188,7 @@
                             $totalBoxRequired = 0;
                             $totalMrpPerSqFt = 0;
                             $totalMrpPrice = 0;
-                            $i = 0;
+                            $i = 1;
                             @endphp
                             @foreach($groupedTiles as $index => $tile)
                                 @if( $tile['apply_on'] !== "paint")
