@@ -109,7 +109,14 @@ function editRoom(id) {
 
             if (Number(room.enabled)) { window.$('#form-update-room-enabled').attr('checked', true); }
             window.$('#form-update-room-icon-img').attr('src', room.icon);
+
             window.$('#form-update-room-image-img').attr('src', room.image);
+            window.$('#form-update-room-theme-thumbnail-0-img').attr('src', room.theme_thumbnail0);
+            window.$('#form-update-room-chosen-theme-0').val(room.image);
+            window.$('#form-update-room-chosen-thumbnail-0').val(room.theme_thumbnail0);
+            window.$('#form-update-room-text-0').val(room.text0);
+
+
             window.$('#form-update-room-shadow-img').attr('src', room.shadow);
             window.$('#form-update-room-shadow-matt-img').attr('src', room.shadow_matt);
 
@@ -196,16 +203,6 @@ function showBigIconImageModal(name, image) {
       <span class="col-sm-3 help-block">Image must be less than 1 MB and resolution less than 1024x1024 pixels.</span>
     </div>
 
-    <div class="form-group required">
-      <label for="form-room-image" class="col-sm-3 control-label">Room Image</label>
-      <div class="col-sm-6">
-        <input type="file" name="image" id="form-room-image" accept="image/*" class="form-control" required>
-      </div>
-      @if (!config('app.unlimited_image_size'))
-        <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
-      @endif
-    </div>
-
     <div class="form-group">
       <label for="form-room-shadow" class="col-sm-3 control-label">Room Shadow Glossy</label>
       <div class="col-sm-6">
@@ -283,19 +280,6 @@ function showBigIconImageModal(name, image) {
         <input type="file" name="icon" id="form-update-room-icon" accept="image/*" class="form-control">
       </div>
       <span class="col-sm-3 help-block">Image must be less than 1 MB and resolution less than 1024x1024 pixels.</span>
-    </div>
-
-    <div class="form-group required">
-      <label for="form-update-room-image" class="col-sm-3 control-label">Room Image</label>
-      <div class="col-sm-2">
-        <img id="form-update-room-image-img" src="" alt="" class="img-thumbnail" style="max-width: 128px; max-height: 128px;cursor: pointer;" onclick="showBigIconImageModal(window.$('#form-update-room-name').val(), this.src);">
-      </div>
-      <div class="col-sm-4">
-        <input type="file" name="image" id="form-update-room-image" accept="image/*" class="form-control">
-      </div>
-      @if (!config('app.unlimited_image_size'))
-        <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
-      @endif
     </div>
 
     <div class="form-group required">
