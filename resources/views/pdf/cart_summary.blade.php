@@ -74,7 +74,7 @@
                                             <input type="hidden" value="{{$tile_detail->height}}" id="tiles_height">
 
                                             @if( isset($tile_detail->total_area_sq_meter) && $tile_detail->total_area_sq_meter !== null )
-                                                <div class="tiles_calculation_wrapper tiles_calculation_wrapper_from_db_{{$item->id}}">
+                                                <div class="tiles_calculation_wrapper tiles_calculation_wrapper_from_db">
                                                     <input type="hidden" value="{{$tile_detail->width_in_feet}}" id="width_in_feet">
                                                     <input type="hidden" value="{{$tile_detail->height_in_feet}}" id="height_in_feet">
                                                     <input type="hidden" value="{{$tile_detail->wastage}}" id="tiles_wastage">
