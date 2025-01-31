@@ -21,7 +21,7 @@
         <div class="row mt-20">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <h3 class="product-title font-bold">Your Product Selection</h3>
-                <p>Date: <span>{{\Carbon\Carbon::now()->format('d-m-Y')}}</span></p>
+                <p>Date: <span>{{ $cc_date }}</span></p>
 {{--                <p>Name: <span class="font-bold">customer name</span></p>--}}
 {{--                <p>Number: <span class="font-bold">customer number</span></p>--}}
                 <p>Here are the products you’ve selected from our collection. Visit more on
@@ -128,27 +128,32 @@
             </div>
             <div class="col-md-3 col-sm-12 col-xs-12">
                 <div class="right-panel form-container">
-                    <form action="{{ route('generate-pdf') }}" name="fill_basic_form" method="post">
+                    <form action="{{ route('generate-pdf') }}" name="fill_basic_form" method="post" onsubmit="reloadPage()">
                         @csrf
                         <div class="form-group">
                             <label for="firstName">First Name</label>
-                            <input type="text" class="form-control" id="firstName" name="firstName">
+                            <input type="text" class="form-control" id="firstName" name="firstName" value="{{ old('firstName', $upform_data->first_name ?? '') }}"
+                            {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <div class="form-group">
                             <label for="lastName">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" name="lastName">
+                            <input type="text" class="form-control" id="lastName" name="lastName" value="{{ old('lastName', $upform_data->last_name ?? '') }}" 
+                            {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <div class="form-group">
                             <label for="mobileNumber">Mobile Number</label>
-                            <input type="text" class="form-control" id="mobileNumber" name="mobileNumber">
+                            <input type="text" class="form-control" id="mobileNumber" name="mobileNumber" value="{{ old('mobileNumber', $upform_data->mobile ?? '') }}"
+                            {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <div class="form-group">
                             <label for="state">State</label>
-                            <input type="text" class="form-control" id="state" name="state">
+                            <input type="text" class="form-control" id="state" name="state" value="{{ old('state', $upform_data->state ?? '') }}"
+                            {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <div class="form-group">
                             <label for="city">City</label>
-                            <input type="text" class="form-control" id="city" name="city">
+                            <input type="text" class="form-control" id="city" name="city" value="{{ old('city', $upform_data->city ?? '') }}"
+                            {{ $isReadOnly ? 'readonly' : '' }}>
                         </div>
                         <input type="hidden" value="{{$randomKey}}" name="random_key">
                         <button class="btn btn-danger download-btn" id="download_pdf" disabled>Download PDF</button>
@@ -388,6 +393,24 @@
             </div>
         </div>
     </div tabindex="-1">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof validateForm === 'function' && validateForm()) {
+                document.getElementById('download_pdf').disabled = false;
+                document.getElementById('download_pdf').classList.add('enabled');
+            }
+        });
+    </script>
+
+    <script>
+        function reloadPage() {
+            // After form submission, reload the page
+            setTimeout(function() {
+                location.reload();
+            }, 1000); // 1-second delay for the form submission to complete before reloading
+        }
+    </script>
 
 @endsection
 
