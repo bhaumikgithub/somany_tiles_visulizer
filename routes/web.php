@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PincodeController;
 use App\Http\Controllers\ZipcodeController;
+use App\Http\Controllers\UserPdfController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\ShowroomController;
@@ -230,7 +231,6 @@ Route::group(['middleware' => 'role:administrator'], function () {
 
 
     Route::post('/maximum_images/update', 'App\Http\Controllers\MaxImageController@update');
-
     Route::post('/fetch-data', 'App\Http\Controllers\FetchTilesController@fetchData')->name('fetch.data');
 
 
@@ -238,7 +238,8 @@ Route::group(['middleware' => 'role:administrator'], function () {
     Route::post('/showrooms/enable', [ShowroomController::class, 'showroomsEnable']);
     Route::post('/showrooms/disable', [ShowroomController::class, 'showroomsdisable']);
     Route::post('/showrooms/delete', [ShowroomController::class, 'showroomsDelete']);
-
+    Route::get('/user_pdf_list', [UserPdfController::class , 'viewUserPdfList'])->name(name: 'user_pdf-summary'); //yash changes
+    Route::get('/filter_pdf_list', [UserPdfController::class , 'filteredPdfList'])->name(name: 'filter_pdf_list'); //yash changes
 });
 
 
