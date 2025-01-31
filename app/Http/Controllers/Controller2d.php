@@ -115,6 +115,9 @@ class Controller2d extends Controller
         }
         if ($request->hasFile('image')) {
             $room->image = $request->file('image')->store('rooms2d', 'public');
+            $room->theme0 = $request->file('image')->store('rooms2d', 'public');
+            $room->theme_thumbnail0 = $request->file('theme_thumbnail0')->store('rooms2d', 'public');
+            $room->text0 = $request->text0;
         }
         if ($request->hasFile('shadow')) {
             $room->shadow = $request->file('shadow')->store('rooms2d', 'public');
@@ -207,6 +210,9 @@ class Controller2d extends Controller
         if ($request->hasFile('image')) {
             Storage::disk('public')->delete($room->getOriginal('image'));
             $room->image = $request->file('image')->store('rooms2d', 'public');
+            $room->theme0 = $request->file('image')->store('rooms2d', 'public');
+        } else {
+            $room->theme0 = str_replace('/storage/', '', $request->theme0);
         }
         if ($request->hasFile('shadow')) {
             Storage::disk('public')->delete($room->getOriginal('shadow'));
@@ -216,6 +222,11 @@ class Controller2d extends Controller
             Storage::disk('public')->delete($room->getOriginal('shadow_matt'));
             $room->shadow_matt = $request->file('shadow_matt')->store('rooms2d', 'public');
         }
+
+        if ($request->hasFile('theme_thumbnail0')) {
+            $room->theme_thumbnail0 = $request->file('theme_thumbnail0')->store('rooms2d', 'public');
+        }
+        $room->text0 = $request->text0;
 
         // Array of theme, thumbnail, and text field combinations
         $fields = [
