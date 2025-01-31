@@ -163,8 +163,8 @@
             </div>
             <!-- Table structure -->
             @if(isset($groupedTiles))
-                <div class="row summary-page-table-row">
-                    <table class="table summary-page-table table-responsive">
+                <div class="row summary-page-table-row table-responsive">
+                    <table class="table summary-page-table">
                         <thead>
                         <tr class="table-active">
                             <th scope="col" class="text-center">Sr. No</th>
