@@ -1,8 +1,14 @@
-var alphabets = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"];
+var alphabets = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"];
 var allSurfacesData = [];
 var surfaceTypesDataTemp = [];
 var clickedHTML = "";
 var currentListId = "";
+var themeData;
+var wallAwallBwallCListing = '#selectd-data';
+var wallFloorContent = '.withoutThemePanelWrapper';
+var wallFloorThemeContentParent = '#slected-panel';
+var themeContent = '#selected_panel_theme';
+
 
 window.onload = function getRoomSurface() {
     $.ajax({
@@ -12,12 +18,17 @@ window.onload = function getRoomSurface() {
             _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
             room_id: $('#current_room_id').val(),
         },
-        success: function(response) {
+        success: function (response) {
             $('.show_selected_surface_data div#selectd-data').html(response.body);
+            loadThemeData();
+            $('#selected_panel_theme').removeClass("withoutThemePanelWrapper");
+            //showMainInfoPanel("MAINLISTING_SHOW", "theme");
         },
-        error: function(error) {
+        error: function (error) {
             console.error('Error fetching room details', error);
         }
+
+
     });
 
 
@@ -33,8 +44,8 @@ function openTileSelectionPanel(surface_name) {
     surface_name = convertFirstLetterCapital(newName[0] + " " + newName[1]);
 
     // Show the info panel
-    showMainInfoPanel("MAINLISTING_HIDE",oldSurfaceName);
-    if( oldSurfaceName != "theme") {
+    showMainInfoPanel("MAINLISTING_HIDE", oldSurfaceName);
+    if (oldSurfaceName != "theme") {
         $('#slected-panel .display_surface_name h5#optionText').text(surface_name);
     } else {
         $('#slected-panel .display_surface_name h5#optionText').text("Themes");
@@ -42,155 +53,204 @@ function openTileSelectionPanel(surface_name) {
 
     var clickedSurface = findRoomSurfaceUsingName(surface_name);
 
-    if(clickedSurface!=false){
+    if (clickedSurface != false) {
         //This function directly go to 2d.min.js and set the current surface
         currentRoom._onSurfaceClick(clickedSurface);
     }
 
 
 }
-function showMainInfoPanel(p_type,surface_name){
-    console.log("showMainInfoPanel = " + p_type);
-    if( surface_name === "theme"){
-        if(p_type=="MAINLISTING_HIDE"){
-            $('#selectd-data').hide();
-            $('#slected-panel').show();
-            $('.withoutThemePanelWrapper').hide();
-            //get theme data
-            let current_room_id = $('#current_room_id').val();
-            // Fetch data from room2d endpoint
-            $.ajax({
-                url: '/get/room2d/'+$('#current_room_id').val(), // Replace with the actual endpoint for room2d
-                success: function (themes) {
-                    $('#selected_panel_theme').show();
-                    // JSON data (you can replace this with data fetched from an AJAX call)
-                    const themeData = {
-                        theme_thumbnail1: themes.theme_thumbnail1,
-                        text1: themes.text1,
-                        theme_thumbnail2: themes.theme_thumbnail2,
-                        text2: themes.text2,
-                        theme_thumbnail3: themes.theme_thumbnail3,
-                        text3: themes.text3,
-                        theme_thumbnail4: themes.theme_thumbnail4,
-                        text4: themes.text4,
-                        theme_thumbnail5: themes.theme_thumbnail5,
-                        text5: themes.text5,
-                    };
+function loadThemeData() {
 
-                    // Select the <ul> container
-                    const themeList = document.getElementById("topPanelThemeListUl");
-                    // Clear existing data
-                    themeList.innerHTML = "";
-                    // Iterate through theme data
-                    for (let i = 1; i <= 5; i++) {
-                        const thumbnail = themeData[`theme_thumbnail${i}`];
-                        const text = themeData[`text${i}`];
+    $.ajax({
+        url: '/get/room2d/' + $('#current_room_id').val(), // Replace with the actual endpoint for room2d
+        success: function (themes) {
+            $('#selected_panel_theme').show();
+            console.log("THEME DATA");
+            console.log(themes);
+            // JSON data (you can replace this with data fetched from an AJAX call)
+            themeData = [{
+                theme_id: 1,
+                theme_thumbnail: themes.theme_thumbnail1,
+                text: themes.text1,
+                theme_bigimage: themes.theme1
+            }, {
+                theme_id: 2,
+                theme_thumbnail: themes.theme_thumbnail2,
+                text: themes.text2,
+                theme_bigimage: themes.theme2,
+            }, {
+                theme_id: 3,
+                theme_thumbnail: themes.theme_thumbnail3,
+                text: themes.text3,
+                theme_bigimage: themes.theme3,
+            }, {
+                theme_id: 4,
+                theme_thumbnail: themes.theme_thumbnail4,
+                text: themes.text4,
+                theme_bigimage: themes.theme4,
+            }, {
+                theme_id: 5,
+                theme_thumbnail: themes.theme_thumbnail5,
+                text: themes.text5,
+                theme_bigimage: themes.theme5
+            }];
 
-                        // Only add <li> if both thumbnail and text are present
-                        if (thumbnail) {
-                            const li = document.createElement("li");
-                            li.className = "top-panel-content-tiles-list-item";
+            // Select the <ul> container
+            const themeList = document.getElementById("topPanelThemeListUl");
+            // Clear existing data
+            themeList.innerHTML = "";
+            // Iterate through theme data
+            var themeExist = false;
+            for (let i = 0; i < themeData.length; i++) {
+                var themeObj = themeData[i];
 
-                            // Add the inner HTML structure
-                            li.innerHTML = `
-                                    <div class="tile-list-thumbnail-image-holder">
-                                      <img src="${thumbnail}" alt="Theme Thumbnail ${i}">
-                                    </div>
-                                    <div class="tile-list-text">
-                                      <p class="-caption">${text || `Theme ${i}`}</p>
-                                    </div>
-                                  `;
+                // Only add <li> if both thumbnail and text are present
+                if (themeObj["theme_thumbnail"]) {
+                    themeExist = true;
+                    const thumbnail = themeObj.theme_thumbnail;
+                    const text = themeObj.text;
+                    const li = document.createElement("li");
+                    li.id = "theme_thumb_" + i;
+                    li.className = "top-panel-content-tiles-list-item";
 
-                            // Append the <li> to the <ul>
-                            themeList.appendChild(li);
-                        }
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching themes:', error);
-                },
-            });
+                    // Add the inner HTML structure
+                    li.innerHTML = `
+                            <div  class="tile-list-thumbnail-image-holder" onclick="themeBtnPressed('`+ i + `')">
+                              <img src="${thumbnail}" alt="Theme Thumbnail ${i}">
+                            </div>
+                            <div class="tile-list-text">
+                              <p class="-caption">${text || `Theme ${i}`}</p>
+                            </div>
+                          `;
+
+                    // Append the <li> to the <ul>
+                    themeList.appendChild(li);
+                }
+            }
+            if(themeExist==false){
+                $("#list_theme").hide();
+            }
+            themeBtnPressed(0,"IMAGE_LOAD_NOT_REQUIRED");
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching themes:', error);
+        },
+    });
+}
+function showMainInfoPanel(p_type, surface_name) {
+
+    allRightPanelContentHide();
+
+    if (p_type == "MAINLISTING_HIDE") {
+        //  $('#selectd-data').hide(); //wall A, b , c hide
+        $(wallFloorThemeContentParent).show();
+        if (surface_name == "theme") {
+            $(themeContent).show();
         }
-        else if(p_type=="MAINLISTING_SHOW"){
-            $('#selectd-data').show();
-            $('#slected-panel').hide();
-            $('.withoutThemePanelWrapper').show();
-            $('#selected_panel_theme').hide();
-        }
-    } else {
-        if(p_type=="MAINLISTING_HIDE"){
-            $('#selectd-data').hide();
-            $('.withoutThemePanelWrapper').show();
-            $('#slected-panel').show();
-            $('#selected_panel_theme').hide();
-        }
-        else if(p_type=="MAINLISTING_SHOW"){
-            $('#selectd-data').show();
-            $('.withoutThemePanelWrapper').hide();
-            $('#slected-panel').hide();
-            $('#selected_panel_theme').hide();
+        else {
+            $(wallFloorContent).show();
         }
     }
+    if (p_type == "MAINLISTING_SHOW") {
+        $(wallAwallBwallCListing).show();
+    }
+}
+function themeBtnPressed(p_id,p_imageLoadByPass) {
+    if(p_imageLoadByPass=="IMAGE_LOAD_NOT_REQUIRED"){
+
+    }
+    else{
+        currentRoom._engine2d.loadAndDrawForegroundImage(themeData[p_id].theme_bigimage);
+    }
+    $(".top-panel-content-tiles-list-item").removeClass("active_theme");
+    $("#theme_thumb_" + p_id).addClass("active_theme");
+    //list_theme
+    clickedTiles(themeData[p_id], "theme");
+
 
 }
+function clickedTiles(p_tile, p_surfaceName) {
+    var textForMainPanel = "";
+    var thumbImage = "";
 
-function clickedTiles(p_tile,p_surfaceName){
-    //Wall A convert to wall_A
-    var temp = p_surfaceName.split(" ");
-    setCurrentListID(String(temp[0]).toLowerCase() + "_" + temp[1]);
+    if (p_surfaceName == "theme") {
+        setCurrentListID("theme");
+        textForMainPanel = p_tile.text;
+        thumbImage = p_tile.theme_thumbnail;
 
-    console.log("p_tile.name = " + p_tile.name);
-    console.log("p_surfaceName = " + p_surfaceName);
+    }
+    else {
+        //Wall A convert to wall_A
+        var temp = p_surfaceName.split(" ");
+        setCurrentListID(String(temp[0]).toLowerCase() + "_" + temp[1]);
+        textForMainPanel = convertFirstLetterCapital(p_tile.name) + "<br><small>" + convertFirstLetterCapital(p_tile.finish) + "</small>"
+        thumbImage = p_tile.icon;
+
+
+    }
     //Wall A
     var detailDiv = currentListId.find(".detail")[0];
     var imageDiv = currentListId.find("img")[0];
-    $(detailDiv).html( convertFirstLetterCapital(p_tile.name) + "<br><small>"+convertFirstLetterCapital(p_tile.finish)+"</small>");
-    $(imageDiv).attr("src",p_tile.icon);
+
+    $(detailDiv).html(textForMainPanel);
+    $(imageDiv).attr("src", thumbImage);
+
+
 }
 
-function setCurrentListID(p_surfaceType){
+function setCurrentListID(p_surfaceType) {
     currentListId = $("#list_" + p_surfaceType);
 }
 
 
+function allRightPanelContentHide() {
+    $(wallAwallBwallCListing).hide(); //wall A, b , c hide
+    $(wallFloorThemeContentParent).hide(); //wall A's content show
+    $(themeContent).hide();
+    $(wallFloorContent).hide(); //
+}
 //This function clicked from 2d.min.js
 //When user click on any of the wall, floor, counter, paint, it will call this function.
-function surfaceClickedByUser(p_surface_name){
-    $('#selectd-data').hide();
-    $('#slected-panel').show();
+function surfaceClickedByUser(p_surface_name) {
+    allRightPanelContentHide();
+
+    $(wallFloorThemeContentParent).show();
+    $(wallFloorContent).show();
     $('#topPanel h5').text(p_surface_name);
+
     //updateTopPanelText(p_surface_name);
 }
 
-function findRoomSurfaceUsingName(p_name){
+function findRoomSurfaceUsingName(p_name) {
     var allSurfaces = currentRoom.tiledSurfaces; // Array
     console.log("allSurfaces.length = " + allSurfaces.length);
     console.log("p_name = " + p_name);
-    for(var i = 0;i<allSurfaces.length;i++){
+    for (var i = 0; i < allSurfaces.length; i++) {
         console.log("allSurfaces[i].custom_surface_name = " + allSurfaces[i]._surfaceData.custom_surface_name);
 
-        if(allSurfaces[i]._surfaceData.custom_surface_name == p_name){
+        if (allSurfaces[i]._surfaceData.custom_surface_name == p_name) {
             return allSurfaces[i]
         }
     }
     return false;
 }
-function getCustomNameOfSurfaceData(p_surfaceType){
+function getCustomNameOfSurfaceData(p_surfaceType) {
     var cnt = 0;
-    for(var k=0;k<surfaceTypesDataTemp.length;k++){
-        if(surfaceTypesDataTemp[k] == p_surfaceType){
+    for (var k = 0; k < surfaceTypesDataTemp.length; k++) {
+        if (surfaceTypesDataTemp[k] == p_surfaceType) {
             cnt++;
         }
     }
     surfaceTypesDataTemp.push(p_surfaceType);
-    if( p_surfaceType !== "Themes")
+    if (p_surfaceType !== "Themes")
         return convertFirstLetterCapital(p_surfaceType + " " + alphabets[cnt]);
     else
-         return "Themes";
+        return "Themes";
 
 }
-function convertFirstLetterCapital(p_str){
-    p_str = p_str.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+function convertFirstLetterCapital(p_str) {
+    p_str = p_str.toLowerCase().replace(/\b[a-z]/g, function (letter) {
         return letter.toUpperCase();
     });
     return p_str;
