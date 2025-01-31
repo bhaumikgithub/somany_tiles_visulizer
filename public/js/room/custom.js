@@ -9,12 +9,16 @@ function AdjustCanvasWidthHeight() {
     var windowHeight = $(window).height();
     var newWidth = windowWidth;
     var newHeight = windowHeight;
+    var topPanelHeight = newHeight - 20;
+    var topPanelTopPosition = 10;
 
     if(windowWidth > windowHeight){//landscape
         newWidth = windowHeight * 1.78;
     }
     else{//Portrait
         newHeight = windowWidth / 1.78;
+        topPanelHeight = windowHeight - newHeight - 20;
+        topPanelTopPosition = newHeight + 20;
     }
 
     var newLeft = Math.round((windowWidth - newWidth) / 2);
@@ -31,7 +35,17 @@ function AdjustCanvasWidthHeight() {
     $(".share-div").css({ right: newRight });
 
     //$("#topPanel").css('top',newHeight + 'px');
-    $('.top-panel').css('height', newHeight - 20 + 'px'); // Set height dynamically
+
+    $('.top-panel').attr('style', 'top: '+topPanelTopPosition + 'px!important');
+    $('.top-panel').css('height', topPanelHeight + 'px'); // Set height dynamically
+    $("#productInfoPanel").hide();
+
+    var topAreaHeight = $(".top-panel-box").height() + $(".serch-box-wrap").height() + $(".top-panel-box-first").height();
+    var toppanellistboxheight = topPanelHeight - topAreaHeight;
+    console.log("topPanelHeight = " + topPanelHeight);
+    console.log("topAreaHeight = " + topAreaHeight);
+
+    $("#topPanelTilesListBox").height(topPanelHeight - topAreaHeight);
 
     if (isInitialLoad) {
         if (windowWidth > 1300) {
@@ -153,66 +167,9 @@ function updateTopPanelText() {
 }*/
 //updateTopPanelText();
 
-function selectedpaneltext() {
-    /*
-    if (lastRoomCanvasTitle === 'Change wall' && wallCount === 0) {
-      $('#slected-panel-data p').text('Please first choose data');
-    } else if (lastRoomCanvasTitle === 'Change floor' && floorCount === 0) {
-      $('#slected-panel-data p').text('Please first choose data');
-    } else if (lastRoomCanvasTitle === 'Change counter' && counterCount === 0) {
-      $('#slected-panel-data p').text('Please first choose data');
-    } else if (lastRoomCanvasTitle === 'Change ceiling' && ceilingCount === 0) {
-      $('#slected-panel-data p').text('Please first choose data');
-    } else if (lastRoomCanvasTitle === 'Change theme' && themeCount === 0) {
-      $('#slected-panel-data p').text('Please first choose data');
-    }
-      */
-}
-selectedpaneltext();
 
-// Track clicks on any li inside #topPanelTilesListUl
-/*
-$('#topPanelTilesListUl').on('click', 'li', function () {
-  if ($('#topPanelTilesListUl').hasClass('wallul') && lastRoomCanvasTitle === 'Change wall') {
-    wallCount++;
-    let wallLetter = String.fromCharCode(64 + wallCount); // Convert wallCount to letter
-    wallSelections.push('Wall ' + wallLetter); // Add to wall selections
-    console.log('Wall Click Count:', wallCount);
-    updateTopPanelText(); // Update the top panel to show WALL A, WALL B, etc.
-  } else if ($('#topPanelTilesListUl').hasClass('floorul') && lastRoomCanvasTitle === 'Change floor') {
-    floorCount++;
-    let floorLetter = String.fromCharCode(64 + floorCount); // Convert floorCount to letter
-    floorSelections.push('Floor ' + floorLetter); // Add to floor selections
-    console.log('Floor Click Count:', floorCount);
-    updateTopPanelText();
-  } else if ($('#topPanelTilesListUl').hasClass('counterul') && lastRoomCanvasTitle === 'Change counter') {
-    counterCount++;
-    let counterLetter = String.fromCharCode(64 + counterCount); // Convert counterCount to letter
-    counterSelections.push('Counter ' + counterLetter); // Add to counter selections
-    console.log('Counter Click Count:', counterCount);
-    updateTopPanelText();
-  } else if ($('#topPanelTilesListUl').hasClass('ceilingul') && lastRoomCanvasTitle === 'Change ceiling') {
-    ceilingCount++;
-    let ceilingLetter = String.fromCharCode(64 + ceilingCount); // Convert ceilingCount to letter
-    ceilingSelections.push('Ceiling ' + ceilingLetter); // Add to ceiling selections
-    console.log('Ceiling Click Count:', ceilingCount);
-    updateTopPanelText();
-  } else if ($('#topPanelTilesListUl').hasClass('themeul') && lastRoomCanvasTitle === 'Change theme') {
-    themeCount++;
-    let themeLetter = String.fromCharCode(64 + themeCount); // Convert themeCount to letter
-    themeSelections.push('Theme ' + themeLetter); // Add to theme selections
-    console.log('Theme Click Count:', themeCount);
-    updateTopPanelText();
-  } else if ($('#topPanelTilesListUl').hasClass('themeul') && lastRoomCanvasTitle === 'Change paint') {
-    paintCount++;
-    let paintLetter = String.fromCharCode(64 + themeCount); // Convert themeCount to letter
-    paintSelections.push('Theme ' + paintLetter); // Add to theme selections
-    console.log('Paint Click Count:', paintCount);
-    updateTopPanelText();
-  } else {
-    console.log("Invalid action: Ensure the correct room-canvas is selected.");
-  }
-});*/
+
+
 
 // Store the last room-canvas title and update the class on room-canvas click
 $('.room-canvas').on('click', function () {
@@ -222,28 +179,6 @@ $('.room-canvas').on('click', function () {
     lastRoomCanvasTitle = title;
     console.log('Last roomCanvas title set to:', lastRoomCanvasTitle);
 
-    // Update the h5 element or perform other actions based on the title
-    /*
-    if (title === 'Change wall') {
-      $('#topPanel h5').text('Wall');
-      $('#topPanelTilesListUl').addClass('wallul').removeClass('floorul counterul ceilingul themeul');
-    } else if (title === 'Change floor') {
-      $('#topPanel h5').text('Floor124');
-      $('#topPanelTilesListUl').addClass('floorul').removeClass('wallul counterul ceilingul themeul');
-    } else if (title === 'Change counter') {
-      $('#topPanel h5').text('Counter');
-      $('#topPanelTilesListUl').addClass('counterul').removeClass('wallul floorul ceilingul themeul');
-    } else if (title === 'Change ceiling') {
-      $('#topPanel h5').text('Ceiling');
-      $('#topPanelTilesListUl').addClass('ceilingul').removeClass('wallul floorul counterul themeul');
-    } else if (title === 'Change theme') {
-      $('#topPanel h5').text('Theme');
-      $('#topPanelTilesListUl').addClass('themeul').removeClass('wallul floorul counterul ceilingul');
-    }
-      */
-
-    // Update the topPanelText after setting the class
-    //updateTopPanelText();
 });
 
 

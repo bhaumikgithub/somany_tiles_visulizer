@@ -51,6 +51,15 @@ function openTileSelectionPanel(surface_name) {
         $('#slected-panel .display_surface_name h5#optionText').text("Themes");
     }
 
+    if(String(surface_name).indexOf("Paint")>-1){
+        $(".serch-box-wrap").hide();
+        $(".top-panel-box-first").hide();
+        // row top-panel-box top-panel-box-first top-panel-box-first-btn-wrap top-panel-box-cmn-br
+    }
+    else{
+        $(".serch-box-wrap").show();
+        $(".top-panel-box-first").show();
+    }
     var clickedSurface = findRoomSurfaceUsingName(surface_name);
 
     if (clickedSurface != false) {
