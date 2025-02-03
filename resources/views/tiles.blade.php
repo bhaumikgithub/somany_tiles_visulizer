@@ -154,6 +154,7 @@ function prepareExpPropsJsonString() {
 }
 
 function formTileAddOption(options) {
+    console.log(options);
     'use strict';
     if (typeof options !== 'object') options = {};
 

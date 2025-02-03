@@ -34,6 +34,12 @@ class RoomModel extends Model {
         }
     }
 
+    public function getTheme0Attribute($value) {
+        if ($value) {
+            return Storage::url($value);
+        }
+    }
+
     public function getTheme1Attribute($value) {
         if ($value) {
             return Storage::url($value);
@@ -59,6 +65,12 @@ class RoomModel extends Model {
     }
 
     public function getTheme5Attribute($value) {
+        if ($value) {
+            return Storage::url($value);
+        }
+    }
+
+    public function getThemeThumbnail0Attribute($value) {
         if ($value) {
             return Storage::url($value);
         }

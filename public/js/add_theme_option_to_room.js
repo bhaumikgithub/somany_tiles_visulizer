@@ -5,6 +5,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // Input pairs for validation
         const inputGroups = [
             {
+                file: "form-update-room-chosen-theme-0",
+                thumbnail: "form-update-room-chosen-thumbnail-0",
+                text: "form-update-room-text-0",
+                theme: 0
+            },
+            {
                 file: "form-update-room-chosen-theme-1",
                 thumbnail: "form-update-room-chosen-thumbnail-1",
                 text: "form-update-room-text-1",
