@@ -100,7 +100,7 @@
                                                             @php
                                                                 $surface_title = (  isset($tile_detail->surface_title ) ) ? ucfirst($tile_detail->surface_title) : ucfirst($tile_detail->surface) ;
                                                             @endphp
-                                                            <button class="tile-cal-link tile_calculation" id="tile_cal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}" data-surface-name="{{str_replace(" ","_",$surface_title)}}">Open Tiles Calculator
+                                                            <button class="tile-cal-link tile_calculation" id="tile_cal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}" data-unique-id={{$index}} data-surface-name="{{str_replace(" ","_",$surface_title)}}">Open Tiles Calculator
                                                             </button>
                                                         @endif
                                                 </div>
