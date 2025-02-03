@@ -74,12 +74,12 @@
                                             <input type="hidden" value="{{$tile_detail->height}}" id="tiles_height">
 
                                             @if( isset($tile_detail->total_area_sq_meter) && $tile_detail->total_area_sq_meter !== null )
-                                                <div class="tiles_calculation_wrapper tiles_calculation_wrapper_from_db">
+                                                <div class="tiles_calculation_wrapper_{{$item->id}}_{{$loop->index}} tiles_calculation_wrapper_from_db">
                                                     <input type="hidden" value="{{$tile_detail->width_in_feet}}" id="width_in_feet">
                                                     <input type="hidden" value="{{$tile_detail->height_in_feet}}" id="height_in_feet">
                                                     <input type="hidden" value="{{$tile_detail->wastage}}" id="tiles_wastage">
                                                     @else
-                                                        <div class="tiles_calculation_wrapper" style="display: none;">
+                                                        <div class="tiles_calculation_wrapper_{{$item->id}}_{{$loop->index}}" style="display: none;">
                                                             @endif
                                                             <p>Total Area: <span class="total_area_covered_meter">{{@$tile_detail->total_area_sq_meter}}</span> Sq. Meter</p>
                                                             <p>Total Area: <span class="total_area_covered_feet">{{@$tile_detail->total_area}}</span> Sq. Feet</p>
@@ -90,14 +90,17 @@
                                                             <?php $tiles_par_box = Helper::getTilesParCarton($tile_detail->id);?>
                                                         <input type="hidden" value="{{$tiles_par_box}}" id="tiles_par_carton">
                                                         @if( $tiles_par_box !== NULL )
-                                                            <div class="tiles_carton_wrapper" style="display: <?php echo ($tiles_par_box !== NULL ) ? 'block' : 'none'; ?>">
+                                                            <div class="tiles_carton_wrapper_{{$item->id}}_{{$loop->index}}" style="display: <?php echo ($tiles_par_box !== NULL ) ? 'block' : 'none'; ?>">
                                                                 <input type="hidden" value="" id="require_box">
                                                                 <p>Number of Box Required: <span class="require_box">{{@$tile_detail->box_needed}}</span></p>
                                                             </div>
                                                             <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
                                                         @endif
                                                         @if( session()->has('pincode') )
-                                                            <button class="tile-cal-link tile_calculation" id="tile_cal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}">Open Tiles Calculator
+                                                            @php
+                                                                $surface_title = (  isset($tile_detail->surface_title ) ) ? ucfirst($tile_detail->surface_title) : ucfirst($tile_detail->surface) ;
+                                                            @endphp
+                                                            <button class="tile-cal-link tile_calculation" id="tile_cal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}" data-surface-name="{{str_replace(" ","_",$surface_title)}}">Open Tiles Calculator
                                                             </button>
                                                         @endif
                                                 </div>
@@ -152,6 +155,9 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="city">City</label>
+                                                @if( isset($pincode) )
+                                                    <input type="hidden" class="form-control" name="pincode" value="{{$pincode}}">
+                                                @endif
                                                 <input type="text" class="form-control" id="city" name="city" value="{{ old('city', $upform_data->city ?? '') }}"
                                                         {{ $isReadOnly ? 'readonly' : '' }}>
                                             </div>
@@ -372,6 +378,8 @@
                                     <input type="hidden" value="" id="calc_tiles_par_carton" name="calc_tiles_par_carton">
                                     <input type="hidden" value="" id="calc_tile_id" name="calc_tile_id">
                                     <input type="hidden" value="" id="calc_cart_item_id" name="calc_cart_item_id">
+                                    <input type="hidden" value="" id="unique_block_id" name="unique_block_id">
+                                    <input type="hidden" value="" id="surface_title" name="surface_title">
                                     <a href="javascript:void(0);" id="calculate_btn" class="btn modify-btn tile-cal-btn">Calculate</a>
                                     <a href="javascript:void(0);" id="reset_btn" class="btn modify-btn ml-3 tile-cal-btn ml-10 reset_btn">Reset</a>
                                 </div>
@@ -447,4 +455,3 @@
     </script>
 
 @endsection
-
