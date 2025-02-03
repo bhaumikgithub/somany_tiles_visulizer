@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Showroom;
+use App\Models\UserPdfData;
 use App\Tile;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
@@ -301,7 +302,22 @@ class AddToPdfRoomsController extends Controller
             ]);
         });
 
-        return view('pdf.cart_summary',compact('allProduct','randomKey','groupedTiles','pincode','userShowroomInfo'));
+        $upform_data = null;
+        $isReadOnly = false;
+
+        $savedUserpdfData = UserPdfData::where('unique_id',$randomKey)->get();
+
+        if($savedUserpdfData->isNotEmpty()){
+            $isReadOnly = true;
+            $upform_data = $savedUserpdfData->first();
+        }
+
+        // if($isReadOnly){
+        //     $upform_data = UserPdfData::where([['unique_id',$randomKey],['name',base64_decode(request()->query('name'))]])->get()->first();
+        // }
+
+        $cc_date = $getCartId->created_at->format('d-m-y');
+        return view('pdf.cart_summary',compact('allProduct','randomKey','groupedTiles','upform_data','isReadOnly','cc_date','groupedTiles','pincode','userShowroomInfo'));
     }
 
     /**
@@ -350,7 +366,6 @@ class AddToPdfRoomsController extends Controller
 
 
         $getCartId = Cart::where('random_key',$request->random_key)->first();
-        $randomKey = $request->random_key;
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
         $basic_info = [
             'first_name' => $request->firstName,
@@ -444,9 +459,43 @@ class AddToPdfRoomsController extends Controller
                 'mrp_per_sq_ft' => $combinedPrice
             ]);
         });
+        $randomKey = $request->randomKey;
+
+        $userAccount = auth()->check() ? auth()->user()->name : 'Guest User';
+
+        $userPdfData = UserPdfData::where('unique_id',$request->random_key)->get();
+
+        if($userPdfData->isEmpty()){
+
+            $savedPdf = UserPdfData::create([
+                'name' => $request->firstName . ' ' . $request->lastName,
+                'first_name' => $request->firstName,
+                'last_name' => $request->lastName,
+                'mobile' => $request->mobileNumber,
+                'pincode' => $request->pincode ? $request->pincode : '-',
+                'user_account' => $userAccount,
+                'unique_id' => $request->random_key,
+                'state' => $request->state,
+                'city' => $request->city
+            ]);
+
+        }
 
         // Generate the second PDF (dynamic content) using mPDF (in landscape mode)
-        $mpdf = new Mpdf(['mode' => 'utf-8', 'format' => 'A4-L']); // A4-L for landscape mode
+        $mpdf = new \Mpdf\Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4-L',
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'margin_top' => 20,
+            'margin_bottom' =>20
+        ]);
+        $mpdf->SetHeader('');
+        $mpdf->SetFooter('');
+
+
+        // Disable automatic page breaks
+        // $mpdf->SetAutoPageBreak(false, 0); 
         $html = view('pdf.template', compact('allProduct', 'basic_info', 'userShowroomInfo','randomKey','groupedTiles')); // Pass data to the Blade view
         $mpdf->WriteHTML($html);
         $mpdf->SetDisplayMode('real', 'default');
@@ -527,8 +576,6 @@ class AddToPdfRoomsController extends Controller
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . $fileName . '"'
         ]);
-
-        //return $pdf->download($fileName);
     }
 
     public function updateTilePrice(Request $request): JsonResponse

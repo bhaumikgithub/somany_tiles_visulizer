@@ -589,6 +589,7 @@ body{
     padding: 10px 5px;
     color: #555;
     z-index: 5;
+    width: 450px;
 }
 .top-panel-box{
     margin:0px;
@@ -713,9 +714,7 @@ body{
     padding:15px 0px;
     margin: 5px;
 }
-.top-panel-product{
-    width: 450px;
-}
+
 .top-panel-button{
     font-weight: 400;
     line-height: 1.5;
@@ -816,10 +815,11 @@ body{
 
 
 .filter-top-panel{
-    padding: 0px;
+    padding: 10px;
     width: 100%;
     border:1px solid #ccc;
     border-radius: 10px;
+    background-color: #ffffff80;
 }
 .filter-top-panel .filter-block{
     display: flex;
@@ -860,7 +860,7 @@ body{
     position: relative;
 }
 .filter-item-checkbox input[type=checkbox]:checked + label:after {
-    background-color: #555;
+    background-color: #ce1f22;
     content: '\2714';
     font-size: 11px;
     left: 0px;
@@ -876,7 +876,7 @@ body{
 .filter-item-checkbox input[type=checkbox]{
     margin:0px;
     background-color: #fff;
-    border:1px solid #555;
+    border:1px solid #ce1f22;
     border-radius:2px;
     height: 17px;
     width: 17px;
@@ -1225,6 +1225,11 @@ body{
     border-radius: 20px;
 
 }
+.active_theme{
+    border:1px solid #9d9d9d !important;
+    background: transparent;
+    border-radius: 20px;
+}
 
 .button-radio-btn {
     float: left;
@@ -1409,15 +1414,15 @@ input[type=checkbox]{
 /* select data pannel css end */
 @media (max-width:767px) {
     .top-panel-product{
-        width: 400px;
+        width: 100% !important;
+        overflow-y: auto;
+        border-radius: 0px;
     }
     .range-slider{
         margin-top: 10px;
     }
 
-    .panel_list li{
-        width: 50%;
-    }
+
     .top-panel-button-product{
         margin-bottom: 10px;
     }
@@ -1429,7 +1434,7 @@ input[type=checkbox]{
         height: 37px;
         width: 37px;
         display: block;
-        margin-left: -42px;
+        /*margin-left: 0px;*/
 
     }
     #topPanelmainpanel{
@@ -1458,25 +1463,28 @@ input[type=checkbox]{
         font-size: 19px;
     }
     .radio-surface-pattern label{
-        width: 100%;
+        width: 120px;
     }
 
     .radio-surface-pattern{
-        justify-content: center;
+        justify-content: left;
         display: flex;
-        width: 100%;
+        /*width: 100%;*/
         flex-wrap: wrap;
+        margin:0px;
+        padding-left:20px;
     }
-    .radio-surface-pattern label {
-        width: 100%;
-    }
+
     .radio-skew-size{
         display: flex;
     }
 
     #grout-predefined-color button{
-        width: 46%;
-        height: 58px;
+        width: 60px;
+        height: 60px;
+    }
+    .top-panel-box-cmn-br{
+        text-align:left;
     }
 
     .cmn-room-btn.back-btn , .cmn-room-btn.cn-btn{
@@ -1498,21 +1506,10 @@ input[type=checkbox]{
     }
 
 }
-@media (max-width:520px) {
 
-    .top-panel-product{
-        width: 280px;
-    }
-
-}
-
+/*
 @media (max-width:500px) {
-    .room-canvas{
 
-        width:100%;
-        height:100vh;
-        overflow-x: hidden;
-    }
 
     .cmn-room-btn.back-btn, .cmn-room-btn.cn-btn {
 
@@ -1533,4 +1530,4 @@ input[type=checkbox]{
     }
 
 
-}
+}*/
