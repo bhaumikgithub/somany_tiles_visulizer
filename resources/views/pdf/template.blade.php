@@ -92,6 +92,7 @@
             background-image: url('./img/pdf_back.png');
             background-size: 100% 100%;
             background-repeat: no-repeat;
+            width:100%;
             height:100%;
             background-position:100% 100%;
             padding:0px 30px 30px 30px;
@@ -164,7 +165,7 @@
                 <div class="pageTitleBadge" style="width:25%;">
                     <span> SELECTION {{$index+1}} OF {{$allProduct->count()}} </span>
                 </div>
-                <div>
+                <div style="width:100%;">
                         <?php $showImage = $item->show_main_image; ?>
                     @if($showImage === "yes")
                         <table style="font-family: 'Roboto', sans-serif;vertical-align-top; width:100%; margin-top:20px;">
