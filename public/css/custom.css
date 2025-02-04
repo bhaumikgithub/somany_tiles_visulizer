@@ -2,3 +2,11 @@
     height: 100vh; /* or a specific height in pixels, e.g., 500px */
     overflow-y: auto;
 }
+.no-data-text{
+    height: auto !important;
+    font-size: 14px;
+    border-top: 2px solid #ddd;
+    padding-top: 16px;
+    margin-bottom: 13px;
+    margin-top: 13px;
+}
