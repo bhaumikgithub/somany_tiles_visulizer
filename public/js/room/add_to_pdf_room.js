@@ -26,6 +26,8 @@ function addToPDF(){
             },
             success: function (response) {
                 $('#dialogSaveModalBox').modal('hide');
+                $('.product_title').text('Selected Rooms');
+                $('.braces').css('display','inline');
                 $('.productCount').text(response.data.all_selection);
                 $('#addToCartInfoPanelModal').modal('show');
                 $('#addToCartInfoPanelModal #cartInfoTilesList').html(response.body);
@@ -118,7 +120,18 @@ function removeProductFromCart(id) {
         success: function (response) {
             alert(response.message);
             let finalCount = parseInt(totalProductCount) - parseInt(response.data);
-            $('.productCount').text(finalCount);
+            if( finalCount > 0 ){
+                $('.product_title').text('Selected Rooms');
+                $('.braces').css('display','inline');
+                $('.productCount').text(finalCount);
+            } else {
+                $('.braces').css('display','none');
+                $('.product_hr').hide();
+                $('.button-row').hide();
+                $('.product_title').text('No Selected Rooms');
+                $('.loadCartItems').addClass('no-data-text');
+                $('.no-data-text').html("There is no Selection , Please add some tiles and click on Add to Selection");
+            }
             // Optionally remove the deleted item from the DOM
             $(`[data-prod-id="${id}"]`).closest('div').remove();
         },
@@ -189,9 +202,12 @@ function clearAllItems() {
         success: function (response) {
             alert(response.message); // Display success message
             // Optionally update the UI (e.g., empty the cart display)
-            $('.productCount').text('');
-            $('#addToCartInfoPanelModal #cartInfoTilesList').html(''); // Assuming cart items are listed in #cart-items
-            ;
+            $('.braces').css('display','none');
+            $('.product_hr').hide();
+            $('.button-row').hide();
+            $('.product_title').text('No Selected Rooms');
+            $('.loadCartItems').addClass('no-data-text');
+            $('.loadCartItems').html("There is no Selection , Please add some tiles and click on Add to Selection");
         },
         error: function (xhr) {
             alert('Something went wrong!');
