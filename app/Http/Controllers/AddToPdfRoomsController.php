@@ -218,8 +218,11 @@ class AddToPdfRoomsController extends Controller
 
     public function pdfSummary(Request $request , $randomKey): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
-        // Destroy the cart session data
-        Session::flush();  // This clears all session data, including cart data
+        $pincode = Session::get('pincode'); // Store the pincode temporarily
+
+        Session::flush(); // Clears all session data
+
+        Session::put('pincode', $pincode); // Restore the pincode session
             
         // Optionally, regenerate session ID for the user
         $request->session()->regenerate();  // This generates a new session ID

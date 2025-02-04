@@ -436,7 +436,7 @@
         </div>
     </div>
 
-    <script>
+    <!-- <script>
         document.addEventListener('DOMContentLoaded', function () {
             if (typeof validateForm === 'function' && validateForm()) {
                 document.getElementById('download_pdf').disabled = false;
@@ -452,6 +452,6 @@
                 location.reload();
             }, 1000); // 1-second delay for the form submission to complete before reloading
         }
-    </script>
+    </script> -->
 
 @endsection
