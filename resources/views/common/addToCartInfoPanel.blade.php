@@ -4,7 +4,11 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div id="addToCartInfoPanel" >
-                    <div class="top-modal-header total-product-title">@lang('Selected Rooms') <span>&#40;</span><span class="productCount"></span><span>&#41;</span>
+                    <div class="top-modal-header total-product-title">
+                        <span class="product_title">@lang('Selected Rooms')</span>
+                        <span class="braces">
+                            <span>&#40;</span><span class="productCount"></span><span>&#41;</span>
+                        </span>
                         <button type="button" class="close cartpanelclose" data-dismiss="modal">&times;</button>
                     </div>
                     <div id="cartInfoTilesList" class="top-panel-box product-top-panel-box">

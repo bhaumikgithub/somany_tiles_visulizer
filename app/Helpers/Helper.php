@@ -29,6 +29,12 @@ class Helper
     public static function getTilesParCarton($tile_id)
     {
         $tile = Tile::find($tile_id);
-        return $tile->tiles_per_carton;
+        if ($tile) {
+            // Access properties only if $tile is not null
+            $tilesPerCarton = $tile->tiles_per_carton;
+        } else {
+            // Handle case where tile is not found
+            $tilesPerCarton = null;  // Or provide some default value
+        }
     }
 }
