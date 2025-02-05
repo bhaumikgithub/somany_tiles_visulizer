@@ -36,14 +36,14 @@ function AdjustCanvasWidthHeight() {
     if (isInitialLoad) {
         if (windowWidth > 1300) {
             $(".cn-btn").css("margin-right", "26px");
-            $(".share-btn-img").css("margin-right", "26px");
+            $(".share-btn-img").css("margin-right", "32px");
             $(".share-div").css("margin-right", "26px");
 
         }
         isInitialLoad = false; // Set flag to false after initial load
     } else {
         $(".cn-btn").css("margin-right", "15px"); // Remove margin-right for resize
-        $(".share-btn-img").css("margin-right", "15px");
+        $(".share-btn-img").css("margin-right", "21px");
         $(".share-div").css("margin-right", "26px");
 
     }
