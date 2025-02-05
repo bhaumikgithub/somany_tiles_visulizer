@@ -223,7 +223,7 @@ function showBigIconImageModal(name, image) {
       @endif
     </div>
 
-      @include('2d.theme_options',['module'=>'add'])
+    @include('2d.theme_options',['module'=>'add'])
 
     <div class="form-group">
       <div class="col-sm-offset-3 col-sm-6">

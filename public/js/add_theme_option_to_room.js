@@ -15,35 +15,45 @@ document.addEventListener("DOMContentLoaded", function () {
                 thumbnail: "form-update-room-chosen-thumbnail-1",
                 text: "form-update-room-text-1",
                 theme: 1,
-                clearBtn: "clear-theme-1"
+                clearBtn: "clear-theme-1",
+                actualFileName : "form-update-room-theme-1",
+                actualThumbFileName : "form-update-room-theme-thumbnail-1",
             },
             {
                 file: "form-update-room-chosen-theme-2",
                 thumbnail: "form-update-room-chosen-thumbnail-2",
                 text: "form-update-room-text-2",
                 theme: 2,
-                clearBtn: "clear-theme-2"
+                clearBtn: "clear-theme-2",
+                actualFileName : "form-update-room-theme-2",
+                actualThumbFileName : "form-update-room-theme-thumbnail-2",
             },
             {
                 file: "form-update-room-chosen-theme-3",
                 thumbnail: "form-update-room-chosen-thumbnail-3",
                 text: "form-update-room-text-3",
                 theme: 3,
-                clearBtn: "clear-theme-3"
+                clearBtn: "clear-theme-3",
+                actualFileName : "form-update-room-theme-3",
+                actualThumbFileName : "form-update-room-theme-thumbnail-3",
             },
             {
                 file: "form-update-room-chosen-theme-4",
                 thumbnail: "form-update-room-chosen-thumbnail-4",
                 text: "form-update-room-text-4",
                 theme: 4,
-                clearBtn: "clear-theme-4"
+                clearBtn: "clear-theme-4",
+                actualFileName : "form-update-room-theme-4",
+                actualThumbFileName : "form-update-room-theme-thumbnail-4",
             },
             {
                 file: "form-update-room-chosen-theme-5",
                 thumbnail: "form-update-room-chosen-thumbnail-5",
                 text: "form-update-room-text-5",
                 theme: 5,
-                clearBtn: "clear-theme-"
+                clearBtn: "clear-theme-5",
+                actualFileName : "form-update-room-theme-5",
+                actualThumbFileName : "form-update-room-theme-thumbnail-5",
             }
         ];
         formAddEventListener(inputGroups,form);
@@ -157,29 +167,35 @@ function clearThemeFields(group) {
     const fileInput = document.getElementById(group.file);
     const thumbnailInput = document.getElementById(group.thumbnail);
     const textInput = document.getElementById(group.text);
+    const themeImage = document.getElementById(`${group.actualFileName}-img`); // Get the theme preview image
+    const thumbnailImage = document.getElementById(`${group.actualThumbFileName}-img`); // Get the thumbnail preview image
     const room_id = document.getElementById('form-update-room-id')?.value || null;
+    
+    
     if (fileInput) fileInput.value = ""; // Clear file input
     if (thumbnailInput) thumbnailInput.value = ""; // Clear thumbnail input
     if (textInput) textInput.value = ""; // Clear text input
+    if (themeImage) themeImage.src = ""; // Clear theme preview
+    if (thumbnailImage) thumbnailImage.src = ""; // Clear thumbnail preview
 
     // Send AJAX request to remove the file, thumbnail, and text from the database
-    fetch('/room2d/clear-theme', {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-        },
-        body: JSON.stringify({ theme: group.theme , room_id:room_id })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log(`Theme ${group.theme} cleared from the database.`);
-        } else {
-            alert(`Error clearing Theme ${group.theme}.`);
-        }
-    })
-    .catch(error => console.error("Error:", error));
+    // fetch('/room2d/clear-theme', {
+    //     method: "POST",
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //         "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+    //     },
+    //     body: JSON.stringify({ theme: group.theme , room_id:room_id })
+    // })
+    // .then(response => response.json())
+    // .then(data => {
+    //     if (data.success) {
+    //         console.log(`Theme ${group.theme} cleared from the database.`);
+    //     } else {
+    //         alert(`Error clearing Theme ${group.theme}.`);
+    //     }
+    // })
+    // .catch(error => console.error("Error:", error));
 }
 
 

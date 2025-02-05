@@ -18,9 +18,6 @@
 
             <label for="form-update-room-text-0" class="file-label"><b>Theme Name 0</b></label>
             <input type="text" name="text0" id="form-update-room-text-0" class="form-control" placeholder="Enter Theme0 Name here" required>
-
-            <br>
-            <button class="btn btn-primary">Clear Theme 0</button>
         </div>
         
         @if (!config('app.unlimited_image_size'))
@@ -171,31 +168,27 @@
         @endif
     </div>
 @else
-    <div class="form-group">
-        <div class="form-group required">
-            <div class="col-sm-6">
-                <label for="form-room-image" class="col-sm-3 control-label">Theme0</label>
-                <input type="hidden" name="chosen_theme0" id="form-room-chosen-theme-0" class="form-control">
-                <input type="file" name="image" id="form-room-image" accept="image/*" class="form-control" required onchange="handleFileChange('form-room-image','form-room-chosen-theme-0')">
+    <div class="form-group required">
+        <label for="form-room-theme-0" class="col-sm-3 control-label">Theme 0</label>
+        <div class="col-sm-6">
+            <input type="hidden" name="chosen_theme0" id="form-room-chosen-theme-0" class="form-control">
+            <input type="file" name="image" id="form-room-image" accept="image/*" class="form-control" required onchange="handleFileChange('form-room-image','form-room-chosen-theme-0')">
+            <br>
 
-                <br>
+            <label for="form-room-theme-thumbnail-0" class="file-label"><b>Upload Thumbnail 0</b></label>
+            <input type="hidden" id="form-room-chosen-thumbnail-0" class="form-control">
+            <input type="file" name="theme_thumbnail0" id="form-room-theme-thumbnail-0" accept="image/*" class="form-control" onchange="handleFileChange('form-room-theme-thumbnail-0','form-room-chosen-thumbnail-0')" required>
 
-                <label for="form-room-theme-thumbnail-0" class="file-label"><b>Upload Thumbnail 0</b></label>
-                <input type="hidden" id="form-room-chosen-thumbnail-0" class="form-control">
-                <input type="file" name="theme_thumbnail0" id="form-room-theme-thumbnail-0" accept="image/*" class="form-control" onchange="handleFileChange('form-room-theme-thumbnail-0','form-room-chosen-thumbnail-0')" required>
-
-                <br>
-                <label for="form-room-text-0" class="file-label"><b>Theme Name 0</b></label>
-                <input type="text" name="text0" id="form-room-text-0" class="form-control" placeholder="Enter Theme0 Name here" required>
-
-            </div>
-            <button class="btn btn-primary">Clear Theme0</button>
-            @if (!config('app.unlimited_image_size'))
-                <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
-            @endif
+            <br>
+            <label for="form-room-text-0" class="file-label"><b>Theme Name 0</b></label>
+            <input type="text" name="text0" id="form-room-text-0" class="form-control" placeholder="Enter Theme0 Name here" required>
         </div>
+        @if (!config('app.unlimited_image_size'))
+            <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
+        @endif
+    </div>
 
-
+    <div class="form-group">
         <label for="form-room-theme-1" class="col-sm-3 control-label">Theme 1</label>
         <div class="col-sm-6">
             <label for="form-room-theme-1" class="file-label"><b>Upload Theme 1</b></label>
