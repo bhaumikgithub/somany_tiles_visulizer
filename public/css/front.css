@@ -1068,8 +1068,45 @@ body{
     text-transform: capitalize !important;
 }
 
+.cmn-room-back-btn .span-icon{
+    background: rgba(246,247,245,0.8);
+    /* background: #ffffff80; */
+    /* border: 1px solid #bfbfbf;*/
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 10px 0px;
+    border-radius: 20px;
+    color: #34486c !important;
+    text-decoration: none !important;
+     border-radius: 100%;
+    text-decoration: none !important;
+    width:50px;
+    height:50px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+
+}
+.cmn-room-back-btn .span-icon i{
+    font-size: 18px;
+}
+
+
+
 .cmn-room-btn{
 
+    
+}
+.cmn-room-btn .span-icon{
+    font-size: 25px;
+
+}
+/* .cmn-back-btn .span-icon{
+    font-size: 25px;
+
+} */
+
+.cmn-room-btn.cn-btn{
     background: #ffffff80;
     /* border: 1px solid #bfbfbf;*/
     padding: 10px;
@@ -1082,15 +1119,10 @@ body{
     visibility: hidden;
 
     /* box-shadow: rgba(0, 0, 0, 0.24) 0 0 10px; */
-}
-.cmn-room-btn .span-icon{
-    font-size: 25px;
 
 }
-.cmn-back-btn .span-icon{
-    font-size: 25px;
 
-}
+
 .cmn-room-btn:hover{
 
     color: #3F3F46 !important;
@@ -1110,28 +1142,41 @@ body{
 }
 
 .cmn-back-btn{
-    background: #ffffff80;
-    /* border: 1px solid #bfbfbf;*/
-    padding: 10px;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 10px 0px;
-    border-radius: 20px;
-    color: #484848 !important;
-    text-decoration: none !important;
-    cursor: pointer;
-    padding:16px 12px 20px 20px;
-    height: 60px;
-    width: 100px !important;
-    padding:10px;
-    border-radius: 20px;
-
-    text-decoration: none !important;
-    cursor: pointer;
-    position: fixed;
-    bottom: 20px;
+      position: fixed;
+    bottom: 10px;
     left: 20px;
     margin-left: 15px;
+    
 
 }
+
+.cmn-back-btn .span-icon{
+    background: rgba(246,247,245,0.8);
+    /* border: 1px solid #bfbfbf;*/
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 10px 0px;
+    border-radius: 20px;
+    color: #34486c !important;
+    text-decoration: none !important;
+     border-radius: 100%;
+    text-decoration: none !important;
+    width:50px;
+    height:50px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+
+}
+.cmn-back-btn .span-icon i{
+    font-size: 18px;
+}
+.btn-text-set-back{
+color: #fff !important;
+margin-left: 8px;
+margin-top: 10px;
+}
+
 .cmn-room-btn.cn-btn{
     padding:16px 20px 20px 12px;
     height: 60px;
