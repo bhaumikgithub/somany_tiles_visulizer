@@ -24,9 +24,12 @@
                                 </div>
 
                        
-                            <a href="{{url('listing/'.@$room_type)}}" class="cmn-room-btn back-btn d-flex flex-wrap align-items-center"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
-                            </span> <span class="btn-text-set">Back </span> </a>
-                          
+                            <!-- <a href="{{url('listing/'.@$room_type)}}" class="cmn-room-btn back-btn d-flex flex-wrap align-items-center"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
+                            </span> <span class="btn-text-set">Back </span> </a> -->
+                            <div class=" cmn-room-btn cmn-room-back-btn back-btn" >  
+     <a href="{{ url('/') }}"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
+    </span></a>
+    <p class="btn-text-set-back">Back </p></div>
                            
                             <button class="cmn-room-btn cn-btn d-flex flex-wrap align-items-center" onclick="checkCartHasData()">
                                 <span class="span-icon">
