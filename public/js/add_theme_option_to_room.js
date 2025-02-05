@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         ];
         formAddEventListener(inputGroups,form);
-        assignClearButtonEventListener(inputGroups);
+        assignClearButtonEventListener(inputGroups,'update');
     } else {
         console.error("Element with ID 'updateRoomForm' not found.");
     }
@@ -73,34 +73,40 @@ document.addEventListener("DOMContentLoaded", function () {
                 file: "form-room-chosen-theme-1",
                 thumbnail: "form-room-chosen-thumbnail-1",
                 text: "form-room-text-1",
-                theme: 1
+                theme: 1,
+                clearBtn: "clear-add-theme-1",
             },
             {
                 file: "form-room-chosen-theme-2",
                 thumbnail: "form-room-chosen-thumbnail-2",
                 text: "form-room-text-2",
-                theme: 2
+                theme: 2,
+                clearBtn: "clear-add-theme-2",
             },
             {
                 file: "form-room-chosen-theme-3",
                 thumbnail: "form-room-chosen-thumbnail-3",
                 text: "form-room-text-3",
-                theme: 3
+                theme: 3,
+                clearBtn: "clear-add-theme-3",
             },
             {
                 file: "form-room-chosen-theme-4",
                 thumbnail: "form-room-chosen-thumbnail-4",
                 text: "form-room-text-4",
-                theme: 4
+                theme: 4,
+                clearBtn: "clear-add-theme-4",
             },
             {
                 file: "form-room-chosen-theme-5",
                 thumbnail: "form-room-chosen-thumbnail-5",
                 text: "form-room-text-5",
-                theme: 5
+                theme: 5,
+                clearBtn: "clear-add-theme-5",
             }
         ];
         formAddEventListener(inputGroups,form);
+        assignClearButtonEventListener(inputGroups,'add');
     } else {
         console.error("Element with ID 'updateRoomForm' not found.");
     }
@@ -151,19 +157,19 @@ function formAddEventListener(inputGroups,form)
 }
 
 
-function assignClearButtonEventListener(inputGroups) {
+function assignClearButtonEventListener(inputGroups,method) {
     inputGroups.forEach(group => {
         const clearButton = document.getElementById(group.clearBtn);
         if (clearButton) {
             clearButton.addEventListener("click", function () {
-                clearThemeFields(group);
+                clearThemeFields(group,method);
             });
         }
     });
 }
 
 // Function to clear a theme's inputs
-function clearThemeFields(group) {
+function clearThemeFields(group,method) {
     const fileInput = document.getElementById(group.file);
     const thumbnailInput = document.getElementById(group.thumbnail);
     const textInput = document.getElementById(group.text);
@@ -179,23 +185,25 @@ function clearThemeFields(group) {
     if (thumbnailImage) thumbnailImage.src = ""; // Clear thumbnail preview
 
     // Send AJAX request to remove the file, thumbnail, and text from the database
-    // fetch('/room2d/clear-theme', {
-    //     method: "POST",
-    //     headers: {
-    //         "Content-Type": "application/json",
-    //         "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-    //     },
-    //     body: JSON.stringify({ theme: group.theme , room_id:room_id })
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //     if (data.success) {
-    //         console.log(`Theme ${group.theme} cleared from the database.`);
-    //     } else {
-    //         alert(`Error clearing Theme ${group.theme}.`);
-    //     }
-    // })
-    // .catch(error => console.error("Error:", error));
+    if( method === "update"){
+        fetch('/room2d/clear-theme', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+            },
+            body: JSON.stringify({ theme: group.theme , room_id:room_id })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log(`Theme ${group.theme} cleared from the database.`);
+            } else {
+                alert(`Error clearing Theme ${group.theme}.`);
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
 }
 
 
