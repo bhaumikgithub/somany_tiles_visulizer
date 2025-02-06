@@ -31,9 +31,13 @@
             margin-bottom: 20px;
         }
         .details-card img {
-            width: 100px;
-            border-radius: 8px;
-        }
+	
+	   border-radius: 8px;
+	min-width: 100px;
+	min-height: 100px;
+	width:130px;
+	height:130px;
+}
         .details-card h5 {
             font-size: 16px;
         }
@@ -211,7 +215,7 @@
                                                 <!-- Tile Image and Details Row -->
                                                 <tr style="background:#ffffff; margin-bottom:10px;border:1px solid #d4c19b;border-top:none !important;">
                                                     <td style="width: 50%; text-align: left; padding: 10px;vertical-align:top;">
-                                                        <img src="{{ public_path($tile_detail->icon) }}" alt="Tile Icon" style="width: 100%; max-width:200px; height: auto; border: 1px solid #cccccc;">
+                                                        <img src="{{ public_path($tile_detail->icon) }}" alt="Tile Icon" style="width:130px;height:130px; border: 1px solid #cccccc;">
                                                     </td>
                                                     <td style="width: 50%; padding: 10px; vertical-align:top;">
                                                         <p style="margin: 7px 0; color:#3e3e40;font-size:14px;">{{$tile_detail->width}} × {{$tile_detail->height}} MM</p>
@@ -291,7 +295,7 @@
 
                                                 <tr style=" width: 100%;height: 100%;">
                                                     <td style="border-radius:10px;width: 50%; text-align: left; padding: 10px; vertical-align: top;background: #ffffff;border-top:none;">
-                                                        <img src="{{ public_path($tile_detail->icon) }}" alt="Tile Icon" style="width: 100%; max-width:180px; height: auto; border: 1px solid #cccccc;">
+                                                        <img src="{{ public_path($tile_detail->icon) }}" alt="Tile Icon" style="width:130px;height:130px; border: 1px solid #cccccc;">
                                                     </td>
                                                     <td style="border-radius:10px;width: 50%; padding: 10px; vertical-align: top;background: #ffffff;border-top:none;">
                                                         <p style="margin: 7px 0; color:#3e3e40; font-size:14px;">{{$tile_detail->width}} × {{$tile_detail->height}} MM</p>
@@ -371,7 +375,7 @@
                                         <!-- Tile Image and Details Row -->
                                         <tr style=" width: 100%;height: 100%;">
                                             <td style="background: #ffffff;border: 1px solid #d4c19b; border-radius:10px;width: 50%; text-align: left; padding: 10px; vertical-align: top; border-right:none;">
-                                                <img src="{{ public_path($tile_detail->icon) }}" alt="Tile Icon" style="width: 100%; max-width:180px; height: auto; border: 1px solid #cccccc;">
+                                                <img src="{{ public_path($tile_detail->icon) }}" alt="Tile Icon" style="width:130px;height:130px; border: 1px solid #cccccc;">
                                             </td>
                                             <td style="background: #ffffff;border: 1px solid #d4c19b; border-radius:10px;width: 50%; padding: 10px; vertical-align: top;border-left:none;">
                                                 <!-- <img src="./img/QR.png" alt="QR Code" style="margin-bottom: 10px;">-->

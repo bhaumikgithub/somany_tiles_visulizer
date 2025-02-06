@@ -1735,7 +1735,7 @@ input[type=checkbox] {
         padding: 12px;
         font-size: 22px;
         right: 20px;
-        .share-btn-img
+        
     }
 
     .share-btn-close {
@@ -1762,8 +1762,8 @@ input[type=checkbox] {
     }
 }
 
-/*
-@media (max-width:500px) {
+
+/* @media (max-width:500px) {
 
 
     .cmn-room-btn.back-btn, .cmn-room-btn.cn-btn {
@@ -1785,4 +1785,4 @@ input[type=checkbox] {
     }
 
 
-}*/
+} */
