@@ -126,16 +126,15 @@
                 <!-- <img src="./img/YOUR PRODUCT(S) SELECTION.png" alt="YOUR PRODUCT(S) SELECTION" > -->
             </div>
             <div class="section-block" style="width:50%;">
-                <div class="normalText">Date</div>
-                <p style="font-size:14px;line-height:14px;"><span>{{\Carbon\Carbon::now()->format('d F Y')}}</span></p>
+                <p style="font-size:14px;line-height:14px;">Date: <span>{{\Carbon\Carbon::now()->format('d F Y')}}</span></p>
                 <p style="font-size:14px;line-height:14px;">Selection Code: <b><span>{{$randomKey}}</span></b></p>
                 <p style="margin-bottom: 0px;font-size:14px;line-height:14px;"><span><b>{{$basic_info['first_name']. " ". $basic_info['last_name']}}</b></span></p>
-                <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">Contact No: <b>{{$basic_info['contact_no']}}</b></span></p>
-                <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">State: <b>{{$basic_info['state']}}</b></p>
-                <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">City: <b>{{$basic_info['city']}}</b></p>
+                <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">Contact No: {{$basic_info['contact_no']}}</span></p>
+                <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">State: {{$basic_info['state']}}</p>
+                <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">City: {{$basic_info['city']}}</p>
                 
                 @if( isset($basic_info['pin_code']))
-                    <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">Pincode: {{$basic_info['pin_code']}}</span></p>
+                    <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">Pincode: {{$basic_info['pin_code']}}</p>
                 @endif
                 <p style="font-weight:bold">Total Selection: <span>{{$allProduct->count()}}</span></p>
                 @if($userShowroomInfo['user'])
@@ -538,8 +537,8 @@
             </div>
 
             <div class="section-block">
-                <h3 style="color:#413f41">Exciting offers:</h3>
-                <p class="normalText" style="font-size:18px;">The prices listed above are the Maximum Retail Price (MRP). Visit your nearest Somany store to unlock exclusive offers and discover deals that'll make your wallet smile! </p>
+                <h3 style="color:#413f41;">Exciting offers:</h3>
+                <p class="normalText">The prices listed above are the Maximum Retail Price (MRP). Visit your nearest Somany store to unlock exclusive offers and discover deals that'll make your wallet smile! </p>
             </div>
             <div  class="section-block">
                 <h3 style="color:#413f41;">Disclaimer:</h3>
