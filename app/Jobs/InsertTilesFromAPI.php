@@ -129,7 +129,7 @@ class InsertTilesFromAPI implements ShouldQueue
         $unchangedCount = 0; // Track unchanged records
 
         // Step 1: Fetch all existing SKUs from the database
-        $existingSkus = \DB::table('tiles')->pluck('sku')->toArray();
+        //$existingSkus = \DB::table('tiles')->pluck('sku')->toArray();
 
         foreach ($records as $aTile) {
             $product = $aTile['attributes'];
@@ -137,10 +137,10 @@ class InsertTilesFromAPI implements ShouldQueue
             $creation_time = Carbon::parse($aTile['creation_time'])->format('Y-m-d H:i:s');
 
             // Step 2: Skip processing if SKU already exists in the database
-            if (in_array($product['sku'], $existingSkus)) {
-                \Log::info("Skipping SKU: {$product['sku']} - Already exists in DB.");
-                continue;
-            }
+//            if (in_array($product['sku'], $existingSkus)) {
+//                \Log::info("Skipping SKU: {$product['sku']} - Already exists in DB.");
+//                continue;
+//            }
 
             if (in_array($product['sku'], ['12345678', '1223324324'])) {
                 continue; // Skip this record
