@@ -162,7 +162,11 @@
                                                         {{ $isReadOnly ? 'readonly' : '' }}>
                                             </div>
                                             <input type="hidden" value="{{$randomKey}}" name="random_key">
-                                            <button class="btn btn-danger download-btn" id="download_pdf" disabled>Download PDF</button>
+                                            @if( isset($upform_data))
+                                                <button class="btn btn-danger download-btn" id="download_pdf">Download PDF</button>
+                                            @else
+                                                <button class="btn btn-danger download-btn" id="download_pdf" disabled>Download PDF</button>
+                                            @endif
                                         </form>
                                     </div>
                                 </div>
@@ -237,17 +241,10 @@
                                 <td class="text-center">{{ ( $totalMrpPrice === 0 ) ? "" : "Rs. ". number_format($totalMrpPrice) }}</td>
                             </tr>
                         @endif
-<<<<<<< HEAD
-                        </tbody>
-                    </table>
-                </div>
-                </div>
-=======
                     </tbody>
                 </table>
               </div>
             </div>
->>>>>>> a7ceacaf43a606040a90420fd9759527ff8cd24b
             @endif
 
             <div class="row">
