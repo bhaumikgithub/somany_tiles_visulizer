@@ -203,14 +203,10 @@ class InsertTilesFromAPI implements ShouldQueue
         if (!isset($product['design_finish'])) {
             \Log::warning("Missing key 'design_finish' for SKU: " . ($product['sku'] ?? 'Unknown'));
             $product['design_finish'] = "GLOSSY";
-        } else {
-            $product['design_finish'] = "GLOSSY";
         }
 
         if( !isset($product['brand_name'])){
             \Log::warning("Missing key 'brand_name' for SKU: " . ($product['sku'] ?? 'Unknown'));
-            $product['brand_name'] = "Duragres";
-        }else {
             $product['brand_name'] = "Duragres";
         }
 
