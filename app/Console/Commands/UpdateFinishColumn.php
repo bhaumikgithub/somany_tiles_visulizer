@@ -106,11 +106,14 @@ class UpdateFinishColumn extends Command
                 // Extract the new design_finish value
                 $newFinish = $product['design_finish'];
 
-                // Decode the existing expProps JSON field (handle null case)
                 $expProps = json_decode($existing->expProps, true) ?? [];
 
+                // Remove 'finish' key if it exists
+                unset($expProps['finish']);
+
+
                 // Check if finish value needs an update
-                if ($existing->finish !== $newFinish || ($expProps['finish'] ?? null) !== $newFinish) {
+                if ($existing->finish !== $newFinish || ($expProps['finishes'] ?? null) !== $newFinish) {
                     // Update expProps with the new finish value
                     $expProps['finishes'] = $newFinish;
                     $expProps['category'] = $this->mapCategoryType($product['brand_name']) ?? null;
