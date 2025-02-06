@@ -26,6 +26,8 @@ function addToPDF(){
             },
             success: function (response) {
                 $('#dialogSaveModalBox').modal('hide');
+                $('.product_title').text('Selected Rooms');
+                $('.braces').css('display','inline');
                 $('.productCount').text(response.data.all_selection);
                 $('#addToCartInfoPanelModal').modal('show');
                 $('#addToCartInfoPanelModal #cartInfoTilesList').html(response.body);
@@ -118,7 +120,18 @@ function removeProductFromCart(id) {
         success: function (response) {
             alert(response.message);
             let finalCount = parseInt(totalProductCount) - parseInt(response.data);
-            $('.productCount').text(finalCount);
+            if( finalCount > 0 ){
+                $('.product_title').text('Selected Rooms');
+                $('.braces').css('display','inline');
+                $('.productCount').text(finalCount);
+            } else {
+                $('.braces').css('display','none');
+                $('.product_hr').hide();
+                $('.button-row').hide();
+                $('.product_title').text('No Selected Rooms');
+                $('.loadCartItems').addClass('no-data-text');
+                $('.no-data-text').html("There is no Selection , Please add some tiles and click on Add to Selection");
+            }
             // Optionally remove the deleted item from the DOM
             $(`[data-prod-id="${id}"]`).closest('div').remove();
         },
@@ -189,9 +202,12 @@ function clearAllItems() {
         success: function (response) {
             alert(response.message); // Display success message
             // Optionally update the UI (e.g., empty the cart display)
-            $('.productCount').text('');
-            $('#addToCartInfoPanelModal #cartInfoTilesList').html(''); // Assuming cart items are listed in #cart-items
-            ;
+            $('.braces').css('display','none');
+            $('.product_hr').hide();
+            $('.button-row').hide();
+            $('.product_title').text('No Selected Rooms');
+            $('.loadCartItems').addClass('no-data-text');
+            $('.loadCartItems').html("There is no Selection , Please add some tiles and click on Add to Selection");
         },
         error: function (xhr) {
             alert('Something went wrong!');
@@ -346,6 +362,8 @@ $('.tile_calculation').click(function() {
 
     // Get the tile ID from the button's data attribute
     let tile = $(this).data('tile-id');
+    let blockId = $(this).data("unique-id");
+    let surface_title = $(this).data("surface-name");
     let cart_item_id = $(this).data('calculate-cart-item-id');
     let height = $('#tile'+tile+' input#tiles_height').val();
     let width = $('#tile'+tile+' input#tiles_width').val();
@@ -353,7 +371,6 @@ $('.tile_calculation').click(function() {
     let wastage = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db_'+cart_item_id+' input#tiles_wastage').val();
     let width_in_feet = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db_'+cart_item_id+' input#width_in_feet').val();
     let height_in_feet = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db_'+cart_item_id+' input#height_in_feet').val();
-
     $('#tiles_size').val(`${width} x ${height} mm`);
 
     // Set the modal content
@@ -361,10 +378,12 @@ $('.tile_calculation').click(function() {
     $('#calc_tile_id').val(tile);
     $("#width_feet").val(width_in_feet);
     $("#length_feet").val(height_in_feet);
+    $('#unique_block_id').val(blockId);
 
     let tile_par_carton = $('#tile'+tile+' input#tiles_par_carton').val();
     $('#calc_tiles_par_carton').val(tile_par_carton);
     $('#calc_cart_item_id').val(cart_item_id);
+    $('#surface_title').val(surface_title);
 });
 
 //Tiles calc
@@ -373,7 +392,9 @@ $("#calculate_btn").click(function () {
     if(validationCheck()===false){
         return false;
     }
-
+    // Get the block ID from the clicked button's data-id
+    let blockId = $('#unique_block_id').val();
+    let cart_item_id=$('#calc_cart_item_id').val();
     let tilesIn1Box = $('#calc_tiles_par_carton').val(); // this should come from DB
     let tile_id = $('#calc_tile_id').val();
     let widthInFeet = $("#width_feet").val();
@@ -396,20 +417,23 @@ $("#calculate_btn").click(function () {
     let tilesNeeded =  Math.ceil(actualWallFloorArea/tilesArea);
     let boxNeeded = Math.ceil(tilesNeeded/tilesIn1Box);
 
-    $('div#tile' + tile_id + ' div.tiles_calculation_wrapper').css('display','block');
-    $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.total_area_covered_meter').text(totalAreaSqMeter.toFixed(2));
-    $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.total_area_covered_feet').text(totalArea.toFixed(2));
-    $('div#tile'+tile_id+' div.tiles_calculation_wrapper span.tiles_wastage').text(wastage);
-    $('div#tile'+ tile_id + ' div.tiles_calculation_wrapper span.tiles_needed').text(tilesNeeded);
+    let blockSelector = $('div#tile' + tile_id + ' div.tiles_calculation_wrapper_'+cart_item_id+'_'+blockId);
+
+    blockSelector.css('display','block');
+    blockSelector.find('span.total_area_covered_meter').text(totalAreaSqMeter.toFixed(2));
+    blockSelector.find('span.total_area_covered_feet').text(totalArea.toFixed(2));
+    blockSelector.find('span.tiles_wastage').text(wastage);
+    blockSelector.find('span.tiles_needed').text(tilesNeeded);
     $('#calc_area_covered_meter').val(totalAreaSqMeter.toFixed(2));
     $('#calc_area_covered').val(totalArea.toFixed(2));
     $('#calc_wastage').val(wastage);
     $('#calc_tiles_needed').val(tilesNeeded);
 
     if( tilesIn1Box !== "" ) {
-        $('div#tile' + tile_id + ' div.tiles_carton_wrapper').css('display','block');
-        $('div#tile' + tile_id + ' div.tiles_carton_wrapper input#require_box').val(boxNeeded);
-        $('div#tile' + tile_id + ' div.tiles_carton_wrapper span.require_box').text(boxNeeded);
+        let tileSelector = $('div#tile' + tile_id + ' div.tiles_carton_wrapper_'+cart_item_id+'_'+blockId);
+        tileSelector.css('display','block');
+        tileSelector.find('input#require_box').val(boxNeeded);
+        tileSelector.find('span.require_box').text(boxNeeded);
         $('#required_box').show();
         displayResult("#required_box","Required Boxes : <b>" + boxNeeded+"</b> <small>(1 box have "+tilesIn1Box+" Tiles)</small>");
     }
@@ -453,7 +477,6 @@ function findDataFromTable(p_row,p_col,p_value){
 }
 
 $('#closeTileCalcModal').click(function() {
-
     let tilesIn1Box = $('#calc_tiles_par_carton').val(); //pieces this should come from DB
     let tile_id = $('#calc_tile_id').val();
     let cart_item_id = $('#calc_cart_item_id').val();
@@ -464,7 +487,7 @@ $('#closeTileCalcModal').click(function() {
     let wastageOfTilesArea = $('#calc_wastage').val();
     let tilesNeeded = $('#calc_tiles_needed').val();
     let boxNeeded = $('div#tile' + tile_id + ' div.tiles_carton_wrapper input#require_box').val();
-
+    let blockId = $('#unique_block_id').val();
     //Save data into db
     $.ajax({
         url: '/update-tile-calc', // URL to the controller method for updating the price
@@ -480,11 +503,12 @@ $('#closeTileCalcModal').click(function() {
             tilesIn1Box:( tilesIn1Box !== null ) ? tilesIn1Box : 0,
             tilesNeeded:tilesNeeded,
             boxNeeded:boxNeeded,
+            surfaceName : $('#surface_title').val(),
             _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
         },
         success: function(response) {
             if( response.success === true) {
-                $('div#tile' + tile_id + ' div.tiles_calculation_wrapper').css('display', 'block');
+                $('div#tile' + tile_id + ' div.tiles_calculation_wrapper_'+cart_item_id+'_'+blockId).css('display', 'block');
             }
         },
         error: function(xhr) {
@@ -728,5 +752,3 @@ function checkCartHasData(){
         });
     }
 }
-
-
