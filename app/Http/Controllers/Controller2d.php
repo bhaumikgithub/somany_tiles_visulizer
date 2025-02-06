@@ -347,4 +347,22 @@ class Controller2d extends Controller
         ]);
     }
 
+    public function clearTheme(Request $request){
+        $themeId = $request->input('theme');
+        $room_id = $request->input('room_id');
+        // Find and delete the theme from the database
+        $theme = Room2d::where('id', $room_id)->first();
+    
+        if ($theme) {
+            Room2d::where('id', $room_id)->update([
+                'theme'.$themeId => null,
+                'theme_thumbnail'.$themeId => null,
+                'text'.$themeId => null
+            ]);
+            return response()->json(['success' => true]);
+        }
+    
+        return response()->json(['success' => false, 'message' => 'Theme not found']);
+    }
+
 }

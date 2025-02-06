@@ -125,16 +125,22 @@
                 <span>YOUR PRODUCT(s) SELECTION</span>
                 <!-- <img src="./img/YOUR PRODUCT(S) SELECTION.png" alt="YOUR PRODUCT(S) SELECTION" > -->
             </div>
-            <p style="font-size:14px;line-height:14px;"><span>{{\Carbon\Carbon::now()->format('d F Y')}}</span></p>
-            <p style="font-size:14px;line-height:14px;">Selection Code: <span>{{$randomKey}}</span></p>
-            <p style="margin-bottom: 0px;font-size:14px;line-height:14px;"><span>{{$basic_info['first_name']. " ". $basic_info['last_name']}}</span></p>
-            <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">{{$basic_info['contact_no']}}</span></p>
-            <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">{{$basic_info['state']}},{{$basic_info['city']}}</span></p>
-            @if( isset($basic_info['pin_code']))
-                <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">{{$basic_info['pin_code']}}</span></p>
-            @endif
-            <p style="font-weight:bold">Total Selection: <span>{{$allProduct->count()}}</span></p>
-            @if($userShowroomInfo['user'])
+            <div class="section-block" style="width:50%;">
+                <div class="normalText">Date</div>
+                <p style="font-size:14px;line-height:14px;"><span>{{\Carbon\Carbon::now()->format('d F Y')}}</span></p>
+                <p style="font-size:14px;line-height:14px;">Selection Code: <b><span>{{$randomKey}}</span></b></p>
+                <p style="margin-bottom: 0px;font-size:14px;line-height:14px;"><span><b>{{$basic_info['first_name']. " ". $basic_info['last_name']}}</b></span></p>
+                <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">Contact No: <b>{{$basic_info['contact_no']}}</b></span></p>
+                <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">State: <b>{{$basic_info['state']}}</b></p>
+                <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">City: <b>{{$basic_info['city']}}</b></p>
+                
+                @if( isset($basic_info['pin_code']))
+                    <p style="margin-bottom:0px;font-size:14px;line-height:-14px;">Pincode: {{$basic_info['pin_code']}}</span></p>
+                @endif
+                <p style="font-weight:bold">Total Selection: <span>{{$allProduct->count()}}</span></p>
+                @if($userShowroomInfo['user'])
+            </div>
+
                 <!-- Footer Section -->
                 <div style="page-break-inside: avoid;">
                     <table style="width:100%;">

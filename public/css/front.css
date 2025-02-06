@@ -1475,10 +1475,7 @@ body {
     padding: 9px 12px !important;
     height: auto !important;
     /*width: 100px;*/
-    color: #3F3F46 !important;
-    cursor: pointer;
-    border-radius: 20px;
-    border:1px solid #ccc;
+    color: #3F3F46  !important;
 }
 .yes-no-btn:hover{
     background-color:#f2f2f2;

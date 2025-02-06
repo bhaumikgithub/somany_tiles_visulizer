@@ -154,6 +154,7 @@ Route::group(['middleware' => 'role:editor'], function () {
         Route::post('/room2d/surfaces/update', 'App\Http\Controllers\Controller2d@roomSurfacesUpdate');
 
         Route::post('/add-to-pdf-data','App\Http\Controllers\AddToPdfRoomsController@addToPdf');
+        Route::post('/room2d/clear-theme', 'App\Http\Controllers\Controller2d@clearTheme');
     }
 
     if (config('app.engine_panorama_enabled')) {
