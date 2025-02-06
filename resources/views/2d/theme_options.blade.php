@@ -148,11 +148,11 @@
         <div class="col-sm-4">
             <label for="form-update-room-theme-5" class="file-label"><b>Upload Theme 5</b></label>
             <input type="hidden" id="form-update-room-chosen-theme-5" class="form-control">
-            <input type="hidden" id="form-update-room-chosen-thumbnail-5" class="form-control">
-            <input type="file" name="theme5" id="form-update-room-theme-5" accept="image/*" class="form-control" onchange="handleFileChange('form-update-room-theme-5','form-update-room-chosen-thumbnail-5')">
+            <input type="file" name="theme5" id="form-update-room-theme-5" accept="image/*" class="form-control" onchange="handleFileChange('form-update-room-theme-5','form-update-room-chosen-theme-5')">
             <br>
 
             <label for="form-update-room-theme-thumbnail-5" class="file-label"><b>Upload Thumbnail 5</b></label>
+            <input type="hidden" id="form-update-room-chosen-thumbnail-5" class="form-control">
             <input type="file" name="theme_thumbnail5" id="form-update-room-theme-thumbnail-5" accept="image/*" class="form-control" onchange="handleFileChange('form-update-room-theme-thumbnail-5','form-update-room-chosen-thumbnail-5')">
 
             <br>
