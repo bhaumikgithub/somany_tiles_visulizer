@@ -134,7 +134,7 @@ class AddToPdfRoomsController extends Controller
                 ] : null,
                 'showrooms' => $showrooms ? $showrooms->toArray() : [],
             ];
-            
+
         }else{
             $userShowroomInfo = [
                 'user' => null,
@@ -218,8 +218,11 @@ class AddToPdfRoomsController extends Controller
 
     public function pdfSummary(Request $request , $randomKey): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
-        // Destroy the cart session data
-        Session::flush();  // This clears all session data, including cart data
+        $pincode = Session::get('pincode'); // Store the pincode temporarily
+
+        Session::flush(); // Clears all session data
+
+        Session::put('pincode', $pincode); // Restore the pincode session
             
         // Optionally, regenerate session ID for the user
         $request->session()->regenerate();  // This generates a new session ID
@@ -466,7 +469,7 @@ class AddToPdfRoomsController extends Controller
                 'mrp_per_sq_ft' => $combinedPrice
             ]);
         });
-        $randomKey = $request->randomKey;
+        $randomKey = $request->random_key;
 
         $userAccount = auth()->check() ? auth()->user()->name : 'Guest User';
 
@@ -502,7 +505,7 @@ class AddToPdfRoomsController extends Controller
 
 
         // Disable automatic page breaks
-        // $mpdf->SetAutoPageBreak(false, 0); 
+        // $mpdf->SetAutoPageBreak(false, 0);
         $html = view('pdf.template', compact('allProduct', 'basic_info', 'userShowroomInfo','randomKey','groupedTiles')); // Pass data to the Blade view
         $mpdf->WriteHTML($html);
         $mpdf->SetDisplayMode('real', 'default');
@@ -630,6 +633,8 @@ class AddToPdfRoomsController extends Controller
     {
         $cartItemId = $request->input('cart_item_id');
         $tileId = $request->input('tile_id');
+        $surfaceTitle = str_replace("_"," ",$request->input('surfaceName')); // Ensure you pass the surface_title from the request
+
         if( $request->widthInFeet !== null ) {
             $newData = [
                 'total_area_sq_meter' => $request->input('totalAreaSqMeter'),
@@ -658,22 +663,24 @@ class AddToPdfRoomsController extends Controller
 
                 // Check if tile exists and update if it does
                 foreach ($tilesData as &$tile) {
-                    if ($tile['id'] == $tileId) {
+                    if ($tile['id'] == $tileId && $tile['surface_title'] == $surfaceTitle) {
                         $tile = array_merge($tile, $filteredData); // Update existing tile with filtered data
                         $tileExists = true;
                         break;
                     }
                 }
 
-                // If tile does not exist, add it
+                // If the tile doesn't exist, insert it as a new tile
                 if (!$tileExists) {
-                    $newTile = array_merge(['id' => $tileId], $filteredData); // Include tile ID
-                    $tilesData[] = $newTile;
+                    $newTile = array_merge([
+                        'id' => $tileId,
+                        'surface_title' => $surfaceTitle, // Include the surface title for uniqueness
+                    ], $filteredData);
+                    $tilesData[] = $newTile; // Add new tile to the tiles data
                 }
 
                 // Re-encode the JSON data
                 $updatedTilesData = json_encode($tilesData);
-
                 // Update the database
                 DB::table('cart_items')
                     ->where('id', $cartItemId)
@@ -687,6 +694,7 @@ class AddToPdfRoomsController extends Controller
             return response()->json(['success' => false, 'message' => 'Date not found.']);
         }
     }
+
 
     public function updatePreference(Request $request)
     {
