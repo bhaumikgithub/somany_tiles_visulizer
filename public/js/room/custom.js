@@ -1,6 +1,11 @@
 var isInitialLoad = true; // Flag to track the initial load
 var interval;
 var topPanelCustomVisible = false;
+var activeTab = "PRODUCT";
+var layoutMode = "";
+var topPanelTopPosition = 10;
+var firstTime = true;
+
 document.getElementById("roomLoaderBackground").style.visibility = "hidden";
 
 function AdjustCanvasWidthHeight() {
@@ -9,46 +14,100 @@ function AdjustCanvasWidthHeight() {
     var windowHeight = $(window).height();
     var newWidth = windowWidth;
     var newHeight = windowHeight;
+    var topPanelHeight = newHeight - 20;
+    var newCanvasHeight  = windowHeight;
+    var newCanvasWidth = windowWidth;
 
-    if(windowWidth > windowHeight){//landscape
+    if (windowWidth > windowHeight) {//landscape
+        layoutMode = "LANDSCAPE";
+
         newWidth = windowHeight * 1.78;
+        newCanvasWidth = newWidth;
+
+        topPanelTopPosition = 10;
+        $("#topPanelHideBtn").css({ "left": "auto", "top": "auto" });
+        $("#container").width(windowWidth);
     }
-    else{//Portrait
-        newHeight = windowWidth / 1.78;
+    else {//Portrait
+        layoutMode = "PORTRAIT";
+
+        newHeight = windowHeight / 2;
+        newWidth = windowWidth;
+
+        newCanvasHeight =  newHeight;
+        newCanvasWidth =  newHeight * 1.78;
+
+        topPanelHeight = newHeight;
+        topPanelTopPosition = newHeight + 20;
+
+        $("#topPanelHideBtn").css({ "left": windowWidth / 2 + 50, "top": topPanelTopPosition - 50 });
+        if (firstTime == true) {
+            firstTime = false;
+            hideTopPanelMainPanel();
+        }
+        $("#container").width(windowWidth);
+        $("#container").css("overflow-x","auto");
+        setTimeout(setTimeout(function(){
+            $("#container").scrollLeft((newCanvasWidth - windowWidth) / 2);
+        },300));
     }
+
+    //row top-panel-box top-panel-box-first top-panel-box-first-btn-wrap top-panel-box-cmn-br
+
+    $("#selectd-data").css("max-height", Math.round(topPanelHeight - 20));
+
+    $("#topPanelTilesListBox").height(topPanelHeight - 220);
+    /*$(".top-panel-box-cmn-br").height(topPanelHeight-220);*/
+    /*$(".radio-surface-pattern").height(topPanelHeight-220);*/
+    $("#topPanelThemeListBox").height(topPanelHeight - 220);
 
     var newLeft = Math.round((windowWidth - newWidth) / 2);
-    var newRight = Math.round((windowWidth - newLeft - newWidth));  // Calculate new right position
+    var newRight = Math.round((windowWidth - newLeft - newWidth)) + 6;  // Calculate new right position
 
-    $("#roomCanvas").height(newHeight);
-    $("#roomCanvas").width(newWidth);
+    $("#roomCanvas").height(newCanvasHeight);
+    $("#roomCanvas").width(newCanvasWidth);
 
     $("#container").css({ left: newLeft });
 
-    $(".back-btn").css({ left: newLeft });
-    $(".cn-btn").css({ right: newRight });
-    $(".share-btn-img").css({ right: newRight });
-    $(".share-div").css({ right: newRight });
-
     //$("#topPanel").css('top',newHeight + 'px');
-    $('.top-panel').css('height', newHeight - 20 + 'px'); // Set height dynamically
 
-    if (isInitialLoad) {
-        if (windowWidth > 1300) {
-            $(".cn-btn").css("margin-right", "26px");
-            $(".share-btn-img").css("margin-right", "32px");
-            $(".share-div").css("margin-right", "26px");
+    $('.top-panel').css('top', topPanelTopPosition + 'px');
+    $('.top-panel').css('height', topPanelHeight + 'px'); // Set height dynamically
+    $("#productInfoPanel").hide();
 
-        }
-        isInitialLoad = false; // Set flag to false after initial load
-    } else {
-        $(".cn-btn").css("margin-right", "15px"); // Remove margin-right for resize
-        $(".share-btn-img").css("margin-right", "21px");
-        $(".share-div").css("margin-right", "26px");
+    $("#roomCanvas").height(newCanvasHeight);
+    $("#roomCanvas").width(newCanvasWidth);
 
+    if (topPanelCustomVisible == true) {
+        setTopPanelOpenPosition(false);
     }
+    else {
+        setTopPanelClosedPosition(false);
+    }
+    //This function calling from 2d.min.js
+
+
+
+
+    //$(".cn-btn").css({ right: newRight });
+    //$(".share-btn-img").css({ right: newRight });
+    //$(".share-div").css({ right: newRight });
+    if(layoutMode=="PORTRAIT"){
+        $(".back-btn").css({ left: newLeft });
+        $(".cn-btn").css("right", "0px");
+        $(".share-btn-img").css("right", "18px");
+        $(".share-div").css("right", "26px");
+    }
+    else{
+        $(".back-btn").css({ left: newLeft });
+        $(".cn-btn").css({ right: newRight });
+        $(".share-btn-img").css({ right: newRight + 6});
+        $(".share-div").css({ right: newRight });
+    }
+
 }
-function allLoadCompleted(){
+
+function allLoadCompleted() {
     $(".cmn-room-btn").css('visibility', 'visible');
     $("#topPanelmainpanel").css('visibility', 'visible');
     $(".share-div").css('visibility', 'visible');
@@ -57,37 +116,81 @@ function allLoadCompleted(){
 }
 
 
-$(window).on('load', function() {
+$(window).on('load', function () {
 
-    interval = setInterval(function(){
-        if($("#sourceLoadProgressBarContainer").length>0){
+    interval = setInterval(function () {
+        if ($("#sourceLoadProgressBarContainer").length > 0) {
         }
-        else{
+        else {
             clearInterval(interval);
             AdjustCanvasWidthHeight();
 
-            setTimeout(function(){
-                allLoadCompleted()},19);
+            setTimeout(function () {
+                allLoadCompleted()
+            }, 19);
         }
-    },500);
+    }, 500);
 
 
 });
 
-$(window).on('resize', function() {
+$(window).on('resize', function () {
     AdjustCanvasWidthHeight();
 });
 
 //This function calling from 2d.min.js
-function openTopPanel(){
+function openTopPanel() {
     topPanelCustomVisible = true;
-    window.$('#topPanel').animate({ 'right': 0 }, 'fast');
+    setTopPanelOpenPosition(true);
+}
+function closeTopPanel() {
+    topPanelCustomVisible = false;
+    setTopPanelClosedPosition(true);
+}
+
+function setTopPanelOpenPosition(p_animation_required) {
+    if (layoutMode == "PORTRAIT") {
+        if (p_animation_required == true) {
+            window.$('#topPanel').animate({ 'right': 0, 'top': topPanelTopPosition }, 'fast');
+            $("#topPanelHideBtn").animate({ "top": topPanelTopPosition - 50 });
+        }
+        else {
+            window.$('#topPanel').css({ 'right': 0, 'top': topPanelTopPosition });
+            $("#topPanelHideBtn").css({ "top": topPanelTopPosition - 50 });
+        }
+    }
+    else {
+        if (p_animation_required == true) {
+            window.$('#topPanel').animate({ 'right': 0 }, 'fast');
+        }
+        else {
+            window.$('#topPanel').css({ 'right': 0 });
+        }
+    }
     window.$('#topPanelHideIcon').removeClass('glyphicon glyphicon-menu-left').addClass('glyphicon glyphicon-menu-right');
 }
-function closeTopPanel(){
-    topPanelCustomVisible = false;
+function setTopPanelClosedPosition(p_animation_required,) {
     var width = window.$('#topPanel').width();
-    window.$('#topPanel').animate({ 'right': -(width + 10) }, 'fast');
+    var height = $(window).height();
+
+    if (layoutMode == "PORTRAIT") {
+        if (p_animation_required == true) {
+            window.$('#topPanel').animate({ 'top': (height - 20) }, 'fast');
+            $("#topPanelHideBtn").animate({ "top": height - 80 });
+        }
+        else {
+            window.$('#topPanel').css({ 'top': (height - 20) });
+            $("#topPanelHideBtn").css({ "top": height - 80 });
+        }
+    }
+    else { //landscape
+        if (p_animation_required == true) {
+            window.$('#topPanel').animate({ 'right': -(width + 10) }, 'fast');
+        }
+        else {
+            window.$('#topPanel').css({ 'right': -(width + 10) });
+        }
+    }
     window.$('#topPanelHideIcon').removeClass('glyphicon glyphicon-menu-right').addClass('glyphicon glyphicon-menu-left');
 }
 //END
@@ -103,11 +206,13 @@ function closeTopPanel(){
 //   }
 // });
 $('#topPanelmainpanel').on('click', function () {
-
-    $('#topPanel').show(); // Toggle visibility of the topPanel
-    $(this).hide();
-
+    hideTopPanelMainPanel();
 });
+
+function hideTopPanelMainPanel() {
+    $('#topPanel').show(); // Toggle visibility of the topPanel
+    $('#topPanelmainpanel').hide();
+}
 
 
 let wallCount = 0;
@@ -124,155 +229,54 @@ let ceilingSelections = []; // Array to store ceiling selections
 let themeSelections = [];   // Array to store theme selections
 let paintSelections = [];   // Array to store theme selections
 
-let lastRoomCanvasTitle = ''; // Variable to store the last room-canvas title
-
-// Function to update the h5 element text based on the current mode
-/*
-function updateTopPanelText() {
-  if (lastRoomCanvasTitle === 'Change wall') {
-    const text = wallSelections.length > 0 ? wallSelections[wallSelections.length - 1] : 'Wall:';
-    $('#topPanel h5').text(text);
-  } else if (lastRoomCanvasTitle === 'Change floor') {
-    const text = floorSelections.length > 0 ? floorSelections[floorSelections.length - 1] : 'Floor:';
-    $('#topPanel h5').text(text);
-  } else if (lastRoomCanvasTitle === 'Change counter') {
-    const text = counterSelections.length > 0 ? counterSelections[counterSelections.length - 1] : 'Counter:';
-    $('#topPanel h5').text(text);
-  } else if (lastRoomCanvasTitle === 'Change ceiling') {
-    const text = ceilingSelections.length > 0 ? ceilingSelections[ceilingSelections.length - 1] : 'Ceiling:';
-    $('#topPanel h5').text(text);
-  } else if (lastRoomCanvasTitle === 'Change theme') {
-    const text = themeSelections.length > 0 ? themeSelections[themeSelections.length - 1] : 'Theme:';
-    $('#topPanel h5').text(text);
-  } else if (lastRoomCanvasTitle === 'Change paint') {
-    const text = themeSelections.length > 0 ? themeSelections[themeSelections.length - 1] : 'Paint:';
-    $('#topPanel h5').text(text);
-  } else {
-    $('#topPanel h5').text('Choose Tiles');
-  }
-}*/
-//updateTopPanelText();
-
-function selectedpaneltext() {
-    /*
-    if (lastRoomCanvasTitle === 'Change wall' && wallCount === 0) {
-      $('#slected-panel-data p').text('Please first choose data');
-    } else if (lastRoomCanvasTitle === 'Change floor' && floorCount === 0) {
-      $('#slected-panel-data p').text('Please first choose data');
-    } else if (lastRoomCanvasTitle === 'Change counter' && counterCount === 0) {
-      $('#slected-panel-data p').text('Please first choose data');
-    } else if (lastRoomCanvasTitle === 'Change ceiling' && ceilingCount === 0) {
-      $('#slected-panel-data p').text('Please first choose data');
-    } else if (lastRoomCanvasTitle === 'Change theme' && themeCount === 0) {
-      $('#slected-panel-data p').text('Please first choose data');
-    }
-      */
-}
-selectedpaneltext();
-
-// Track clicks on any li inside #topPanelTilesListUl
-/*
-$('#topPanelTilesListUl').on('click', 'li', function () {
-  if ($('#topPanelTilesListUl').hasClass('wallul') && lastRoomCanvasTitle === 'Change wall') {
-    wallCount++;
-    let wallLetter = String.fromCharCode(64 + wallCount); // Convert wallCount to letter
-    wallSelections.push('Wall ' + wallLetter); // Add to wall selections
-    console.log('Wall Click Count:', wallCount);
-    updateTopPanelText(); // Update the top panel to show WALL A, WALL B, etc.
-  } else if ($('#topPanelTilesListUl').hasClass('floorul') && lastRoomCanvasTitle === 'Change floor') {
-    floorCount++;
-    let floorLetter = String.fromCharCode(64 + floorCount); // Convert floorCount to letter
-    floorSelections.push('Floor ' + floorLetter); // Add to floor selections
-    console.log('Floor Click Count:', floorCount);
-    updateTopPanelText();
-  } else if ($('#topPanelTilesListUl').hasClass('counterul') && lastRoomCanvasTitle === 'Change counter') {
-    counterCount++;
-    let counterLetter = String.fromCharCode(64 + counterCount); // Convert counterCount to letter
-    counterSelections.push('Counter ' + counterLetter); // Add to counter selections
-    console.log('Counter Click Count:', counterCount);
-    updateTopPanelText();
-  } else if ($('#topPanelTilesListUl').hasClass('ceilingul') && lastRoomCanvasTitle === 'Change ceiling') {
-    ceilingCount++;
-    let ceilingLetter = String.fromCharCode(64 + ceilingCount); // Convert ceilingCount to letter
-    ceilingSelections.push('Ceiling ' + ceilingLetter); // Add to ceiling selections
-    console.log('Ceiling Click Count:', ceilingCount);
-    updateTopPanelText();
-  } else if ($('#topPanelTilesListUl').hasClass('themeul') && lastRoomCanvasTitle === 'Change theme') {
-    themeCount++;
-    let themeLetter = String.fromCharCode(64 + themeCount); // Convert themeCount to letter
-    themeSelections.push('Theme ' + themeLetter); // Add to theme selections
-    console.log('Theme Click Count:', themeCount);
-    updateTopPanelText();
-  } else if ($('#topPanelTilesListUl').hasClass('themeul') && lastRoomCanvasTitle === 'Change paint') {
-    paintCount++;
-    let paintLetter = String.fromCharCode(64 + themeCount); // Convert themeCount to letter
-    paintSelections.push('Theme ' + paintLetter); // Add to theme selections
-    console.log('Paint Click Count:', paintCount);
-    updateTopPanelText();
-  } else {
-    console.log("Invalid action: Ensure the correct room-canvas is selected.");
-  }
-});*/
-
-// Store the last room-canvas title and update the class on room-canvas click
-$('.room-canvas').on('click', function () {
-    var title = $(this).attr('title');
-
-    // Store the title in the variable
-    lastRoomCanvasTitle = title;
-    console.log('Last roomCanvas title set to:', lastRoomCanvasTitle);
-
-    // Update the h5 element or perform other actions based on the title
-    /*
-    if (title === 'Change wall') {
-      $('#topPanel h5').text('Wall');
-      $('#topPanelTilesListUl').addClass('wallul').removeClass('floorul counterul ceilingul themeul');
-    } else if (title === 'Change floor') {
-      $('#topPanel h5').text('Floor124');
-      $('#topPanelTilesListUl').addClass('floorul').removeClass('wallul counterul ceilingul themeul');
-    } else if (title === 'Change counter') {
-      $('#topPanel h5').text('Counter');
-      $('#topPanelTilesListUl').addClass('counterul').removeClass('wallul floorul ceilingul themeul');
-    } else if (title === 'Change ceiling') {
-      $('#topPanel h5').text('Ceiling');
-      $('#topPanelTilesListUl').addClass('ceilingul').removeClass('wallul floorul counterul themeul');
-    } else if (title === 'Change theme') {
-      $('#topPanel h5').text('Theme');
-      $('#topPanelTilesListUl').addClass('themeul').removeClass('wallul floorul counterul ceilingul');
-    }
-      */
-
-    // Update the topPanelText after setting the class
-    //updateTopPanelText();
-});
 
 
 
 $("#btnProduct").addClass("top-panel-button-active");
 
 $('#btnProduct').on('click', function () {
-    $('#topPanelTilesListBox').show();
-    $('#topPanelLayout').hide();
-    $('#topPanelGrout').hide();
+    activeTab = "PRODUCT";
+    showHideTabs();
 
 
 });
 $('#btnLayout').on('click', function () {
-    $('#topPanelLayout').show();
-    $('#topPanelTilesListBox').hide();
-    $('#topPanelGrout').hide();
-    $('.radio-surface-rotation').hide();
+    activeTab = "LAYOUT";
+    showHideTabs();
 
 
 
 });
 $('#btnGrout').on('click', function () {
-    $('#topPanelGrout').show();
-    $('#topPanelTilesListBox').hide();
-    $('#topPanelLayout').hide();
-    $('.radio-surface-rotation').hide();
+    activeTab = "GROUT";
+    showHideTabs();
 
 });
+
+function showHideTabs() {
+    $('#topPanelTilesListBox').hide();
+    $('#topPanelLayout').hide();
+    $('#topPanelGrout').hide();
+    $(".serch-box-wrap").hide();
+    $('.radio-surface-rotation').hide();
+
+    switch (activeTab) {
+        case "PRODUCT":
+            $(".serch-box-wrap").show();
+            $('.radio-surface-rotation').show();
+            $('#topPanelTilesListBox').show();
+
+            break;
+        case "LAYOUT":
+            $('#topPanelLayout').show();
+            break;
+        case "GROUT":
+            $('#topPanelGrout').show();
+            $("#topPanelContentSurfaceTabGroutSizeBody").show();
+            break;
+    }
+
+}
 
 
 $('#grout-predefined-color .-btn').on('click', function () {
@@ -286,13 +290,13 @@ $('#grout-predefined-color .-btn').on('click', function () {
 
 
 $('.share-btn-img').on('click', function () {
-    $('.share-div').css('display','flex');
+    $('.share-div').css('display', 'flex');
     $(this).hide();
     $('.share-btn-close').show();
 });
 $('.share-btn-close').on('click', function () {
 
-    $('.share-div').css('display','none');
+    $('.share-div').css('display', 'none');
     $(this).hide();
     $('.share-btn-img').show();
 });
