@@ -164,21 +164,22 @@
 
         <!-- Table structure -->
             @if(isset($groupedTiles))
-                <div class="row summary-page-table-row">
-                <table class="table summary-page-table">
+            <div class="summary-page-table-row">
+                 <div class="">
+                    <table class="table summary-page-table">
                     <thead>
                         <tr class="table-active">
-                        <th scope="col" class="text-center">Sr. No</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Size</th>
-                        <th scope="col">Finish</th>
-                        <th scope="col">Apply<br>On</th>
-                        <th scope="col" class="text-center">Area<br>Sq. Ft.</th>
-                        <th scope="col" class="text-center">Tiles/Box</th>
-                        <th scope="col" class="text-center">Box Coverage<br>Area Sq. Ft.</th>
-                        <th scope="col" class="text-center">Box<br> Required</th>
-                        <th scope="col" class="text-center">MRP/<br>Sq. Ft.</th>
-                        <th scope="col" class="text-center">MRP<br>Price</th>
+                        <th  class="text-center">Sr. No</th>
+                        <th >Name</th>
+                        <th >Size</th>
+                        <th >Finish</th>
+                        <th >Apply<br>On</th>
+                        <th  class="text-center">Area<br>Sq. Ft.</th>
+                        <th  class="text-center">Tiles/Box</th>
+                        <th  class="text-center">Box Coverage<br>Area Sq. Ft.</th>
+                        <th  class="text-center">Box<br> Required</th>
+                        <th  class="text-center">MRP/<br>Sq. Ft.</th>
+                        <th  class="text-center">MRP<br>Price</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -233,6 +234,7 @@
                         @endif
                     </tbody>
                 </table>
+              </div>
             </div>
             @endif
             <div class="row">

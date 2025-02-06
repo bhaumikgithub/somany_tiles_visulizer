@@ -1475,7 +1475,7 @@ body {
     padding: 9px 12px !important;
     height: auto !important;
     /*width: 100px;*/
-    color: #3F3F46 !important;
+    color: #3F3F46  !important;
 }
 
 .mb-15 {
@@ -1735,7 +1735,7 @@ input[type=checkbox] {
         padding: 12px;
         font-size: 22px;
         right: 20px;
-        .share-btn-img
+        
     }
 
     .share-btn-close {
