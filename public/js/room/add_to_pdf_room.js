@@ -746,3 +746,45 @@ function checkCartHasData(){
 }
 
 
+
+///////// added by vikesha ///////////////////
+
+function tableresize() {
+    var pageWidth = $(window).width(); // Get the current page width
+
+    // If the page width is less than or equal to 768px, apply custom width
+    if (pageWidth <= 768) {
+        var newWidth = pageWidth - 60; // Subtract 60px for padding/margins
+        
+        // Set the new width for the row and the table, and apply margin-right
+        $('.summary-page-table-row').css({
+            'width': newWidth,  // Set the new width for the row
+            'margin': '0 15px'  // Add 15px margin to the right of the row
+        });
+        $('.summary-page-table').css({
+            'width': newWidth - 20,  // Set the new width for the table
+        });
+    } else {
+        // If the page width is greater than 768px, set the width to 100% (full width)
+        $('.summary-page-table-row').css({
+            'width': '100%',  // Full width for row
+            'margin': '0'     // No margin needed for full width
+        });
+        $('.summary-page-table').css({
+            'width': '100%',  // Full width for table
+        });
+    }
+}
+
+tableresize(); // Call once on page load
+
+// Debounce window resize event to optimize performance
+var resizeTimeout;
+$(window).on('resize', function () {
+    clearTimeout(resizeTimeout);  // Clear the previous timeout
+    resizeTimeout = setTimeout(function () {
+        tableresize();  // Call after resizing has stopped
+    }, 200);  // Adjust 200ms as needed for your preference
+});
+
+////////////////////////////////
