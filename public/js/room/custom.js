@@ -15,48 +15,59 @@ function AdjustCanvasWidthHeight() {
     var newWidth = windowWidth;
     var newHeight = windowHeight;
     var topPanelHeight = newHeight - 20;
-
+    var newCanvasHeight  = windowHeight;
+    var newCanvasWidth = windowWidth;
 
     if (windowWidth > windowHeight) {//landscape
-        newWidth = windowHeight * 1.78;
         layoutMode = "LANDSCAPE";
+
+        newWidth = windowHeight * 1.78;
+        newCanvasWidth = newWidth;
+
         topPanelTopPosition = 10;
         $("#topPanelHideBtn").css({ "left": "auto", "top": "auto" });
-
+        $("#container").width(windowWidth);
     }
     else {//Portrait
-        newHeight = windowWidth / 1.78;
-        topPanelHeight = windowHeight - newHeight - 20;
-        topPanelTopPosition = newHeight + 20;
         layoutMode = "PORTRAIT";
+
+        newHeight = windowHeight / 2;
+        newWidth = windowWidth;
+
+        newCanvasHeight =  newHeight;
+        newCanvasWidth =  newHeight * 1.78;
+
+        topPanelHeight = newHeight;
+        topPanelTopPosition = newHeight + 20;
+
         $("#topPanelHideBtn").css({ "left": windowWidth / 2 + 50, "top": topPanelTopPosition - 50 });
         if (firstTime == true) {
             firstTime = false;
             hideTopPanelMainPanel();
         }
-        console.log("topPanelCustomVisible = " + topPanelCustomVisible);
+        $("#container").width(windowWidth);
+        $("#container").css("overflow-x","auto");
+        setTimeout(setTimeout(function(){
+            $("#container").scrollLeft((newCanvasWidth - windowWidth) / 2);
+        },300));
     }
 
     //row top-panel-box top-panel-box-first top-panel-box-first-btn-wrap top-panel-box-cmn-br
 
     $("#selectd-data").css("max-height", Math.round(topPanelHeight - 20));
+
     $("#topPanelTilesListBox").height(topPanelHeight - 220);
     /*$(".top-panel-box-cmn-br").height(topPanelHeight-220);*/
     /*$(".radio-surface-pattern").height(topPanelHeight-220);*/
     $("#topPanelThemeListBox").height(topPanelHeight - 220);
 
     var newLeft = Math.round((windowWidth - newWidth) / 2);
-    var newRight = Math.round((windowWidth - newLeft - newWidth));  // Calculate new right position
+    var newRight = Math.round((windowWidth - newLeft - newWidth)) + 6;  // Calculate new right position
 
-    $("#roomCanvas").height(newHeight);
-    $("#roomCanvas").width(newWidth);
+    $("#roomCanvas").height(newCanvasHeight);
+    $("#roomCanvas").width(newCanvasWidth);
 
     $("#container").css({ left: newLeft });
-
-    $(".back-btn").css({ left: newLeft });
-    $(".cn-btn").css({ right: newRight });
-    $(".share-btn-img").css({ right: newRight });
-    $(".share-div").css({ right: newRight });
 
     //$("#topPanel").css('top',newHeight + 'px');
 
@@ -64,34 +75,36 @@ function AdjustCanvasWidthHeight() {
     $('.top-panel').css('height', topPanelHeight + 'px'); // Set height dynamically
     $("#productInfoPanel").hide();
 
+    $("#roomCanvas").height(newCanvasHeight);
+    $("#roomCanvas").width(newCanvasWidth);
 
-    if(topPanelCustomVisible==true){
+    if (topPanelCustomVisible == true) {
         setTopPanelOpenPosition(false);
     }
-    else{
+    else {
         setTopPanelClosedPosition(false);
     }
     //This function calling from 2d.min.js
 
-    $(".cn-btn").css("margin-right", "15px"); // Remove margin-right for resize
-    $(".share-btn-img").css("margin-right", "15px");
-    $(".share-div").css("margin-right", "14px");
 
 
-    /* if (isInitialLoad) {
-       if (windowWidth > 1300) {
-         $(".cn-btn").css("margin-right", "26px");
-         $(".share-btn-img").css("margin-right", "26px");
-         $(".share-div").css("margin-right", "26px");
 
-       }
-       isInitialLoad = false; // Set flag to false after initial load
-     } else {
-       $(".cn-btn").css("margin-right", "15px"); // Remove margin-right for resize
-       $(".share-btn-img").css("margin-right", "15px");
-       $(".share-div").css("margin-right", "14px");
+    //$(".cn-btn").css({ right: newRight });
+    //$(".share-btn-img").css({ right: newRight });
+    //$(".share-div").css({ right: newRight });
+    if(layoutMode=="PORTRAIT"){
+        $(".back-btn").css({ left: newLeft });
+        $(".cn-btn").css("right", "0px");
+        $(".share-btn-img").css("right", "18px");
+        $(".share-div").css("right", "26px");
+    }
+    else{
+        $(".back-btn").css({ left: newLeft });
+        $(".cn-btn").css({ right: newRight });
+        $(".share-btn-img").css({ right: newRight + 6});
+        $(".share-div").css({ right: newRight });
+    }
 
-     }*/
 }
 
 function allLoadCompleted() {
@@ -135,22 +148,22 @@ function closeTopPanel() {
     setTopPanelClosedPosition(true);
 }
 
-function setTopPanelOpenPosition(p_animation_required){
+function setTopPanelOpenPosition(p_animation_required) {
     if (layoutMode == "PORTRAIT") {
-        if(p_animation_required==true){
+        if (p_animation_required == true) {
             window.$('#topPanel').animate({ 'right': 0, 'top': topPanelTopPosition }, 'fast');
             $("#topPanelHideBtn").animate({ "top": topPanelTopPosition - 50 });
         }
-        else{
+        else {
             window.$('#topPanel').css({ 'right': 0, 'top': topPanelTopPosition });
             $("#topPanelHideBtn").css({ "top": topPanelTopPosition - 50 });
         }
     }
     else {
-        if(p_animation_required==true){
+        if (p_animation_required == true) {
             window.$('#topPanel').animate({ 'right': 0 }, 'fast');
         }
-        else{
+        else {
             window.$('#topPanel').css({ 'right': 0 });
         }
     }
@@ -165,7 +178,7 @@ function setTopPanelClosedPosition(p_animation_required,) {
             window.$('#topPanel').animate({ 'top': (height - 20) }, 'fast');
             $("#topPanelHideBtn").animate({ "top": height - 80 });
         }
-        else{
+        else {
             window.$('#topPanel').css({ 'top': (height - 20) });
             $("#topPanelHideBtn").css({ "top": height - 80 });
         }
@@ -174,7 +187,7 @@ function setTopPanelClosedPosition(p_animation_required,) {
         if (p_animation_required == true) {
             window.$('#topPanel').animate({ 'right': -(width + 10) }, 'fast');
         }
-        else{
+        else {
             window.$('#topPanel').css({ 'right': -(width + 10) });
         }
     }
