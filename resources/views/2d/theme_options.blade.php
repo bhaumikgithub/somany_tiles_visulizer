@@ -46,7 +46,7 @@
             <input type="text" name="text1" id="form-update-room-text-1" class="form-control" placeholder="Enter Theme1 Name here">
 
             <br>
-            <button type="button" class="btn btn-danger" id="clear-theme-1">Clear Theme 1</button>
+            <button type="button" class="btn btn-default btn-sm clear-btn-wrapper pull-right" id="clear-theme-1">Clear Theme 1</button>
         
         </div>
         @if (!config('app.unlimited_image_size'))
@@ -75,7 +75,7 @@
             <input type="text" name="text2" id="form-update-room-text-2" class="form-control" placeholder="Enter Theme2 Name here">
 
             <br>
-            <button type="button" class="btn btn-danger" id="clear-theme-2">Clear Theme 2</button>
+            <button type="button" class="btn btn-default btn-sm clear-btn-wrapper pull-right" id="clear-theme-2">Clear Theme 2</button>
         </div>
         @if (!config('app.unlimited_image_size'))
             <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
@@ -103,7 +103,7 @@
             <input type="text" name="text3" id="form-update-room-text-3" class="form-control" placeholder="Enter Theme3 Name here">
 
             <br>
-            <button type="button" class="btn btn-danger" id="clear-theme-3">Clear Theme 3</button>
+            <button type="button" class="btn btn-default btn-sm clear-btn-wrapper pull-right" id="clear-theme-3">Clear Theme 3</button>
         </div>
         @if (!config('app.unlimited_image_size'))
             <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
@@ -132,7 +132,7 @@
             <input type="text" name="text4" id="form-update-room-text-4" class="form-control" placeholder="Enter Theme4 Name here">
 
             <br>
-            <button type="button" class="btn btn-danger" id="clear-theme-4">Clear Theme 4</button>
+            <button type="button" class="btn btn-default btn-sm clear-btn-wrapper pull-right" id="clear-theme-4">Clear Theme 4</button>
         </div>
         @if (!config('app.unlimited_image_size'))
             <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
@@ -161,7 +161,7 @@
             <input type="text" name="text5" id="form-update-room-text-5" class="form-control" placeholder="Enter Theme5 Name here">
 
             <br>
-            <button type="button" class="btn btn-danger" id="clear-theme-5">Clear Theme 5</button>
+            <button type="button" class="btn btn-default btn-sm clear-btn-wrapper pull-right" id="clear-theme-5">Clear Theme 5</button>
         </div>
         @if (!config('app.unlimited_image_size'))
             <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
@@ -205,7 +205,7 @@
             <input type="text" name="text1" id="form-room-text-1" class="form-control" placeholder="Enter Theme1 Name here">
 
             <br>
-            <button type="button" class="btn btn-danger" id="clear-add-theme-1">Clear Theme 1</button>
+            <button type="button" class="btn btn-default btn-sm clear-btn-wrapper pull-right" id="clear-add-theme-1">Clear Theme 1</button>
         </div>
         @if (!config('app.unlimited_image_size'))
             <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
@@ -229,7 +229,7 @@
             <input type="text" name="text2" id="form-room-text-2" class="form-control" placeholder="Enter Theme2 Name here">
 
             <br>
-            <button type="button" class="btn btn-danger" id="clear-add-theme-2">Clear Theme 2</button>
+            <button type="button" class="btn btn-default btn-sm clear-btn-wrapper pull-right" id="clear-add-theme-2">Clear Theme 2</button>
         </div>
         @if (!config('app.unlimited_image_size'))
             <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
@@ -253,7 +253,7 @@
             <input type="text" name="text3" id="form-room-text-3" class="form-control" placeholder="Enter Theme3 Name here">
 
             <br>
-            <button type="button" class="btn btn-danger" id="clear-add-theme-3">Clear Theme 3</button>
+            <button type="button" class="btn btn-default btn-sm clear-btn-wrapper pull-right" id="clear-add-theme-3">Clear Theme 3</button>
         </div>
         @if (!config('app.unlimited_image_size'))
             <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
@@ -277,7 +277,7 @@
             <input type="text" name="text4" id="form-room-text-4" class="form-control" placeholder="Enter Theme4 Name here">
 
             <br>
-            <button type="button" class="btn btn-danger" id="clear-add-theme-4">Clear Theme 4</button>
+            <button type="button" class="btn btn-default btn-sm clear-btn-wrapper pull-right" id="clear-add-theme-4">Clear Theme 4</button>
         </div>
         @if (!config('app.unlimited_image_size'))
             <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>
@@ -301,7 +301,7 @@
             <input type="text" name="text5" id="form-room-text-5" class="form-control" placeholder="Enter Theme5 Name here">
 
             <br>
-            <button type="button" class="btn btn-danger" id="clear-add-theme-5">Clear Theme 5</button>
+            <button type="button" class="btn btn-default btn-sm clear-btn-wrapper pull-right pull-right" id="clear-add-theme-5">Clear Theme 5</button>
         </div>
         @if (!config('app.unlimited_image_size'))
             <span class="col-sm-3 help-block">Image must be less than 4 MB and resolution less than 4096x4096 pixels.</span>

@@ -11,6 +11,7 @@
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/admin_custom.css" rel="stylesheet">
 
     <!-- Scripts -->
     <script>

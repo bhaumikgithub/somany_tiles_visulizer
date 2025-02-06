@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: "form-update-room-text-1",
                 theme: 1,
                 clearBtn: "clear-theme-1",
-                actualFileName : "form-update-room-theme-1",
-                actualThumbFileName : "form-update-room-theme-thumbnail-1",
+                actualFileName : "form-update-room-theme-1-img",
+                actualThumbFileName : "form-update-room-theme-thumbnail-1-img",
             },
             {
                 file: "form-update-room-chosen-theme-2",
@@ -25,8 +25,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: "form-update-room-text-2",
                 theme: 2,
                 clearBtn: "clear-theme-2",
-                actualFileName : "form-update-room-theme-2",
-                actualThumbFileName : "form-update-room-theme-thumbnail-2",
+                actualFileName : "form-update-room-theme-2-img",
+                actualThumbFileName : "form-update-room-theme-thumbnail-2-img",
             },
             {
                 file: "form-update-room-chosen-theme-3",
@@ -34,8 +34,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: "form-update-room-text-3",
                 theme: 3,
                 clearBtn: "clear-theme-3",
-                actualFileName : "form-update-room-theme-3",
-                actualThumbFileName : "form-update-room-theme-thumbnail-3",
+                actualFileName : "form-update-room-theme-3-img",
+                actualThumbFileName : "form-update-room-theme-thumbnail-3-img",
             },
             {
                 file: "form-update-room-chosen-theme-4",
@@ -43,8 +43,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: "form-update-room-text-4",
                 theme: 4,
                 clearBtn: "clear-theme-4",
-                actualFileName : "form-update-room-theme-4",
-                actualThumbFileName : "form-update-room-theme-thumbnail-4",
+                actualFileName : "form-update-room-theme-4-img",
+                actualThumbFileName : "form-update-room-theme-thumbnail-4-img",
             },
             {
                 file: "form-update-room-chosen-theme-5",
@@ -52,8 +52,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: "form-update-room-text-5",
                 theme: 5,
                 clearBtn: "clear-theme-5",
-                actualFileName : "form-update-room-theme-5",
-                actualThumbFileName : "form-update-room-theme-thumbnail-5",
+                actualFileName : "form-update-room-theme-5-img",
+                actualThumbFileName : "form-update-room-theme-thumbnail-5-img",
             }
         ];
         formAddEventListener(inputGroups,form);
@@ -75,6 +75,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: "form-room-text-1",
                 theme: 1,
                 clearBtn: "clear-add-theme-1",
+                actualFileName : "form-room-theme-1",
+                actualThumbFileName : "form-room-theme-thumbnail-1",
             },
             {
                 file: "form-room-chosen-theme-2",
@@ -82,6 +84,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: "form-room-text-2",
                 theme: 2,
                 clearBtn: "clear-add-theme-2",
+                actualFileName : "form-room-theme-2",
+                actualThumbFileName : "form-room-theme-thumbnail-2",
             },
             {
                 file: "form-room-chosen-theme-3",
@@ -89,6 +93,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: "form-room-text-3",
                 theme: 3,
                 clearBtn: "clear-add-theme-3",
+                actualFileName : "form-room-theme-3",
+                actualThumbFileName : "form-room-theme-thumbnail-3",
             },
             {
                 file: "form-room-chosen-theme-4",
@@ -96,6 +102,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: "form-room-text-4",
                 theme: 4,
                 clearBtn: "clear-add-theme-4",
+                actualFileName : "form-room-theme-4",
+                actualThumbFileName : "form-room-theme-thumbnail-4",
             },
             {
                 file: "form-room-chosen-theme-5",
@@ -103,6 +111,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: "form-room-text-5",
                 theme: 5,
                 clearBtn: "clear-add-theme-5",
+                actualFileName : "form-room-theme-5",
+                actualThumbFileName : "form-room-theme-thumbnail-5",
             }
         ];
         formAddEventListener(inputGroups,form);
@@ -173,8 +183,13 @@ function clearThemeFields(group,method) {
     const fileInput = document.getElementById(group.file);
     const thumbnailInput = document.getElementById(group.thumbnail);
     const textInput = document.getElementById(group.text);
-    const themeImage = document.getElementById(`${group.actualFileName}-img`); // Get the theme preview image
-    const thumbnailImage = document.getElementById(`${group.actualThumbFileName}-img`); // Get the thumbnail preview image
+    if( method === "update"){
+        const themeImage = document.getElementById(`${group.actualFileName}`); // Get the theme preview image
+        const thumbnailImage = document.getElementById(`${group.actualThumbFileName}`); // Get the thumbnail preview image
+    } else {
+        const themeImage = document.getElementById(`${group.actualFileName}`); // Get the theme preview image
+        const thumbnailImage = document.getElementById(`${group.actualThumbFileName}`); // Get the thumbnail preview image
+    }
     const room_id = document.getElementById('form-update-room-id')?.value || null;
     
     
