@@ -27,6 +27,7 @@ use setasign\Fpdi\PdfParser\PdfParserException;
 use setasign\Fpdi\PdfParser\StreamReader;
 use setasign\Fpdi\PdfParser\Type\PdfTypeException;
 use setasign\Fpdi\PdfReader\PdfReaderException;
+use Illuminate\Support\Facades\Session;
 
 class AddToPdfRoomsController extends Controller
 {
@@ -215,8 +216,14 @@ class AddToPdfRoomsController extends Controller
         return response()->json(['message' => 'All items have been removed from the pdf.']);
     }
 
-    public function pdfSummary($randomKey): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
+    public function pdfSummary(Request $request , $randomKey): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
+        // Destroy the cart session data
+        Session::flush();  // This clears all session data, including cart data
+            
+        // Optionally, regenerate session ID for the user
+        $request->session()->regenerate();  // This generates a new session ID
+
         $getCartId = Cart::where('random_key',$randomKey)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
         $firstProduct = $allProduct->first(); // This returns the first CartItem model

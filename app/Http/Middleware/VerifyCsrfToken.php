@@ -12,6 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        '/get_room_surface', // Exclude this route from CSRF protection,
+        '/add-to-pdf-data-store'
     ];
 }

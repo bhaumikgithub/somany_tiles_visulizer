@@ -50,13 +50,15 @@ function openTileSelectionPanel(surface_name) {
     } else {
         $('#slected-panel .display_surface_name h5#optionText').text("Themes");
     }
-
-    if(String(surface_name).indexOf("Paint")>-1){
+    //top-panel-box
+    if (String(surface_name).indexOf("Paint") > -1) {
         $(".serch-box-wrap").hide();
         $(".top-panel-box-first").hide();
+        $(".radio-surface-rotation").hide();
+        $("#topPanelContentSurfaceTabGroutSizeBody").hide();
         // row top-panel-box top-panel-box-first top-panel-box-first-btn-wrap top-panel-box-cmn-br
     }
-    else{
+    else {
         $(".serch-box-wrap").show();
         $(".top-panel-box-first").show();
     }
@@ -78,32 +80,17 @@ function loadThemeData() {
             console.log("THEME DATA");
             console.log(themes);
             // JSON data (you can replace this with data fetched from an AJAX call)
-            themeData = [{
-                theme_id: 1,
-                theme_thumbnail: themes.theme_thumbnail1,
-                text: themes.text1,
-                theme_bigimage: themes.theme1
-            }, {
-                theme_id: 2,
-                theme_thumbnail: themes.theme_thumbnail2,
-                text: themes.text2,
-                theme_bigimage: themes.theme2,
-            }, {
-                theme_id: 3,
-                theme_thumbnail: themes.theme_thumbnail3,
-                text: themes.text3,
-                theme_bigimage: themes.theme3,
-            }, {
-                theme_id: 4,
-                theme_thumbnail: themes.theme_thumbnail4,
-                text: themes.text4,
-                theme_bigimage: themes.theme4,
-            }, {
-                theme_id: 5,
-                theme_thumbnail: themes.theme_thumbnail5,
-                text: themes.text5,
-                theme_bigimage: themes.theme5
-            }];
+            themeData = [];
+            for (var i = 0; i <= 5; i++) {
+                if (themes["theme_thumbnail" + i] && themes["text" + i] && themes["theme" + i]) {
+                    addThemeData({
+                        theme_id: i,
+                        theme_thumbnail: themes["theme_thumbnail" + i],
+                        text: themes["text" + i],
+                        theme_bigimage: themes["theme" + i]
+                    });
+                }
+            }
 
             // Select the <ul> container
             const themeList = document.getElementById("topPanelThemeListUl");
@@ -137,15 +124,19 @@ function loadThemeData() {
                     themeList.appendChild(li);
                 }
             }
-            if(themeExist==false){
+            if (themeExist == false) {
                 $("#list_theme").hide();
             }
-            themeBtnPressed(0,"IMAGE_LOAD_NOT_REQUIRED");
+            themeBtnPressed(0, "IMAGE_LOAD_NOT_REQUIRED");
         },
         error: function (xhr, status, error) {
             console.error('Error fetching themes:', error);
         },
     });
+}
+function addThemeData(p_obj) {
+    if (p_obj)
+        themeData.push(p_obj)
 }
 function showMainInfoPanel(p_type, surface_name) {
 
@@ -165,11 +156,11 @@ function showMainInfoPanel(p_type, surface_name) {
         $(wallAwallBwallCListing).show();
     }
 }
-function themeBtnPressed(p_id,p_imageLoadByPass) {
-    if(p_imageLoadByPass=="IMAGE_LOAD_NOT_REQUIRED"){
+function themeBtnPressed(p_id, p_imageLoadByPass) {
+    if (p_imageLoadByPass == "IMAGE_LOAD_NOT_REQUIRED") {
 
     }
-    else{
+    else {
         currentRoom._engine2d.loadAndDrawForegroundImage(themeData[p_id].theme_bigimage);
     }
     $(".top-panel-content-tiles-list-item").removeClass("active_theme");
@@ -227,6 +218,11 @@ function surfaceClickedByUser(p_surface_name) {
     $(wallFloorThemeContentParent).show();
     $(wallFloorContent).show();
     $('#topPanel h5').text(p_surface_name);
+    $("#btnProduct").addClass("top-panel-button-active");
+    $("#btnLayout").removeClass("top-panel-button-active");
+    $("#btnGrout").removeClass("top-panel-button-active");
+    activeTab = "PRODUCT";
+    showHideTabs();
 
     //updateTopPanelText(p_surface_name);
 }
