@@ -100,7 +100,7 @@
                                                             @php
                                                                 $surface_title = (  isset($tile_detail->surface_title ) ) ? ucfirst($tile_detail->surface_title) : ucfirst($tile_detail->surface) ;
                                                             @endphp
-                                                            <button class="tile-cal-link tile_calculation" id="tile_cal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}" data-unique-id={{$index}} data-surface-name="{{str_replace(" ","_",$surface_title)}}">Open Tiles Calculator
+                                                            <button class="tile-cal-link tile_calculation" id="tile_cal" data-tile-id="{{$tile_detail->id}}" data-calculate-cart-item-id="{{$item->id}}" data-unique-id={{$loop->index}} data-surface-name="{{str_replace(" ","_",$surface_title)}}">Open Tiles Calculator
                                                             </button>
                                                         @endif
                                                 </div>
@@ -216,6 +216,9 @@
                                         <td class="text-center">{{ $tile['mrp_per_sq_ft'] }}</td>
                                         <td class="text-center">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
                                     </tr>
+                                    @php
+                                        $i++; // Increment only when a valid row is printed
+                                    @endphp
                                 @endif
                                 @php
                                     $totalArea += (int)$tile['area_sq_ft'];
@@ -224,7 +227,6 @@
                                     $totalBoxRequired += (int)$tile['box_required'];
                                     $totalMrpPerSqFt += (int)$tile['mrp_per_sq_ft'];
                                     $totalMrpPrice += (int)$tile['mrp_price'];
-                                    $i++;
                                 @endphp
                             @endforeach
                             <tr class="table-active footer-table-text">

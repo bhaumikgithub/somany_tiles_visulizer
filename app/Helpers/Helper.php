@@ -38,6 +38,7 @@ class Helper
             // Handle case where tile is not found
             $tilesPerCarton = null;  // Or provide some default value
         }
+        return $tilesPerCarton;
     }
 
     public static function getShowRoomNames($showroom_id): string

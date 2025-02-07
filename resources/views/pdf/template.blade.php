@@ -509,6 +509,9 @@
                                         <td style="border: 1px solid #b7bab2;padding: 8px;text-align: center;background-color: #eff2eb;">{{ $tile['box_required'] }}</td>
                                         <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['mrp_per_sq_ft'] }}</td>
                                         <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
+                                        @php
+                                            $i++; // Increment only when a valid row is printed
+                                        @endphp
                                     </tr>
                                 @endif
                                 @php
@@ -518,7 +521,6 @@
                                     $totalBoxRequired += (int)$tile['box_required'];
                                     $totalMrpPerSqFt += (int)$tile['mrp_per_sq_ft'];
                                     $totalMrpPrice += (int)$tile['mrp_price'];
-                                    $i++;
                                 @endphp
                             @endforeach
                             <tr class="table-active footer-table-text">

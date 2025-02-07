@@ -405,6 +405,8 @@ $("#calculate_btn").click(function () {
     let widthInFeet = $("#width_feet").val();
     let heightInFeet = $("#length_feet").val();
 
+    console.log(tilesIn1Box);
+
     let wastage = $("#wast_per").val();
 
     let totalArea =  widthInFeet * heightInFeet;
