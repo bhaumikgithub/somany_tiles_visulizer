@@ -223,45 +223,51 @@ body{
     height: 170px;
     -webkit-transition:1s;
 }
-.mobile_image1{
+.mobile_image1 {
     background-image: url(../images/mobile/4.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position: center;
 }
-.mobile_image2{
+
+.mobile_image2 {
     background-image: url(../images/mobile/1.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position:  center;
 
 }
-.mobile_image3{
+
+.mobile_image3 {
     background-image: url(../images/mobile/3.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position: center;
 
 }
-.mobile_image4{
+
+.mobile_image4 {
     background-image: url(../images/mobile/2.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position: center;
 
 }
-.mobile_image5{
+
+.mobile_image5 {
     background-image: url(../images/mobile/5.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position: center;
 
 }
-.mobile_image6{
+
+.mobile_image6 {
     background-image: url(../images/mobile/6.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position: center;
 
 }
-.mobile_image7{
+
+.mobile_image7 {
     background-image: url(../images/mobile/7.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position: center;
 
 }
 .mobile_first_width{
