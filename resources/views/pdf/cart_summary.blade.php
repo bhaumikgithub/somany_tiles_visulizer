@@ -197,7 +197,6 @@
                             $i = 1;
                             @endphp
                             @foreach($groupedTiles as $index => $tile)
-                                @if( $tile['apply_on'] !== "paint")
                                     <tr>
                                         <td class="text-center">{{ $i }}</td>
                                         <td>{{ $tile['name'] }}</td>
@@ -206,7 +205,7 @@
                                         <td>{{ ucwords($tile['apply_on']) }}</td>
                                         <td class="text-center">{{ ( $tile['area_sq_ft'] === "-" ) ? "-" : number_format($tile['area_sq_ft'])  }}</td>
                                         <td class="text-center">{{ $tile['tiles_per_box'] }}</td>
-                                        <td class="text-center">{{ ( $tile['box_coverage_area_sq_ft'] === "-" ) ? "-" : number_format($tile['box_coverage_area_sq_ft'])  }}</td>
+                                        <td class="text-center">{{ ( $tile['box_coverage_area_sq_ft'] === "-" ) ? "-" : $tile['box_coverage_area_sq_ft'] }}</td>
                                         <td class="text-center">{{ $tile['box_required'] }}</td>
                                         <td class="text-center">{{ $tile['mrp_per_sq_ft'] }}</td>
                                         <td class="text-center">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
@@ -214,7 +213,6 @@
                                     @php
                                         $i++; // Increment only when a valid row is printed
                                     @endphp
-                                @endif
                                 @php
                                     $totalMrpPrice += (int)$tile['mrp_price'];
                                 @endphp

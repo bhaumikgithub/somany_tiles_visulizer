@@ -373,9 +373,8 @@ $('.tile_calculation').click(function() {
     let height = $('#tile'+tile+' input#tiles_height').val();
     let width = $('#tile'+tile+' input#tiles_width').val();
 
-    let wastage = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db_'+cart_item_id+' input#tiles_wastage').val();
-    let width_in_feet = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db_'+cart_item_id+' input#width_in_feet').val();
-    let height_in_feet = $('#tile'+tile+' div.tiles_calculation_wrapper_from_db_'+cart_item_id+' input#height_in_feet').val();
+    let width_in_feet = $('div#tile' + tile + ' div.tiles_calculation_wrapper_'+cart_item_id+'_'+blockId).find('input#width_in_feet').val();
+    let height_in_feet = $('div#tile' + tile + ' div.tiles_calculation_wrapper_'+cart_item_id+'_'+blockId).find('input#height_in_feet').val();
     $('#tiles_size').val(`${width} x ${height} mm`);
 
     // Set the modal content

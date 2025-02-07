@@ -486,29 +486,26 @@
                         </tr>
                         </thead>
                         <tbody>
-
                             @php $totalMrpPrice = 0;
                             $i = 1;
                             @endphp
                             @foreach($groupedTiles as $index => $tile)
-                                @if( $tile['apply_on'] !== "paint")
-                                    <tr>
-                                        <td style="border: 1px solid #b7bab2;padding: 8px;text-align: center;background-color: #eff2eb;">{{ $i }}</td>
-                                        <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['name'] }}</td>
-                                        <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['size'] }}</td>
-                                        <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ ucfirst($tile['finish']) }}</td>
-                                        <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ ucwords($tile['apply_on']) }}</td>
-                                        <td style="border: 1px solid #b7bab2;padding: 8px;text-align: center;background-color: #eff2eb;">{{ ( $tile['area_sq_ft'] === "-" ) ? "-" : number_format($tile['area_sq_ft'])  }}</td>
-                                        <td style="border: 1px solid #b7bab2;padding: 8px;text-align: center;background-color: #eff2eb;">{{ $tile['tiles_per_box'] }}</td>
-                                        <td style="border: 1px solid #b7bab2;padding: 8px;text-align: center;background-color: #eff2eb;">{{ ( $tile['box_coverage_area_sq_ft'] === "-" ) ? "-" : number_format($tile['box_coverage_area_sq_ft'])  }}</td>
-                                        <td style="border: 1px solid #b7bab2;padding: 8px;text-align: center;background-color: #eff2eb;">{{ $tile['box_required'] }}</td>
-                                        <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['mrp_per_sq_ft'] }}</td>
-                                        <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
-                                        @php
-                                            $i++; // Increment only when a valid row is printed
-                                        @endphp
-                                    </tr>
-                                @endif
+                                <tr>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: center;background-color: #eff2eb;">{{ $i }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['name'] }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['size'] }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ ucfirst($tile['finish']) }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ ucwords($tile['apply_on']) }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: center;background-color: #eff2eb;">{{ ( $tile['area_sq_ft'] === "-" ) ? "-" : number_format($tile['area_sq_ft'])  }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: center;background-color: #eff2eb;">{{ $tile['tiles_per_box'] }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: center;background-color: #eff2eb;">{{ ( $tile['box_coverage_area_sq_ft'] === "-" ) ? "-" : $tile['box_coverage_area_sq_ft'] }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: center;background-color: #eff2eb;">{{ $tile['box_required'] }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['mrp_per_sq_ft'] }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
+                                    @php
+                                        $i++; // Increment only when a valid row is printed
+                                    @endphp
+                                </tr>
                                 @php
                                     $totalMrpPrice += (int)$tile['mrp_price'];
                                 @endphp
