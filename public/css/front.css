@@ -69,7 +69,7 @@ a:focus {
 }
 
 body {
-    overflow-x: hidden !important;
+    overflow: hidden;
 }
 
 .grow h1 {
