@@ -251,9 +251,7 @@ class AddToPdfRoomsController extends Controller
                 // Check if 'total_area' exists
                 if (isset($tile['total_area'])) {
                     if( isset($tile['tile_in_box']) && isset($tile['box_needed'])){
-                        $boxWH = $tile['width'] * $tile['height'];
-                        $TotalWH = $boxWH * $tile['box_needed'];
-                        $box_coverage_area_sq_ft = $TotalWH/305;
+                        $box_coverage_area_sq_ft = Helper::getBoxCoverageAreaSqFt($tile['id']);
                         $mrp_price = ( $box_coverage_area_sq_ft * $tile['price'] );
                     } else {
                         $box_coverage_area_sq_ft = "-";
@@ -405,6 +403,7 @@ class AddToPdfRoomsController extends Controller
             $tiles = json_decode($item->tiles_json, true);
             foreach ($tiles as $tile) {
                 $tiles_per_carton = Helper::getTilesParCarton($tile['id']);
+                $box_coverage_area = Helper::getBoxCoverageAreaSqFt($tile['id']);
                 // Check if 'total_area' exists
                 if (isset($tile['total_area'])) {
                     if( isset($tile['tile_in_box']) && isset($tile['box_needed'])){
