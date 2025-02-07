@@ -94,7 +94,7 @@ class UpdateFinishColumn extends Command
 
             // Check if 'design_finish' key is missing and log a warning
             if (!isset($product['brand_name'])) {
-                \Log::warning("Missing key 'brand_name' for SKU: {$product['sku']}, assigning default value 'Durastone'.");
+                \Log::warning("Missing key 'brand_name' for SKU: {$product['sku']}.");
                 $product['brand_name'] = ""; // Assign default value
             }
 
@@ -111,12 +111,11 @@ class UpdateFinishColumn extends Command
                 // Remove 'finish' key if it exists
                 unset($expProps['finish']);
 
-
                 // Check if finish value needs an update
                 if ($existing->finish !== $newFinish || ($expProps['finishes'] ?? null) !== $newFinish) {
                     // Update expProps with the new finish value
                     $expProps['finishes'] = $newFinish;
-                    $expProps['category'] = $this->mapCategoryType($product['brand_name']) ?? null;
+                    $expProps['category'] = $this->mapCategoryType(strtolower($product['brand_name'])) ?? null;
 
                     // Update only the finish column and expProps JSON field
                     \DB::table('tiles')->where('sku', $product['sku'])->update([
@@ -214,16 +213,16 @@ class UpdateFinishColumn extends Command
     protected function mapCategoryType($brand_name): string
     {
         $mapping = [
-            'Coverstone' => 'Large Format Slab',
-            'Regalia Collection' => 'Large Format Tiles',
-            'Porto Collection' => 'Large Format Tiles',
-            'Sedimento Collection' => 'Large Format Tiles',
-            'Colorato Collection' => 'Large Format Tiles',
-            'Ceramica' => 'Ceramic',
-            'Duragres' => ' Glazed Vitrified Tiles',
-            'Vitro' => 'Polished Vitrified Tiles',
-            'Durastone' => 'Heavy Duty Vitrified Tiles',
-            'Italmarmi' => 'Subway Tiles',
+            'coverstone' => 'Large Format Slab',
+            'regalia collection' => 'Large Format Tiles',
+            'porto collection' => 'Large Format Tiles',
+            'sedimento collection' => 'Large Format Tiles',
+            'colorato collection' => 'Large Format Tiles',
+            'ceramica' => 'Ceramic',
+            'duragres' => ' Glazed Vitrified Tiles',
+            'vitro' => 'Polished Vitrified Tiles',
+            'durastone' => 'Heavy Duty Vitrified Tiles',
+            'italmarmi' => 'Subway Tiles',
         ];
 
         return $mapping[$brand_name] ?? $brand_name; // Default to original value if not in mapping
