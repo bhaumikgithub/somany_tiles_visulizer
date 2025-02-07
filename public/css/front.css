@@ -1476,10 +1476,13 @@ body {
     height: auto !important;
     /*width: 100px;*/
     color: #3F3F46  !important;
+    border-radius: 20px;
+    border:1px solid #ccc;
+    cursor: pointer;
 }
 .yes-no-btn:hover{
     background-color:#f2f2f2;
-    }
+}
 
 .mb-15 {
     margin-bottom: 10px;
@@ -1738,7 +1741,7 @@ input[type=checkbox] {
         padding: 12px;
         font-size: 22px;
         right: 20px;
-        
+
     }
 
     .share-btn-close {

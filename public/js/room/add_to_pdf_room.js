@@ -359,9 +359,14 @@ $('.cartpanelclose').on('click', function(e) {
 $('.tile_calculation').click(function() {
     $('#tilecal').modal('show');
     clearForm();
-
+    console.log("tile_calculation");
     // Get the tile ID from the button's data attribute
     let tile = $(this).data('tile-id');
+    console.log("Tile ID");
+
+    console.log($(this).data('tile-id'));
+
+
     let blockId = $(this).data("unique-id");
     let surface_title = $(this).data("surface-name");
     let cart_item_id = $(this).data('calculate-cart-item-id');
