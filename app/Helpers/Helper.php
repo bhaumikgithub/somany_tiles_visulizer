@@ -41,6 +41,19 @@ class Helper
         return $tilesPerCarton;
     }
 
+    public static function getBoxCoverageAreaSqFt($tile_id)
+    {
+        $tile = Tile::find($tile_id);
+        if ($tile) {
+            // Access properties only if $tile is not null
+            $boxCoverageArea = $tile->coverage_sq_ft;
+        } else {
+            // Handle a case where tile is not found
+            $boxCoverageArea = null;  // Or provide some default value
+        }
+        return $boxCoverageArea;
+    }
+
     public static function getShowRoomNames($showroom_id): string
     {
         if( $showroom_id ) {

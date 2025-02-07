@@ -193,12 +193,7 @@
                     </thead>
                     <tbody>
                         @if(isset($groupedTiles))
-                            @php $totalArea = 0;
-                            $totalTilesPerBox = 0;
-                            $totalBoxCoverageAreaSqFt = 0;
-                            $totalBoxRequired = 0;
-                            $totalMrpPerSqFt = 0;
-                            $totalMrpPrice = 0;
+                            @php $totalMrpPrice = 0;
                             $i = 1;
                             @endphp
                             @foreach($groupedTiles as $index => $tile)
@@ -221,11 +216,6 @@
                                     @endphp
                                 @endif
                                 @php
-                                    $totalArea += (int)$tile['area_sq_ft'];
-                                    $totalTilesPerBox += (int)$tile['tiles_per_box'];
-                                    $totalBoxCoverageAreaSqFt += (int)$tile['box_coverage_area_sq_ft'];
-                                    $totalBoxRequired += (int)$tile['box_required'];
-                                    $totalMrpPerSqFt += (int)$tile['mrp_per_sq_ft'];
                                     $totalMrpPrice += (int)$tile['mrp_price'];
                                 @endphp
                             @endforeach
@@ -235,11 +225,11 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td class="text-center">{{ ( $totalArea === 0 ) ? "" : number_format($totalArea) }}</td>
-                                <td class="text-center"></td>
-                                <td class="text-center">{{ ( $totalBoxCoverageAreaSqFt === 0 ) ? "" : number_format($totalBoxCoverageAreaSqFt) }}</td>
-                                <td class="text-center">{{ ( $totalBoxRequired === 0 ) ? "" : $totalBoxRequired }}</td>
-                                <td class="text-center">{{ ( $totalMrpPerSqFt === 0 ) ? "" : number_format($totalMrpPerSqFt) }}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td class="text-center">{{ ( $totalMrpPrice === 0 ) ? "" : "Rs. ". number_format($totalMrpPrice) }}</td>
                             </tr>
                         @endif

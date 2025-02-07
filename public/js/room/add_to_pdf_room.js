@@ -485,6 +485,7 @@ function findDataFromTable(p_row,p_col,p_value){
 
 $('#closeTileCalcModal').click(function() {
     let tilesIn1Box = $('#calc_tiles_par_carton').val(); //pieces this should come from DB
+    let blockId = $('#unique_block_id').val();
     let tile_id = $('#calc_tile_id').val();
     let cart_item_id = $('#calc_cart_item_id').val();
     let widthInFeet = $("#width_feet").val();
@@ -493,8 +494,8 @@ $('#closeTileCalcModal').click(function() {
     let totalArea = $('#calc_area_covered').val();
     let wastageOfTilesArea = $('#calc_wastage').val();
     let tilesNeeded = $('#calc_tiles_needed').val();
-    let boxNeeded = $('div#tile' + tile_id + ' div.tiles_carton_wrapper input#require_box').val();
-    let blockId = $('#unique_block_id').val();
+    let boxNeeded = $('div#tile' + tile_id + ' div.tiles_carton_wrapper_'+cart_item_id+'_'+blockId).find('input#require_box').val();
+
     //Save data into db
     $.ajax({
         url: '/update-tile-calc', // URL to the controller method for updating the price
