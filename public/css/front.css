@@ -1476,6 +1476,12 @@ body {
     height: auto !important;
     /*width: 100px;*/
     color: #3F3F46  !important;
+    border-radius: 20px;
+    border:1px solid #ccc;
+    cursor: pointer;
+}
+.yes-no-btn:hover{
+    background-color:#f2f2f2;
 }
 
 .mb-15 {
@@ -1735,7 +1741,7 @@ input[type=checkbox] {
         padding: 12px;
         font-size: 22px;
         right: 20px;
-        
+
     }
 
     .share-btn-close {
@@ -1762,8 +1768,8 @@ input[type=checkbox] {
     }
 }
 
-/*
-@media (max-width:500px) {
+
+/* @media (max-width:500px) {
 
 
     .cmn-room-btn.back-btn, .cmn-room-btn.cn-btn {
@@ -1785,4 +1791,4 @@ input[type=checkbox] {
     }
 
 
-}*/
+} */
