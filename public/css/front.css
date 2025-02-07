@@ -69,7 +69,7 @@ a:focus {
 }
 
 body {
-    overflow: hidden;
+    overflow-x: hidden !important;
 }
 
 .grow h1 {
@@ -253,48 +253,48 @@ body {
 .mobile_image1 {
     background-image: url(../images/mobile/4.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position: center;
 }
 
 .mobile_image2 {
     background-image: url(../images/mobile/1.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position: center;
 
 }
 
 .mobile_image3 {
     background-image: url(../images/mobile/3.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position: center;
 
 }
 
 .mobile_image4 {
     background-image: url(../images/mobile/2.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position: center;
 
 }
 
 .mobile_image5 {
     background-image: url(../images/mobile/5.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position: center;
 
 }
 
 .mobile_image6 {
     background-image: url(../images/mobile/6.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position: center;
 
 }
 
 .mobile_image7 {
     background-image: url(../images/mobile/7.jpg);
     background-size: cover;
-    background-position-x: center;
+    background-position: center;
 
 }
 
