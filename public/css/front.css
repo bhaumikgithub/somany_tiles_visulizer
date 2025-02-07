@@ -309,6 +309,8 @@ body {
 
     .mobile-div {
         display: block;
+        height: 100%;
+        overflow-y: auto !important;
     }
 
     .body-selection-item-image {
@@ -1003,6 +1005,7 @@ body {
 
 .filter-block-support-buttons {
     font-size: 12px;
+    display: none !important;
 }
 
 .filter-block-support-buttons span {
@@ -1415,6 +1418,10 @@ body {
     margin-top: -8px;
 }
 
+.-header{
+    cursor: pointer;
+}
+
 .add-sec-header {
     padding: 15px 15px 0px 15px;
 }
@@ -1792,3 +1799,5 @@ input[type=checkbox] {
 
 
 } */
+
+
