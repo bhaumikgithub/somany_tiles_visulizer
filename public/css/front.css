@@ -69,7 +69,7 @@ a:focus {
 }
 
 body {
-    overflow-x: hidden !important;
+    overflow: hidden;
 }
 
 .grow h1 {
@@ -1635,9 +1635,7 @@ body {
 input[type=checkbox] {
     cursor: pointer;
 }
-.demo{
-    text-align: center;
-}
+
 /* select data pannel css end */
 @media (max-width:767px) {
     .top-panel-product {
