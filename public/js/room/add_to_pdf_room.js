@@ -769,7 +769,6 @@ function tableresize() {
     // If the page width is less than or equal to 768px, apply custom width
     if (pageWidth <= 768) {
         var newWidth = pageWidth - 40; // Subtract 40px for padding/margins
-        
         // Set the new width for the row and the table, and apply margin-right
         $('.summary-page-table-row').css({
             'width': newWidth,  // Set the new width for the row
