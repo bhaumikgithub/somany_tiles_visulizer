@@ -754,12 +754,12 @@ function tableresize() {
 
     // If the page width is less than or equal to 768px, apply custom width
     if (pageWidth <= 768) {
-        var newWidth = pageWidth - 60; // Subtract 60px for padding/margins
+        var newWidth = pageWidth - 40; // Subtract 60px for padding/margins
         
         // Set the new width for the row and the table, and apply margin-right
         $('.summary-page-table-row').css({
             'width': newWidth,  // Set the new width for the row
-            'margin': '0 15px'  // Add 15px margin to the right of the row
+            'margin': '0px 0px 0px 4px'  // Add 15px margin to the right of the row
         });
         $('.summary-page-table').css({
             'width': newWidth - 20,  // Set the new width for the table
