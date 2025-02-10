@@ -449,7 +449,11 @@ class AddToPdfRoomsController extends Controller
         ]);
     }
 
-    protected function getProcessedTiles($allProduct)
+    /**
+     * @param $allProduct
+     * @return mixed
+     */
+    protected function getProcessedTiles($allProduct): mixed
     {
         // Initialize an empty collection to store processed data
         $tilesCollection = collect();
@@ -511,6 +515,10 @@ class AddToPdfRoomsController extends Controller
         });
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function updateTilePrice(Request $request): JsonResponse
     {
         // Validate the incoming request
@@ -552,6 +560,10 @@ class AddToPdfRoomsController extends Controller
         return response()->json(['success' => false, 'message' => 'Cart item not found.']);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function updateTileCalculation(Request $request): JsonResponse
     {
         $cartItemId = $request->input('cart_item_id');
@@ -618,8 +630,11 @@ class AddToPdfRoomsController extends Controller
         }
     }
 
-
-    public function updatePreference(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updatePreference(Request $request): JsonResponse
     {
         $showImage = $request->input('show_image');
 
@@ -629,7 +644,11 @@ class AddToPdfRoomsController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function checkSelectionHasData(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function checkSelectionHasData(Request $request): JsonResponse
     {
         $cart = Cart::where('user_id',$request->input('session_id'))->get();
         if( $cart->count() === 0 ){
@@ -637,5 +656,26 @@ class AddToPdfRoomsController extends Controller
         } else {
             return response()->json(['success' => true,'message' => 'selection in Cart.','count'=>$cart->count()]);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getTileSummary(Request $request)
+    {
+        $tileId = $request->input('tile_id');
+
+        // Fetch all products (assuming this method fetches relevant tiles)
+        $getCartId = Cart::where('random_key',$request->random_key)->first();
+        $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
+
+        //Get processed tiles summary using the existing method
+        $processedTiles = $this->getProcessedTiles($allProduct);
+
+        return response()->json([
+            'success' => true,
+            'tiles' => $processedTiles // Pass entire summarized collection
+        ]);
     }
 }

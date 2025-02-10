@@ -278,6 +278,7 @@ Route::post('/update-preference', 'App\Http\Controllers\AddToPdfRoomsController@
 
 
 Route::post('check-selection-has-data','App\Http\Controllers\AddToPdfRoomsController@checkSelectionHasData');
+Route::post('/get-tile-summary', 'App\Http\Controllers\AddToPdfRoomsController@getTileSummary');
 // Route::get('/test', 'App\Http\Controllers\HomeController@index');
 // Route::get('/test', function () {
 //     return response($_SERVER['SERVER_NAME']);

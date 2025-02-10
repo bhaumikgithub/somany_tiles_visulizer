@@ -359,13 +359,8 @@ $('.cartpanelclose').on('click', function(e) {
 $('.tile_calculation').click(function() {
     $('#tilecal').modal('show');
     clearForm();
-    console.log("tile_calculation");
     // Get the tile ID from the button's data attribute
     let tile = $(this).data('tile-id');
-    console.log("Tile ID");
-
-    console.log($(this).data('tile-id'));
-
 
     let blockId = $(this).data("unique-id");
     let surface_title = $(this).data("surface-name");
@@ -447,47 +442,37 @@ $("#calculate_btn").click(function () {
     displayResult("#area_covered_feet","Total Area covered : <b>" + totalArea.toFixed(2)+"</b> Sq. Feet");
     displayResult("#required_tiles","Required Tiles : <b>" + tilesNeeded+"</b> Tiles");
 
-    // ✅ Update the summary table
-    updateSummaryTable(tile_id, totalArea, tilesNeeded, boxNeeded);
-
-    //calculateBoxCoverageArea();
 });
 
-function updateSummaryTable(tileId, newArea, newTiles, newBoxes) {
-    let summaryTable = $("#summary-table tbody");
-    let existingRow = summaryTable.find("tr[data-tile-id='" + tileId + "']");
+function updateSummaryTable(tiles) {
+    let tilesArray = Object.values(tiles); // ✅ Convert object to array
 
-    if (existingRow.length > 0) {
-        let currentArea = parseFloat(existingRow.find('.summary-total-area').text()) || 0;
-        let currentBoxes = parseInt(existingRow.find('.summary-box-needed').text()) || 0;
-        let currentMrpPrice = parseFloat(existingRow.find('.summary-mrp-price').text()) || 0;
+    let totalArea = 0, totalBoxes = 0, totalPrice = 0;
 
-        let updatedArea = currentArea + newArea;
-        let updatedBoxes = currentBoxes + newBoxes;
-        //let updatedMrpPrice = currentMrpPrice + parseFloat(newMrpPrice);
+    tilesArray.forEach((tile) => { // ✅ Now forEach will work
+        let existingRow = $(`#summary-table tbody tr[data-tile-id="${tile.id}"]`);
 
-        existingRow.find('.summary-total-area').text(updatedArea.toFixed(2));
-        existingRow.find('.summary-box-needed').text(updatedBoxes);
-        //existingRow.find('.summary-mrp-price').text(updatedMrpPrice.toFixed(2));
-    }
+        if (existingRow.length > 0) {
+            // ✅ Update values in the existing row
+            existingRow.find('.summary-total-area').text(tile.area_sq_ft);
+            existingRow.find('.summary-box-needed').text(tile.box_required);
+            existingRow.find('.summary-mrp-price').text(tile.mrp_price);
 
-    updateTotalRow();
-}
-
-function updateTotalRow() {
-    let totalArea = 0, totalTiles = 0, totalBoxes = 0, totalMrpPrice = 0;
-
-    $("#summary-table tbody tr").each(function () {
-        totalArea += parseFloat($(this).find('.summary-total-area').text()) || 0;
-        totalTiles += parseInt($(this).find('.summary-tiles-needed').text()) || 0;
-        totalBoxes += parseInt($(this).find('.summary-box-needed').text()) || 0;
-        //totalMrpPrice += parseFloat($(this).find('.summary-mrp-price').text()) || 0;
+            // ✅ Accumulate total values
+            // totalArea += parseFloat(tile.area_sq_ft);
+            // totalBoxes += parseInt(tile.box_required);
+            totalPrice += parseFloat(tile.mrp_price);
+        } else {
+            console.warn("Tile ID not found in summary table:", tile.id);
+        }
     });
 
-    $("#summary-total-area").text(totalArea.toFixed(2));
-    $("#summary-total-boxes").text(totalBoxes);
-    //$("#summary-total-mrp-price").text("Rs. " + totalMrpPrice.toFixed(2));
+    // Update total row
+    // $("#summary-total-area").text(totalArea.toFixed(2));
+    // $("#summary-total-boxes").text(totalBoxes);
+    $("#summary-total-mrp-price").text("Rs. " + totalPrice.toFixed(2));
 }
+
 
 
 //0 = Sr. No
@@ -553,6 +538,27 @@ $('#closeTileCalcModal').click(function() {
         success: function(response) {
             if( response.success === true) {
                 $('div#tile' + tile_id + ' div.tiles_calculation_wrapper_'+cart_item_id+'_'+blockId).css('display', 'block');
+                //Call ajax to update summary table
+                $.ajax({
+                    url: "/get-tile-summary", // Your Laravel route
+                    type: "POST",
+                    data: {
+                        tile_id: tile_id,
+                        random_key : $('#random_key').val(),
+                        _token: $('meta[name="csrf-token"]').attr('content') // CSRF protection
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            //Update Summary Table with the new values
+                            updateSummaryTable(response.tiles);
+                        } else {
+                            console.error("Error fetching summary data.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX error:", error);
+                    }
+                });
             }
         },
         error: function(xhr) {

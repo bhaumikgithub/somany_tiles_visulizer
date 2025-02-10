@@ -30,6 +30,7 @@
         <div class="row">
             <div class="col-md-9 col-sm-12 col-xs-12">
                 @if( isset($allProduct))
+                    <input type="hidden" value="{{@$randomKey}}" id="random_key" class="form-control">
                     @foreach($allProduct as $index=>$item)
                         <h4 class="selection-title">Selection {{$index+1}} of {{$allProduct->count()}}</h4>
                             <?php $showImage = $item->show_main_image ;?>
@@ -183,12 +184,12 @@
                         <th >Size</th>
                         <th >Finish</th>
                         <th >Apply<br>On</th>
-                        <th  class="text-center">Area<br>Sq. Ft.</th>
-                        <th  class="text-center">Tiles/Box</th>
-                        <th  class="text-center">Box Coverage<br>Area Sq. Ft.</th>
-                        <th  class="text-center">Box<br> Required</th>
-                        <th  class="text-center">MRP/<br>Sq. Ft.</th>
-                        <th  class="text-center">MRP<br>Price</th>
+                        <th class="text-center">Area<br>Sq. Ft.</th>
+                        <th class="text-center">Tiles/Box</th>
+                        <th class="text-center">Box Coverage<br>Area Sq. Ft.</th>
+                        <th class="text-center">Box<br> Required</th>
+                        <th class="text-center">MRP/<br>Sq. Ft.</th>
+                        <th class="text-center">MRP<br>Price</th>
                     </tr>
                     </thead>
                     <tbody>
