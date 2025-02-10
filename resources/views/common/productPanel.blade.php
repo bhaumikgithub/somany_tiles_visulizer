@@ -18,8 +18,9 @@
                     </div>
                 </div>
                 <div class="withoutThemePanelWrapper">
-                    <div class="top-panel-box">
+                    <div class="top-panel-box search-filter-panel-box">
                     <div class="input-box d-flex flex-wrap serch-box-wrap">
+                        <div class="serach-pad-set d-flex flex-wrap w-100">
                         <div class="input-text-box-wrap">
                             <input id="inputSearch" type="search" value="" placeholder="@lang('Search Product')"
                                    class="input-search product-input-serch"><button id="btnSearchIcon"
@@ -42,6 +43,7 @@
                                                 ')</button>
 
                         </div>
+                       </div>
 
                         <div id="topPanelSearchResult" style="display: none"></div>
 
