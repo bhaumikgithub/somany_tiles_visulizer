@@ -404,8 +404,6 @@ $("#calculate_btn").click(function () {
     let widthInFeet = $("#width_feet").val();
     let heightInFeet = $("#length_feet").val();
 
-    console.log(tilesIn1Box);
-
     let wastage = $("#wast_per").val();
 
     let totalArea =  widthInFeet * heightInFeet;
@@ -449,10 +447,49 @@ $("#calculate_btn").click(function () {
     displayResult("#area_covered_feet","Total Area covered : <b>" + totalArea.toFixed(2)+"</b> Sq. Feet");
     displayResult("#required_tiles","Required Tiles : <b>" + tilesNeeded+"</b> Tiles");
 
-
+    // ✅ Update the summary table
+    updateSummaryTable(tile_id, totalArea, tilesNeeded, boxNeeded);
 
     //calculateBoxCoverageArea();
 });
+
+function updateSummaryTable(tileId, newArea, newTiles, newBoxes) {
+    let summaryTable = $("#summary-table tbody");
+    let existingRow = summaryTable.find("tr[data-tile-id='" + tileId + "']");
+
+    if (existingRow.length > 0) {
+        let currentArea = parseFloat(existingRow.find('.summary-total-area').text()) || 0;
+        let currentBoxes = parseInt(existingRow.find('.summary-box-needed').text()) || 0;
+        let currentMrpPrice = parseFloat(existingRow.find('.summary-mrp-price').text()) || 0;
+
+        let updatedArea = currentArea + newArea;
+        let updatedBoxes = currentBoxes + newBoxes;
+        //let updatedMrpPrice = currentMrpPrice + parseFloat(newMrpPrice);
+
+        existingRow.find('.summary-total-area').text(updatedArea.toFixed(2));
+        existingRow.find('.summary-box-needed').text(updatedBoxes);
+        //existingRow.find('.summary-mrp-price').text(updatedMrpPrice.toFixed(2));
+    }
+
+    updateTotalRow();
+}
+
+function updateTotalRow() {
+    let totalArea = 0, totalTiles = 0, totalBoxes = 0, totalMrpPrice = 0;
+
+    $("#summary-table tbody tr").each(function () {
+        totalArea += parseFloat($(this).find('.summary-total-area').text()) || 0;
+        totalTiles += parseInt($(this).find('.summary-tiles-needed').text()) || 0;
+        totalBoxes += parseInt($(this).find('.summary-box-needed').text()) || 0;
+        //totalMrpPrice += parseFloat($(this).find('.summary-mrp-price').text()) || 0;
+    });
+
+    $("#summary-total-area").text(totalArea.toFixed(2));
+    $("#summary-total-boxes").text(totalBoxes);
+    //$("#summary-total-mrp-price").text("Rs. " + totalMrpPrice.toFixed(2));
+}
+
+
 //0 = Sr. No
 //1 = Name
 //2 = Size

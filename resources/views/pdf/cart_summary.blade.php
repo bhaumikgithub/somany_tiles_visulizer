@@ -173,9 +173,9 @@
             </div>
             <!-- Table structure -->
             @if(isset($groupedTiles))
-            <div class="summary-page-table-row">
+                <div class="summary-page-table-row">
                  <div class="">
-                    <table class="table summary-page-table">
+                    <table class="table summary-page-table" id="summary-table">
                     <thead>
                         <tr class="table-active">
                         <th  class="text-center">Sr. No</th>
@@ -197,18 +197,18 @@
                             $i = 1;
                             @endphp
                             @foreach($groupedTiles as $index => $tile)
-                                    <tr>
+                                    <tr data-tile-id="{{ $tile['id'] }}">
                                         <td class="text-center">{{ $i }}</td>
                                         <td>{{ $tile['name'] }}</td>
                                         <td>{{ $tile['size'] }}</td>
                                         <td>{{ ucfirst($tile['finish']) }}</td>
                                         <td>{{ ucwords($tile['apply_on']) }}</td>
-                                        <td class="text-center">{{ ( $tile['area_sq_ft'] === "-" ) ? "-" : number_format($tile['area_sq_ft'])  }}</td>
+                                        <td class="text-center summary-total-area">{{ ( $tile['area_sq_ft'] === "-" ) ? "-" : number_format($tile['area_sq_ft'])  }}</td>
                                         <td class="text-center">{{ $tile['tiles_per_box'] }}</td>
                                         <td class="text-center">{{ ( $tile['box_coverage_area_sq_ft'] === "-" ) ? "-" : $tile['box_coverage_area_sq_ft'] }}</td>
-                                        <td class="text-center">{{ $tile['box_required'] }}</td>
+                                        <td class="text-center summary-box-needed">{{ $tile['box_required'] }}</td>
                                         <td class="text-center">{{ $tile['mrp_per_sq_ft'] }}</td>
-                                        <td class="text-center">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
+                                        <td class="text-center summary-mrp-price">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
                                     </tr>
                                     @php
                                         $i++; // Increment only when a valid row is printed
@@ -228,7 +228,7 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td class="text-center">{{ ( $totalMrpPrice === 0 ) ? "" : "Rs. ". number_format($totalMrpPrice) }}</td>
+                                <td class="text-center" id="summary-total-mrp-price">{{ ( $totalMrpPrice === 0 ) ? "" : "Rs. ". number_format($totalMrpPrice) }}</td>
                             </tr>
                         @endif
                     </tbody>

@@ -128,7 +128,7 @@ Route::group(['middleware' => 'role:editor'], function () {
     Route::post('/tiles', 'App\Http\Controllers\Controller@tilesFilter');
     Route::post('/tiles/upload', 'App\Http\Controllers\Controller@tilesUpload');
     Route::post('/tiles/upload/confirm', 'App\Http\Controllers\Controller@tilesUploadConfirm');
-    Route::post('/tile/update', 'App\Http\Controllers\Controller@tileUpdate');
+    Route::post('/tile/update', 'App\Http\Controllers\Controller@+');
     Route::post('/tiles/delete', 'App\Http\Controllers\Controller@tilesDelete');
     Route::post('/tiles/enable', 'App\Http\Controllers\Controller@tilesEnable');
     Route::post('/tiles/disable', 'App\Http\Controllers\Controller@tilesDisable');

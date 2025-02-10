@@ -464,6 +464,7 @@ class AddToPdfRoomsController extends Controller
                     $box_coverage_area_sq_ft = Helper::getBoxCoverageAreaSqFt($tile['id']);
                     $mrp_price = ( $box_coverage_area_sq_ft * $tile['price'] );
                     $tilesCollection->push([
+                        'id' => $tile['id'],
                         'name' => $tile['name'],
                         'size' => "{$tile['width']} x {$tile['height']}",
                         'finish' => $tile['finish'],
@@ -478,6 +479,7 @@ class AddToPdfRoomsController extends Controller
                 } else {
                     // Push default values or skip this tile
                     $tilesCollection->push([
+                        'id' => $tile['id'],
                         'name' => $tile['name'],
                         'size' => "{$tile['width']} x {$tile['height']}",
                         'finish' => $tile['finish'],
