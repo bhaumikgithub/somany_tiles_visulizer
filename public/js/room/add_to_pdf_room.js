@@ -451,17 +451,22 @@ function updateSummaryTable(tiles) {
 
     tilesArray.forEach((tile) => { // ✅ Now forEach will work
         let existingRow = $(`#summary-table tbody tr[data-tile-id="${tile.id}"]`);
-
+        let mrpPrice = 0;
         if (existingRow.length > 0) {
-            // ✅ Update values in the existing row
+            // Update values in the existing row
             existingRow.find('.summary-total-area').text(tile.area_sq_ft);
             existingRow.find('.summary-box-needed').text(tile.box_required);
-            existingRow.find('.summary-mrp-price').text(tile.mrp_price);
+            if( tile.mrp_price === "-"){
+                mrpPrice = 0;
+            } else {
+                mrpPrice = tile.mrp_price
+            }
+            existingRow.find('.summary-mrp-price').text(mrpPrice);
 
-            // ✅ Accumulate total values
+            //Accumulate total values
             // totalArea += parseFloat(tile.area_sq_ft);
             // totalBoxes += parseInt(tile.box_required);
-            totalPrice += parseFloat(tile.mrp_price);
+            totalPrice += parseInt(mrpPrice);
         } else {
             console.warn("Tile ID not found in summary table:", tile.id);
         }
@@ -470,7 +475,8 @@ function updateSummaryTable(tiles) {
     // Update total row
     // $("#summary-total-area").text(totalArea.toFixed(2));
     // $("#summary-total-boxes").text(totalBoxes);
-    $("#summary-total-mrp-price").text("Rs. " + totalPrice.toFixed(2));
+    if(totalPrice !==0 )
+        $("#summary-total-mrp-price").text("Rs. " + totalPrice);
 }
 
 
