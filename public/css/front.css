@@ -1003,6 +1003,12 @@ body {
 
 
 } */
+
+.-header.active  .-header-title{
+
+    color: #ce1f22;
+    font-weight: bold;
+}
 .filter-item-checkbox {
     display: flex;
     align-items: center;
