@@ -309,6 +309,8 @@ body {
 
     .mobile-div {
         display: block;
+        height: 100%;
+        overflow-y: auto !important;
     }
 
     .body-selection-item-image {
@@ -908,11 +910,18 @@ body {
 
 
 .filter-top-panel {
-    padding: 10px;
+    padding: 0px 0px 0px 7px;
     width: 100%;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc;
     border-radius: 10px;
-    background-color: #ffffff80;
+    background-color: #ffffff80; */
+
+}
+.search-filter-panel-box{
+    padding: 0px 0px 0px 15px;
+}
+.serach-pad-set{
+    padding-right: 15px;
 }
 
 .filter-top-panel .filter-block {
@@ -932,13 +941,15 @@ body {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
 }
 
 .filter-item-checkbox {
-    width: auto;
+    width: 28%;
     margin-left: 0px;
     margin-right: 10px;
+    display: flex;
+    flex-wrap:wrap;
 }
 
 .filter-block label {
@@ -959,14 +970,14 @@ body {
     position: relative;
 }
 
-.filter-item-checkbox input[type=checkbox]:checked+label:after {
+.filter-item-checkbox input[type=checkbox]:checked:after {
     background-color: #ce1f22;
     content: '\2714';
     font-size: 11px;
     left: 0px;
     padding: 1px 2px 0px 4px;
     position: absolute;
-    top: 0px;
+  
     color: #fff;
     border-radius: 2px;
     height: 17px;
@@ -975,6 +986,7 @@ body {
 
 .filter-item-checkbox input[type=checkbox] {
     margin: 0px;
+   
     background-color: #fff;
     border: 1px solid #ce1f22;
     border-radius: 2px;
@@ -991,6 +1003,12 @@ body {
 
 
 } */
+
+.-header.active  .-header-title{
+
+    color: #ce1f22;
+    font-weight: bold;
+}
 .filter-item-checkbox {
     display: flex;
     align-items: center;
@@ -999,10 +1017,12 @@ body {
 
 .filter-item-checkbox label {
     margin-left: 6px;
+    width: calc(100% - 24px);
 }
 
 .filter-block-support-buttons {
     font-size: 12px;
+    display: none !important;
 }
 
 .filter-block-support-buttons span {
@@ -1415,6 +1435,10 @@ body {
     margin-top: -8px;
 }
 
+.-header{
+    cursor: pointer;
+}
+
 .add-sec-header {
     padding: 15px 15px 0px 15px;
 }
@@ -1635,6 +1659,9 @@ body {
 input[type=checkbox] {
     cursor: pointer;
 }
+#topPanelFilter{
+    max-height:30vh !important;
+}
 
 /* select data pannel css end */
 @media (max-width:767px) {
@@ -1792,3 +1819,5 @@ input[type=checkbox] {
 
 
 } */
+
+
