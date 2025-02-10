@@ -456,17 +456,14 @@ function updateSummaryTable(tiles) {
             // Update values in the existing row
             existingRow.find('.summary-total-area').text(tile.area_sq_ft);
             existingRow.find('.summary-box-needed').text(tile.box_required);
-            if( tile.mrp_price === "-"){
-                mrpPrice = 0;
-            } else {
-                mrpPrice = tile.mrp_price
+            if( tile.mrp_price !== "-"){
+                existingRow.find('.summary-mrp-price').text(tile.mrp_price);
+                totalPrice += parseInt(tile.mrp_price);
             }
-            existingRow.find('.summary-mrp-price').text(mrpPrice);
-
             //Accumulate total values
             // totalArea += parseFloat(tile.area_sq_ft);
             // totalBoxes += parseInt(tile.box_required);
-            totalPrice += parseInt(mrpPrice);
+
         } else {
             console.warn("Tile ID not found in summary table:", tile.id);
         }
