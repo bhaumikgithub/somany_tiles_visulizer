@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Room2d;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Support\Facades\Storage;
@@ -19,6 +21,12 @@ class ControllerPanorama extends Controller
     /**
      *  AJAX
      */
+
+    public function index()
+    {
+        return view('panorama.index');
+    }
+
 
     public function getRoom($id) {
         $room = Panorama::findOrFail($id);
@@ -39,10 +47,24 @@ class ControllerPanorama extends Controller
 
         if (!$roomById && !$url) { abort(404); }
 
+        if( $url ){
+            $savedroom = Savedroom::where('url', $url)->first();
+            $room = Panorama::where('id', $savedroom->roomid)->first();
+            $id = $savedroom->roomid;
+            $name = $room->name;
+            $type = $room->type;
+        } else {
+            $id = $id;
+            $name = $roomById->name;
+            $type = $roomById->type;
+        }
+
         $userId = Auth::id();
 
         return view('panorama.room', [
             'roomId' => $id,
+            'room_name' => $name,
+            'room_type'=> $type,
             'savedRoomUrl' => $url,
             'rooms' => Panorama::roomsByType(),
             'saved_rooms' => Savedroom::getUserSavedRooms($userId),
@@ -59,6 +81,12 @@ class ControllerPanorama extends Controller
         if (!$room) { abort(404); }
 
         return $this->room($room->id);
+    }
+
+    public function roomListing($room_type)
+    {
+        $rooms = Panorama::where('type', $room_type)->where('enabled', 1)->get();
+        return view('panorama.listing',compact('rooms'));
     }
 
 
@@ -213,5 +241,20 @@ class ControllerPanorama extends Controller
 //
 //        return redirect('/panoramas');
 //    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getRoomSurfacePanorama(Request $request): JsonResponse
+    {
+        $room = Panorama::findOrFail($request->room_id);
+        $surface = json_decode($room->surfaces,true);
+        return response()->json([
+            'body' => view('common.exists_surface_area_panorama',compact('surface'))->render(),
+            'data' => ['surface'=> $surface],
+            'success' => 'success'
+        ]);
+    }
 
 }

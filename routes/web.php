@@ -89,9 +89,22 @@ if ($engine_2d_enabled) {
 }
 
 if ($engine_panorama_enabled) {
-    Route::get('/panorama', 'App\Http\Controllers\ControllerPanorama@roomDefault');
-    Route::get('/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@room');
-    Route::get('/get/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@getRoom');
+    Route::middleware(['check.pincode'])->group(function () {
+        Route::get('/panorama', 'App\Http\Controllers\ControllerPanorama@index');
+        Route::get('/panorama-listing/{roomType}', 'App\Http\Controllers\ControllerPanorama@roomListing');
+        //Route::get('/panorama', 'App\Http\Controllers\ControllerPanorama@roomDefault');
+        Route::get('/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@room');
+        Route::get('/get/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@getRoom');
+    });
+
+    Route::get('/check-pincode', function() {
+        return response()->json([
+            'pincode_saved' => session()->has('pincode')
+        ]);
+    });
+
+    Route::post('/save-pincode', [PincodeController::class, 'store'])->name('save-pincode');
+    Route::post('/get_room_surface','App\Http\Controllers\ControllerPanorama@getRoomSurfacePanorama');
 }
 
 if ($engine_3d_enabled) {
