@@ -1395,6 +1395,7 @@ body {
     align-items: center;
     justify-content: center;
     color: #3F3F46 !important;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 10px 0px;
 
 }
 
