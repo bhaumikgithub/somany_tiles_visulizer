@@ -9,10 +9,18 @@ var wallFloorContent = '.withoutThemePanelWrapper';
 var wallFloorThemeContentParent = '#slected-panel';
 var themeContent = '#selected_panel_theme';
 
+const url = new URL(window.location.href);
+const pathSegments = url.pathname.split("/");
 
+let surfaceUrl = "";
 window.onload = function getRoomSurface() {
+    if(pathSegments[1] === "panorama"){
+        surfaceUrl = '/get_room_surface_panorama';
+    } else {
+        surfaceUrl = '/get_room_surface';
+    }
     $.ajax({
-        url: '/get_room_surface', // URL to the controller method for updating the price
+        url: surfaceUrl, // URL to the controller method for updating the price
         method: 'POST',
         data: {
             _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
@@ -20,7 +28,9 @@ window.onload = function getRoomSurface() {
         },
         success: function (response) {
             $('.show_selected_surface_data div#selectd-data').html(response.body);
-            loadThemeData();
+            if(pathSegments[1] === "room2d") {
+                loadThemeData();
+            }
             $('#selected_panel_theme').removeClass("withoutThemePanelWrapper");
             //showMainInfoPanel("MAINLISTING_SHOW", "theme");
         },
@@ -50,6 +60,7 @@ function openTileSelectionPanel(surface_name) {
     } else {
         $('#slected-panel .display_surface_name h5#optionText').text("Themes");
     }
+    console.log(surface_name);
     //top-panel-box
     if (String(surface_name).indexOf("Paint") > -1) {
         $(".serch-box-wrap").hide();
