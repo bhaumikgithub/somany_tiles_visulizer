@@ -9,7 +9,7 @@
                 @include('common.exists_surface_area')
             </div>
             <div id="slected-panel">
-                <div class="top-panel-box">
+                <div class="top-panel-box hideOnMobile">
                     <div class="h5-wrapper display_surface_name">
                         <button class="selcte-data-btn">
                             <span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span>
@@ -23,23 +23,26 @@
                     <div class="row top-panel-box top-panel-box-first top-panel-box-first-btn-wrap top-panel-box-cmn-br">
                         <div class="col-md-12 col-xs-12">
                             <div class="d-flex flex-wrap w-100">
-                                <!-- <button class="selcte-data-btn">
+                                <button class="selcte-data-btn smallBackArrowForMobile showOnMobile">
                                     <span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span>
-                                </button> -->
+                                </button>
                                 <button id="btnProduct"
                                         class="top-panel-button top-panel-button-product">@lang('Tiles')</button>
                                 <button id="btnLayout"
                                         class="top-panel-button top-panel-button-product">@lang('Layout')</button>
                                 <button id="btnGrout"
                                         class="top-panel-button top-panel-button-product">@lang('Grout')</button>
-                                        <button id="search"
+                                <button id="search"
                                         class="top-panel-search"> <svg class="svg-inline--fa fa-magnifying-glass search-icon" aria-hidden="true"
-                                            focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img"
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
-                                            <path fill="currentColor"
-                                                d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z">
-                                            </path>
-                                        </svg></button>
+                                                                       focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img"
+                                                                       xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                                        <path fill="currentColor"
+                                              d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z">
+                                        </path>
+                                    </svg></button>
+                                <button id="sliderIconToggle" class="top-panel-button smallBackArrowForMobile showOnMobile partOfProductTab" style="padding-left:8px;">
+                                    <i class="fa-solid fa-sliders"></i>
+                                </button>
                             </div>
                         </div>
 
@@ -50,20 +53,20 @@
                             <div class="serach-pad-set d-flex flex-wrap w-100">
                                 <div class="input-text-box-wrap">
                                     <input id="inputSearch" type="search" value="" placeholder="@lang('Search Product')"
-                                        class="input-search product-input-serch"><button id="btnSearchIcon"
+                                           class="input-search product-input-serch"><button id="btnSearchIcon"
                                                                                             class="search-icon-button">
                                         <svg class="svg-inline--fa fa-magnifying-glass form-control-feedback" aria-hidden="true"
-                                            focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img"
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                                             focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img"
+                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
                                             <path fill="currentColor"
-                                                d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z">
+                                                  d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z">
                                             </path>
                                         </svg>
                                     </button>
                                 </div>
-                                <div class="fliter-btn-wrap">
+                                <div class="fliter-btn-wrap hideOnMobile">
                                     <button id="btnRefine"
-                                        class="top-panel-button top-panel-btn-filter">@lang('
+                                            class="top-panel-button top-panel-btn-filter">@lang('
                                             <i class="fa-solid fa-sliders"></i>
                                     ')</button>
                                 </div>
@@ -72,8 +75,8 @@
                             {{--            <p class="ds-text">Displaying 3,123 of 3123</p> --}}
 
                             <div id="topPanelFilter"
-                                class="top-panel-box top-panel-option-box top-panel-box-overflow-y filter-top-panel"
-                                style="display: none;"></div>
+                                 class="top-panel-box top-panel-option-box top-panel-box-overflow-y filter-top-panel"
+                                 style="display: none;"></div>
                         </div>
                     </div>
                     <div class="top-panel-box row radio-surface-rotation top-panel-box-cmn-br mt-0 d-flex flex-wrap">
@@ -191,53 +194,53 @@
                     </div>
 
                     <div id="topPanelGrout" class="top-panel-option-box top-panel-box-overflow-y" style="display: none;">
-                    <div id="topPanelContentSurfaceTabGroutSizeBody" class="top-panel-box top-panel-box-cmn-br row">
-                        <div class="col-md-12">
-                            <div class="row d-flex flex-wrap">
-                                <div class="col-md-4 col-xs-12">
-                                    <span class="top-panel-label stiled-checkbox-text">@lang('Size')</span>
-                                </div>
-                                <div class="col-md-8 col-xs-12 text-right xs-left range-slider">
-                                    <span id="" class="span-width">0</span>
-                                    <input id="topPanelGroutSizeRange" type="range" min="0" max="24"
-                                           value="4" class="slider">
-                                    <span id="topPanelGroutSizeText" class="top-panel-label stiled-checkbox-text">4
+                        <div id="topPanelContentSurfaceTabGroutSizeBody" class="top-panel-box top-panel-box-cmn-br row">
+                            <div class="col-md-12">
+                                <div class="row d-flex flex-wrap">
+                                    <div class="col-md-4 col-xs-12">
+                                        <span class="top-panel-label stiled-checkbox-text">@lang('Size')</span>
+                                    </div>
+                                    <div class="col-md-8 col-xs-12 text-right xs-left range-slider">
+                                        <span id="" class="span-width">0</span>
+                                        <input id="topPanelGroutSizeRange" type="range" min="0" max="24"
+                                               value="4" class="slider">
+                                        <span id="topPanelGroutSizeText" class="top-panel-label stiled-checkbox-text">4
                                         mm</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="top-panel-box top-panel-box-cmn-br row">
-                        <!-- <span class="top-panel-label stiled-checkbox-text">@lang('Grout Color')</span> -->
+                        <div class="top-panel-box top-panel-box-cmn-br row">
+                            <!-- <span class="top-panel-label stiled-checkbox-text">@lang('Grout Color')</span> -->
 
-                        <div class="col-md-12">
-                            <?php
-                            $grout_colors = config('app.grout_colors');
-                            if (count($grout_colors) > 0 && $grout_colors[0]) {
-                                echo '<div id="grout-predefined-color">';
-                                foreach ($grout_colors as $color) {
-                                    echo "<button data-color=\"$color\" style=\"background-color: $color;\" class=\"-btn\"></button>";
+                            <div class="col-md-12">
+                                <?php
+                                $grout_colors = config('app.grout_colors');
+                                if (count($grout_colors) > 0 && $grout_colors[0]) {
+                                    echo '<div id="grout-predefined-color">';
+                                    foreach ($grout_colors as $color) {
+                                        echo "<button data-color=\"$color\" style=\"background-color: $color;\" class=\"-btn\"></button>";
+                                    }
+                                    echo '</div>';
                                 }
-                                echo '</div>';
-                            }
-                            ?>
-                        </div>
-                        <div class="col-md-12">
-                            <div id="grout-color-picker" class="top-panel-select-color" data-color="#ffffff"
-                                 title="Grout Color"></div>
+                                ?>
+                            </div>
+                            <div class="col-md-12">
+                                <div id="grout-color-picker" class="top-panel-select-color" data-color="#ffffff"
+                                     title="Grout Color"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
                     <div id="topPanelAccordionFilter" class="top-panel-box" style="display: none;">
-                    <span class="top-panel-label">@lang('Sorting tiles'):</span>
-                    <div class="accordion-filter">
-                        <div class="filter-accordion accordion-menu">
-                            <h3 class="accordion-header">Select...</h3>
-                            <div class="filter-accordion accordion-body"></div>
+                        <span class="top-panel-label">@lang('Sorting tiles'):</span>
+                        <div class="accordion-filter">
+                            <div class="filter-accordion accordion-menu">
+                                <h3 class="accordion-header">Select...</h3>
+                                <div class="filter-accordion accordion-body"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
                     {{--    @if (!config('app.hide_top_panel_sort')) --}}
                     {{--    <div class="row top-panel-box dropdown-tiles-sort top-panel-box-cmn-br mt-0 d-flex flex-wrap"> --}}
