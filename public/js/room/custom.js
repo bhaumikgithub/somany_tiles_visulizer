@@ -6,7 +6,7 @@ var layoutMode = "";
 var topPanelTopPosition = 10;
 var firstTime = true;
 var searchPanelOpen = true;
-
+$(".cmn-room-btn").css('visibility', 'hidden');
 document.getElementById("roomLoaderBackground").style.visibility = "hidden";
 
 function AdjustCanvasWidthHeight() {
@@ -119,6 +119,7 @@ function allLoadCompleted() {
 
 $(window).on('load', function () {
 
+    $(".cmn-room-btn").css('visibility', 'hidden');
     interval = setInterval(function () {
         if ($("#sourceLoadProgressBarContainer").length > 0) {
         }
