@@ -543,6 +543,39 @@ body {
     width: 100%;
 }
 
+.search-icon{
+   
+    position: relative;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    display: block;
+    color: #fff;
+    height: 16px;
+   
+    text-align: center;
+}
+
+.top-panel-search{
+    background-color: #ffc4c4 !important;
+    padding: 8px 12px !important;
+    display: none;
+    font-weight: 400;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: 1px solid #bbbbbb;
+    line-height: unset;
+    margin-bottom: 0px !important;
+    margin-top: 5px;
+}
+
+.top-panel-search-active {
+    background-color: #7e7c7c !important;
+}
+
+
+
 
 @media (max-width:991px) {
 
@@ -918,6 +951,7 @@ body {
 }
 .search-filter-panel-box{
     padding: 0px 0px 0px 15px;
+    display: none;
 }
 .serach-pad-set{
     padding-right: 15px;
