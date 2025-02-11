@@ -83,14 +83,12 @@ function openTileSelectionPanel(surface_name) {
 }
 
 let themeSurfaceUrl = "";
-console.log(pathSegments[1]);
-if(pathSegments[1] === "panorama"){
-    themeSurfaceUrl = '/get/panorama/';
-} else {
-    themeSurfaceUrl = '/get/room2d/';
-}
-
 function loadThemeData() {
+    if(pathSegments[1] === "panorama"){
+        themeSurfaceUrl = '/get/panorama/';
+    } else {
+        themeSurfaceUrl = '/get/room2d/';
+    }
     $.ajax({
         url: themeSurfaceUrl + $('#current_room_id').val(), // Replace with the actual endpoint for room2d
         success: function (themes) {
