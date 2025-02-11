@@ -83,7 +83,7 @@ if ($engine_2d_enabled) {
     // Route to save the pincode
     Route::post('/save-pincode', [PincodeController::class, 'store'])->name('save-pincode');
 //    Route::get('/room2d/{id}', 'App\Http\Controllers\Controller2d@room');
-//    Route::get('/get/room2d/{id}', 'App\Http\Controllers\Controller2d@getRoom');
+    Route::get('/get/room2d/{id}', 'App\Http\Controllers\Controller2d@getRoom');
 //    Route::get('/listing/{roomType}', 'App\Http\Controllers\Controller2d@roomListing');
     Route::post('/get_room_surface','App\Http\Controllers\Controller2d@getRoomSurface');
 }
@@ -101,6 +101,7 @@ if ($engine_panorama_enabled) {
     });
 
     Route::post('/save-pincode', [PincodeController::class, 'store'])->name('save-pincode');
+    Route::get('/get/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@getRoom');
     Route::post('/get_room_surface_panorama','App\Http\Controllers\ControllerPanorama@getRoomSurfacePanorama');
 }
 

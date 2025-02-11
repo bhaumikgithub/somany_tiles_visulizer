@@ -11,6 +11,8 @@ var themeContent = '#selected_panel_theme';
 
 const url = new URL(window.location.href);
 const pathSegments = url.pathname.split("/");
+console.log(pathSegments[1]);
+
 
 let surfaceUrl = "";
 window.onload = function getRoomSurface() {
@@ -58,7 +60,6 @@ function openTileSelectionPanel(surface_name) {
     } else {
         $('#slected-panel .display_surface_name h5#optionText').text("Themes");
     }
-    console.log(surface_name);
     //top-panel-box
     if (String(surface_name).indexOf("Paint") > -1) {
         $(".serch-box-wrap").hide();
@@ -80,10 +81,18 @@ function openTileSelectionPanel(surface_name) {
 
 
 }
-function loadThemeData() {
 
+let themeSurfaceUrl = "";
+console.log(pathSegments[1]);
+if(pathSegments[1] === "panorama"){
+    themeSurfaceUrl = '/get/panorama/';
+} else {
+    themeSurfaceUrl = '/get/room2d/';
+}
+
+function loadThemeData() {
     $.ajax({
-        url: '/get/room2d/' + $('#current_room_id').val(), // Replace with the actual endpoint for room2d
+        url: themeSurfaceUrl + $('#current_room_id').val(), // Replace with the actual endpoint for room2d
         success: function (themes) {
             $('#selected_panel_theme').show();
             console.log("THEME DATA");

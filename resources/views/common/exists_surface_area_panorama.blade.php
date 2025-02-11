@@ -34,15 +34,15 @@
                 <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
             </li>
         @endforeach
-{{--        <li class="slected_tile choosen_tile_updated_data" id="list_theme" onclick="openTileSelectionPanel('theme');" style="cursor: pointer">--}}
-{{--            <div class="tile-list-thumbnail-image-holder">--}}
-{{--                <img src="{{asset('/storage/no_tile.png')}}">--}}
-{{--            </div>--}}
-{{--            <div class="tile-list-text">--}}
-{{--                <p class="-caption">Theme</p>--}}
-{{--                <div class="selected tile detail"></div>--}}
-{{--            </div>--}}
-{{--            <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>--}}
-{{--        </li>--}}
+        <li class="slected_tile choosen_tile_updated_data" id="list_theme" onclick="openTileSelectionPanel('theme');" style="cursor: pointer">
+            <div class="tile-list-thumbnail-image-holder">
+                <img src="{{asset('/storage/no_tile.png')}}">
+            </div>
+            <div class="tile-list-text">
+                <p class="-caption">Theme</p>
+                <div class="selected tile detail"></div>
+            </div>
+            <button class="open-panel"><span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span></button>
+        </li>
     @endif
 </ul>
