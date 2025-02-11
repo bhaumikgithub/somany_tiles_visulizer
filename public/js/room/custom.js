@@ -282,16 +282,21 @@ function showHideTabs(p_pressedType) {
     //IF responsive and search icon pressed then
     //This function calling from 2d.min.js
 
-
-    //$("#search-filter-panel-box").show();
+     var roomCanvasTitle = $('#roomCanvas').attr('title').trim();  // Get the title and trim any extra spaces
+     var titleWords = roomCanvasTitle.split(' ');  // Split the title by spaces
+    var firstTwoWords = titleWords.slice(0, 2).join(' ');  // Take the first two words and join them with a space
 
     switch (activeTab) {
         case "PRODUCT":
             $('#topPanelGrout').hide();
             $('#topPanelLayout').hide();
             $("#topPanelContentSurfaceTabGroutSizeBody").hide();
-
-            $(".serch-box-wrap").show();
+            if (firstTwoWords.toLowerCase() === "change counter" || firstTwoWords.toLowerCase() === "change paint") {
+                $('.top-panel-search').hide();  // Hide the search panel
+            } else {
+                $('.top-panel-search').show();  // Show the search panel
+            }
+        
             $('.radio-surface-rotation').show();
             $('#topPanelTilesListBox').show();
             if (layoutMode == "PORTRAIT") {
@@ -304,7 +309,8 @@ function showHideTabs(p_pressedType) {
         case "LAYOUT":
             $('#topPanelGrout').hide();
             $('#topPanelTilesListBox').hide();
-            $(".serch-box-wrap").hide();
+            
+            $(".top-panel-search").hide();
             $('.radio-surface-rotation').hide();
             $(".partOfProductTab").hide();
             $("#topPanelContentSurfaceTabGroutSizeBody").hide();
@@ -315,6 +321,7 @@ function showHideTabs(p_pressedType) {
         case "GROUT":
             $('#topPanelLayout').hide();
             $('#topPanelTilesListBox').hide();
+            $(".top-panel-search").hide();
             $(".partOfProductTab").hide();
 
             $('#topPanelGrout').show();
@@ -349,14 +356,14 @@ $('.share-btn-close').on('click', function () {
 
 
 $('.open-panel').on('click', function () {
-    // Show the info panel
+   
     $('#selectd-data').hide();
     $('#slected-panel').show();
 
 });
 
 $('.selcte-data-btn').on('click', function () {
-    // Show the info panel
+   
     $('#selectd-data').show();
     $('#slected-panel').hide();
 
@@ -366,3 +373,35 @@ $('.cartpanelclose').on('click', function () {
     $("body").css('overflow', "hidden");
 
 });
+
+
+$('.top-panel-search').on('click', function () {
+    // Toggle the class .top-panel-search-active
+    $(this).toggleClass('top-panel-search-active');
+    
+    if ($('.search-filter-panel-box').css('display') === 'none') {
+        $('.search-filter-panel-box').show();
+       
+    } else {
+        $('.search-filter-panel-box').hide();
+    }
+});
+
+$('.search-filter-panel-box').on('click', function (e) {
+    e.stopPropagation(); 
+});
+
+$('#btnProduct').on('click', function () {
+    activeTab = "PRODUCT";
+    showHideTabs();
+
+    var optionText = $('#optionText').text().trim();  
+    var firstWord = optionText.split(' ')[0].toLowerCase(); 
+
+    if (firstWord === "counter" || firstWord === "paint") {
+        $('.top-panel-search').hide();  
+    } else {
+        $('.top-panel-search').show();  
+    }
+});
+
