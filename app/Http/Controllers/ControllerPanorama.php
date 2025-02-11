@@ -124,6 +124,9 @@ class ControllerPanorama extends Controller
         }
         if ($request->hasFile('image')) {
             $room->image = $request->file('image')->store('panoramas', 'public');
+            $room->theme0 = $request->file('image')->store('panoramas', 'public');
+            $room->theme_thumbnail0 = $request->file('theme_thumbnail0')->store('rooms2d', 'public');
+            $room->text0 = $request->text0;
         }
         if ($request->hasFile('shadow')) {
             $room->shadow = $request->file('shadow')->store('panoramas', 'public');
@@ -131,6 +134,50 @@ class ControllerPanorama extends Controller
         if ($request->hasFile('shadow_matt')) {
             $room->shadow_matt = $request->file('shadow_matt')->store('panoramas', 'public');
         }
+
+        // Array of theme, thumbnail, and text field combinations
+        $fields = [
+            ['theme1', 'theme_thumbnail1', 'text1'],
+            ['theme2', 'theme_thumbnail2', 'text2'],
+            ['theme3', 'theme_thumbnail3', 'text3'],
+            ['theme4', 'theme_thumbnail4', 'text4'],
+            ['theme5', 'theme_thumbnail5', 'text5'],
+        ];
+
+        foreach ($fields as $fieldSet) {
+            // $fieldSet will contain an array with [themeX, theme_thumbnailX, textX]
+            $themeField = $fieldSet[0];
+            $thumbnailField = $fieldSet[1];
+            $textField = $fieldSet[2];
+
+            // Handle the theme field (image)
+            if ($request->hasFile($themeField)) {
+                // If the theme file exists, delete the old one from storage
+                if ($room->getOriginal($themeField)) {
+                    Storage::disk('public')->delete($room->getOriginal($themeField));
+                }
+
+                // Store the new theme file
+                $room->$themeField = $request->file($themeField)->store('panoramas', 'public');
+            }
+
+            // Handle the thumbnail field (image)
+            if ($request->hasFile($thumbnailField)) {
+                // If the thumbnail file exists, delete the old one from storage
+                if ($room->getOriginal($thumbnailField)) {
+                    Storage::disk('public')->delete($room->getOriginal($thumbnailField));
+                }
+
+                // Store the new thumbnail file
+                $room->$thumbnailField = $request->file($thumbnailField)->store('panoramas', 'public');
+            }
+
+            // Handle the text field (text input)
+            if ($request->has($textField)) {
+                $room->$textField = $request->$textField;
+            }
+        }
+
 
         $room->surfaces = $request->surfaces;
         $room->enabled = 1;
@@ -150,6 +197,11 @@ class ControllerPanorama extends Controller
             'shadow_matt' => 'nullable|image', // |max:10000|dimensions:max_width=12288,max_height=1024
             'surfaces' => 'required|json',
             'enabled' => 'nullable|boolean',
+            'theme1' => 'nullable|image',
+            'theme2' => 'nullable|image' ,
+            'theme3' => 'nullable|image',
+            'theme4' => 'nullable|image',
+            'theme5' => 'nullable|image',
         ]);
 
         if ($validator->fails()) {
@@ -175,6 +227,54 @@ class ControllerPanorama extends Controller
         if ($request->hasFile('shadow_matt')) {
             Storage::disk('public')->delete($room->getOriginal('shadow_matt'));
             $room->shadow_matt = $request->file('shadow_matt')->store('panoramas', 'public');
+        }
+
+        if ($request->hasFile('theme_thumbnail0')) {
+            $room->theme_thumbnail0 = $request->file('theme_thumbnail0')->store('panoramas', 'public');
+        }
+        $room->text0 = $request->text0;
+
+        // Array of theme, thumbnail, and text field combinations
+        $fields = [
+            ['theme1', 'theme_thumbnail1', 'text1'],
+            ['theme2', 'theme_thumbnail2', 'text2'],
+            ['theme3', 'theme_thumbnail3', 'text3'],
+            ['theme4', 'theme_thumbnail4', 'text4'],
+            ['theme5', 'theme_thumbnail5', 'text5'],
+        ];
+
+        foreach ($fields as $fieldSet) {
+            // $fieldSet will contain an array with [themeX, theme_thumbnailX, textX]
+            $themeField = $fieldSet[0];
+            $thumbnailField = $fieldSet[1];
+            $textField = $fieldSet[2];
+
+            // Handle the theme field (image)
+            if ($request->hasFile($themeField)) {
+                // If the theme file exists, delete the old one from storage
+                if ($room->getOriginal($themeField)) {
+                    Storage::disk('public')->delete($room->getOriginal($themeField));
+                }
+
+                // Store the new theme file
+                $room->$themeField = $request->file($themeField)->store('panoramas', 'public');
+            }
+
+            // Handle the thumbnail field (image)
+            if ($request->hasFile($thumbnailField)) {
+                // If the thumbnail file exists, delete the old one from storage
+                if ($room->getOriginal($thumbnailField)) {
+                    Storage::disk('public')->delete($room->getOriginal($thumbnailField));
+                }
+
+                // Store the new thumbnail file
+                $room->$thumbnailField = $request->file($thumbnailField)->store('panoramas', 'public');
+            }
+
+            // Handle the text field (text input)
+            if ($request->has($textField)) {
+                $room->$textField = $request->$textField;
+            }
         }
 
         $room->surfaces = $request->surfaces;

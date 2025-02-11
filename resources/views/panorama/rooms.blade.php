@@ -94,6 +94,11 @@ function editRoom(id) {
     window.$('#form-update-room-icon-img').attr('src', '');
     window.$('#form-update-room-shadow-img').attr('src', '');
     window.$('#form-update-room-shadow-matt-img').attr('src', '');
+    window.$('#form-update-room-theme-1-img').attr('src', '');
+    window.$('#form-update-room-theme-2-img').attr('src', '');
+    window.$('#form-update-room-theme-3-img').attr('src', '');
+    window.$('#form-update-room-theme-4-img').attr('src', '');
+    window.$('#form-update-room-theme-5-img').attr('src', '');
 
     window.$.ajax({
         url: '/get/panorama/' + id,
@@ -105,9 +110,46 @@ function editRoom(id) {
             if (Number(room.enabled)) { window.$('#form-update-room-enabled').attr('checked', true); }
             window.$('#form-update-room-icon-img').attr('src', room.icon);
             window.$('#form-update-room-image-img').attr('src', room.image);
+            window.$('#form-update-room-theme-thumbnail-0-img').attr('src', room.theme_thumbnail0);
+            window.$('#form-update-room-chosen-theme-0').val(room.image);
+            window.$('#form-update-room-chosen-thumbnail-0').val(room.theme_thumbnail0);
+            window.$('#form-update-room-text-0').val(room.text0);
+
+
             window.$('#form-update-room-shadow-img').attr('src', room.shadow);
             window.$('#form-update-room-shadow-matt-img').attr('src', room.shadow_matt);
             window.$('#form-update-room-tiledSurfaces').val(room.surfaces);
+
+            window.$('#form-update-room-theme-1-img').attr('src', room.theme1);
+            window.$('#form-update-room-theme-thumbnail-1-img').attr('src', room.theme_thumbnail1);
+            window.$('#form-update-room-chosen-theme-1').val(room.theme1);
+            window.$('#form-update-room-chosen-thumbnail-1').val(room.theme_thumbnail1);
+            window.$('#form-update-room-text-1').val(room.text1);
+
+            window.$('#form-update-room-theme-2-img').attr('src', room.theme2);
+            window.$('#form-update-room-theme-thumbnail-2-img').attr('src', room.theme_thumbnail2);
+            window.$('#form-update-room-chosen-theme-2').val(room.theme2);
+            window.$('#form-update-room-chosen-thumbnail-2').val(room.theme_thumbnail2);
+            window.$('#form-update-room-text-2').val(room.text2);
+
+            window.$('#form-update-room-theme-3-img').attr('src', room.theme3);
+            window.$('#form-update-room-theme-thumbnail-3-img').attr('src', room.theme_thumbnail3);
+            window.$('#form-update-room-chosen-theme-3').val(room.theme3);
+            window.$('#form-update-room-chosen-thumbnail-3').val(room.theme_thumbnail3);
+            window.$('#form-update-room-text-3').val(room.text3);
+
+            window.$('#form-update-room-theme-4-img').attr('src', room.theme4);
+            window.$('#form-update-room-theme-thumbnail-4-img').attr('src', room.theme_thumbnail4);
+            window.$('#form-update-room-chosen-theme-4').val(room.theme4);
+            window.$('#form-update-room-chosen-thumbnail-4').val(room.theme_thumbnail4);
+            window.$('#form-update-room-text-4').val(room.text4);
+
+            window.$('#form-update-room-theme-5-img').attr('src', room.theme5);
+            window.$('#form-update-room-theme-thumbnail-5-img').attr('src', room.theme_thumbnail5);
+            window.$('#form-update-room-chosen-theme-5').val(room.theme5);
+            window.$('#form-update-room-chosen-thumbnail-5').val(room.theme_thumbnail5);
+            window.$('#form-update-room-text-5').val(room.text5);
+
 
             // window.$('#form-update-room-surfaces').attr('href', '/panorama/' + room.id + '/surfaces');
 
@@ -161,12 +203,12 @@ function showBigIconImageModal(name, image) {
       <span class="col-sm-3 help-block">Image must be less than 1 MB and resolution less than 1024x1024 pixels.</span>
     </div>
 
-    <div class="form-group required">
-      <label for="form-room-image" class="col-sm-3 control-label">Room Image</label>
-      <div class="col-sm-6">
-        <input type="file" name="image" id="form-room-image" accept="image/*" class="form-control" required>
-      </div>
-    </div>
+{{--    <div class="form-group required">--}}
+{{--      <label for="form-room-image" class="col-sm-3 control-label">Room Image</label>--}}
+{{--      <div class="col-sm-6">--}}
+{{--        <input type="file" name="image" id="form-room-image" accept="image/*" class="form-control" required>--}}
+{{--      </div>--}}
+{{--    </div>--}}
 
     <div class="form-group">
       <label for="form-room-shadow" class="col-sm-3 control-label">Room Shadow Glossy</label>
@@ -181,6 +223,8 @@ function showBigIconImageModal(name, image) {
         <input type="file" name="shadow_matt" id="form-room-shadow-matt" accept="image/*" class="form-control">
       </div>
     </div>
+
+      @include('2d.theme_options',['module'=>'add'])
 
     <div class="form-group required">
       <label for="form-room-tiledSurfaces" class="col-sm-3 control-label">Tiled Surfaces</label>
@@ -246,15 +290,15 @@ function showBigIconImageModal(name, image) {
       <span class="col-sm-3 help-block">Image must be less than 1 MB and resolution less than 1024x1024 pixels.</span>
     </div>
 
-    <div class="form-group required">
-      <label for="form-update-room-image" class="col-sm-3 control-label">Room Image</label>
-      <div class="col-sm-2">
-        <img id="form-update-room-image-img" src="" alt="" class="img-thumbnail" style="max-width: 128px; max-height: 128px;cursor: pointer;" onclick="showBigIconImageModal(window.$('#form-update-room-name').val(), this.src);">
-      </div>
-      <div class="col-sm-4">
-        <input type="file" name="image" id="form-update-room-image" accept="image/*" class="form-control">
-      </div>
-    </div>
+{{--    <div class="form-group required">--}}
+{{--      <label for="form-update-room-image" class="col-sm-3 control-label">Room Image</label>--}}
+{{--      <div class="col-sm-2">--}}
+{{--        <img id="form-update-room-image-img" src="" alt="" class="img-thumbnail" style="max-width: 128px; max-height: 128px;cursor: pointer;" onclick="showBigIconImageModal(window.$('#form-update-room-name').val(), this.src);">--}}
+{{--      </div>--}}
+{{--      <div class="col-sm-4">--}}
+{{--        <input type="file" name="image" id="form-update-room-image" accept="image/*" class="form-control">--}}
+{{--      </div>--}}
+{{--    </div>--}}
 
     <div class="form-group required">
       <label for="form-update-room-shadow" class="col-sm-3 control-label">Room Shadow</label>
@@ -275,6 +319,8 @@ function showBigIconImageModal(name, image) {
         <input type="file" name="shadow_matt" id="form-update-room-shadow-matt" accept="image/*" class="form-control">
       </div>
     </div>
+
+      @include('2d.theme_options',['module'=>'edit'])
 
     <div class="form-group required">
       <label for="form-update-room-tiledSurfaces" class="col-sm-3 control-label">Tiled Surfaces</label>
