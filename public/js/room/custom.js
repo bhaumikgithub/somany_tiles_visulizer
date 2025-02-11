@@ -5,6 +5,7 @@ var activeTab = "PRODUCT";
 var layoutMode = "";
 var topPanelTopPosition = 10;
 var firstTime = true;
+var searchPanelOpen = true;
 
 document.getElementById("roomLoaderBackground").style.visibility = "hidden";
 
@@ -15,7 +16,7 @@ function AdjustCanvasWidthHeight() {
     var newWidth = windowWidth;
     var newHeight = windowHeight;
     var topPanelHeight = newHeight - 20;
-    var newCanvasHeight  = windowHeight;
+    var newCanvasHeight = windowHeight;
     var newCanvasWidth = windowWidth;
 
     if (windowWidth > windowHeight) {//landscape
@@ -34,8 +35,8 @@ function AdjustCanvasWidthHeight() {
         newHeight = windowHeight / 2;
         newWidth = windowWidth;
 
-        newCanvasHeight =  newHeight;
-        newCanvasWidth =  newHeight * 1.78;
+        newCanvasHeight = newHeight;
+        newCanvasWidth = newHeight * 1.78;
 
         topPanelHeight = newHeight;
         topPanelTopPosition = newHeight + 20;
@@ -46,10 +47,10 @@ function AdjustCanvasWidthHeight() {
             hideTopPanelMainPanel();
         }
         $("#container").width(windowWidth);
-        $("#container").css("overflow-x","auto");
-        setTimeout(setTimeout(function(){
+        $("#container").css("overflow-x", "auto");
+        setTimeout(setTimeout(function () {
             $("#container").scrollLeft((newCanvasWidth - windowWidth) / 2);
-        },300));
+        }, 300));
     }
 
     //row top-panel-box top-panel-box-first top-panel-box-first-btn-wrap top-panel-box-cmn-br
@@ -92,16 +93,16 @@ function AdjustCanvasWidthHeight() {
     //$(".cn-btn").css({ right: newRight });
     //$(".share-btn-img").css({ right: newRight });
     //$(".share-div").css({ right: newRight });
-    if(layoutMode=="PORTRAIT"){
+    if (layoutMode == "PORTRAIT") {
         $(".back-btn").css({ left: newLeft });
         $(".cn-btn").css("right", "0px");
         $(".share-btn-img").css("right", "18px");
         $(".share-div").css("right", "26px");
     }
-    else{
+    else {
         $(".back-btn").css({ left: newLeft });
         $(".cn-btn").css({ right: newRight });
-        $(".share-btn-img").css({ right: newRight + 6});
+        $(".share-btn-img").css({ right: newRight + 6 });
         $(".share-div").css({ right: newRight });
     }
 
@@ -253,24 +254,69 @@ $('#btnGrout').on('click', function () {
 
 });
 
-function showHideTabs() {
-    $('#topPanelTilesListBox').hide();
-    $('#topPanelLayout').hide();
-    $('#topPanelGrout').hide();
-    $(".serch-box-wrap").hide();
-    $('.radio-surface-rotation').hide();
+function showHideSearchPanel() {
+
+    if ($('.serach-pad-set').css('display') == 'none') {
+        console.log("diplay none");
+        $(".serach-pad-set").show();
+    }
+    else {
+        console.log("diplay block");
+        $(".serach-pad-set").hide();
+    }
+}
+function showHideFilterPanel(){
+    if ($('#topPanelFilter').css('display') == 'none') {
+        console.log("diplay none");
+        $("#topPanelFilter").show();
+        return true;
+    }
+    else {
+        console.log("diplay block");
+        $("#topPanelFilter").hide();
+        return false;
+    } 
+}
+function showHideTabs(p_pressedType) {
+
+    //IF responsive and search icon pressed then
+    //This function calling from 2d.min.js
+
+
+    //$("#search-filter-panel-box").show();
 
     switch (activeTab) {
         case "PRODUCT":
+            $('#topPanelGrout').hide();
+            $('#topPanelLayout').hide();
+            $("#topPanelContentSurfaceTabGroutSizeBody").hide();
+
             $(".serch-box-wrap").show();
             $('.radio-surface-rotation').show();
             $('#topPanelTilesListBox').show();
-
+            if (layoutMode == "PORTRAIT") {
+                $(".partOfProductTab").show();
+            }
+            else {
+                $(".partOfProductTab").hide();
+            }
             break;
         case "LAYOUT":
+            $('#topPanelGrout').hide();
+            $('#topPanelTilesListBox').hide();
+            $(".serch-box-wrap").hide();
+            $('.radio-surface-rotation').hide();
+            $(".partOfProductTab").hide();
+            $("#topPanelContentSurfaceTabGroutSizeBody").hide();
+
             $('#topPanelLayout').show();
+
             break;
         case "GROUT":
+            $('#topPanelLayout').hide();
+            $('#topPanelTilesListBox').hide();
+            $(".partOfProductTab").hide();
+
             $('#topPanelGrout').show();
             $("#topPanelContentSurfaceTabGroutSizeBody").show();
             break;

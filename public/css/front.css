@@ -734,7 +734,6 @@ body {
     font-size: 15px;
     border-radius: 20px;
     padding-left: 40px;
-    letter-spacing: 1px;
     color: #555;
     border: 1px solid #ced4da;
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
@@ -835,7 +834,7 @@ body {
 
 
     color: #f8f9fa;
-    background-color: #ce1f22;
+    background-color: #ce1f22 !important;
     border-color: #fff;
     width: auto;
     height: auto;
@@ -1663,11 +1662,24 @@ input[type=checkbox] {
     max-height:30vh !important;
 }
 
+.hideOnMobile{
+    display: block;
+}
+.showOnMobile{
+    display: none;
+}
+.showBlock{
+    display: block;
+}
+.hideBlock{
+    display: none;
+}
+
 /* select data pannel css end */
 @media (max-width:767px) {
     .top-panel-product {
         width: 100% !important;
-
+        background-color: rgba(255, 255, 255, 1) !important;
         border-radius: 20px;
         border: 1px solid #ccc;
     }
@@ -1792,6 +1804,23 @@ input[type=checkbox] {
 
     .cmn-room-btn .span-icon {
         font-size: 20px;
+    }
+    .smallBackArrowForMobile{
+        width: 30px;
+        height: 30px;
+        margin-top: 7px;
+        background-color: rgba(217, 217, 217, 1);
+        border-radius: 100%;
+        font-size: 14px;
+    }
+    .hideOnMobile{
+        display: none;
+    }
+    .showOnMobile{
+        display: block;
+    }
+    .input-text-box-wrap{
+        width: 100%;
     }
 }
 
