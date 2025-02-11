@@ -269,7 +269,6 @@ Route::get('/add-to-pdf-data', 'App\Http\Controllers\AddToPdfRoomsController@ind
 Route::get('/pdf-summary/{randomKey}','App\Http\Controllers\AddToPdfRoomsController@pdfSummary');
 Route::post('/generate-pdf', 'App\Http\Controllers\AddToPdfRoomsController@downlaodPdf')->name('generate-pdf');
 Route::post('/add-to-pdf-data-store','App\Http\Controllers\AddToPdfRoomsController@store');
-Route::post('/pdf-summary','App\Http\Controllers\AddToPdfRoomsController@pdf-summary');
 Route::delete('/add-to-pdf-data/{id}', 'App\Http\Controllers\AddToPdfRoomsController@destroy')->name('add-to-pdf-data.destroy');
 Route::delete('/clear-items', 'App\Http\Controllers\AddToPdfRoomsController@removeAllItems')->name('add-to-pdf-data.remove-all-items');
 Route::post('/update-tile-price','App\Http\Controllers\AddToPdfRoomsController@updateTilePrice');

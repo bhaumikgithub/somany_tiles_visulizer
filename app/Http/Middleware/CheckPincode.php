@@ -23,7 +23,8 @@ class CheckPincode
         // Check if we are on the summary page
         if (!session()->has('pincode') &&
             !session()->has('redirected_to_room2d') &&
-            !in_array($request->path(), ['pdf-summary'])) {
+            !in_array($request->path(),['generate-pdf'])&&
+            !str_contains($request->path(),'pdf-summary')) {
 
             // Mark the user as redirected
             session(['redirected_to_room2d' => true]);
