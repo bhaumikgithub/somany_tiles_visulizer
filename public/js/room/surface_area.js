@@ -28,9 +28,7 @@ window.onload = function getRoomSurface() {
         },
         success: function (response) {
             $('.show_selected_surface_data div#selectd-data').html(response.body);
-            if(pathSegments[1] === "room2d") {
-                loadThemeData();
-            }
+            loadThemeData();
             $('#selected_panel_theme').removeClass("withoutThemePanelWrapper");
             //showMainInfoPanel("MAINLISTING_SHOW", "theme");
         },
