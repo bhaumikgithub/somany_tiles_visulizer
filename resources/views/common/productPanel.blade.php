@@ -18,48 +18,14 @@
                     </div>
                 </div>
                 <div class="withoutThemePanelWrapper">
-                    <div class="top-panel-box search-filter-panel-box">
-                    <div class="input-box d-flex flex-wrap serch-box-wrap">
-                        <div class="serach-pad-set d-flex flex-wrap w-100">
-                        <div class="input-text-box-wrap">
-                            <input id="inputSearch" type="search" value="" placeholder="@lang('Search Product')"
-                                   class="input-search product-input-serch"><button id="btnSearchIcon"
-                                                                                    class="search-icon-button">
-                                <svg class="svg-inline--fa fa-magnifying-glass form-control-feedback" aria-hidden="true"
-                                     focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img"
-                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
-                                    <path fill="currentColor"
-                                          d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z">
-                                    </path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="fliter-btn-wrap">
-                            <button id="btnRefine"
-                                    class="top-panel-button top-panel-btn-filter">@lang('
 
-                                                <i class="fa-solid fa-sliders"></i>
-
-                                                ')</button>
-
-                        </div>
-                       </div>
-
-                        <div id="topPanelSearchResult" style="display: none"></div>
-
-                        {{--            <p class="ds-text">Displaying 3,123 of 3123</p> --}}
-
-                        <div id="topPanelFilter"
-                             class="top-panel-box top-panel-option-box top-panel-box-overflow-y filter-top-panel"
-                             style="display: none;"></div>
-
-                    </div>
-                </div>
 
                     <div class="row top-panel-box top-panel-box-first top-panel-box-first-btn-wrap top-panel-box-cmn-br">
                         <div class="col-md-12 col-xs-12">
                             <div class="d-flex flex-wrap w-100">
-
+                                <!-- <button class="selcte-data-btn">
+                                    <span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span>
+                                </button> -->
                                 <button id="btnProduct"
                                         class="top-panel-button top-panel-button-product">@lang('Tiles')</button>
                                 <button id="btnLayout"
@@ -71,7 +37,37 @@
 
 
                     </div>
+                    <div class="top-panel-box search-filter-panel-box">
+                        <div class="input-box d-flex flex-wrap serch-box-wrap">
+                            <div class="serach-pad-set d-flex flex-wrap w-100">
+                                <div class="input-text-box-wrap">
+                                    <input id="inputSearch" type="search" value="" placeholder="@lang('Search Product')"
+                                        class="input-search product-input-serch"><button id="btnSearchIcon"
+                                                                                            class="search-icon-button">
+                                        <svg class="svg-inline--fa fa-magnifying-glass form-control-feedback" aria-hidden="true"
+                                            focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                                            <path fill="currentColor"
+                                                d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="fliter-btn-wrap">
+                                    <button id="btnRefine"
+                                        class="top-panel-button top-panel-btn-filter">@lang('
+                                            <i class="fa-solid fa-sliders"></i>
+                                    ')</button>
+                                </div>
+                            </div>
+                            <div id="topPanelSearchResult" style="display: none"></div>
+                            {{--            <p class="ds-text">Displaying 3,123 of 3123</p> --}}
 
+                            <div id="topPanelFilter"
+                                class="top-panel-box top-panel-option-box top-panel-box-overflow-y filter-top-panel"
+                                style="display: none;"></div>
+                        </div>
+                    </div>
                     <div class="top-panel-box row radio-surface-rotation top-panel-box-cmn-br mt-0 d-flex flex-wrap">
 
                         <div class="col-md-4">
