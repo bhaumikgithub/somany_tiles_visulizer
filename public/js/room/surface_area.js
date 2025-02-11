@@ -192,9 +192,10 @@ function clickedTiles(p_tile, p_surfaceName) {
 
     if (p_surfaceName == "theme") {
         setCurrentListID("theme");
-        textForMainPanel = p_tile.text;
-        thumbImage = p_tile.theme_thumbnail;
-
+        if( p_tile ) {
+            textForMainPanel = p_tile.text;
+            thumbImage = p_tile.theme_thumbnail;
+        }
     }
     else {
         //Wall A convert to wall_A
