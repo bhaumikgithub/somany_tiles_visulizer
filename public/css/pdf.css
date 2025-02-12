@@ -40,10 +40,12 @@ body{
 
 }
 .details-card img {
-	max-width: 100%;
+	
 	border-radius: 8px;
 	min-width: 100px;
 	min-height: 100px;
+	width:130px;
+	height:130px;
 }
 .details-card h5 {
 	font-size: 16px;
@@ -179,8 +181,11 @@ input[type=checkbox]{
 }
 
 .summary-page-table-row {
-	background: #f8f9fa;
+	/* background: #f8f9fa; */
 	margin-top: 20px;
+}
+.summary-page-table-row{
+	overflow: auto !important;
 }
 
 .col {
@@ -188,10 +193,10 @@ input[type=checkbox]{
 	padding: 10px;
 }
 .summary-page-table th{
-	font-size:11px;
+	font-size:12px;
 }
-summary-page-table td{
-	font-size:11px;
+.summary-page-table td{
+	font-size:12px;
 }
 .footer-table-text{
 	font-weight:bold;
@@ -202,7 +207,10 @@ summary-page-table td{
 }
 .summary-page-table{
 	font-size:11px;
+	border-collapse: collapse;
+	width: 100%;
 }
+
 /* media query */
 
 @media (max-width:1200px) {

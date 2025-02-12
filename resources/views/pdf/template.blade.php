@@ -103,7 +103,7 @@
                                 @if( $tile_detail->surface !== "paint")
                                     <tr style="border: 1px solid #000;">
                                     <td style="width: 20%; border: 1px solid #000; text-align: center; padding: 10px;">
-                                        <img src="{{ public_path($tile_detail->icon) }}" alt="Wall A" style="width: 100%; max-width: 100px; height: auto;">
+                                        <img src="{{ public_path($tile_detail->icon) }}" alt="Wall A" style="width:130px;height:130px;">
                                     </td>
                                     <td style="width: 60%; border: 1px solid #000; padding: 10px;">
                                         <h5 style="margin: 5px 0; font-size: 14px;font-weight: bold">
