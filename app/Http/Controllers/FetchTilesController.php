@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\Traits\ApiHelper;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -14,6 +15,8 @@ use Intervention\Image\Facades\Image as InterventionImage; // Import Interventio
 
 class FetchTilesController extends Controller
 {
+    use ApiHelper;
+
     public function index(): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
         $api_details = Company::select('last_fetch_date_from_api','fetch_products_count')->first();
@@ -46,32 +49,23 @@ class FetchTilesController extends Controller
                 'limit' => $perPage,
             ]);
 
-            $curl = curl_init();
-            curl_setopt_array($curl, [
-                CURLOPT_URL => "$apiUrl?$queryParams",
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_HTTPGET => true,
-                CURLOPT_SSL_VERIFYPEER => $this->getSSLVerfier(),
-                CURLOPT_HTTPHEADER => [
-                    'JWTAuthorization: Bearer ' . $getToken,
-                ],
-            ]);
+            $headers = [
+                'JWTAuthorization: Bearer ' . $getToken,
+            ];
 
-            $result = curl_exec($curl);
-            $error = curl_error($curl);
-            curl_close($curl);
+            // Use the trait function for GET request
+            $data = $this->makeGetRequest($apiUrl, $queryParams, $headers);
 
-            if ($error) {
+            if (isset($data['error'])) {
                 return response()->json([
-                    'error' => 'Unable to fetch total records: ' . $error,
+                    'error' => 'Unable to fetch total records: ' . $data['error'],
                 ], 500);
             }
-
-            $data = json_decode($result, true);
 
             if (empty($data)) {
                 break; // Stop if there are no more records
             }
+
 
             $totalRecords = count($data);
             $recordsProcessed += $totalRecords;
@@ -97,45 +91,6 @@ class FetchTilesController extends Controller
             'updatedCount' => $updatedCount,
             'unchangedCount' => $unchangedCount,
         ]);
-    }
-
-    private function loginAPI()
-    {
-        // JSON payload - Login cURL
-        $data = [
-            "username" => "admin@brndaddo.com",
-            "password" => "abcd1234"
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => "https://somany-backend.brndaddo.ai/api/v1/login",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => [
-                "Content-Type: application/json",
-            ],
-            CURLOPT_SSL_VERIFYPEER => $this->getSSLVerfier(),
-            CURLOPT_POSTFIELDS => json_encode($data), // Attach the JSON-encoded data
-        ]);
-
-        // Execute the cURL request
-        $response = curl_exec($curl);
-
-        // Check for cURL errors
-        if ($response === false) {
-            echo 'Error:' . curl_error($curl);
-            curl_close($curl);
-            return null;
-        }
-
-        // Close cURL session
-        curl_close($curl);
-
-        // Decode the JSON response
-        $responseData = json_decode($response, true);
-
-        return $responseData['token'];
     }
 
     public function updateOrInsertMultiple($records, $endDate, $totalCount): array
@@ -343,12 +298,5 @@ class FetchTilesController extends Controller
         Storage::disk('public')->put($fileName, $imageContent);
 
         return $fileName;
-    }
-
-    protected function getSSLVerfier(): bool
-    {
-        // Get the value of MY_CUSTOM_VAR from the .env file
-        $customVar = config('app.curl'); // 'default_value' is the fallback in case MY_CUSTOM_VAR is not set
-        return !(($customVar === "localhost"));
     }
 }
