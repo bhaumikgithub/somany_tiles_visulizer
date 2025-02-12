@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div id="container" class="canvas-fullscreen" style="touch-action: none;">
+<div id="container" class="canvas-fullscreen" >
 </div>
 <div id="topPanelmainpanel" class="">
             <span id="mainpage-panel-btn" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
