@@ -187,6 +187,7 @@ function themeBtnPressed(p_id, p_imageLoadByPass) {
 
 }
 function clickedTiles(p_tile, p_surfaceName) {
+    console.log(p_surfaceName);
     var textForMainPanel = "";
     var thumbImage = "";
 
@@ -230,6 +231,7 @@ function allRightPanelContentHide() {
 //This function clicked from 2d.min.js
 //When user click on any of the wall, floor, counter, paint, it will call this function.
 function surfaceClickedByUser(p_surface_name) {
+    console.log(p_surface_name);
     allRightPanelContentHide();
 
     $(wallFloorThemeContentParent).show();
@@ -249,8 +251,8 @@ function findRoomSurfaceUsingName(p_name) {
     console.log("allSurfaces.length = " + allSurfaces.length);
     console.log("p_name = " + p_name);
     for (var i = 0; i < allSurfaces.length; i++) {
+        console.log( allSurfaces[i]._surfaceData);
         console.log("allSurfaces[i].custom_surface_name = " + allSurfaces[i]._surfaceData.custom_surface_name);
-
         if (allSurfaces[i]._surfaceData.custom_surface_name == p_name) {
             return allSurfaces[i]
         }
