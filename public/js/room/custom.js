@@ -159,7 +159,7 @@ $(window).on('load', function () {
        
         AdjustCanvasWidthHeight(); 
     }
-    checkCanvasVisibility();
+    // checkCanvasVisibility();
    
     interval = setInterval(function () {
       
