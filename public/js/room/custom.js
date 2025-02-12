@@ -129,18 +129,54 @@ function allLoadCompleted() {
 
 }
 
+function isCanvasFullscreen() {
+    
+    return $('#container').hasClass('canvas-fullscreen'); // Replace with actual check for fullscreen
+    
+}
+
+// function checkCanvasVisibility() {
+//     var canvas = document.querySelector('.canvas-fullscreen canvas'); 
+//     var container = document.querySelector('.canvas-fullscreen'); 
+
+//     // Check 
+//     if (canvas && container.contains(canvas) && canvas.offsetHeight > 0 && canvas.offsetWidth > 0) {
+       
+//         $(".cmn-room-btn").css('visibility', 'visible');
+//         $(".share-div").css('visibility', 'visible');
+//     } else {
+        
+//         $(".cmn-room-btn").css('visibility', 'hidden');
+//         $(".share-div").css('visibility', 'hidden');
+//     }
+// }
 
 $(window).on('load', function () {
-
+    
+    if (isCanvasFullscreen()) {
+        $(".cmn-room-btn").css('visibility', 'visible');
+        $(".share-div").css('visibility', 'visible');
+       
+        AdjustCanvasWidthHeight(); 
+    }
+    checkCanvasVisibility();
+   
     interval = setInterval(function () {
+      
         if ($("#sourceLoadProgressBarContainer").length > 0) {
         }
         else {
+            alert($("#sourceLoadProgressBarContainer").length);
             clearInterval(interval);
             AdjustCanvasWidthHeight();
 
             setTimeout(function () {
-                allLoadCompleted()
+                allLoadCompleted();
+                $(".back-btn").css({ left: newLeft });
+                $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
+                $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 6);
+                $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight);
+               
             }, 19);
         }
     }, 500);
