@@ -1,25 +1,31 @@
-var isInitialLoad = true; // Flag to track the initial load
+//var isInitialLoad = true; // Flag to track the initial load
 var interval;
 var topPanelCustomVisible = false;
 var activeTab = "PRODUCT";
-var layoutMode = "";
+var layoutMode = "LANDSCAPE";
 var topPanelTopPosition = 10;
 var firstTime = true;
 var searchPanelOpen = true;
-$(".cmn-room-btn").css('visibility', 'hidden');
+
 document.getElementById("roomLoaderBackground").style.visibility = "hidden";
 
 function AdjustCanvasWidthHeight() {
 
     var windowWidth = $(window).width();
     var windowHeight = $(window).height();
+
     var newWidth = windowWidth;
     var newHeight = windowHeight;
+
     var topPanelHeight = newHeight - 20;
+
     var newCanvasHeight = windowHeight;
     var newCanvasWidth = windowWidth;
 
-    if (windowWidth > windowHeight) {//landscape
+    //Check if mode is landscape or portrait
+
+    //FOR LANDSCAPE
+    if (windowWidth > windowHeight) {
         layoutMode = "LANDSCAPE";
 
         newWidth = windowHeight * 1.78;
@@ -29,7 +35,7 @@ function AdjustCanvasWidthHeight() {
         $("#topPanelHideBtn").css({ "left": "auto", "top": "auto" });
         $("#container").width(windowWidth);
     }
-    else {//Portrait
+    else {//FOR PORTRAIT
         layoutMode = "PORTRAIT";
 
         newHeight = windowHeight / 2;
@@ -41,13 +47,16 @@ function AdjustCanvasWidthHeight() {
         topPanelHeight = newHeight;
         topPanelTopPosition = newHeight + 20;
 
-        $("#topPanelHideBtn").css({ "left": windowWidth / 2 + 50, "top": topPanelTopPosition - 50 });
+        //Center up / down button pressed
+        $("#topPanelHideBtn").css({ "left": windowWidth / 2, "top": topPanelTopPosition - 50 });
+
         if (firstTime == true) {
             firstTime = false;
             hideTopPanelMainPanel();
         }
         $("#container").width(windowWidth);
         $("#container").css("overflow-x", "auto");
+
         setTimeout(setTimeout(function () {
             $("#container").scrollLeft((newCanvasWidth - windowWidth) / 2);
         }, 300));
@@ -75,7 +84,7 @@ function AdjustCanvasWidthHeight() {
     $('.top-panel').css('top', topPanelTopPosition + 'px');
     $('.top-panel').css('height', topPanelHeight + 'px'); // Set height dynamically
     $("#productInfoPanel").hide();
-
+    heightAdjust();
     $("#roomCanvas").height(newCanvasHeight);
     $("#roomCanvas").width(newCanvasWidth);
 
@@ -105,6 +114,8 @@ function AdjustCanvasWidthHeight() {
         $(".share-btn-img").css({ right: newRight + 6 });
         $(".share-div").css({ right: newRight });
     }
+
+    showHideTabs();
 
 }
 
@@ -217,21 +228,6 @@ function hideTopPanelMainPanel() {
 }
 
 
-let wallCount = 0;
-let floorCount = 0;
-let counterCount = 0;  // Counter count
-let ceilingCount = 0; // Ceiling count
-let themeCount = 0;   // Theme count
-let paintCount = 0;   // Theme count
-
-let wallSelections = [];   // Array to store wall selections
-let floorSelections = [];  // Array to store floor selections
-let counterSelections = []; // Array to store counter selections
-let ceilingSelections = []; // Array to store ceiling selections
-let themeSelections = [];   // Array to store theme selections
-let paintSelections = [];   // Array to store theme selections
-
-
 
 
 $("#btnProduct").addClass("top-panel-button-active");
@@ -239,99 +235,101 @@ $("#btnProduct").addClass("top-panel-button-active");
 $('#btnProduct').on('click', function () {
     activeTab = "PRODUCT";
     showHideTabs();
-
-
 });
+
 $('#btnLayout').on('click', function () {
     activeTab = "LAYOUT";
     showHideTabs();
-
-
-
 });
+
 $('#btnGrout').on('click', function () {
     activeTab = "GROUT";
     showHideTabs();
-
 });
 
-function showHideSearchPanel() {
-
-    if ($('.serach-pad-set').css('display') == 'none') {
-        console.log("diplay none");
-        $(".serach-pad-set").show();
-    }
-    else {
-        console.log("diplay block");
-        $(".serach-pad-set").hide();
-    }
-}
-function showHideFilterPanel(){
-    if ($('#topPanelFilter').css('display') == 'none') {
-        console.log("diplay none");
-        $("#topPanelFilter").show();
-        return true;
-    }
-    else {
-        console.log("diplay block");
-        $("#topPanelFilter").hide();
+function setPanelToggleStatus(p_panelIdorClass,p_buttonIdorClass){
+    if ($(p_panelIdorClass).css('display') == 'none'){
+        if(p_buttonIdorClass){
+            $(p_panelIdorClass).show();
+            $(p_buttonIdorClass).addClass('top-panel-button-active');
+            heightAdjust();
+        }
         return false;
-    } 
+    }
+    if(p_buttonIdorClass){
+        $(p_panelIdorClass).hide();
+        $(p_buttonIdorClass).removeClass('top-panel-button-active');
+        heightAdjust();
+    }
+    return true;
 }
-function showHideTabs(p_pressedType) {
+function heightAdjust(){
+    setTimeout(function(){
+        if( $(".search-filter-panel-box").height()<10){
+            $(".search-filter-panel-box").hide();
+        }
+        else{
+            $(".search-filter-panel-box").show();
+        }
+
+        $(".search-filter-panel-box").css({"top":$('#topPanel').offset().top - $(".search-filter-panel-box").height()});
+    },100);
+
+}
+
+function showHideTabs() {
 
     //IF responsive and search icon pressed then
     //This function calling from 2d.min.js
 
-     var roomCanvasTitle = $('#roomCanvas').attr('title').trim();  // Get the title and trim any extra spaces
-     var titleWords = roomCanvasTitle.split(' ');  // Split the title by spaces
-    var firstTwoWords = titleWords.slice(0, 2).join(' ');  // Take the first two words and join them with a space
 
     switch (activeTab) {
         case "PRODUCT":
-            $('#topPanelGrout').hide();
-            $('#topPanelLayout').hide();
-            $("#topPanelContentSurfaceTabGroutSizeBody").hide();
-            if (firstTwoWords.toLowerCase() === "change counter" || firstTwoWords.toLowerCase() === "change paint") {
-                $('.top-panel-search').hide();  // Hide the search panel
-            } else {
-                $('.top-panel-search').show();  // Show the search panel
-            }
-        
-            $('.radio-surface-rotation').show();
-            $('#topPanelTilesListBox').show();
-            if (layoutMode == "PORTRAIT") {
-                $(".partOfProductTab").show();
-            }
-            else {
-                $(".partOfProductTab").hide();
-            }
+            showProductContent();
             break;
         case "LAYOUT":
-            $('#topPanelGrout').hide();
-            $('#topPanelTilesListBox').hide();
-            
-            $(".top-panel-search").hide();
-            $('.radio-surface-rotation').hide();
-            $(".partOfProductTab").hide();
-            $("#topPanelContentSurfaceTabGroutSizeBody").hide();
-
-            $('#topPanelLayout').show();
-
+            showLayoutContent();
             break;
         case "GROUT":
-            $('#topPanelLayout').hide();
-            $('#topPanelTilesListBox').hide();
-            $(".top-panel-search").hide();
-            $(".partOfProductTab").hide();
-
-            $('#topPanelGrout').show();
-            $("#topPanelContentSurfaceTabGroutSizeBody").show();
+            showGroutContent();
             break;
     }
-
+    if (layoutMode == "LANDSCAPE") {
+        $(".partOfProductTabContent").show();
+    }
 }
+function showProductContent(){
+    console.log("showProductContent");
+    $('#topPanelGrout').hide();
+    $('#topPanelLayout').hide();
+    if (layoutMode == "PORTRAIT") {
+        $(".partOfProductTabButtons").show();
+        setPanelToggleStatus('.serach-pad-set','#searchIconToggle');
+        setPanelToggleStatus('#topPanelFilter','#sliderIconToggle');
+    }
+    else {
+        console.log("showProductContent in LANDSCAPE MODE");
+        $(".partOfProductTabButtons").hide();
+    }
+    console.log("partOfProductTabContent SHOW");
+    $(".partOfProductTabContent").show();
+}
+function showLayoutContent(){
+    $('#topPanelGrout').hide();
+    $(".partOfProductTabButtons").hide();
+    $(".partOfProductTabContent").hide();
+    //$("#topPanelContentSurfaceTabGroutSizeBody").hide();
 
+    $('#topPanelLayout').show();
+}
+function showGroutContent(){
+    $('#topPanelLayout').hide();
+    $(".partOfProductTabButtons").hide();
+    $(".partOfProductTabContent").hide();
+
+    $('#topPanelGrout').show();
+    //$("#otpPanelContentSurfaceTabGroutSizeBody").show();
+}
 
 $('#grout-predefined-color .-btn').on('click', function () {
 
@@ -357,14 +355,14 @@ $('.share-btn-close').on('click', function () {
 
 
 $('.open-panel').on('click', function () {
-   
+
     $('#selectd-data').hide();
     $('#slected-panel').show();
 
 });
 
 $('.selcte-data-btn').on('click', function () {
-   
+
     $('#selectd-data').show();
     $('#slected-panel').hide();
 
@@ -379,30 +377,30 @@ $('.cartpanelclose').on('click', function () {
 $('.top-panel-search').on('click', function () {
     // Toggle the class .top-panel-search-active
     $(this).toggleClass('top-panel-search-active');
-    
+
     if ($('.search-filter-panel-box').css('display') === 'none') {
         $('.search-filter-panel-box').show();
-       
+
     } else {
         $('.search-filter-panel-box').hide();
     }
 });
 
 $('.search-filter-panel-box').on('click', function (e) {
-    e.stopPropagation(); 
+    e.stopPropagation();
 });
 
 $('#btnProduct').on('click', function () {
     activeTab = "PRODUCT";
     showHideTabs();
 
-    var optionText = $('#optionText').text().trim();  
-    var firstWord = optionText.split(' ')[0].toLowerCase(); 
+    var optionText = $('#optionText').text().trim();
+    var firstWord = optionText.split(' ')[0].toLowerCase();
 
     if (firstWord === "counter" || firstWord === "paint") {
-        $('.top-panel-search').hide();  
+        $('.top-panel-search').hide();
     } else {
-        $('.top-panel-search').show();  
+        $('.top-panel-search').show();
     }
 });
 
