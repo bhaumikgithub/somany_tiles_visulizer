@@ -544,7 +544,7 @@ body {
 }
 
 .search-icon{
-   
+
     position: relative;
     top: 0;
     right: 0;
@@ -552,7 +552,7 @@ body {
     display: block;
     color: #fff;
     height: 16px;
-   
+
     text-align: center;
 }
 
@@ -951,7 +951,6 @@ body {
 }
 .search-filter-panel-box{
     padding: 0px 0px 0px 15px;
-    display: none;
 }
 .serach-pad-set{
     padding-right: 15px;
@@ -1010,7 +1009,7 @@ body {
     left: 0px;
     padding: 1px 2px 0px 4px;
     position: absolute;
-  
+
     color: #fff;
     border-radius: 2px;
     height: 17px;
@@ -1019,7 +1018,7 @@ body {
 
 .filter-item-checkbox input[type=checkbox] {
     margin: 0px;
-   
+
     background-color: #fff;
     border: 1px solid #ce1f22;
     border-radius: 2px;
@@ -1311,6 +1310,7 @@ body {
     position: fixed;
     bottom: 70px;
     margin-left: 15px;
+    visibility: hidden;
 }
 
 .cmn-back-btn {
@@ -1359,7 +1359,7 @@ body {
     position: fixed;
     bottom: 70px;
     margin-right: 15px;
-
+    visibility: hidden;
 }
 
 .btn-text-set {
@@ -1420,7 +1420,7 @@ body {
 
 .share-div {
     /*border: 1px solid #bfbfbf;*/
-    background: #ffffff80;
+    background: #ffffff90;
     color: #484848;
     display: flex;
     padding: 16px;
@@ -1711,7 +1711,7 @@ input[type=checkbox] {
 }
 
 /* select data pannel css end */
-@media (max-width:767px) {
+@media (max-width:767px)  {
     .top-panel-product {
         width: 100% !important;
         background-color: rgba(255, 255, 255, 1) !important;
@@ -1857,7 +1857,35 @@ input[type=checkbox] {
     .input-text-box-wrap{
         width: 100%;
     }
+
 }
+@media (max-width:767px) and (orientation:portrait){
+    .search-filter-panel-box{
+        position: fixed;
+        left: 0px;
+        background: #ffffff90;
+        border-radius: 20px;
+        z-index: 100;
+        width: 100%;
+        height: auto;
+        display: none;
+        padding-top: 10px;
+    }
+    .search-icon-button{
+        padding: 5px;
+    }
+    #topPanelSearchResult{
+        margin-top: 0px;
+        margin-left: 8px;
+    }
+    #topPanelFilter{
+        max-height: 20vh !important;
+    }
+}
+@media (max-width:767px) and (orientation:landscape){
+
+}
+
 
 
 /* @media (max-width:500px) {
