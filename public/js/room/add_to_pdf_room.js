@@ -32,11 +32,11 @@ function addToPDF(){
                 $('#addToCartInfoPanelModal').modal('show');
                 $('#addToCartInfoPanelModal #cartInfoTilesList').html(response.body);
                 $("body").css('overflow', "hidden");
-                if( $('#continue-modal').length > 0 ) {
-                    $('#continue-modal').modal('hide');
+                if( $('.continue-modal').length > 0 ) {
+                    $('.continue-modal').modal('hide');
                 }
-                if( $('#no-data-in-cart-selection-modal').length > 0 ){
-                    $('#no-data-in-cart-selection-modal').modal('hide');
+                if( $('.no-data-in-cart-selection-modal').length > 0 ){
+                    $('.no-data-in-cart-selection-modal').modal('hide');
                 }
                 $('div.modal-backdrop').each(function () {
                     if (!$(this).attr('id')) {
@@ -46,7 +46,7 @@ function addToPDF(){
                 });
 
                 // Update the href attribute of the link in the modal
-                //$('#continue-modal a#cart_url').attr('href', response.url);
+                //$('.continue-modal a#cart_url').attr('href', response.url);
             },
             error: function (xhr, status, error) {
                 alert('Failed to stored!');
@@ -56,10 +56,19 @@ function addToPDF(){
     }
 }
 
+let url1 = new URL(window.location.href);
+let pathSegments1 = url1.pathname.split("/");
+
 // Get the main canvas and its context
 function generateAndDownloadThumbnail(){
     // Create an offscreen canvas for the thumbnail
-    const mainCanvas = document.getElementById('roomCanvas');
+    let mainCanvas ;
+    if( pathSegments1[1] === "room2d") {
+        mainCanvas = document.getElementById('roomCanvas');
+    } else {
+        let containerDiv = document.getElementById("container");
+        mainCanvas = containerDiv.getElementsByTagName("canvas")[0]; // Get first <canvas>
+    }
     const thumbnailCanvas = document.createElement('canvas');
     const thumbnailSize = 200; // Thumbnail width
     thumbnailCanvas.width = thumbnailSize;
@@ -73,7 +82,13 @@ function generateAndDownloadThumbnail(){
 
 
 function canvasImage() {
-    let canvas = document.getElementById('roomCanvas');
+    let canvas;
+    if( pathSegments1[1] === "room2d") {
+        canvas = document.getElementById('roomCanvas');
+    } else {
+        let containerDiv = document.getElementById("container");
+        canvas = containerDiv.getElementsByTagName("canvas")[0]; // Get first <canvas>
+    }
     let imageCanvas = document.createElement('canvas');
     imageCanvas.width = canvas.width;
     imageCanvas.height = canvas.height;
@@ -154,11 +169,11 @@ function viewCartPdf() {
                 alert("Please choose tiles to add in PDF");
             } else {
                 $("body").css('overflow', "hidden");
-                if( $('#continue-modal').length > 0 ) {
-                    $('#continue-modal').modal('hide');
+                if( $('.continue-modal').length > 0 ) {
+                    $('.continue-modal').modal('hide');
                 }
-                if( $('#no-data-in-cart-selection-modal').length > 0 ){
-                    $('#no-data-in-cart-selection-modal').modal('hide');
+                if( $('.no-data-in-cart-selection-modal').length > 0 ){
+                    $('.no-data-in-cart-selection-modal').modal('hide');
                 }
                 $('#addToCartInfoPanelModal').modal('show');
 
@@ -626,7 +641,13 @@ function validationCheck(){
 
 function downloadImage() {
 
-    let canvas = document.getElementById('roomCanvas');
+    let canvas;
+    if( pathSegments1[1] === "room2d") {
+        canvas = document.getElementById('roomCanvas');
+    } else {
+        let containerDiv = document.getElementById("container");
+        canvas = containerDiv.getElementsByTagName("canvas")[0]; // Get first <canvas>
+    }
 
     let imageCanvas = document.createElement('canvas');
 
@@ -798,9 +819,9 @@ function checkCartHasData(){
             },
             success: function (response) {
                 if (response.success === true && response.count === 1) {
-                    $('#continue-modal').modal('show');
+                    $('.continue-modal').modal('show');
                 } else {
-                    $('#no-data-in-cart-selection-modal').modal('show');
+                    $('.no-data-in-cart-selection-modal').modal('show');
                 }
             }
         });
