@@ -27,20 +27,16 @@
                                     <span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span>
                                 </button>
                                 <button id="btnProduct"
-                                        class="top-panel-button top-panel-button-product">@lang('Tiles')</button>
+                                        class="top-panel-button">@lang('Tiles')</button>
                                 <button id="btnLayout"
-                                        class="top-panel-button top-panel-button-product">@lang('Layout')</button>
+                                        class="top-panel-button">@lang('Layout')</button>
                                 <button id="btnGrout"
-                                        class="top-panel-button top-panel-button-product">@lang('Grout')</button>
-                                <button id="search"
-                                        class="top-panel-search"> <svg class="svg-inline--fa fa-magnifying-glass search-icon" aria-hidden="true"
-                                                                       focusable="false" data-prefix="fas" data-icon="magnifying-glass" role="img"
-                                                                       xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
-                                        <path fill="currentColor"
-                                              d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z">
-                                        </path>
-                                    </svg></button>
-                                <button id="sliderIconToggle" class="top-panel-button smallBackArrowForMobile showOnMobile partOfProductTab" style="padding-left:8px;">
+                                        class="top-panel-button">@lang('Grout')</button>
+                                <button id="searchIconToggle"
+                                        class="top-panel-button smallBackArrowForMobile showOnMobile partOfProductTabButtons"  style="padding-left:8px;">
+                                    <i class="fa-solid fa-search"></i>
+                                </button>
+                                <button id="sliderIconToggle" class="top-panel-button smallBackArrowForMobile showOnMobile partOfProductTabButtons" style="padding-left:8px;">
                                     <i class="fa-solid fa-sliders"></i>
                                 </button>
                             </div>
@@ -48,7 +44,7 @@
 
 
                     </div>
-                    <div class="top-panel-box search-filter-panel-box">
+                    <div class="top-panel-box search-filter-panel-box partOfProductTabContent">
                         <div class="input-box d-flex flex-wrap serch-box-wrap">
                             <div class="serach-pad-set d-flex flex-wrap w-100">
                                 <div class="input-text-box-wrap">
@@ -76,10 +72,11 @@
 
                             <div id="topPanelFilter"
                                  class="top-panel-box top-panel-option-box top-panel-box-overflow-y filter-top-panel"
-                                 style="display: none;"></div>
+                                 style="display: none;">
+                            </div>
                         </div>
                     </div>
-                    <div class="top-panel-box row radio-surface-rotation top-panel-box-cmn-br mt-0 d-flex flex-wrap">
+                    <div class="top-panel-box row radio-surface-rotation top-panel-box-cmn-br mt-0 d-flex flex-wrap partOfProductTabContent">
 
                         <div class="col-md-4">
                             <span class="top-panel-label rotate-font-title">@lang('Rotate'):</span>
@@ -103,7 +100,7 @@
                         </div>
                     </div>
 
-                    <div id="topPanelLayout" class="top-panel-option-box top-panel-box-overflow-y" style="display: none;">
+                    <div id="topPanelLayout" class="top-panel-option-box top-panel-box-overflow-y partOfLayoutTabContent" style="display: none;">
                         @if ($view_name == '3d.room')
                             <div class="top-panel-box">
                                 <span class="top-panel-label stiled-checkbox-text">@lang('Surface Color')</span>
@@ -193,14 +190,14 @@
                         </div>
                     </div>
 
-                    <div id="topPanelGrout" class="top-panel-option-box top-panel-box-overflow-y" style="display: none;">
-                        <div id="topPanelContentSurfaceTabGroutSizeBody" class="top-panel-box top-panel-box-cmn-br row">
+                    <div id="topPanelGrout" class="top-panel-option-box top-panel-box-overflow-y partOfGroutTabContent" style="display: none;">
+                        <div id="topPanelContentSurfaceTabGroutSizeBody" class="top-panel-box top-panel-box-cmn-br row partOfGroutTabContent">
                             <div class="col-md-12">
                                 <div class="row d-flex flex-wrap">
-                                    <div class="col-md-4 col-xs-12">
+                                    <div class="col-md-4 col-xs-2">
                                         <span class="top-panel-label stiled-checkbox-text">@lang('Size')</span>
                                     </div>
-                                    <div class="col-md-8 col-xs-12 text-right xs-left range-slider">
+                                    <div class="col-md-8 col-xs-10 text-right xs-left range-slider">
                                         <span id="" class="span-width">0</span>
                                         <input id="topPanelGroutSizeRange" type="range" min="0" max="24"
                                                value="4" class="slider">
@@ -256,7 +253,7 @@
                     {{--    </div> --}}
                     {{--    @endif --}}
 
-                    <div id="topPanelTilesListBox" class="top-panel-box">
+                    <div id="topPanelTilesListBox" class="top-panel-box partOfProductTabContent">
                         <div id="loadTilesAnimationContainer">
                             <p>Loading Tiles</p>
                             <div class="circles marginLeft">
