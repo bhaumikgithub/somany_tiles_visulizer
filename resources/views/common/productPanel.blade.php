@@ -76,6 +76,7 @@
                             </div>
                         </div>
                     </div>
+                    <div class="radio-surface-rotation-wrap">
                     <div class="top-panel-box row radio-surface-rotation top-panel-box-cmn-br mt-0 d-flex flex-wrap partOfProductTabContent">
 
                         <div class="col-md-4">
@@ -99,6 +100,7 @@
                             <label for="topPanelSurfaceRotation_180">180°</label>
                         </div>
                     </div>
+                   </div>
 
                     <div id="topPanelLayout" class="top-panel-option-box top-panel-box-overflow-y partOfLayoutTabContent" style="display: none;">
                         @if ($view_name == '3d.room')
@@ -189,7 +191,7 @@
                             ?>
                         </div>
                     </div>
-
+                    <div class="topPanelGrout-wrap">
                     <div id="topPanelGrout" class="top-panel-option-box top-panel-box-overflow-y partOfGroutTabContent" style="display: none;">
                         <div id="topPanelContentSurfaceTabGroutSizeBody" class="top-panel-box top-panel-box-cmn-br row partOfGroutTabContent">
                             <div class="col-md-12">
@@ -228,6 +230,7 @@
                             </div>
                         </div>
                     </div>
+                    </div>
 
                     <div id="topPanelAccordionFilter" class="top-panel-box" style="display: none;">
                         <span class="top-panel-label">@lang('Sorting tiles'):</span>
@@ -252,7 +255,7 @@
                     {{--    </div> --}}
                     {{--    </div> --}}
                     {{--    @endif --}}
-
+                    <div class="topPanelTilesListBox-wrap">
                     <div id="topPanelTilesListBox" class="top-panel-box partOfProductTabContent">
                         <div id="loadTilesAnimationContainer">
                             <p>Loading Tiles</p>
@@ -265,6 +268,7 @@
 
                         <ul id="topPanelTilesListUl" class="panel_list"></ul>
                     </div>
+                </div>
                 </div>
 
                 <!-- Added for themes -->
