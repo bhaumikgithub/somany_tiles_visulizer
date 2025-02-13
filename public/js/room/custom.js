@@ -63,9 +63,9 @@ function AdjustCanvasWidthHeight() {
         $("#container").width(windowWidth);
         $("#container").css("overflow-x", "auto");
 
-        setTimeout(setTimeout(function () {
+        setTimeout(function () {
             $("#container").scrollLeft((newCanvasWidth - windowWidth) / 2);
-        }, 300));
+        }, 300);
     }
 
     //row top-panel-box top-panel-box-first top-panel-box-first-btn-wrap top-panel-box-cmn-br
@@ -367,9 +367,9 @@ function showHideTabs() {
         $(".partOfProductTabContent").show();
     }
 
-    setTimeout(function() {
-        AdjustCanvasWidthHeight();  // Recalculate canvas width/height
-    }, 100); 
+    // setTimeout(function() {
+    //     AdjustCanvasWidthHeight();  // Recalculate canvas width/height
+    // }, 100); 
 }
 function showProductContent(){
     console.log("showProductContent");
