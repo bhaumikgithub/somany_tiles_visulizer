@@ -160,7 +160,22 @@ function isCanvasFullscreen() {
 //         $(".share-div").css('visibility', 'hidden');
 //     }
 // }
+function toggleShareElements() {
+    
+    var screenWidth = $(window).width();
 
+     if (screenWidth <= 767) {
+       
+        $('.share-btn-img').show();
+        $('.share-div').hide();
+        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 20 );
+      
+    } else {
+        $('.share-btn-img').hide();
+        $('.share-div').show();
+    }
+
+}
 $(window).on('load', function () {
 
     interval = setInterval(function () {
@@ -178,6 +193,7 @@ $(window).on('load', function () {
                 $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
                 $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 6);
                 $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight);
+                toggleShareElements();
 
             }, 19);
         }
@@ -197,6 +213,7 @@ $(window).on('load', function () {
 
 $(window).on('resize', function () {
     AdjustCanvasWidthHeight();
+    toggleShareElements();
 });
 
 //This function calling from 2d.min.js
@@ -293,6 +310,10 @@ $('#btnLayout').on('click', function () {
 $('#btnGrout').on('click', function () {
     activeTab = "GROUT";
     showHideTabs();
+    setTimeout(function() {
+      
+        AdjustCanvasWidthHeight();
+    }, 0);
 });
 
 function setPanelToggleStatus(p_panelIdorClass,p_buttonIdorClass){
@@ -345,11 +366,17 @@ function showHideTabs() {
     if (layoutMode == "LANDSCAPE") {
         $(".partOfProductTabContent").show();
     }
+
+    setTimeout(function() {
+        AdjustCanvasWidthHeight();  // Recalculate canvas width/height
+    }, 100); 
 }
 function showProductContent(){
     console.log("showProductContent");
     $('#topPanelGrout').hide();
     $('#topPanelLayout').hide();
+    $('.radio-surface-rotation-wrap').show();
+  
     if (layoutMode == "PORTRAIT") {
         $(".partOfProductTabButtons").show();
         setPanelToggleStatus('.serach-pad-set','#searchIconToggle');
@@ -366,16 +393,18 @@ function showLayoutContent(){
     $('#topPanelGrout').hide();
     $(".partOfProductTabButtons").hide();
     $(".partOfProductTabContent").hide();
+    $('.radio-surface-rotation-wrap').hide();
     //$("#topPanelContentSurfaceTabGroutSizeBody").hide();
-
+    $('.search-pad-set').hide(); 
     $('#topPanelLayout').show();
 }
 function showGroutContent(){
     $('#topPanelLayout').hide();
     $(".partOfProductTabButtons").hide();
     $(".partOfProductTabContent").hide();
-
+    $('#topPanelGrout').css('display', 'block'); 
     $('#topPanelGrout').show();
+    $('.radio-surface-rotation-wrap').hide();
     //$("#otpPanelContentSurfaceTabGroutSizeBody").show();
 }
 
