@@ -69,9 +69,9 @@
                             </div>
                             <div id="topPanelSearchResult" style="display: none"></div>
                             {{--            <p class="ds-text">Displaying 3,123 of 3123</p> --}}
-
+                            <div id="topPanelNavFilter" class="filterContentPanel"></div>
                             <div id="topPanelFilter"
-                                 class="top-panel-box top-panel-option-box top-panel-box-overflow-y filter-top-panel"
+                                 class="top-panel-box top-panel-option-box top-panel-box-overflow-y filter-top-panel filterContentPanel"
                                  style="display: none;">
                             </div>
                         </div>
@@ -129,7 +129,7 @@
 
                             </div>
 
-                            <div id="topPanelCheckFreeDesignRotateBox" class="top-panel-box ">
+                            <div id="topPanelCheckFreeDesignRotateBox" class="top-panel-box">
 
                                 <div class="d-flex flex-wrap row rotate-set align-items-center">
                                     <div class="lbl-fd col-md-6 col-sm-6 col-xs-8">
@@ -149,7 +149,7 @@
                             </div>
                         </div>
 
-                        <div class="top-panel-box radio-surface-pattern top-panel-box-cmn-br">
+                        <div id="layout-list" class="top-panel-box radio-surface-pattern top-panel-box-cmn-br">
                             <input id="topPanelSurfacePattern_0" type="radio" name="radioSurfacePattern"
                                    value="0">
                             <label for="topPanelSurfacePattern_0">
@@ -207,7 +207,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="top-panel-box top-panel-box-cmn-br row">
+                        <div id="grout-list" class="top-panel-box top-panel-box-cmn-br row">
                             <!-- <span class="top-panel-label stiled-checkbox-text">@lang('Grout Color')</span> -->
 
                             <div class="col-md-12">

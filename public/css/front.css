@@ -2,7 +2,9 @@
     font-family: "Rethink Sans", sans-serif;
     letter-spacing: 0px;
 }
-
+:root{
+    --primaryColor: #ce1f22;
+}
 h1 {
     font-size: 50px;
     font-weight: 100;
@@ -967,6 +969,7 @@ body {
 .filter-top-panel .-header {
     margin-bottom: 5px;
     font-weight: bold;
+    display: none;
 }
 
 .filter-top-panel .-body {
@@ -980,27 +983,22 @@ body {
     width: 28%;
     margin-left: 0px;
     margin-right: 10px;
+    margin-bottom: 5px;
     display: flex;
     flex-wrap:wrap;
 }
 
 .filter-block label {
-    font-size: 12px;
+    font-size: 11px;
 }
 
-.filter-item-checkbox:last-child {
 
-    margin-right: 8px;
-}
 
 .filter-top-panel .filter-block .-header-box {
     margin-bottom: 5px;
 
 }
 
-.filter-item-checkbox {
-    position: relative;
-}
 
 .filter-item-checkbox input[type=checkbox]:checked:after {
     background-color: #ce1f22;
@@ -1042,6 +1040,7 @@ body {
     font-weight: bold;
 }
 .filter-item-checkbox {
+    position: relative;
     display: flex;
     /* align-items: center; */
     flex-wrap: wrap;
@@ -1050,6 +1049,7 @@ body {
 .filter-item-checkbox label {
     margin-left: 6px;
     width: calc(100% - 24px);
+    text-transform: capitalize;
 }
 
 .filter-block-support-buttons {
@@ -1709,6 +1709,17 @@ input[type=checkbox] {
 .hideBlock{
     display: none;
 }
+.filter-click{
+    float:left;
+    margin-right:10px;
+    font-weight:bold;
+    margin-bottom:12px;
+    cursor: pointer;
+}
+.filter-click-active{
+    color: var(--primaryColor);
+    border-bottom:1px solid var(--primaryColor);
+}
 
 /* select data pannel css end */
 @media (max-width:767px)  {
@@ -1733,18 +1744,20 @@ input[type=checkbox] {
         display: inline-block;
     }
 
+
     .top-panel-hide-button-product {
         height: 37px;
         width: 37px;
         display: block;
-        left: 246px;
         top: 207px;
         border-radius: 20px;
         rotate: 90deg;
-    ;
         background-color: #ff9f9f;
         /*margin-left: 0px;*/
-
+        margin-left: 0px;
+        margin-right: 0px;
+        left:calc(50vw - 18px);
+        z-index: 500;
     }
 
     #topPanelmainpanel {
@@ -1863,7 +1876,7 @@ input[type=checkbox] {
     .search-filter-panel-box{
         position: fixed;
         left: 0px;
-        background: #ffffff90;
+        background: #ffffff;
         border-radius: 20px;
         z-index: 100;
         width: 100%;
