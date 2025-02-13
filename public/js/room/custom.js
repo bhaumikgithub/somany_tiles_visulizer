@@ -163,15 +163,6 @@ function isCanvasFullscreen() {
 
 $(window).on('load', function () {
 
-    $(".cmn-room-btn").css('visibility', 'hidden');
-    if (isCanvasFullscreen()) {
-        $(".cmn-room-btn").css('visibility', 'visible');
-        $(".share-div").css('visibility', 'visible');
-
-        AdjustCanvasWidthHeight();
-    }
-    // checkCanvasVisibility();
-
     interval = setInterval(function () {
 
         if ($("#sourceLoadProgressBarContainer").length > 0) {
