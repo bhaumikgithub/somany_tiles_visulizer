@@ -68,10 +68,12 @@ class InsertTilesFromAPI implements ShouldQueue
         }
 
         $totalRecords = count($data);
+
+        // Pass count of data to function
         $this->updateOrInsertMultiple($data, $this->endDate, $totalRecords);
 
         // Log Success
-        Log::info('Tiles data inserted successfully from API.');
+        \Log::info("Tiles data inserted successfully from API. Total Records: {$totalRecords}");
     }
 
     protected function updateOrInsertMultiple($records, $endDate, $totalCount): array

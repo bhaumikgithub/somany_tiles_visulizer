@@ -27,11 +27,11 @@ trait ApiHelper
     /**
      * Perform a GET request.
      */
-    public function makeGetRequest($url, $headers = [])
+    public function makeGetRequest($url, $queryParams,$headers = [])
     {
         $curl = curl_init();
         curl_setopt_array($curl, [
-            CURLOPT_URL => $url,
+            CURLOPT_URL => "$url?$queryParams",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => $this->prepareHeaders($headers),
             CURLOPT_SSL_VERIFYPEER => $this->getSSLVerifier(),
@@ -67,20 +67,15 @@ trait ApiHelper
     }
 
     /**
-     * Get SSL Verifier (can be modified based on environment needs).
-     */
-    private function getSSLVerifier(): bool
-    {
-        // Get the value of MY_CUSTOM_VAR from the .env file
-        $customVar = config('app.curl'); // 'default_value' is the fallback in case MY_CUSTOM_VAR is not set
-        return !(($customVar === "localhost"));
-    }
-
-    /**
      * Prepare headers for API requests.
      */
     private function prepareHeaders($extraHeaders = []): array
     {
+        // Ensure $extraHeaders is always an array
+        if (!is_array($extraHeaders)) {
+            $extraHeaders = [$extraHeaders];
+        }
+
         $defaultHeaders = [
             "Content-Type: application/json",
         ];
@@ -124,7 +119,7 @@ trait ApiHelper
             'size' => $product['size'] ?? null,
             'surface' => $surface ?? null,
             'finish' => $product['design_finish'] ?? null,
-            'file' => $this->fetchAndSaveImage($imageURL),
+            //'file' => $this->fetchAndSaveImage($imageURL),
             'image_variation_1' => $product['image_variation_1'] ?? null,
             'image_variation_2' => $product['image_variation_2'] ?? null,
             'grout' => ( $surface === "wall" || $surface === "floor" ) ? 1 : null,
@@ -220,7 +215,7 @@ trait ApiHelper
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $imageURL);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->getSSLVerfier()); // Ensure SSL verification is enabled
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->getSSLVerifier()); // Ensure SSL verification is enabled
 
         $imageContent = curl_exec($ch);
 
@@ -270,4 +265,15 @@ trait ApiHelper
         Storage::disk('public')->put($fileName, $imageContent);
         return $fileName;
     }
+
+    /**
+     * Get SSL Verifier (can be modified based on environment needs).
+     */
+    protected function getSSLVerifier(): bool
+    {
+        // Get the value of MY_CUSTOM_VAR from the .env file
+        $customVar = config('app.curl'); // 'default_value' is the fallback in case MY_CUSTOM_VAR is not set
+        return !(($customVar === "localhost"));
+    }
+
 }
