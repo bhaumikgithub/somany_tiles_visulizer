@@ -120,7 +120,6 @@ function getTileId(id){
         surfaceTitle: surface_title
     });
 
-    console.log(JSON.stringify(ids));
     // Store the updated array in the hidden field
     $('#selected_tile_ids').val(JSON.stringify(ids));
 
