@@ -7,7 +7,9 @@ var topPanelTopPosition = 10;
 var firstTime = true;
 var searchButtonPressed  = false;
 var filterButtonPressed = false;
-
+var newLeft;
+var newRight;
+var panelStatusManager;
 //var searchPanelOpen = true;
 
 
@@ -34,7 +36,7 @@ function AdjustCanvasWidthHeight() {
         newCanvasWidth = newWidth;
 
         topPanelTopPosition = 10;
-        $("#topPanelHideBtn").css({ "left": "auto", "top": "auto" });
+        $("#topPanelHideBtn").css({ "top": "auto" });
         $("#container").width(windowWidth);
     }
     else {//FOR PORTRAIT
@@ -50,7 +52,7 @@ function AdjustCanvasWidthHeight() {
         topPanelTopPosition = newHeight + 20;
 
         //Center up / down button pressed
-        $("#topPanelHideBtn").css({ "left": windowWidth / 2, "top": topPanelTopPosition - 50 });
+        $("#topPanelHideBtn").css({ "top": topPanelTopPosition - 50 });
 
         if (firstTime == true) {
             firstTime = false;
@@ -68,13 +70,19 @@ function AdjustCanvasWidthHeight() {
 
     $("#selectd-data").css("max-height", Math.round(topPanelHeight - 20));
 
-    $("#topPanelTilesListBox").height(topPanelHeight - 220);
+
+
+    $("#topPanelTilesListBox").height(topPanelHeight - 130);
+    $("#grout-list").height(topPanelHeight - 250+98);
+    $("#layout-list").height(topPanelHeight - 130-60);
     /*$(".top-panel-box-cmn-br").height(topPanelHeight-220);*/
     /*$(".radio-surface-pattern").height(topPanelHeight-220);*/
     $("#topPanelThemeListBox").height(topPanelHeight - 220);
 
-    var newLeft = Math.round((windowWidth - newWidth) / 2);
-    var newRight = Math.round((windowWidth - newLeft - newWidth)) + 6;  // Calculate new right position
+
+
+    newLeft = Math.round((windowWidth - newWidth) / 2);
+    newRight = Math.round((windowWidth - newLeft - newWidth)) + 6;  // Calculate new right position
 
     $("#roomCanvas").height(newCanvasHeight);
     $("#roomCanvas").width(newCanvasWidth);
@@ -130,43 +138,43 @@ function allLoadCompleted() {
 }
 
 function isCanvasFullscreen() {
-    
+
     return $('#container').hasClass('canvas-fullscreen'); // Replace with actual check for fullscreen
-    
+
 }
 
 // function checkCanvasVisibility() {
-//     var canvas = document.querySelector('.canvas-fullscreen canvas'); 
-//     var container = document.querySelector('.canvas-fullscreen'); 
+//     var canvas = document.querySelector('.canvas-fullscreen canvas');
+//     var container = document.querySelector('.canvas-fullscreen');
 
-//     // Check 
+//     // Check
 //     if (canvas && container.contains(canvas) && canvas.offsetHeight > 0 && canvas.offsetWidth > 0) {
-       
+
 //         $(".cmn-room-btn").css('visibility', 'visible');
 //         $(".share-div").css('visibility', 'visible');
 //     } else {
-        
+
 //         $(".cmn-room-btn").css('visibility', 'hidden');
 //         $(".share-div").css('visibility', 'hidden');
 //     }
 // }
 
 $(window).on('load', function () {
-    
+
     if (isCanvasFullscreen()) {
         $(".cmn-room-btn").css('visibility', 'visible');
         $(".share-div").css('visibility', 'visible');
-       
-        AdjustCanvasWidthHeight(); 
+
+        AdjustCanvasWidthHeight();
     }
     // checkCanvasVisibility();
-   
+
     interval = setInterval(function () {
-      
+
         if ($("#sourceLoadProgressBarContainer").length > 0) {
         }
         else {
-            alert($("#sourceLoadProgressBarContainer").length);
+            //alert($("#sourceLoadProgressBarContainer").length);
             clearInterval(interval);
             AdjustCanvasWidthHeight();
 
@@ -176,12 +184,21 @@ $(window).on('load', function () {
                 $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
                 $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 6);
                 $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight);
-               
+
             }, 19);
         }
     }, 500);
 
+    $("body").on("click",'.filter-click',function(){
+        alert('hello from binded function call');
+    });
 
+
+
+    $(document).on('click', '.filter-click', function() {
+        alert("Click");
+        console.log($(this).attr("id"));
+    });
 });
 
 $(window).on('resize', function () {
@@ -309,8 +326,8 @@ function heightAdjust(){
             $(".search-filter-panel-box").show();
         }
 
-        $(".search-filter-panel-box").css({"top":$('#topPanel').offset().top - $(".search-filter-panel-box").height()});
-    },100);
+        $(".search-filter-panel-box").animate({"top":$('#topPanel').offset().top - $(".search-filter-panel-box").height()- 15});
+    },10);
 
 }
 
@@ -342,7 +359,7 @@ function showProductContent(){
     if (layoutMode == "PORTRAIT") {
         $(".partOfProductTabButtons").show();
         setPanelToggleStatus('.serach-pad-set','#searchIconToggle');
-        setPanelToggleStatus('#topPanelFilter','#sliderIconToggle');
+        setPanelToggleStatus('.filterContentPanel','#sliderIconToggle');
     }
     else {
         console.log("showProductContent in LANDSCAPE MODE");
@@ -441,3 +458,45 @@ $('#btnProduct').on('click', function () {
     }
 });
 
+function customFilterManagement(){
+
+    var filterTitles = $("#topPanelFilter").find(".filter-block");
+    var htmlStr = "<ul>";
+    for(var i=0;i<filterTitles.length;i++){
+        var filterTitle = filterTitles.eq(i);
+        if ($(filterTitle).css('display') == 'none'){}
+        else{
+            var titleHeader = filterTitle.find(".-header-title");
+            var filterName = titleHeader.html();
+            htmlStr +="<li onclick=clickFilterCategory('"+filterName+"') id='filterclick_"+filterName+"' class='filter-click'>"+filterName+"</li>";``
+        }
+
+
+
+
+
+    }
+    htmlStr+="</ul>";
+
+    $("#topPanelNavFilter").html(htmlStr);
+
+
+}
+
+function clickFilterCategory(p_filterName){
+    $('.-body').hide();
+    $('#-body_' + p_filterName).css({"display":"flex"});
+    $(".filter-click").removeClass("filter-click-active");
+    $("#filterclick_"+p_filterName).addClass("filter-click-active");
+
+    $(".filter-block").css({"height":"0px","margin":"0px"});
+    $('#-body_' + p_filterName).parent(".filter-block").css({"height":"auto","margin":"null"});
+    heightAdjust();
+}
+
+
+
+
+
+/*this._body.id =
+*/
