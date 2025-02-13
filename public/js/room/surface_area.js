@@ -153,7 +153,7 @@ function addThemeData(p_obj) {
         themeData.push(p_obj)
 }
 function showMainInfoPanel(p_type, surface_name) {
-
+    console.log("p_type " + p_type);
     allRightPanelContentHide();
 
     if (p_type == "MAINLISTING_HIDE") {
