@@ -189,6 +189,7 @@ $(window).on('load', function () {
 
             setTimeout(function () {
                 allLoadCompleted();
+                $(".partOfProductTabContent-wrap").show(); // Show the content wrapper
                 $(".back-btn").css({ left: newLeft });
                 $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
                 $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 6);
@@ -517,7 +518,10 @@ function clickFilterCategory(p_filterName){
     heightAdjust();
 }
 
-
+$('#btnRefine').on('click', function () {
+    $('#topPanelNavFilter').toggle(); // Toggle visibility of the element
+   
+});
 
 
 
