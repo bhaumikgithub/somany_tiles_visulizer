@@ -52,10 +52,10 @@ class AjaxController extends Controller
             }
 
             $roomType = $findRoom->type;
-            $commercialRooms = ['Lobby', 'Veranda', 'Mall']; // Define commercial room types
-
+            $commercialRooms = ['Lobby', 'Mall', 'Hotels','Restaurant','Reception']; // Define commercial room types
+            $outDoorsRooms = ['Balcony','Veranda'];
             if ($roomType === 'outdoor') {
-                $roomType = 'Balcony'; // If a room type is outdoor, match with Balcony
+                $roomType = $outDoorsRooms;
             } elseif ($roomType === 'commercial') {
                 // Check for multiple values in application_room_area
                 $roomType = $commercialRooms;
