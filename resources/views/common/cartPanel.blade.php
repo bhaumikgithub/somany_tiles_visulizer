@@ -3,7 +3,7 @@
         @foreach ($allProduct as $productInfo)
             <div class="top-panel-content-tiles-list-item top-panel-content-tiles-list-item-product"
                 data-prod-id="{{ $productInfo->id }}" style="cursor: default">
-                <div class="tile-list-thumbnail-image-holder tile-list-thumbnail-image-holder-product ">
+                <div class="tile-list-thumbnail-image-holder tile-list-thumbnail-image-holder-product cart-summary-img-holder ">
                     <img src="{{ asset('/storage/' . $productInfo->current_room_thumbnail) }}"
                         class="tile-list-thumbnail tile-list-thumbnail-product">
                 </div>
@@ -21,11 +21,11 @@
     </div>
     @if ($count > 0)
         <div class="row button-row">
-            <div class="col-md-4 col-xs-12 xs-text-center">
+            <div class="col-md-4 col-sm-4 col-xs-12 xs-text-center">
                 <button class="btn btn-info clear_all_btn modify-btn reset_btn" onclick="clearAllItems();">Clear
                     All</button>
             </div>
-            <div class="col-md-8 col-xs-12 text-right xs-left">
+            <div class="col-md-8 col-sm-8 col-xs-12 text-right xs-left">
                 <a href="#" target="_blank" class="btn modify-btn xs-w-100 csp-btn"
                     onclick="window.location.href='{{ @$url }}';">Continue to Summary Page</a>
             </div>
