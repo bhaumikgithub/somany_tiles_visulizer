@@ -2,11 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Traits\ApiHelper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class UpdateFinishColumn extends Command
 {
+    use ApiHelper;
     /**
      * The name and signature of the console command.
      *
@@ -49,7 +51,7 @@ class UpdateFinishColumn extends Command
             CURLOPT_URL => "$apiUrl?$queryParams",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPGET => true,
-            CURLOPT_SSL_VERIFYPEER => $this->getSSLVerfier(),
+            CURLOPT_SSL_VERIFYPEER => $this->getSSLVerifier(),
             CURLOPT_HTTPHEADER => [
                 'JWTAuthorization: Bearer ' . $getToken
             ],
@@ -135,96 +137,5 @@ class UpdateFinishColumn extends Command
         }
 
         return ['updatedCount' => $updatedCount, 'unchangedCount' => $unchangedCount];
-    }
-
-    protected function mapFinishType($designFinish): string
-    {
-        $mapping = [
-            'LUCIDO' => 'glossy',
-            'FULL POLISHED' => 'glossy',
-            'HIGH GLOSS FP' => 'glossy',
-            'NANO' => 'glossy',
-            'NANO FP' => 'glossy',
-            'RUSTIC' => 'matt',
-            'RUSTIC CARVING' => 'matt',
-            'STONE' => 'matt',
-            'WOOD' => 'glossy',
-            'MATT' => 'matt',
-            'GLOSSY' => 'glossy',
-            'DAZZLE' => 'matt',
-            'Metallic'=>'matt',
-            'SUGAR HOME' => 'matt',
-            'SATIN MATT' => 'matt',
-            'SEMI GLOSSY' => 'matt',
-            'MATT ENGRAVE' => 'matt',
-            'PRM FULL POLISHED' => 'glossy',
-            'ROTTO' => 'matt',
-            'Lapato' => 'matt',
-        ];
-        return $mapping[$designFinish] ?? $designFinish; // Default to original value if not in mapping
-    }
-
-    protected function loginAPI()
-    {
-        // JSON payload - Login cURL
-        $data = [
-            "username" => "admin@brndaddo.com",
-            "password" => "abcd1234"
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => "https://somany-backend.brndaddo.ai/api/v1/login",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => [
-                "Content-Type: application/json",
-            ],
-            CURLOPT_SSL_VERIFYPEER => $this->getSSLVerfier(),
-            CURLOPT_POSTFIELDS => json_encode($data), // Attach the JSON-encoded data
-        ]);
-
-        // Execute the cURL request
-        $response = curl_exec($curl);
-
-        // Check for cURL errors
-        if ($response === false) {
-            echo 'Error:' . curl_error($curl);
-            curl_close($curl);
-            return null;
-        }
-
-        // Close cURL session
-        curl_close($curl);
-
-        // Decode the JSON response
-        $responseData = json_decode($response, true);
-
-        return $responseData['token'];
-    }
-
-    protected function getSSLVerfier(): bool
-    {
-        // Get the value of MY_CUSTOM_VAR from the .env file
-        $customVar = config('app.curl'); // 'default_value' is the fallback in case MY_CUSTOM_VAR is not set
-        return !(($customVar === "localhost"));
-    }
-
-    protected function mapCategoryType($brand_name): string
-    {
-        $mapping = [
-            'coverstone' => 'Large Format Slab',
-            'regalia collection' => 'Large Format Tiles',
-            'porto collection' => 'Large Format Tiles',
-            'sedimento collection' => 'Large Format Tiles',
-            'colorato collection' => 'Large Format Tiles',
-            'ceramica' => 'Ceramic',
-            'duragres' => ' Glazed Vitrified Tiles',
-            'vitro' => 'Polished Vitrified Tiles',
-            'durastone' => 'Heavy Duty Vitrified Tiles',
-            'italmarmi' => 'Subway Tiles',
-        ];
-
-        return $mapping[$brand_name] ?? $brand_name; // Default to original value if not in mapping
     }
 }

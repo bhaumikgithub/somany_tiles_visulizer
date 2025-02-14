@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\Traits\ApiHelper;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -23,6 +24,9 @@ class FetchTilesController extends Controller
         return view('fetch_tiles_index',compact('api_details'));
     }
 
+    /**
+     * @throws Exception
+     */
     public function fetchData(Request $request): JsonResponse
     {
         $getToken = $this->loginAPI();
@@ -68,6 +72,9 @@ class FetchTilesController extends Controller
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function updateOrInsertMultiple($records, $endDate, $totalCount): array
     {
         $insertedCount = 0; // Track new insertions
@@ -100,11 +107,17 @@ class FetchTilesController extends Controller
                     continue;
                 }
 
+                // Store the image filename to reuse for multiple surfaces
+                $imageURL = $product['image'] ?? $product['image_variation_1'];
+                $imageFileName = $this->fetchAndSaveImage($imageURL);
+
+                // Determine the surface value BEFORE passing to prepareTileData()
+                $surfaces = $this->determineSurfaceValues($product);
                 // Handle multiple surfaces
                 $applications = explode(' & ', $product['application']);
                 foreach ($applications as $surface) {
                     $product['surface'] = trim($surface);
-                    $data = $this->prepareTileData($product, $creation_time);
+                    $data = $this->prepareTileData($product, $creation_time ,$imageFileName);
 
                     \Log::info('Processing SKU: ' . $product['sku'] . ' for Surface: ' . $surface);
 

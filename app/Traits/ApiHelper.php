@@ -84,7 +84,10 @@ trait ApiHelper
     }
 
 
-    protected function prepareTileData(array $product,$creation_time): array
+    /**
+     * @throws Exception
+     */
+    protected function prepareTileData(array $product, $creation_time , $imageFileName): array
     {
         // Check if 'design_finish' key is missing and log a warning
         if (!isset($product['design_finish'])) {
@@ -94,22 +97,38 @@ trait ApiHelper
 
         if( !isset($product['brand_name'])){
             \Log::warning("Missing key 'brand_name' for SKU: " . ($product['sku'] ?? 'Unknown'));
-            $product['brand_name'] = "Duragres";
+            $product['brand_name'] = "";
         }
 
         $surface = strtolower($product['surface']);
-        $imageURL = ($product['image'] ) ?? $product['image_variation_1'];
 
-        $parsedUrl = parse_url($imageURL);
-        $filePath = $parsedUrl['path']; // This gets the file path without query parameters
-        // Get the file extension (e.g., tiff, psd, jpg)
-        $fileType = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-        // Check if the file is TIFF or PSD and set the image to null
-        if (in_array($fileType, ['tif', 'psd' ,'tiff'])) {
-            $fileName = null;
-        } else {
-            $fileName = $this->fetchAndSaveImage($imageURL);
+        $imageURL = ($product['image'] ) ?? $product['image_variation_1'];
+        // If imageFileName is not passed, fetch and save the image
+        if (!$imageFileName) {
+            $parsedUrl = parse_url($imageURL);
+            $filePath = $parsedUrl['path']; // This gets the file path without query parameters
+            $fileType = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+
+            // Skip record if an image type is TIFF or PSD
+            if (in_array($fileType, ['tif', 'psd', 'tiff'])) {
+                \Log::info("Skipping insertion for file: $filePath (Unsupported type: $fileType)");
+                return; // Stop processing this record
+            }
+
+            $imageFileName = $this->fetchAndSaveImage($imageURL);
         }
+
+
+        //Prepare an array but remove null values
+        $expPropsArray = array_filter([
+            'thickness' => $product['thickness'] ?? null,
+            'product code' => $product['design_finish'] ?? null,
+            'colour' => $product['color'] ?? null,
+            'category' => $this->mapCategoryType(strtolower($product['brand_name'])) ?? null,
+            'innovation' => $product['innovation'] ?? null,
+        ], function ($value) {
+            return $value !== null; //Remove keys with null values
+        });
 
         return [
             'name' => $product['product_name'] ?? null,
@@ -118,19 +137,17 @@ trait ApiHelper
             'height' => intval($product['size_ht']) ?? 0,
             'size' => $product['size'] ?? null,
             'surface' => $surface ?? null,
-            'finish' => $product['design_finish'] ?? null,
-            //'file' => $this->fetchAndSaveImage($imageURL),
+            'finish' => $this->mapFinishType($product['design_finish']),
+            'design_finish' => $product['design_finish'] ?? null,
+            'file' => $imageFileName,
             'image_variation_1' => $product['image_variation_1'] ?? null,
             'image_variation_2' => $product['image_variation_2'] ?? null,
+            'image_variation_3' => $product['image_variation_3'] ?? null,
+            'real_file' => $imageURL,
             'grout' => ( $surface === "wall" || $surface === "floor" ) ? 1 : null,
             'url' => $product['url'] ?? null,
             'price' => $product['price'] ?? null,
-            'expProps' => json_encode([
-                'thickness' => $product['thickness'] ?? null,
-                'product code' => $product['design_finish'] ?? null,
-                'colour' => $product['color'] ?? null,
-                'category' => $this->mapCategoryType(strtolower($product['brand_name'])) ?? null,
-            ]), // Combined JSON field
+            'expProps' =>  json_encode($expPropsArray),
             'rotoPrintSetName' => str_replace(" FP", "", $product['product_name']) ?? null,
             'access_level' => $product['access_level'] ?? null,
             'sku' => $product['sku'] ?? null,
@@ -274,6 +291,23 @@ trait ApiHelper
         // Get the value of MY_CUSTOM_VAR from the .env file
         $customVar = config('app.curl'); // 'default_value' is the fallback in case MY_CUSTOM_VAR is not set
         return !(($customVar === "localhost"));
+    }
+
+    protected function determineSurfaceValues($product): array
+    {
+        $keywords = ['vanity', 'kitchen cabinet', 'tabletop'];
+
+        if (isset($product['application_room_area'])) {
+            $applicationRoomArea = strtolower($product['application_room_area']);
+
+            foreach ($keywords as $keyword) {
+                if (str_contains($applicationRoomArea, $keyword)) {
+                    return ["counter"]; // ✅ If matched, return only "counter"
+                }
+            }
+        }
+
+        return ["wall", "floor"]; // ✅ Default to both "wall" and "floor"
     }
 
 }
