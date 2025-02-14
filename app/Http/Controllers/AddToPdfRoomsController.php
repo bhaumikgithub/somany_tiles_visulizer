@@ -94,7 +94,7 @@ class AddToPdfRoomsController extends Controller
 
 
 
-        //Check if same session key exists or not
+        //Check if the same session key exists or not
         $checkSessionId = Cart::where('user_id',$sessionId)->first();
 
         //insert data into the Cart table

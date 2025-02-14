@@ -9,12 +9,10 @@ var wallFloorContent = '.withoutThemePanelWrapper';
 var wallFloorThemeContentParent = '#slected-panel';
 var themeContent = '#selected_panel_theme';
 
-const url = new URL(window.location.href);
-const pathSegments = url.pathname.split("/");
-console.log(pathSegments[1]);
-
-
+let url = new URL(window.location.href);
+let pathSegments = url.pathname.split("/");
 let surfaceUrl = "";
+
 window.onload = function getRoomSurface() {
     if(pathSegments[1] === "panorama"){
         surfaceUrl = '/get_room_surface_panorama';
@@ -93,8 +91,8 @@ function loadThemeData() {
         url: themeSurfaceUrl + $('#current_room_id').val(), // Replace with the actual endpoint for room2d
         success: function (themes) {
             $('#selected_panel_theme').show();
-            console.log("THEME DATA");
-            console.log(themes);
+            // console.log("THEME DATA");
+            // console.log(themes);
             // JSON data (you can replace this with data fetched from an AJAX call)
             themeData = [];
             for (var i = 0; i <= 5; i++) {
@@ -116,7 +114,6 @@ function loadThemeData() {
             var themeExist = false;
             for (let i = 0; i < themeData.length; i++) {
                 var themeObj = themeData[i];
-
                 // Only add <li> if both thumbnail and text are present
                 if (themeObj["theme_thumbnail"]) {
                     themeExist = true;
@@ -155,7 +152,6 @@ function addThemeData(p_obj) {
         themeData.push(p_obj)
 }
 function showMainInfoPanel(p_type, surface_name) {
-
     allRightPanelContentHide();
 
     if (p_type == "MAINLISTING_HIDE") {
@@ -177,6 +173,7 @@ function themeBtnPressed(p_id, p_imageLoadByPass) {
 
     }
     else {
+        console.log(currentRoom);
         currentRoom._engine2d.loadAndDrawForegroundImage(themeData[p_id].theme_bigimage);
     }
     $(".top-panel-content-tiles-list-item").removeClass("active_theme");
@@ -250,7 +247,6 @@ function findRoomSurfaceUsingName(p_name) {
     console.log("p_name = " + p_name);
     for (var i = 0; i < allSurfaces.length; i++) {
         console.log("allSurfaces[i].custom_surface_name = " + allSurfaces[i]._surfaceData.custom_surface_name);
-
         if (allSurfaces[i]._surfaceData.custom_surface_name == p_name) {
             return allSurfaces[i]
         }

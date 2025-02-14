@@ -213,4 +213,47 @@ class Tile extends Model
     public static function getTileByIds($id) {
         return Tile::where('id', $id)->first();
     }
+
+    /**
+     * Scope: Filter by service geography (Zone).
+     */
+    public function scopeFilterByZone($query, $getZone)
+    {
+        return $query->where(function ($query) use ($getZone) {
+            $query->whereNull('service_geography')
+                ->orWhere('service_geography', 'Pan India')
+                ->orWhereRaw('LOWER(service_geography) LIKE ?', ['%' . strtolower($getZone) . '%']);
+        })->where('enabled', 1);
+    }
+
+    /**
+     * Scope: Filter by access level.
+     */
+    public function scopeFilterByAccessLevel($query, $accessLevel)
+    {
+        return $query->where('enabled', 1)
+            ->where(function ($query) use ($accessLevel) {
+                $query->where('access_level', '<=', $accessLevel)
+                    ->orWhereNull('access_level');
+            });
+    }
+
+    /**
+     * Scope: Filter by room type.
+     */
+    public function scopeFilterByRoomType($query, $roomType)
+    {
+        return $query->where(function ($query) use ($roomType) {
+            if (is_array($roomType)) {
+                foreach ($roomType as $room) {
+                    $query->orWhereRaw("FIND_IN_SET(?, application_room_area)", [$room])
+                        ->orWhereRaw("LOWER(application_room_area) LIKE ?", ['%' . strtolower($room) . '%']);
+                }
+            } else {
+                $query->whereRaw("FIND_IN_SET(?, application_room_area)", [$roomType])
+                    ->orWhereRaw("LOWER(application_room_area) LIKE ?", ['%' . strtolower($roomType) . '%']);
+            }
+        });
+    }
+
 }

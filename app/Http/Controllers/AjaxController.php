@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Panorama;
 use App\Room2d;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
@@ -41,6 +42,25 @@ class AjaxController extends Controller
     public function getTiles(Request $request): Response | JsonResponse
     {
         if (config('app.tiles_access_level')) {
+
+            $roomID = $request->input('room_id');
+            $currentRoomType = $request->input('room_type');
+            if( $currentRoomType === "room2d") {
+                $findRoom = Room2d::select('type')->findOrFail($roomID);
+            } else {
+                $findRoom = Panorama::select('type')->findOrFail($roomID);
+            }
+
+            $roomType = $findRoom->type;
+            $commercialRooms = ['Lobby', 'Mall', 'Hotels','Restaurant','Reception']; // Define commercial room types
+            $outDoorsRooms = ['Balcony','Veranda'];
+            if ($roomType === 'outdoor') {
+                $roomType = $outDoorsRooms;
+            } elseif ($roomType === 'commercial') {
+                // Check for multiple values in application_room_area
+                $roomType = $commercialRooms;
+            }
+
             if ($request->ids) {
                 $ids = explode(",", $request->ids);
 
@@ -56,31 +76,29 @@ class AjaxController extends Controller
                     ->get();
                     return response()->json($tiles);
             }
-            if(session()->has('pincode') )
-            {
-                $getZone = $this->getZoneByPincode(session('pincode'));
-                $tiles = Tile::where(function ($query) use ($getZone) {
-                    $query->whereNull('service_geography') // Matches null values
-                        ->orWhere('service_geography', 'Pan India') // Condition for "Pan India"
-                        ->orWhereRaw('LOWER(service_geography) LIKE ?', ['%' . strtolower($getZone) . '%']); // Matches partial zone
-                })->where('enabled', 1)->get();
-            } else {
-                $tiles = Tile::where('enabled', 1)
-                    ->where(function ($query) {
-                        $user = Auth::user();
-                        $access_level = isset($user) ? $user->getAccessLevel() : 0;
-
-                        $query->where('access_level', '<=', $access_level)
-                            ->orWhere('access_level', null);
-                    })
-                    ->get();
-            }
+            $tiles = $this->getTilesByRoomType($roomType);
             return response()->json($tiles);
         }
-
         $tiles = Tile::where('enabled', 1)->get();
         return response()->json($tiles);
     }
+
+    protected function getTilesByRoomType($roomType)
+    {
+        if (session()->has('pincode')) {
+            $getZone = $this->getZoneByPincode(session('pincode'));
+            $query = Tile::filterByZone($getZone)->filterByRoomType($roomType);
+        } else {
+            $user = Auth::user();
+            $accessLevel = isset($user) ? $user->getAccessLevel() : 0;
+            $query = Tile::filterByAccessLevel($accessLevel)->filterByRoomType($roomType);
+        }
+
+        // If no matching tiles found, return an empty collection
+        return $query->exists() ? $query->get() : collect([]);
+    }
+
+
 
     public function getTile($id) {
         $tile = Tile::findOrFail($id);

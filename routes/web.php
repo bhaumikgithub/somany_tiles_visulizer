@@ -32,9 +32,9 @@ $engine_panorama_enabled = config('app.engine_panorama_enabled');
 
 if ($engine_3d_enabled) {
     Route::get('/', function () { return redirect('/room3d'); });
-} else if ($engine_2d_enabled) {
+} elseif ($engine_2d_enabled) {
     Route::get('/', function () { return redirect('/room2d'); });
-} else if ($engine_panorama_enabled) {
+} elseif ($engine_panorama_enabled) {
     Route::get('/', function () { return redirect('/panorama'); });
 }
 
@@ -64,6 +64,13 @@ Route::group(['middleware' => 'role:guest'], function () {
     Route::post('/home/rooms/delete', 'App\Http\Controllers\Controller@userRoomsDelete');
 });
 
+// Common Routes (Accessible in Both Engines)
+Route::get('/check-pincode', function() {
+    return response()->json([
+        'pincode_saved' => session()->has('pincode')
+    ]);
+});
+Route::post('/save-pincode', [PincodeController::class, 'store'])->name('save-pincode');
 
 if ($engine_2d_enabled) {
 //    Route::get('/room2d', 'App\Http\Controllers\Controller2d@roomDefault');
@@ -73,34 +80,19 @@ if ($engine_2d_enabled) {
         Route::get('/room2d/{id}', 'App\Http\Controllers\Controller2d@room');
         Route::get('/get/room2d/{id}', 'App\Http\Controllers\Controller2d@getRoom');
     });
-
-    Route::get('/check-pincode', function() {
-        return response()->json([
-            'pincode_saved' => session()->has('pincode')
-        ]);
-    });
-
-    // Route to save the pincode
-    Route::post('/save-pincode', [PincodeController::class, 'store'])->name('save-pincode');
 //    Route::get('/room2d/{id}', 'App\Http\Controllers\Controller2d@room');
     Route::get('/get/room2d/{id}', 'App\Http\Controllers\Controller2d@getRoom');
 //    Route::get('/listing/{roomType}', 'App\Http\Controllers\Controller2d@roomListing');
     Route::post('/get_room_surface','App\Http\Controllers\Controller2d@getRoomSurface');
 }
 if ($engine_panorama_enabled) {
-    Route::get('/panorama', 'App\Http\Controllers\ControllerPanorama@index');
-    Route::get('/panorama-listing/{roomType}', 'App\Http\Controllers\ControllerPanorama@roomListing');
-    //Route::get('/panorama', 'App\Http\Controllers\ControllerPanorama@roomDefault');
-    Route::get('/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@room');
-    Route::get('/get/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@getRoom');
-
-    Route::get('/check-pincode', function() {
-        return response()->json([
-            'pincode_saved' => session()->has('pincode')
-        ]);
+    Route::middleware(['check.pincode'])->group(function () {
+        Route::get('/panorama', 'App\Http\Controllers\ControllerPanorama@index');
+        Route::get('/panorama-listing/{roomType}', 'App\Http\Controllers\ControllerPanorama@roomListing');
+        //Route::get('/panorama', 'App\Http\Controllers\ControllerPanorama@roomDefault');
+        Route::get('/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@room');
+        Route::get('/get/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@getRoom');
     });
-
-    Route::post('/save-pincode', [PincodeController::class, 'store'])->name('save-pincode');
     Route::get('/get/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@getRoom');
     Route::post('/get_room_surface_panorama','App\Http\Controllers\ControllerPanorama@getRoomSurfacePanorama');
 }

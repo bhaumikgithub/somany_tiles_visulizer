@@ -144,6 +144,6 @@
             </div>
         </div>
 
-        <ul id="topPanelTilesListUl"></ul>
+        <ul id="topPanelTilesListUl" class="panel_list"></ul>
     </div>
 </div>

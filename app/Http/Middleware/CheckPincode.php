@@ -17,22 +17,41 @@ class CheckPincode
      */
     public function handle(Request $request, Closure $next)
     {
+        $engine_2d_enabled = config('app.engine_2d_enabled');
+        $engine_panorama_enabled = config('app.engine_panorama_enabled');
+
         Log::info('Redirect check - Current Path: ' . $request->path());
-        Log::info('Pincode session: ' . session()->has('pincode') ? 'Present' : 'Not Present');
+        Log::info('Pincode session: ' . (session()->has('pincode') ? 'Present' : 'Not Present'));
 
-        // Check if we are on the summary page
+        // List of routes that should NOT be redirected
+        $excludedRoutes = ['generate-pdf'];
+        $isPdfSummaryRoute = str_contains($request->path(), 'pdf-summary');
+
+        // Check if redirection is required
         if (!session()->has('pincode') &&
-            !session()->has('redirected_to_room2d') &&
-            !in_array($request->path(),['generate-pdf'])&&
-            !str_contains($request->path(),'pdf-summary')) {
+            !session()->has('redirected_to_room') &&
+            !in_array($request->path(), $excludedRoutes) &&
+            !$isPdfSummaryRoute) {
 
-            // Mark the user as redirected
-            session(['redirected_to_room2d' => true]);
+            // Determine a redirect path based on user's requested route
+            if (str_contains($request->path(), 'panorama') && $engine_panorama_enabled) {
+                $redirectPath = '/panorama';
+            } elseif (str_contains($request->path(), 'room2d') && $engine_2d_enabled) {
+                $redirectPath = '/room2d';
+            } else {
+                // Default redirection based on available engines
+                $redirectPath = $engine_2d_enabled ? '/room2d' : ($engine_panorama_enabled ? '/panorama' : '/');
+            }
 
-            // Redirect to the homepage and show the pincode modal
-            return redirect('/room2d')->with('show_pincode_modal', true);
+            // Mark as redirected
+            session(['redirected_to_room' => true]);
+            Session::save(); // Ensure session persistence
+
+            // Redirect with a modal flag
+            return redirect($redirectPath)->with('show_pincode_modal', true);
         }
 
         return $next($request);
     }
+
 }

@@ -6,9 +6,12 @@
         @endphp
         @foreach($surface as $aSurface)
             @php
-                // Get the current name value
-                $name = $aSurface['176'];
-
+                if( isset($forRoom) && $forRoom === "room2d" ){
+                  // Get the current name value
+                    $name = $aSurface['176'];
+                } else {
+                    $name = $aSurface['type'];
+                }
                 // Increment the count for this name
                 if (isset($nameCounts[$name])) {
                     $nameCounts[$name]++;

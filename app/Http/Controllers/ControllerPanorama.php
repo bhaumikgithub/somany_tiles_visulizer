@@ -350,9 +350,10 @@ class ControllerPanorama extends Controller
     {
         $room = Panorama::findOrFail($request->room_id);
         $surface = json_decode($room->surfaces,true);
+        $forRoom = "panorama";
         return response()->json([
-            'body' => view('common.exists_surface_area_panorama',compact('surface'))->render(),
-            'data' => ['surface'=> $surface],
+            'body' => view('common.exists_surface_area',compact('surface','forRoom'))->render(),
+            'data' => ['surface'=> $surface,'forRoom' => $forRoom],
             'success' => 'success'
         ]);
     }
