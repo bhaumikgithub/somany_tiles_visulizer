@@ -56,9 +56,7 @@ class AjaxController extends Controller
 
             if ($roomType === 'outdoor') {
                 $roomType = 'Balcony'; // If a room type is outdoor, match with Balcony
-            } else if ($roomType === 'prayer-room') {
-                $roomType = ''; // If a room type is outdoor, match with Balcony
-            }elseif ($roomType === 'commercial') {
+            } elseif ($roomType === 'commercial') {
                 // Check for multiple values in application_room_area
                 $roomType = $commercialRooms;
             }
