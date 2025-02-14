@@ -44,6 +44,7 @@
 
 
                     </div>
+                    <div class="partOfProductTabContent-wrap">
                     <div class="top-panel-box search-filter-panel-box partOfProductTabContent">
                         <div class="input-box d-flex flex-wrap serch-box-wrap">
                             <div class="serach-pad-set d-flex flex-wrap w-100">
@@ -75,6 +76,7 @@
                                  style="display: none;">
                             </div>
                         </div>
+                    </div>
                     </div>
                     <div class="radio-surface-rotation-wrap">
                     <div class="top-panel-box row radio-surface-rotation top-panel-box-cmn-br mt-0 d-flex flex-wrap partOfProductTabContent">

@@ -451,6 +451,15 @@ body {
 
 }
 
+ #cartInfoTilesList .top-panel-content-tiles-list-item-product{
+    border-radius: 0px !important;
+}
+.cart-summary-img-holder img{
+
+    width:130px !important;
+    height: 130px !important;
+
+}
 .modify-btn {
     background-color: #ce1f22;
     border-color: #ce1f22 !important;
@@ -576,7 +585,9 @@ body {
     background-color: #7e7c7c !important;
 }
 
-
+.cart-modal-dialog{
+    width: 500px;
+}
 
 
 @media (max-width:991px) {
@@ -660,6 +671,9 @@ body {
     }
 
     .modal-dialog {
+        width: 95%;
+    }
+    .cart-modal-dialog{
         width: 95%;
     }
 
@@ -1745,20 +1759,7 @@ input[type=checkbox] {
     }
 
 
-    .top-panel-hide-button-product {
-        height: 37px;
-        width: 37px;
-        display: block;
-        top: 207px;
-        border-radius: 20px;
-        rotate: 90deg;
-        background-color: #ff9f9f;
-        /*margin-left: 0px;*/
-        margin-left: 0px;
-        margin-right: 0px;
-        left:calc(50vw - 18px);
-        z-index: 500;
-    }
+   
 
     #topPanelmainpanel {
         height: 37px;
@@ -1870,6 +1871,9 @@ input[type=checkbox] {
     .input-text-box-wrap{
         width: 100%;
     }
+    .panel_list .tile-list-text .-caption{
+        font-size: 12px;
+    }
 
 }
 @media (max-width:767px) and (orientation:portrait){
@@ -1894,8 +1898,54 @@ input[type=checkbox] {
     #topPanelFilter{
         max-height: 20vh !important;
     }
+     .top-panel-hide-button-product {
+        height: 37px;
+        width: 37px;
+        display: block;
+        top: 207px;
+        border-radius: 20px;
+        rotate: 90deg;
+        background-color: #ff9f9f;
+      
+        margin-left: 0px;
+        margin-right: 0px;
+        left:calc(50vw - 18px);
+        z-index: 500;
+    }
 }
 @media (max-width:767px) and (orientation:landscape){
+
+    .top-panel-product{
+        width: 350px !important;
+    }
+    .panel_list .tile-list-thumbnail-image-holder img{
+        height: 100px;
+        width: 100px;
+    }
+    .top-panel-hide-button-product {
+        /* background-color: rgba(163, 163, 163, 1); */
+       
+        background-color: rgba(255, 255, 255, 0.90);
+        height: 41px;
+        width: 46px;
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 10px 0px;
+        margin-top: 14px;
+        margin-left: -51px;
+        z-index: 12;
+        border-radius: 8px 0 0 8px;
+        rotate: 360deg;
+    }
+    .fliter-btn-wrap.hideOnMobile{
+        display: block !important;
+    }
+    .input-text-box-wrap {
+        width: 85%;
+    }
+    .fliter-btn-wrap {
+        width: 15%;
+    }
+    
+    
 
 }
 

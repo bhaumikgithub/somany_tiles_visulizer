@@ -1,5 +1,5 @@
 <div class="modal fade" id="addToCartInfoPanelModal" role="dialog" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered cart-modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-body">

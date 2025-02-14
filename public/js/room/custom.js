@@ -388,12 +388,15 @@ function showProductContent(){
     }
     console.log("partOfProductTabContent SHOW");
     $(".partOfProductTabContent").show();
+    $('.partOfProductTabContent-wrap').show();
 }
 function showLayoutContent(){
     $('#topPanelGrout').hide();
     $(".partOfProductTabButtons").hide();
     $(".partOfProductTabContent").hide();
     $('.radio-surface-rotation-wrap').hide();
+    $('.partOfProductTabContent-wrap').hide();
+    
     //$("#topPanelContentSurfaceTabGroutSizeBody").hide();
     $('.search-pad-set').hide(); 
     $('#topPanelLayout').show();
@@ -405,6 +408,7 @@ function showGroutContent(){
     $('#topPanelGrout').css('display', 'block'); 
     $('#topPanelGrout').show();
     $('.radio-surface-rotation-wrap').hide();
+    $('.partOfProductTabContent-wrap').hide();
     //$("#otpPanelContentSurfaceTabGroutSizeBody").show();
 }
 
@@ -493,10 +497,6 @@ function customFilterManagement(){
             var filterName = titleHeader.html();
             htmlStr +="<li onclick=clickFilterCategory('"+filterName+"') id='filterclick_"+filterName+"' class='filter-click'>"+filterName+"</li>";``
         }
-
-
-
-
 
     }
     htmlStr+="</ul>";
