@@ -11,8 +11,8 @@ var themeContent = '#selected_panel_theme';
 
 let url = new URL(window.location.href);
 let pathSegments = url.pathname.split("/");
-
 let surfaceUrl = "";
+
 window.onload = function getRoomSurface() {
     if(pathSegments[1] === "panorama"){
         surfaceUrl = '/get_room_surface_panorama';
