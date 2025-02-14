@@ -71,12 +71,6 @@ class FetchTilesController extends Controller
             'new_date' => $endDate
         ]);
     }
-
-    /**
-     * @throws Exception
-     */
-    use Illuminate\Support\Facades\Cache;
-
     /**
      * @throws Exception
      */

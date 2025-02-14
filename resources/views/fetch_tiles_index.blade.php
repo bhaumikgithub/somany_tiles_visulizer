@@ -46,28 +46,36 @@
                 let progressText = document.getElementById('progress-text');
                 let errorList = document.getElementById('error-list');
 
+                const lastFetchedDate = $('#last_fetch_date_val').val() || "2000-01-01";
+                const todayDate = new Date().toISOString().slice(0, 10);
+
                 fetchButton.disabled = true;
                 fetchButton.innerText = "Processing...";
 
                 progressContainer.style.display = 'block';
                 progressBar.style.width = '0%';
                 progressText.innerText = '0 records processed...';
-                errorList.innerHTML = ''; // Clear previous errors
+                errorList.innerHTML = '';
 
-                fetch("/api/fetch-data", { method: "POST" })
+                fetch("/fetch-data", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ start_date: lastFetchedDate, end_date: todayDate })
+                })
                     .then(response => response.json())
                     .then(result => {
                         let totalRecords = result.total_records;
-                        let processed = 0;
-
-                        function updateProgress() {
-                            fetch("/api/fetch-progress")
+                        let progressInterval = setInterval(() => {
+                            fetch("/fetch-progress")
                                 .then(res => res.json())
                                 .then(progressData => {
                                     if (progressData.total > 0) {
                                         let percentage = (progressData.processed / progressData.total) * 100;
                                         progressBar.style.width = `${percentage}%`;
-                                        progressText.innerText = `${progressData.processed} out of ${progressData.total} records inserted...`;
+                                        progressText.innerText = `${progressData.processed} of ${progressData.total} records processed (SKU: ${progressData.sku}, Surface: ${progressData.surface})`;
 
                                         if (progressData.processed >= progressData.total) {
                                             clearInterval(progressInterval);
@@ -81,9 +89,7 @@
                                 .catch(error => {
                                     console.error("Error fetching progress:", error);
                                 });
-                        }
-
-                        let progressInterval = setInterval(updateProgress, 2000);
+                        }, 2000);
                     })
                     .catch(error => {
                         progressText.innerText = "Error fetching data!";
