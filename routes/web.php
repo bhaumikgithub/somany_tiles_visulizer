@@ -1,12 +1,11 @@
 <?php
 
 use App\Http\Controllers\PincodeController;
-use App\Http\Controllers\ZipcodeController;
 use App\Http\Controllers\UserPdfController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\ShowroomController;
-
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -237,6 +236,17 @@ Route::group(['middleware' => 'role:administrator'], function () {
     Route::post('/maximum_images/update', 'App\Http\Controllers\MaxImageController@update');
     Route::post('/fetch-data', 'App\Http\Controllers\FetchTilesController@fetchData')->name('fetch.data');
 
+//    Route::get('/fetch-progress', function (Request $request) {
+//        return response()->json(Cache::get('tile_processing_progress', [
+//            'total' => 0,
+//            'processed' => 0,
+//            'sku' => null,
+//            'surface' => null,
+//        ]));
+//    });
+
+    Route::post('/fetch-data', 'App\Http\Controllers\FetchTilesController@fetchData')->name('fetch.data');;
+    Route::get('/process-record/{id}', 'App\Http\Controllers\FetchTilesController@processRecord');
 
     Route::resource('fetch_showroom', ShowroomController::class);
     Route::post('/showrooms/enable', [ShowroomController::class, 'showroomsEnable']);

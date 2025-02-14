@@ -87,7 +87,7 @@ trait ApiHelper
     /**
      * @throws Exception
      */
-    protected function prepareTileData(array $product, $creation_time , $imageFileName): array
+    protected function prepareTileData(array $product, $creation_time , $imageFileName): ?array
     {
         // Check if 'design_finish' key is missing and log a warning
         if (!isset($product['design_finish'])) {
@@ -112,7 +112,7 @@ trait ApiHelper
             // Skip record if an image type is TIFF or PSD
             if (in_array($fileType, ['tif', 'psd', 'tiff'])) {
                 \Log::info("Skipping insertion for file: $filePath (Unsupported type: $fileType)");
-                return; // Stop processing this record
+                return null; // Ensure a valid return value
             }
 
             $imageFileName = $this->fetchAndSaveImage($imageURL);
@@ -295,19 +295,35 @@ trait ApiHelper
 
     protected function determineSurfaceValues($product): array
     {
-        $keywords = ['vanity', 'kitchen cabinet', 'tabletop'];
+        $surfaces = [];
 
+        // ✅ Extract surfaces from "application"
+        if (isset($product['application'])) {
+            $applications = explode(' & ', strtolower($product['application']));
+            foreach ($applications as $app) {
+                if (in_array(trim($app), ['wall', 'floor'])) {
+                    $surfaces[] = trim($app);
+                }
+            }
+        }
+
+        // ✅ Check for Counter (Vanity, Kitchen Cabinet, Tabletop)
+        $keywords = ['vanity', 'kitchen cabinet', 'tabletop'];
         if (isset($product['application_room_area'])) {
             $applicationRoomArea = strtolower($product['application_room_area']);
 
             foreach ($keywords as $keyword) {
                 if (str_contains($applicationRoomArea, $keyword)) {
-                    return ["counter"]; // ✅ If matched, return only "counter"
+                    $surfaces[] = "counter"; // ✅ Add counter if keyword is found
+                    break;
                 }
             }
         }
 
-        return ["wall", "floor"]; // ✅ Default to both "wall" and "floor"
+        // ✅ Ensure unique values & default to "wall" if no surfaces found
+        return !empty($surfaces) ? array_unique($surfaces) : ["wall"];
     }
+
+
 
 }

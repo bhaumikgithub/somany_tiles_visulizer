@@ -11,8 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image as InterventionImage; // Import Intervention Image
+use Illuminate\Support\Facades\Cache;
 
 class FetchTilesController extends Controller
 {
@@ -39,6 +38,7 @@ class FetchTilesController extends Controller
         $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete";
 
         $queryParams = http_build_query([
+            'limit' => 2,
             's' => $startDate,
             'e' => $endDate,
         ]);
@@ -62,7 +62,7 @@ class FetchTilesController extends Controller
 
         $totalRecords = count($data);
         // Insert or update database
-        $dbStats = $this->updateOrInsertMultiple($data, $endDate, $totalRecords);
+        $this->updateOrInsertMultiple($data, $endDate, $totalRecords);
 
         return response()->json([
             'success' => true,
@@ -75,56 +75,57 @@ class FetchTilesController extends Controller
     /**
      * @throws Exception
      */
-    public function updateOrInsertMultiple($records, $endDate, $totalCount): array
+    use Illuminate\Support\Facades\Cache;
+
+    /**
+     * @throws Exception
+     */
+    public function updateOrInsertMultiple($records, $endDate, $totalCount): JsonResponse
     {
-        $insertedCount = 0; // Track new insertions
-        $updatedCount = 0; // Track updates
-        $unchangedCount = 0; // Track unchanged records
-        $processedCount = 0;  // Variable to track the total number of processed records
+        $insertedCount = 0;
+        $updatedCount = 0;
+        $unchangedCount = 0;
+        $processedCount = 0;
+        $skippedRecords = [];
 
-        // Define the batch size
-        $batchSize = 500; // Adjust based on your system's capacity
-        $chunks = array_chunk($records, $batchSize);
+        \Log::info('Starting record-by-record processing. Total records: ' . $totalCount);
 
-        \Log::info('Starting batch processing. Total records: ' . count($records) . ', Batch size: ' . $batchSize);
+        foreach ($records as $index => $aTile) {
+            $product = $aTile['attributes'];
+            $creation_time = Carbon::parse($aTile['creation_time'])->format('Y-m-d H:i:s');
 
-        foreach ($chunks as $index => $batch) {
-            \Log::info('Processing batch ' . ($index + 1) . ' of ' . count($chunks));
+            // Skip specific SKUs
+            if (in_array($product['sku'], ['12345678', '1223324324'])) {
+                \Log::info("Skipping SKU: {$product['sku']} due to exclusion.");
+                continue;
+            }
 
-            foreach ($batch as $aTile) {
-                $product = $aTile['attributes'];
-                $creation_time = Carbon::parse($aTile['creation_time'])->format('Y-m-d H:i:s');
+            // Skip records based on a deletion flag
+            if (isset($product['deletion']) && !in_array($product['deletion'], ['RUNNING', 'SLOW MOVING'])) {
+                \Log::info("Skipping SKU: {$product['sku']} due to deletion flag: {$product['deletion']}");
+                continue;
+            }
 
-                // Skip specific SKUs
-                if ($product['sku'] == '12345678') {
-                    \Log::info('Skipping SKU: ' . $product['sku'] . ' due to exclusion.');
-                    continue;
-                }
+            // Store the image filename to reuse for multiple surfaces
+            $imageURL = $product['image'] ?? $product['image_variation_1'];
+            $imageFileName = $this->fetchAndSaveImage($imageURL);
 
-                // Skip records based on the deletion flag
-                if (isset($product['deletion']) && !in_array($product['deletion'], ['RUNNING', 'SLOW MOVING'])) {
-                    \Log::info('Skipping SKU: ' . $product['sku'] . ' due to deletion flag: ' . $product['deletion']);
-                    continue;
-                }
+            if ($imageFileName === null) {
+                continue; // Skip this record safely
+            }
 
-                // Store the image filename to reuse for multiple surfaces
-                $imageURL = $product['image'] ?? $product['image_variation_1'];
-                $imageFileName = $this->fetchAndSaveImage($imageURL);
+            // Determine the surfaces (Wall, Floor, Counter)
+            $surfaces = $this->determineSurfaceValues($product);
 
-                // Determine the surface value BEFORE passing to prepareTileData()
-                $surfaces = $this->determineSurfaceValues($product);
-                // Handle multiple surfaces
-                $applications = explode(' & ', $product['application']);
-                foreach ($applications as $surface) {
-                    $product['surface'] = trim($surface);
-                    $data = $this->prepareTileData($product, $creation_time ,$imageFileName);
+            foreach ($surfaces as $surface) {
+                $product['surface'] = trim($surface);
+                $data = $this->prepareTileData($product, $creation_time, $imageFileName);
 
-                    \Log::info('Processing SKU: ' . $product['sku'] . ' for Surface: ' . $surface);
-
+                try {
                     $existing = \DB::table('tiles')->where('sku', $product['sku'])->where('surface', $surface)->first();
 
                     if ($existing) {
-                        // Check for differences
+                        // Check for changes
                         $isDifferent = false;
                         foreach ($data as $key => $value) {
                             if ($existing->$key != $value) {
@@ -136,43 +137,47 @@ class FetchTilesController extends Controller
                         if ($isDifferent) {
                             \DB::table('tiles')->where('sku', $product['sku'])->where('surface', $surface)->update($data);
                             $updatedCount++;
-                            \Log::info('Updating SKU: ' . $product['sku'] . ' for Surface: ' . $surface);
+                            \Log::info("Updated SKU: {$product['sku']} for Surface: $surface");
                         } else {
                             $unchangedCount++;
-                            \Log::info('No changes for SKU: ' . $product['sku'] . ' for Surface: ' . $surface);
                         }
                     } else {
                         \DB::table('tiles')->insert($data);
                         $insertedCount++;
-                        \Log::info('Inserting new SKU: ' . $product['sku'] . ' for Surface: ' . $surface);
+                        \Log::info("Inserted new SKU: {$product['sku']} for Surface: $surface");
                     }
 
                     $processedCount++;
+
+                    // ✅ Store progress in cache
+                    Cache::put('tile_processing_progress', [
+                        'total' => $totalCount,
+                        'processed' => $processedCount,
+                        'sku' => $product['sku'],
+                        'surface' => $surface,
+                    ], now()->addMinutes(10));
+
+                } catch (\Exception $e) {
+                    $skippedRecords[] = [
+                        'sku' => $product['sku'] ?? 'Unknown',
+                        'surface' => $surface,
+                        'error' => $e->getMessage(),
+                    ];
+                    \Log::error("Error inserting SKU: {$product['sku']} - " . $e->getMessage());
                 }
             }
-
-            // Free up memory after processing each batch
-            \Log::info('Completed batch ' . ($index + 1) . '. Processed so far: ' . $processedCount);
-            unset($batch);
-            gc_collect_cycles(); // Force garbage collection
         }
 
-        // Update the last fetched date
-        \DB::table('companies')->update([
-            'last_fetch_date_from_api' => $endDate,
-            'fetch_products_count' => $totalCount,
-            'updated_at' => now(),
-        ]);
-        \Log::info('Updated last fetch date in companies table.');
-
-        \Log::info('Process complete. Total records processed: ' . $processedCount);
-        \Log::info('Summary: Inserted = ' . $insertedCount . ', Updated = ' . $updatedCount . ', Unchanged = ' . $unchangedCount);
-
-        return [
+        return response()->json([
+            'success' => true,
+            'message' => 'Data processed successfully.',
+            'total_records' => $totalCount,
             'insertedCount' => $insertedCount,
             'updatedCount' => $updatedCount,
-            'count' => $processedCount,
             'unchangedCount' => $unchangedCount,
-        ];
+            'skippedRecords' => $skippedRecords,
+        ]);
     }
+
+
 }

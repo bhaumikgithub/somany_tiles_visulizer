@@ -21,151 +21,77 @@
                 </p>
             </div>
             <div class="form-group">
-                <div id="progress-container" style="display: none; margin: 20px 0;">
-                    <div style="border: 1px solid #ccc; width: 100%; background-color: #f3f3f3; height: 20px; position: relative;">
-                        <div id="progress-bar" style="width: 0%; height: 100%; background-color: green;"></div>
+                <div id="progress-container" style="display: none;">
+                    <div class="progress">
+                        <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
                     </div>
-                    <p id="progress-text" style="text-align: center; margin-top: 5px;">0 of 0 records processed...</p>
+                    <p id="progress-text">0 records processed...</p>
                 </div>
                 <button id="fetch-now" class="btn btn-primary">Fetch Now</button>
+            </div>
+
+            <div class="form-group">
+                <h3>Skipped Records</h3>
+                <ul id="error-list"></ul>
             </div>
         </div>
     </div>
 
     @push('custom-scripts')
         <script>
-            {{--document.getElementById('fetch-now').addEventListener('click', function () {--}}
-            {{--    const lastFetchedDate = ( $('#last_fetch_date_val').val() ) ? $('#last_fetch_date_val').val() : "2000-01-01"; // Replace with actual last fetched date--}}
-            {{--    const todayDate = new Date().toISOString().slice(0, 10); // Current date (YYYY-MM-DD)--}}
+            document.getElementById('fetch-now').addEventListener('click', function () {
+                let fetchButton = document.getElementById('fetch-now');
+                let progressContainer = document.getElementById('progress-container');
+                let progressBar = document.getElementById('progress-bar');
+                let progressText = document.getElementById('progress-text');
+                let errorList = document.getElementById('error-list');
 
-            {{--    const progressContainer = document.getElementById('progress-container');--}}
-            {{--    const progressBar = document.getElementById('progress-bar');--}}
-            {{--    const progressText = document.getElementById('progress-text');--}}
-            {{--    const fetchResult = document.getElementById('last-fetched-date');--}}
-
-            {{--    progressContainer.style.display = 'block';--}}
-            {{--    progressBar.style.width = '0%';--}}
-            {{--    progressText.innerText = '0 of 0 records processed...';--}}
-
-            {{--    fetch("{{ route('fetch.data') }}", {--}}
-            {{--        method: 'POST',--}}
-            {{--        headers: {--}}
-            {{--            'Content-Type': 'application/json',--}}
-            {{--            'X-CSRF-TOKEN': '{{ csrf_token() }}',--}}
-            {{--        },--}}
-            {{--        body: JSON.stringify({ start_date: lastFetchedDate, end_date: todayDate }),--}}
-            {{--    })--}}
-            {{--        .then(response => {--}}
-            {{--            if (!response.ok) {--}}
-            {{--                throw new Error('Failed to fetch data');--}}
-            {{--            }--}}
-            {{--            return response.json();--}}
-            {{--        })--}}
-            {{--        .then(result => {--}}
-            {{--            if (result.success) {--}}
-            {{--                const totalRecords = result.total_records;--}}
-            {{--                let processedRecords = 0;--}}
-
-            {{--                progressText.innerText = `${processedRecords} of ${totalRecords} records processed...`;--}}
-
-            {{--                const interval = setInterval(() => {--}}
-            {{--                    // Simulate processing one record at a time--}}
-            {{--                    processedRecords++;--}}
-            {{--                    const percentage = Math.min((processedRecords / totalRecords) * 100, 100);--}}
-
-            {{--                    // Update progress bar and text--}}
-            {{--                    progressBar.style.width = `${percentage}%`;--}}
-            {{--                    progressText.innerText = `${processedRecords} of ${totalRecords} records...`;--}}
-
-            {{--                    if (processedRecords >= totalRecords) {--}}
-            {{--                        clearInterval(interval);--}}
-            {{--                        progressText.innerText = 'Processing complete!';--}}
-            {{--                        progressBar.style.width = '100%';--}}
-
-            {{--                        fetchResult.innerText = result.updated_message;--}}
-
-            {{--                        const insertedCount = result.insertedCount;--}}
-            {{--                        const updatedCount = result.updatedCount;--}}
-            {{--                        const unchangedCount = result.unchangedCount;--}}
-
-            {{--                        let resultMessage;--}}
-
-            {{--                        if (insertedCount === 0 && updatedCount === 0) {--}}
-            {{--                            resultMessage = 'No new records inserted or updated.';--}}
-            {{--                        } else {--}}
-            {{--                            resultMessage = `Processed ${totalRecords} records:--}}
-            {{--                            - ${insertedCount} record(s) inserted.--}}
-            {{--                            - ${updatedCount} record(s) updated.--}}
-            {{--                            - ${unchangedCount} record(s) unchanged.`;--}}
-            {{--                        }--}}
-            {{--                        document.getElementById('total_result').innerText = resultMessage;--}}
-            {{--                        setTimeout(() => {--}}
-            {{--                            //progressContainer.style.display = 'none';--}}
-            {{--                        }, 2000);--}}
-            {{--                    }--}}
-            {{--                }, 50); // Adjust an interval for progress speed--}}
-            {{--            } else {--}}
-            {{--                fetchResult.innerText = 'Error processing data';--}}
-            {{--            }--}}
-            {{--        })--}}
-            {{--        .catch(error => {--}}
-            {{--            fetchResult.innerText = error.message;--}}
-            {{--            console.error(error);--}}
-            {{--        });--}}
-            {{--});--}}
-
-            document.getElementById('fetch-now').addEventListener('click', async function () {
-                const lastFetchedDate = $('#last_fetch_date_val').val() || "2000-01-01";
-                const todayDate = new Date().toISOString().slice(0, 10);
-                let page = 1;
-
-                const progressContainer = document.getElementById('progress-container');
-                const progressBar = document.getElementById('progress-bar');
-                const progressText = document.getElementById('progress-text');
-                const fetchResult = document.getElementById('last-fetched-date');
+                fetchButton.disabled = true;
+                fetchButton.innerText = "Processing...";
 
                 progressContainer.style.display = 'block';
                 progressBar.style.width = '0%';
-                progressText.innerText = '0 of 0 records processed...';
+                progressText.innerText = '0 records processed...';
+                errorList.innerHTML = ''; // Clear previous errors
 
-                let totalProcessed = 0;
-                let totalRecords = 0;
+                fetch("/api/fetch-data", { method: "POST" })
+                    .then(response => response.json())
+                    .then(result => {
+                        let totalRecords = result.total_records;
+                        let processed = 0;
 
-                try {
-                    while (true) {
-                        const response = await fetch("{{ route('fetch.data') }}", {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            },
-                            body: JSON.stringify({ start_date: lastFetchedDate, end_date: todayDate, page }),
-                        });
+                        function updateProgress() {
+                            fetch("/api/fetch-progress")
+                                .then(res => res.json())
+                                .then(progressData => {
+                                    if (progressData.total > 0) {
+                                        let percentage = (progressData.processed / progressData.total) * 100;
+                                        progressBar.style.width = `${percentage}%`;
+                                        progressText.innerText = `${progressData.processed} out of ${progressData.total} records inserted...`;
 
-                        if (!response.ok) throw new Error('Failed to fetch data');
+                                        if (progressData.processed >= progressData.total) {
+                                            clearInterval(progressInterval);
+                                            progressText.innerText = "Processing complete!";
+                                            progressBar.style.width = "100%";
+                                            fetchButton.disabled = false;
+                                            fetchButton.innerText = "Fetch Now";
+                                        }
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error("Error fetching progress:", error);
+                                });
+                        }
 
-                        const result = await response.json();
-
-                        if (!result.success || result.total_records === 0) break;
-
-                        totalProcessed += result.total_records;
-                        totalRecords += result.total_records;
-
-                        // Update progress
-                        progressBar.style.width = `${(totalProcessed / totalRecords) * 100}%`;
-                        progressText.innerText = `${totalProcessed} of ${totalRecords} records processed...`;
-
-                        page++;
-                    }
-
-                    progressText.innerText = 'Processing complete!';
-                    fetchResult.innerText = 'All records fetched successfully.';
-                } catch (error) {
-                    fetchResult.innerText = error.message;
-                    console.error(error);
-                }
+                        let progressInterval = setInterval(updateProgress, 2000);
+                    })
+                    .catch(error => {
+                        progressText.innerText = "Error fetching data!";
+                        console.error(error);
+                        fetchButton.disabled = false;
+                        fetchButton.innerText = "Fetch Now";
+                    });
             });
-
 
         </script>
     @endpush
