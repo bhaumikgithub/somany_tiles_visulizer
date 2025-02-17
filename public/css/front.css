@@ -1939,22 +1939,18 @@ input[type=checkbox] {
         border-radius: 8px 0 0 8px;
         rotate: 360deg;
     }
-    .fliter-btn-wrap.hideOnMobile{
+    /* .fliter-btn-wrap.hideOnMobile{
         display: block !important;
-    }
-    .input-text-box-wrap {
-        width: 85%;
-    }
-    .fliter-btn-wrap {
-        width: 15%;
-    }
-    .hideOnMobile{
+    } */
+   
+    
+    /* .hideOnMobile{
         display: none !important;
     }
     .showOnMobile{
         display: block !important;
-    }
-    
+    } */
+   
     
 
 }

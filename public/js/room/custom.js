@@ -375,11 +375,23 @@ function showHideTabs() {
     if (layoutMode == "LANDSCAPE") {
         $(".partOfProductTabContent").show();
     }
+    var screenWidth = $(window).width();
+    if (screenWidth <= 767 && layoutMode === "LANDSCAPE") {
+        $(".partOfProductTabButtons").show();
+        setPanelToggleStatus('.serach-pad-set','#searchIconToggle');
+        setPanelToggleStatus('.filterContentPanel','#sliderIconToggle');
+
+    }
 
     // setTimeout(function() {
     //     AdjustCanvasWidthHeight();  // Recalculate canvas width/height
     // }, 100); 
 }
+
+
+
+
+
 function showProductContent(){
     console.log("showProductContent");
     $('#topPanelGrout').hide();
