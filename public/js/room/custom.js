@@ -216,7 +216,7 @@ $(window).on('load', function () {
 
     $(document).on('click', '.filter-click', function() {
         alert("Click");
-        console.log($(this).attr("id"));
+        //console.log($(this).attr("id"));
     });
 });
 
@@ -511,10 +511,25 @@ function customFilterManagement(){
     htmlStr+="</ul>";
 
     $("#topPanelNavFilter").html(htmlStr);
+    $(".checkboxClass").prop("checked",false);
+    badLogicForCheckbox = true;
 
-
+    -body_Finishes
 }
-
+var badLogicForCheckbox = true;
+function totalFilterCheckboxesChecked(p_category){
+    console.log("p_category = " + p_category);
+    var checked = $(".checkboxClass");
+    var totalCheckboxes = checked.length;
+    var count = 0;
+    for(var i=0;i<totalCheckboxes;i++){
+        var obj = $(checked).eq(i);
+        if($(obj).prop("checked")){
+            count++;
+        }
+    }
+    return count;
+}
 function clickFilterCategory(p_filterName){
     $('.-body').hide();
     $('#-body_' + p_filterName).css({"display":"flex"});

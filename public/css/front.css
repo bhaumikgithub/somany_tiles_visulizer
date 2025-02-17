@@ -1780,7 +1780,7 @@ input[type=checkbox] {
     }
 
     .top-panel-button {
-        padding: 8px 10px;
+        padding: 8px 9px;
         font-size: 13px;
     }
 
@@ -1949,11 +1949,12 @@ input[type=checkbox] {
         width: 15%;
     }
     .hideOnMobile{
-        display: none;
+        display: none !important;
     }
     .showOnMobile{
-        display: block;
+        display: block !important;
     }
+    
     
 
 }
