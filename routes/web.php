@@ -242,6 +242,7 @@ Route::group(['middleware' => 'role:administrator'], function () {
             'processed' => 0,
             'sku' => null,
             'surface' => null,
+            'status' => 'Waiting...',
         ]));
     });
     Route::get('/process-record/{id}', 'App\Http\Controllers\FetchTilesController@processRecord');

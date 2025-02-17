@@ -84,6 +84,15 @@ class FetchTilesController extends Controller
 
         \Log::info('Starting record-by-record processing. Total records: ' . $totalCount);
 
+        // Initialize Progress Cache
+        Cache::put('tile_processing_progress', [
+            'total' => $totalCount,
+            'processed' => 0,
+            'sku' => null,
+            'surface' => null,
+            'status' => 'Starting...',
+        ], now()->addMinutes(10));
+
         foreach ($records as $index => $aTile) {
             $product = $aTile['attributes'];
             $creation_time = Carbon::parse($aTile['creation_time'])->format('Y-m-d H:i:s');
@@ -100,12 +109,18 @@ class FetchTilesController extends Controller
                 continue;
             }
 
+            // Check if Image Already Exists in DB
+            $existingTile = \DB::table('tiles')->where('sku', $product['sku'])->first();
+
             // Store the image filename to reuse for multiple surfaces
             $imageURL = $product['image'] ?? $product['image_variation_1'];
-            $imageFileName = $this->fetchAndSaveImage($imageURL);
-
-            if ($imageFileName === null) {
-                continue; // Skip this record safely
+            if ($existingTile && $existingTile->real_file === $imageURL) {
+                $imageFileName = $existingTile->file; // Reuse existing image
+            } else {
+                $imageFileName = $this->fetchAndSaveImage($imageURL);
+                if ($imageFileName === null) {
+                    continue; // Skip this record safely if image fails
+                }
             }
 
             // Determine the surfaces (Wall, Floor, Counter)
@@ -143,12 +158,15 @@ class FetchTilesController extends Controller
 
                     $processedCount++;
 
-                    // ✅ Store progress in cache
+                    // ✅ Store progress update **AFTER EACH RECORD**
+                    $progressPercentage = min(($processedCount / $totalCount) * 100, 100);
                     Cache::put('tile_processing_progress', [
                         'total' => $totalCount,
                         'processed' => $processedCount,
                         'sku' => $product['sku'],
                         'surface' => $surface,
+                        'status' => "{$processedCount} of {$totalCount} records processed (SKU: {$product['sku']}, Surface: {$surface})",
+                        'percentage' => $progressPercentage,
                     ], now()->addMinutes(10));
 
                 } catch (\Exception $e) {
