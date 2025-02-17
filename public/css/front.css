@@ -1748,10 +1748,11 @@ input[type=checkbox] {
     }
 
     .range-slider {
-        margin-top: 10px;
+      margin-top: 7px;
+      margin-bottom: 3px;
     }
-
-
+    
+  
     .top-panel-button-product {
         margin-bottom: 10px;
     }
@@ -1877,7 +1878,9 @@ input[type=checkbox] {
     .panel_list .tile-list-text .-caption{
         font-size: 12px;
     }
-   
+    #topPanelGroutSizeRange {
+        width: 135px;
+    }
 
 }
 @media (max-width:767px) and (orientation:portrait){
@@ -1939,6 +1942,10 @@ input[type=checkbox] {
         border-radius: 8px 0 0 8px;
         rotate: 360deg;
     }
+
+    #topPanelHideIcon{
+        margin-top: 6px;
+    }
     /* .fliter-btn-wrap.hideOnMobile{
         display: block !important;
     } */
@@ -1981,4 +1988,8 @@ input[type=checkbox] {
 
 } */
 
-
+/* @media (min-height: 480px) and (max-height: 576px) {
+    .top-panel-box-overflow-y {
+        max-height: 100vh !important;
+    }
+} */
