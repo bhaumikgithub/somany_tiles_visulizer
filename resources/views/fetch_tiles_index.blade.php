@@ -6,7 +6,15 @@
         <div class="row">
             <h3>Fetch Product Data</h3>
             <div class="form-group">
-                <input type="hidden" value="{{$api_details->last_fetch_date_from_api}}" id="last_fetch_date_val">
+                @if( $api_details->last_fetch_date_from_api !== NULL)
+                    @if($api_details->last_fetch_date_from_api == $lastFetchDateFromRecord)
+                        <input type="hidden" value="{{$api_details->last_fetch_date_from_api}}" id="last_fetch_date_val">
+                    @else
+                        <input type="hidden" value="{{$lastFetchDateFromRecord}}" id="last_fetch_date_val">
+                    @endif
+                @else
+                    <input type="hidden" value="2000-01-01" id="last_fetch_date_val">
+                @endif
                 <p>Last Fetched Date:
                     <span id="last-fetched-date">
                         @if( $api_details->last_fetch_date_from_api === NULL)
@@ -16,6 +24,7 @@
                             ( {{$api_details->fetch_products_count}} records has been fetch )
                         @endif
                     </span>
+                    <p class="fromTodate" style="display: none">Fetching Records from <span class="fromDate"></span> to <span class="toDate"></span></p>
                     <hr>
                     <span id="total_result"></span>
                 </p>
@@ -105,7 +114,7 @@
             $(document).ready(function () {
                 let csrfToken = $('meta[name="csrf-token"]').attr('content');
                 $('#fetch-now').on('click', function () {
-                    let startDate = $('#last_fetch_date_val').val() || "2000-01-01";
+                    let startDate = $('#last_fetch_date_val').val();
                     let endDate = new Date().toISOString().slice(0, 10);
                     let progressContainer = $('#progress-container');
                     let errorList = $('#error-list');
@@ -119,6 +128,10 @@
                     progressBar.style.width = "0%";
                     progressText.innerText = "0 records processed...";
                     errorList.html('');
+
+                    $('.fromTodate').show();
+                    $('.fromDate').text(startDate);
+                    $('.toDate').text(endDate);
 
                     $.ajax({
                         url: "/fetch-data",

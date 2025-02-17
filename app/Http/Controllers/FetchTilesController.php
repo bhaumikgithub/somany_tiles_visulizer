@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\Tile;
 use App\Traits\ApiHelper;
 use Carbon\Carbon;
 use Exception;
@@ -20,7 +21,10 @@ class FetchTilesController extends Controller
     public function index(): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
         $api_details = Company::select('last_fetch_date_from_api','fetch_products_count')->first();
-        return view('fetch_tiles_index',compact('api_details'));
+        // Get last successfully inserted record's date
+        $lastInsertedDate = Tile::max('record_creation_time');
+        $lastFetchDateFromRecord = Carbon::parse($lastInsertedDate)->format('Y-m-d');
+        return view('fetch_tiles_index',compact('api_details','lastFetchDateFromRecord'));
     }
 
     /**
@@ -38,7 +42,7 @@ class FetchTilesController extends Controller
         $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete";
 
         $queryParams = http_build_query([
-            'limit' => 2,
+            'limit' => 20,
             's' => $startDate,
             'e' => $endDate,
         ]);
@@ -179,6 +183,9 @@ class FetchTilesController extends Controller
                 }
             }
         }
+
+        //update companies table
+
 
         return response()->json([
             'success' => true,
