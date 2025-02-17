@@ -61,7 +61,7 @@
 
         <script src="/js/room/three.min.js"></script>
         <!-- contine modal start -->
-        <div class="modal fade" id="continue-modal" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal fade continue-modal" id="continue-modal" role="dialog" data-keyboard="false" data-backdrop="static">
             <div class="modal-dialog modal-dialog-centered">
                 <!-- Modal content-->
                 <div class="modal-content">
@@ -93,7 +93,7 @@
 
 
         <!-- show confirmation popup on click on No button from continue modal -->
-        <div class="modal fade" id="no-data-in-cart-selection-modal" role="dialog" data-keyboard="false"
+        <div class="modal fade no-data-in-cart-selection-modal" id="no-data-in-cart-selection-modal" role="dialog" data-keyboard="false"
              data-backdrop="static">
             <div class="modal-dialog modal-dialog-centered">
                 <!-- Modal content-->
