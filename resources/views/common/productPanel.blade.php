@@ -197,7 +197,7 @@
                     <div id="topPanelGrout" class="top-panel-option-box top-panel-box-overflow-y partOfGroutTabContent" style="display: none;">
                         <div id="topPanelContentSurfaceTabGroutSizeBody" class="top-panel-box top-panel-box-cmn-br row partOfGroutTabContent">
                             <div class="col-md-12">
-                                <div class="row d-flex flex-wrap">
+                                <div class="row d-flex flex-wrap align-items-center">
                                     <div class="col-md-4 col-xs-2">
                                         <span class="top-panel-label stiled-checkbox-text">@lang('Size')</span>
                                     </div>
