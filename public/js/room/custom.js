@@ -75,8 +75,8 @@ function AdjustCanvasWidthHeight() {
 
 
     $("#topPanelTilesListBox").height(topPanelHeight - 130);
-    $("#grout-list").height(topPanelHeight - 250+98);
-    $("#layout-list").height(topPanelHeight - 130-60);
+    $("#grout-list").height(topPanelHeight - 250+120);
+    $("#layout-list").height(topPanelHeight - 130-35);
     /*$(".top-panel-box-cmn-br").height(topPanelHeight-220);*/
     /*$(".radio-surface-pattern").height(topPanelHeight-220);*/
     $("#topPanelThemeListBox").height(topPanelHeight - 220);

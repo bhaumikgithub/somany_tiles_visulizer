@@ -588,7 +588,9 @@ body {
 .cart-modal-dialog{
     width: 500px;
 }
-
+.radio-skew-size{
+  width: 100%;       
+}
 
 @media (max-width:991px) {
 
@@ -1174,7 +1176,8 @@ body {
 #grout-color-picker {
     width: 100%;
     margin-top: 10px;
-    height: 30px
+    height: 30px;
+    margin-bottom:20px;
 }
 
 #grout-predefined-color {
@@ -1874,6 +1877,7 @@ input[type=checkbox] {
     .panel_list .tile-list-text .-caption{
         font-size: 12px;
     }
+   
 
 }
 @media (max-width:767px) and (orientation:portrait){
@@ -1944,7 +1948,12 @@ input[type=checkbox] {
     .fliter-btn-wrap {
         width: 15%;
     }
-    
+    .hideOnMobile{
+        display: none;
+    }
+    .showOnMobile{
+        display: block;
+    }
     
 
 }
