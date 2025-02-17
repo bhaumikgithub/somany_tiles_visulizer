@@ -78,7 +78,7 @@ function AdjustCanvasWidthHeight() {
     $("#grout-list").height(topPanelHeight - 250+120);
     $("#layout-list").height(topPanelHeight - 130-35);
     /*$(".top-panel-box-cmn-br").height(topPanelHeight-220);*/
-    /*$(".radio-surface-pattern").height(topPanelHeight-220);*/
+     /*$(".radio-surface-pattern").height(topPanelHeight-220);*/
     $("#topPanelThemeListBox").height(topPanelHeight - 220);
 
 
@@ -375,13 +375,7 @@ function showHideTabs() {
     if (layoutMode == "LANDSCAPE") {
         $(".partOfProductTabContent").show();
     }
-    var screenWidth = $(window).width();
-    if (screenWidth <= 767 && layoutMode === "LANDSCAPE") {
-        $(".partOfProductTabButtons").show();
-        setPanelToggleStatus('.serach-pad-set','#searchIconToggle');
-        setPanelToggleStatus('.filterContentPanel','#sliderIconToggle');
-
-    }
+  
 
     // setTimeout(function() {
     //     AdjustCanvasWidthHeight();  // Recalculate canvas width/height
@@ -410,6 +404,13 @@ function showProductContent(){
     console.log("partOfProductTabContent SHOW");
     $(".partOfProductTabContent").show();
     $('.partOfProductTabContent-wrap').show();
+    var screenWidth = $(window).width();
+    if (screenWidth <= 767 && layoutMode === "LANDSCAPE") {
+        $(".partOfProductTabButtons").show();
+        setPanelToggleStatus('.serach-pad-set','#searchIconToggle');
+        setPanelToggleStatus('.filterContentPanel','#sliderIconToggle');
+
+    }
 }
 function showLayoutContent(){
     $('#topPanelGrout').hide();
