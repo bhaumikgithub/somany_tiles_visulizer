@@ -167,25 +167,17 @@ function toggleShareElements() {
     var screenHeight = $(window).height();
 
     // Determine layoutMode based on orientation
-    if (screenWidth > screenHeight) {
-        layoutMode = "LANDSCAPE";
-    } else {
-        layoutMode = "PORTRAIT";
-    }
+    var layoutMode = screenWidth > screenHeight ? "LANDSCAPE" : "PORTRAIT";
 
     // If screen width is 767px or less (mobile view)
     if (screenWidth <= 767) {
         $('.share-btn-img').show();
 
-        // Check layoutMode to handle .share-div visibility
-        if (layoutMode === "PORTRAIT") {
-            $('.share-div').hide(); // Hide .share-div in portrait mode
-        } else {
-            $('.share-div').hide(); // Hide .share-div in landscape mode on small screens
-        }
+        // Hide .share-div on small screens regardless of the layout mode
+        $('.share-div').hide();
 
         // Adjust .share-btn-img position
-        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 20);
+        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : "auto"); // Fix: set right for landscape mode
     } else {
         // For larger screens (desktop/tablet)
         $('.share-btn-img').hide();
@@ -194,8 +186,9 @@ function toggleShareElements() {
         $('.share-div').show();
     }
 }
-$(window).on('orientationchange', function() {
-    toggleShareElements(); // Re-run the function when orientation changes
+
+$(window).on('orientationchange resize', function() {
+    toggleShareElements(); // Re-run the function when orientation changes or window is resized
 });
 $(window).on('load', function () {
 
