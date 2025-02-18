@@ -68,13 +68,14 @@
                                     ')</button>
                                 </div>
                             </div>
-                            <div id="topPanelSearchResult" style="display: none"></div>
-                            {{--            <p class="ds-text">Displaying 3,123 of 3123</p> --}}
+                            
+                          
                             <div id="topPanelNavFilter" class="filterContentPanel"></div>
                             <div id="topPanelFilter"
                                  class="top-panel-box top-panel-option-box top-panel-box-overflow-y filter-top-panel filterContentPanel"
                                  style="display: none;">
                             </div>
+                            <div id="topPanelSearchResult" style="display: none"></div>
                         </div>
                     </div>
                     </div>

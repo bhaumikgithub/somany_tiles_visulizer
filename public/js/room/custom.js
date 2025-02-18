@@ -6,7 +6,7 @@ var layoutMode = "LANDSCAPE";
 var topPanelTopPosition = 10;
 var firstTime = true;
 var searchPanelOpen = true;
-var searchButtonPressed  = false;
+var searchButtonPressed = false;
 var filterButtonPressed = false;
 var newLeft;
 var newRight;
@@ -75,10 +75,10 @@ function AdjustCanvasWidthHeight() {
 
 
     $("#topPanelTilesListBox").height(topPanelHeight - 130);
-    $("#grout-list").height(topPanelHeight - 250+120);
-    $("#layout-list").height(topPanelHeight - 130-35);
+    $("#grout-list").height(topPanelHeight - 250 + 120);
+    $("#layout-list").height(topPanelHeight - 130 - 35);
     /*$(".top-panel-box-cmn-br").height(topPanelHeight-220);*/
-     /*$(".radio-surface-pattern").height(topPanelHeight-220);*/
+    /*$(".radio-surface-pattern").height(topPanelHeight-220);*/
     $("#topPanelThemeListBox").height(topPanelHeight - 220);
 
 
@@ -137,6 +137,8 @@ function allLoadCompleted() {
     $(".share-div").css('visibility', 'visible');
     $(".room-canvas").css('visibility', 'visible');
 
+    showProductContent();
+
 }
 
 function isCanvasFullscreen() {
@@ -161,15 +163,15 @@ function isCanvasFullscreen() {
 //     }
 // }
 function toggleShareElements() {
-    
+
     var screenWidth = $(window).width();
 
-     if (screenWidth <= 767) {
-       
+    if (screenWidth <= 767) {
+
         $('.share-btn-img').show();
         $('.share-div').hide();
-        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 20 );
-      
+        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 20);
+
     } else {
         $('.share-btn-img').hide();
         $('.share-div').show();
@@ -208,13 +210,13 @@ $(window).on('load', function () {
         }
     }, 500);
 
-    $("body").on("click",'.filter-click',function(){
+    $("body").on("click", '.filter-click', function () {
         alert('hello from binded function call');
     });
 
 
 
-    $(document).on('click', '.filter-click', function() {
+    $(document).on('click', '.filter-click', function () {
         alert("Click");
         //console.log($(this).attr("id"));
     });
@@ -319,39 +321,39 @@ $('#btnLayout').on('click', function () {
 $('#btnGrout').on('click', function () {
     activeTab = "GROUT";
     showHideTabs();
-    setTimeout(function() {
-      
+    setTimeout(function () {
+
         AdjustCanvasWidthHeight();
     }, 0);
 });
 
-function setPanelToggleStatus(p_panelIdorClass,p_buttonIdorClass){
-    if ($(p_panelIdorClass).css('display') == 'none'){
-        if(p_buttonIdorClass){
+function setPanelToggleStatus(p_panelIdorClass, p_buttonIdorClass) {
+    if ($(p_panelIdorClass).css('display') == 'none') {
+        if (p_buttonIdorClass) {
             $(p_panelIdorClass).show();
             $(p_buttonIdorClass).addClass('top-panel-button-active');
             heightAdjust();
         }
         return false;
     }
-    if(p_buttonIdorClass){
+    if (p_buttonIdorClass) {
         $(p_panelIdorClass).hide();
         $(p_buttonIdorClass).removeClass('top-panel-button-active');
         heightAdjust();
     }
     return true;
 }
-function heightAdjust(){
-    setTimeout(function(){
-        if( $(".search-filter-panel-box").height()<10){
+function heightAdjust() {
+    setTimeout(function () {
+        if ($(".search-filter-panel-box").height() < 10) {
             $(".search-filter-panel-box").hide();
         }
-        else{
+        else {
             $(".search-filter-panel-box").show();
         }
 
-        $(".search-filter-panel-box").animate({"top":$('#topPanel').offset().top - $(".search-filter-panel-box").height()- 15});
-    },10);
+        $(".search-filter-panel-box").animate({ "top": $('#topPanel').offset().top - $(".search-filter-panel-box").height() - 15 });
+    }, 10);
 
 }
 
@@ -375,7 +377,7 @@ function showHideTabs() {
     if (layoutMode == "LANDSCAPE") {
         $(".partOfProductTabContent").show();
     }
-  
+
 
     // setTimeout(function() {
     //     AdjustCanvasWidthHeight();  // Recalculate canvas width/height
@@ -386,48 +388,47 @@ function showHideTabs() {
 
 
 
-function showProductContent(){
+function showProductContent() {
     console.log("showProductContent");
     $('#topPanelGrout').hide();
     $('#topPanelLayout').hide();
     $('.radio-surface-rotation-wrap').show();
-  
+
     if (layoutMode == "PORTRAIT") {
         $(".partOfProductTabButtons").show();
-        setPanelToggleStatus('.serach-pad-set','#searchIconToggle');
-        setPanelToggleStatus('.filterContentPanel','#sliderIconToggle');
+        setPanelToggleStatus('.serach-pad-set', '#searchIconToggle');
+        setPanelToggleStatus('.filterContentPanel', '#sliderIconToggle');
     }
     else {
-        console.log("showProductContent in LANDSCAPE MODE");
         $(".partOfProductTabButtons").hide();
     }
-    console.log("partOfProductTabContent SHOW");
     $(".partOfProductTabContent").show();
     $('.partOfProductTabContent-wrap').show();
     var screenWidth = $(window).width();
     if (screenWidth <= 767 && layoutMode === "LANDSCAPE") {
         $(".partOfProductTabButtons").show();
-        setPanelToggleStatus('.serach-pad-set','#searchIconToggle');
-        setPanelToggleStatus('.filterContentPanel','#sliderIconToggle');
+        setPanelToggleStatus('.serach-pad-set', '#searchIconToggle');
+        setPanelToggleStatus('.filterContentPanel', '#sliderIconToggle');
 
     }
 }
-function showLayoutContent(){
+//this._room.currentTiledSurface
+function showLayoutContent() {
     $('#topPanelGrout').hide();
     $(".partOfProductTabButtons").hide();
     $(".partOfProductTabContent").hide();
     $('.radio-surface-rotation-wrap').hide();
     $('.partOfProductTabContent-wrap').hide();
-    
+
     //$("#topPanelContentSurfaceTabGroutSizeBody").hide();
-    $('.search-pad-set').hide(); 
+    $('.search-pad-set').hide();
     $('#topPanelLayout').show();
 }
-function showGroutContent(){
+function showGroutContent() {
     $('#topPanelLayout').hide();
     $(".partOfProductTabButtons").hide();
     $(".partOfProductTabContent").hide();
-    $('#topPanelGrout').css('display', 'block'); 
+    $('#topPanelGrout').css('display', 'block');
     $('#topPanelGrout').show();
     $('.radio-surface-rotation-wrap').hide();
     $('.partOfProductTabContent-wrap').hide();
@@ -468,6 +469,7 @@ $('.selcte-data-btn').on('click', function () {
 
     $('#selectd-data').show();
     $('#slected-panel').hide();
+    
 
 });
 
@@ -507,59 +509,158 @@ $('#btnProduct').on('click', function () {
     }
 });
 
-function customFilterManagement(){
+/**********************************************************************
 
-    var filterTitles = $("#topPanelFilter").find(".filter-block");
+    This function is calling from 2d.min.js when user press Filter button
+
+    This function's role
+    - This function call when user press filter button on front side
+    - Find the available filters Category
+    - Create dummy navigation and click the first one
+    
+    This function do following
+    - Get the filter block craeated by original code in 2d.min.js
+    - Create separate dummy navigation HTML to overcome existing structure issue
+    - Add html into the new navigation panel
+    - Show navigation panel
+
+ *********************************************************************/
+
+var allnavLinks = [];
+function customFilterManagement() {
+    $("#topPanelNavFilter").empty();
+    allnavLinks = [];
+
+    var filterBlocks = $("#topPanelFilter").find(".filter-block");
+
     var htmlStr = "<ul>";
-    for(var i=0;i<filterTitles.length;i++){
-        var filterTitle = filterTitles.eq(i);
-        if ($(filterTitle).css('display') == 'none'){}
-        else{
-            var titleHeader = filterTitle.find(".-header-title");
-            var filterName = titleHeader.html();
-            htmlStr +="<li onclick=clickFilterCategory('"+filterName+"') id='filterclick_"+filterName+"' class='filter-click'>"+filterName+"</li>";``
+    var clickedCategoryName = "";
+
+    for (var i = 0; i < filterBlocks.length; i++) {
+
+        var filterBlock = filterBlocks.eq(i);
+
+        if ($(filterBlock).css('display') == 'none') {
+            /*
+            There are many object which are hidden if those tiles are not present. 
+            We do not consider those titles and remain display none as it is 
+            */
+        }
+        else {
+
+            //Get the title of the Category
+            var titleHeader = filterBlock.find(".-header-title");
+            var filterNameID = titleHeader.attr("id");
+            var splitter = filterNameID.split("_");
+            //-headerId_wall_Finishes
+            var filterName = String(splitter[1] + "_" + splitter[2]).toLowerCase();
+
+            if (clickedCategoryName == "") {
+                clickedCategoryName = filterName;
+            }
+            allnavLinks.push({ "navName": filterName });
+            $(filterBlock).attr("id", filterName);
+            //Create list (clickable horizontal category list)
+            htmlStr += "<li onclick=clickFilterCategory('" + filterName + "',this) id='filterclick_" + filterName + "' class='filter-click' style='text-transform:capitalize;'>" + splitter[2] + "</li>"; ``
         }
 
     }
-    htmlStr+="</ul>";
+    htmlStr += "</ul>";
 
     $("#topPanelNavFilter").html(htmlStr);
-    $(".checkboxClass").prop("checked",false);
-    badLogicForCheckbox = true;
 
-    -body_Finishes
+    clickFilterCategory(clickedCategoryName);
+
+    showAllFilters(true);
 }
-var badLogicForCheckbox = true;
-function totalFilterCheckboxesChecked(p_category){
-    console.log("p_category = " + p_category);
+
+/***********************************************************************
+    This function is calling from customFilterManagement
+    
+    This function do following
+    - Hide original Category listing (made by owner of code)
+    - Open the content of the clicked category
+    - Remove existing active class and add newly clicked category
+    - Keep height of the remaining div to 0 to avoid height movement during clicking
+    - Reset height and adjust height of newly added content
+ ***********************************************************************/
+
+function clickFilterCategory(p_filterName) {
+    //this._body.id = '-body_' + this.surface + '_' + Locale.lang(this.name);
+
+    //console.log("currentTiledSurface = " + currentRoom.currentTiledSurface);
+
+    $('.-body').hide();
+    $('#-body_' + p_filterName).css({ "display": "flex" });
+
+    $(".filter-click").removeClass("filter-click-active");
+    $("#filterclick_" + p_filterName).addClass("filter-click-active");
+
+    $("#filterclick_" + p_filterName).data("allUnChecked")
+
+    $(".filter-block").css({ "height": "0px", "margin": "0px" });
+
+
+    $('#-body_' + p_filterName).parent(".filter-block").css({ "height": "auto", "margin": "null" });
+    $("#topPanelFilter").show();
+
+    heightAdjust();
+}
+
+/***********************************************************************
+    This function is calling from 2d.min.js
+    
+    This function Role
+    - User click on the checkboxes of category
+    - This function count how many checkboxes checked and count total number
+    
+    This function do following
+    - Total length of the checked checkboxes
+    - Count number and return
+ ***********************************************************************/
+function totalFilterCheckboxesChecked() {
     var checked = $(".checkboxClass");
     var totalCheckboxes = checked.length;
     var count = 0;
-    for(var i=0;i<totalCheckboxes;i++){
+    for (var i = 0; i < totalCheckboxes; i++) {
         var obj = $(checked).eq(i);
-        if($(obj).prop("checked")){
+        if ($(obj).prop("checked")) {
+            count++;
+        }
+    }
+    //checkAllBlankCategories();
+    return count;
+}
+function checkAllBlankCategories(p_category,p_wallorfloor) {
+
+    //-body_wall_Finishes
+    var checkBoxes =$("#"+p_wallorfloor+"_"+p_category).find(".checkboxClass");
+
+    var totalCheckboxes = checkBoxes.length;
+    var count = 0;
+    for (var j = 0; j < totalCheckboxes; j++) {
+        var checkBoxIndividual = $(checkBoxes).eq(j);
+        if ($(checkBoxIndividual).prop("checked")) {
             count++;
         }
     }
     return count;
 }
-function clickFilterCategory(p_filterName){
-    $('.-body').hide();
-    $('#-body_' + p_filterName).css({"display":"flex"});
-    $(".filter-click").removeClass("filter-click-active");
-    $("#filterclick_"+p_filterName).addClass("filter-click-active");
 
-    $(".filter-block").css({"height":"0px","margin":"0px"});
-    $('#-body_' + p_filterName).parent(".filter-block").css({"height":"auto","margin":"null"});
-    heightAdjust();
-}
 
 $('#btnRefine').on('click', function () {
-    $('#topPanelNavFilter').toggle(); // Toggle visibility of the element
-   
+    //$('#topPanelNavFilter').toggle(); // Toggle visibility of the element
+
 });
 
-
+function showAllFilters(p_show) {
+    if (p_show == true) {
+        $("#topPanelNavFilter").show();
+    }
+    else {
+        $("#topPanelNavFilter").hide();
+    }
+}
 
 /*this._body.id =
 */
