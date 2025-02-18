@@ -9,10 +9,18 @@ var wallFloorContent = '.withoutThemePanelWrapper';
 var wallFloorThemeContentParent = '#slected-panel';
 var themeContent = '#selected_panel_theme';
 
+let url = new URL(window.location.href);
+let pathSegments = url.pathname.split("/");
+let surfaceUrl = "";
 
 window.onload = function getRoomSurface() {
+    if(pathSegments[1] === "panorama"){
+        surfaceUrl = '/get_room_surface_panorama';
+    } else {
+        surfaceUrl = '/get_room_surface';
+    }
     $.ajax({
-        url: '/get_room_surface', // URL to the controller method for updating the price
+        url: surfaceUrl, // URL to the controller method for updating the price
         method: 'POST',
         data: {
             _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
@@ -35,16 +43,19 @@ window.onload = function getRoomSurface() {
 
 }
 
-//This function calling from the HTML of the wall A, wall B, Wall C, floor A, Floor B etc
+//This function calling from the HTML of the wall A, wall B, Wall C, floor A, Floor B, Paint A, Counter, Theme etc
+//surface_name = Clicked button from the right panel
+
 function openTileSelectionPanel(surface_name) {
+
     let oldSurfaceName = surface_name;
     setCurrentListID(surface_name);//List_wall_a
 
-    var newName = String(surface_name).split("_");
-    surface_name = convertFirstLetterCapital(newName[0] + " " + newName[1]);
+    surface_name = getSurfaceNameForLabeling(surface_name);
 
     // Show the info panel
     showMainInfoPanel("MAINLISTING_HIDE", oldSurfaceName);
+
     if (oldSurfaceName != "theme") {
         $('#slected-panel .display_surface_name h5#optionText').text(surface_name);
     } else {
@@ -71,14 +82,25 @@ function openTileSelectionPanel(surface_name) {
 
 
 }
-function loadThemeData() {
 
+function getSurfaceNameForLabeling(p_surfaceName){
+    var newName = String(p_surfaceName).split("_");
+    return convertFirstLetterCapital(newName[0] + " " + newName[1]);
+}
+
+let themeSurfaceUrl = "";
+function loadThemeData() {
+    if(pathSegments[1] === "panorama"){
+        themeSurfaceUrl = '/get/panorama/';
+    } else {
+        themeSurfaceUrl = '/get/room2d/';
+    }
     $.ajax({
-        url: '/get/room2d/' + $('#current_room_id').val(), // Replace with the actual endpoint for room2d
+        url: themeSurfaceUrl + $('#current_room_id').val(), // Replace with the actual endpoint for room2d
         success: function (themes) {
             $('#selected_panel_theme').show();
-            console.log("THEME DATA");
-            console.log(themes);
+            // console.log("THEME DATA");
+            // console.log(themes);
             // JSON data (you can replace this with data fetched from an AJAX call)
             themeData = [];
             for (var i = 0; i <= 5; i++) {
@@ -100,7 +122,6 @@ function loadThemeData() {
             var themeExist = false;
             for (let i = 0; i < themeData.length; i++) {
                 var themeObj = themeData[i];
-
                 // Only add <li> if both thumbnail and text are present
                 if (themeObj["theme_thumbnail"]) {
                     themeExist = true;
@@ -139,16 +160,18 @@ function addThemeData(p_obj) {
         themeData.push(p_obj)
 }
 function showMainInfoPanel(p_type, surface_name) {
-
     allRightPanelContentHide();
 
     if (p_type == "MAINLISTING_HIDE") {
         //  $('#selectd-data').hide(); //wall A, b , c hide
         $(wallFloorThemeContentParent).show();
+
+
         if (surface_name == "theme") {
             $(themeContent).show();
         }
         else {
+            hideOpenFilters();
             $(wallFloorContent).show();
         }
     }
@@ -161,6 +184,7 @@ function themeBtnPressed(p_id, p_imageLoadByPass) {
 
     }
     else {
+        console.log(currentRoom);
         currentRoom._engine2d.loadAndDrawForegroundImage(themeData[p_id].theme_bigimage);
     }
     $(".top-panel-content-tiles-list-item").removeClass("active_theme");
@@ -176,9 +200,10 @@ function clickedTiles(p_tile, p_surfaceName) {
 
     if (p_surfaceName == "theme") {
         setCurrentListID("theme");
-        textForMainPanel = p_tile.text;
-        thumbImage = p_tile.theme_thumbnail;
-
+        if( p_tile ) {
+            textForMainPanel = p_tile.text;
+            thumbImage = p_tile.theme_thumbnail;
+        }
     }
     else {
         //Wall A convert to wall_A
@@ -221,19 +246,24 @@ function surfaceClickedByUser(p_surface_name) {
     $("#btnProduct").addClass("top-panel-button-active");
     $("#btnLayout").removeClass("top-panel-button-active");
     $("#btnGrout").removeClass("top-panel-button-active");
+
+
     activeTab = "PRODUCT";
     showHideTabs();
-
+    hideOpenFilters();
     //updateTopPanelText(p_surface_name);
 }
-
+function hideOpenFilters(){
+    showAllFilters(false);
+    $("#topPanelFilter").hide();
+    $("#btnRefine").removeClass("top-panel-button-active");
+}
 function findRoomSurfaceUsingName(p_name) {
     var allSurfaces = currentRoom.tiledSurfaces; // Array
     console.log("allSurfaces.length = " + allSurfaces.length);
     console.log("p_name = " + p_name);
     for (var i = 0; i < allSurfaces.length; i++) {
         console.log("allSurfaces[i].custom_surface_name = " + allSurfaces[i]._surfaceData.custom_surface_name);
-
         if (allSurfaces[i]._surfaceData.custom_surface_name == p_name) {
             return allSurfaces[i]
         }
