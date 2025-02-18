@@ -163,21 +163,40 @@ function isCanvasFullscreen() {
 //     }
 // }
 function toggleShareElements() {
-
     var screenWidth = $(window).width();
+    var screenHeight = $(window).height();
 
-    if (screenWidth <= 767) {
-
-        $('.share-btn-img').show();
-        $('.share-div').hide();
-        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 20);
-
+    // Determine layoutMode based on orientation
+    if (screenWidth > screenHeight) {
+        layoutMode = "LANDSCAPE";
     } else {
-        $('.share-btn-img').hide();
-        $('.share-div').show();
+        layoutMode = "PORTRAIT";
     }
 
+    // If screen width is 767px or less (mobile view)
+    if (screenWidth <= 767) {
+        $('.share-btn-img').show();
+
+        // Check layoutMode to handle .share-div visibility
+        if (layoutMode === "PORTRAIT") {
+            $('.share-div').hide(); // Hide .share-div in portrait mode
+        } else {
+            $('.share-div').hide(); // Hide .share-div in landscape mode on small screens
+        }
+
+        // Adjust .share-btn-img position
+        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 20);
+    } else {
+        // For larger screens (desktop/tablet)
+        $('.share-btn-img').hide();
+
+        // Show .share-div on large screens
+        $('.share-div').show();
+    }
 }
+$(window).on('orientationchange', function() {
+    toggleShareElements(); // Re-run the function when orientation changes
+});
 $(window).on('load', function () {
 
     if (isCanvasFullscreen()) {
@@ -381,7 +400,7 @@ function showHideTabs() {
 
     // setTimeout(function() {
     //     AdjustCanvasWidthHeight();  // Recalculate canvas width/height
-    // }, 100); 
+    // }, 100);
 }
 
 
@@ -389,7 +408,7 @@ function showHideTabs() {
 
 
 function showProductContent() {
-    //console.log("showProductContent");
+    console.log("showProductContent");
     $('#topPanelGrout').hide();
     $('#topPanelLayout').hide();
     $('.radio-surface-rotation-wrap').show();
@@ -469,7 +488,7 @@ $('.selcte-data-btn').on('click', function () {
 
     $('#selectd-data').show();
     $('#slected-panel').hide();
-    
+
 
 });
 
@@ -511,18 +530,18 @@ $('#btnProduct').on('click', function () {
 
 /**********************************************************************
 
-    This function is calling from 2d.min.js when user press Filter button
+ This function is calling from 2d.min.js when user press Filter button
 
-    This function's role
-    - This function call when user press filter button on front side
-    - Find the available filters Category
-    - Create dummy navigation and click the first one
-    
-    This function do following
-    - Get the filter block craeated by original code in 2d.min.js
-    - Create separate dummy navigation HTML to overcome existing structure issue
-    - Add html into the new navigation panel
-    - Show navigation panel
+ This function's role
+ - This function call when user press filter button on front side
+ - Find the available filters Category
+ - Create dummy navigation and click the first one
+
+ This function do following
+ - Get the filter block craeated by original code in 2d.min.js
+ - Create separate dummy navigation HTML to overcome existing structure issue
+ - Add html into the new navigation panel
+ - Show navigation panel
 
  *********************************************************************/
 
@@ -542,8 +561,8 @@ function customFilterManagement() {
 
         if ($(filterBlock).css('display') == 'none') {
             /*
-            There are many object which are hidden if those tiles are not present. 
-            We do not consider those titles and remain display none as it is 
+            There are many object which are hidden if those tiles are not present.
+            We do not consider those titles and remain display none as it is
             */
         }
         else {
@@ -575,14 +594,14 @@ function customFilterManagement() {
 }
 
 /***********************************************************************
-    This function is calling from customFilterManagement
-    
-    This function do following
-    - Hide original Category listing (made by owner of code)
-    - Open the content of the clicked category
-    - Remove existing active class and add newly clicked category
-    - Keep height of the remaining div to 0 to avoid height movement during clicking
-    - Reset height and adjust height of newly added content
+ This function is calling from customFilterManagement
+
+ This function do following
+ - Hide original Category listing (made by owner of code)
+ - Open the content of the clicked category
+ - Remove existing active class and add newly clicked category
+ - Keep height of the remaining div to 0 to avoid height movement during clicking
+ - Reset height and adjust height of newly added content
  ***********************************************************************/
 
 function clickFilterCategory(p_filterName) {
@@ -608,15 +627,15 @@ function clickFilterCategory(p_filterName) {
 }
 
 /***********************************************************************
-    This function is calling from 2d.min.js
-    
-    This function Role
-    - User click on the checkboxes of category
-    - This function count how many checkboxes checked and count total number
-    
-    This function do following
-    - Total length of the checked checkboxes
-    - Count number and return
+ This function is calling from 2d.min.js
+
+ This function Role
+ - User click on the checkboxes of category
+ - This function count how many checkboxes checked and count total number
+
+ This function do following
+ - Total length of the checked checkboxes
+ - Count number and return
  ***********************************************************************/
 function totalFilterCheckboxesChecked() {
     var checked = $(".checkboxClass");
@@ -664,3 +683,16 @@ function showAllFilters(p_show) {
 
 /*this._body.id =
 */
+
+$('#roomCanvas').on('click', function () {
+    var roomCanvasTitle = $('#roomCanvas').attr('title').trim();  // Get the title and trim any extra spaces
+    var titleWords = roomCanvasTitle.split(' ');  // Split the title by spaces
+    var firstTwoWords = titleWords.slice(0, 2).join(' ');  // Take the first two words and join them with a space
+
+    // Check if the title contains "change counter" or "change paint"
+    if (firstTwoWords.toLowerCase() === "change counter" || firstTwoWords.toLowerCase() === "change paint") {
+        $('.serach-pad-set').hide();  // Hide the search panel
+    } else {
+        $('.serach-pad-set').show();  // Show the search panel
+    }
+});
