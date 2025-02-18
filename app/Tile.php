@@ -246,11 +246,13 @@ class Tile extends Model
         return $query->where(function ($query) use ($roomType) {
             if (is_array($roomType)) {
                 foreach ($roomType as $room) {
-                    $query->orWhereRaw("FIND_IN_SET(?, application_room_area)", [$room])
+                    $query->whereNull('application_room_area')
+                        ->orWhereRaw("FIND_IN_SET(?, application_room_area)", [$room])
                         ->orWhereRaw("LOWER(application_room_area) LIKE ?", ['%' . strtolower($room) . '%']);
                 }
             } else {
-                $query->whereRaw("FIND_IN_SET(?, application_room_area)", [$roomType])
+                $query->whereNull('application_room_area') // Include NULL values
+                ->orWhereRaw("FIND_IN_SET(?, application_room_area)", [$roomType])
                     ->orWhereRaw("LOWER(application_room_area) LIKE ?", ['%' . strtolower($roomType) . '%']);
             }
         });
