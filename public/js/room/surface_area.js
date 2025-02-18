@@ -1,13 +1,13 @@
-var alphabets = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"];
-var allSurfacesData = [];
-var surfaceTypesDataTemp = [];
-var clickedHTML = "";
-var currentListId = "";
-var themeData;
-var wallAwallBwallCListing = '#selectd-data';
-var wallFloorContent = '.withoutThemePanelWrapper';
-var wallFloorThemeContentParent = '#slected-panel';
-var themeContent = '#selected_panel_theme';
+let alphabets = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"];
+let allSurfacesData = [];
+let surfaceTypesDataTemp = [];
+let clickedHTML = "";
+let currentListId = "";
+let themeData;
+let wallAwallBwallCListing = '#selectd-data';
+let wallFloorContent = '.withoutThemePanelWrapper';
+let wallFloorThemeContentParent = '#slected-panel';
+let themeContent = '#selected_panel_theme';
 
 let url = new URL(window.location.href);
 let pathSegments = url.pathname.split("/");
@@ -73,7 +73,7 @@ function openTileSelectionPanel(surface_name) {
         $(".serch-box-wrap").show();
         $(".top-panel-box-first").show();
     }
-    var clickedSurface = findRoomSurfaceUsingName(surface_name);
+    let clickedSurface = findRoomSurfaceUsingName(surface_name);
 
     if (clickedSurface != false) {
         //This function directly go to 2d.min.js and set the current surface
@@ -84,7 +84,7 @@ function openTileSelectionPanel(surface_name) {
 }
 
 function getSurfaceNameForLabeling(p_surfaceName){
-    var newName = String(p_surfaceName).split("_");
+    let newName = String(p_surfaceName).split("_");
     return convertFirstLetterCapital(newName[0] + " " + newName[1]);
 }
 
@@ -103,7 +103,7 @@ function loadThemeData() {
             // console.log(themes);
             // JSON data (you can replace this with data fetched from an AJAX call)
             themeData = [];
-            for (var i = 0; i <= 5; i++) {
+            for (let i = 0; i <= 5; i++) {
                 if (themes["theme_thumbnail" + i] && themes["text" + i] && themes["theme" + i]) {
                     addThemeData({
                         theme_id: i,
@@ -119,9 +119,9 @@ function loadThemeData() {
             // Clear existing data
             themeList.innerHTML = "";
             // Iterate through theme data
-            var themeExist = false;
+            let themeExist = false;
             for (let i = 0; i < themeData.length; i++) {
-                var themeObj = themeData[i];
+                let themeObj = themeData[i];
                 // Only add <li> if both thumbnail and text are present
                 if (themeObj["theme_thumbnail"]) {
                     themeExist = true;
@@ -185,7 +185,11 @@ function themeBtnPressed(p_id, p_imageLoadByPass) {
     }
     else {
         console.log(currentRoom);
-        currentRoom._engine2d.loadAndDrawForegroundImage(themeData[p_id].theme_bigimage);
+        if(pathSegments[1] === "room2d"){
+            currentRoom._engine2d.loadAndDrawForegroundImage(themeData[p_id].theme_bigimage);
+        } else {
+            currentRoom.currentTiledSurface.loadAndDrawForegroundImage(themeData[p_id].theme_bigimage,currentRoom.currentTiledSurface._surfaceData.json);
+        }
     }
     $(".top-panel-content-tiles-list-item").removeClass("active_theme");
     $("#theme_thumb_" + p_id).addClass("active_theme");
@@ -195,8 +199,8 @@ function themeBtnPressed(p_id, p_imageLoadByPass) {
 
 }
 function clickedTiles(p_tile, p_surfaceName) {
-    var textForMainPanel = "";
-    var thumbImage = "";
+    let textForMainPanel = "";
+    let thumbImage = "";
 
     if (p_surfaceName == "theme") {
         setCurrentListID("theme");
@@ -207,7 +211,7 @@ function clickedTiles(p_tile, p_surfaceName) {
     }
     else {
         //Wall A convert to wall_A
-        var temp = p_surfaceName.split(" ");
+        let temp = p_surfaceName.split(" ");
         setCurrentListID(String(temp[0]).toLowerCase() + "_" + temp[1]);
         textForMainPanel = convertFirstLetterCapital(p_tile.name) + "<br><small>" + convertFirstLetterCapital(p_tile.finish) + "</small>"
         thumbImage = p_tile.icon;
@@ -215,8 +219,8 @@ function clickedTiles(p_tile, p_surfaceName) {
 
     }
     //Wall A
-    var detailDiv = currentListId.find(".detail")[0];
-    var imageDiv = currentListId.find("img")[0];
+    let detailDiv = currentListId.find(".detail")[0];
+    let imageDiv = currentListId.find("img")[0];
 
     $(detailDiv).html(textForMainPanel);
     $(imageDiv).attr("src", thumbImage);
@@ -259,11 +263,11 @@ function hideOpenFilters(){
     $("#btnRefine").removeClass("top-panel-button-active");
 }
 function findRoomSurfaceUsingName(p_name) {
-    var allSurfaces = currentRoom.tiledSurfaces; // Array
-    console.log("allSurfaces.length = " + allSurfaces.length);
-    console.log("p_name = " + p_name);
-    for (var i = 0; i < allSurfaces.length; i++) {
-        console.log("allSurfaces[i].custom_surface_name = " + allSurfaces[i]._surfaceData.custom_surface_name);
+    let allSurfaces = currentRoom.tiledSurfaces; // Array
+    // console.log("allSurfaces.length = " + allSurfaces.length);
+    //console.log("p_name = " + p_name);
+    for (let i = 0; i < allSurfaces.length; i++) {
+        //console.log("allSurfaces[i].custom_surface_name = " + allSurfaces[i]._surfaceData.custom_surface_name);
         if (allSurfaces[i]._surfaceData.custom_surface_name == p_name) {
             return allSurfaces[i]
         }
@@ -271,8 +275,8 @@ function findRoomSurfaceUsingName(p_name) {
     return false;
 }
 function getCustomNameOfSurfaceData(p_surfaceType) {
-    var cnt = 0;
-    for (var k = 0; k < surfaceTypesDataTemp.length; k++) {
+    let cnt = 0;
+    for (let k = 0; k < surfaceTypesDataTemp.length; k++) {
         if (surfaceTypesDataTemp[k] == p_surfaceType) {
             cnt++;
         }

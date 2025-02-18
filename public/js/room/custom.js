@@ -389,7 +389,7 @@ function showHideTabs() {
 
 
 function showProductContent() {
-    console.log("showProductContent");
+    //console.log("showProductContent");
     $('#topPanelGrout').hide();
     $('#topPanelLayout').hide();
     $('.radio-surface-rotation-wrap').show();
