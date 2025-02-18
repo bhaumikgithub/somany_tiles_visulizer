@@ -113,17 +113,16 @@
                                      title="Surface Color"></div>
                             </div>
                         @endif
-
-                        <div id="topPanelContentFreeDesign" class="top-panel-box row top-panel-box-cmn-br">
-
-                            <div class="col-md-12 col-xs-12">
+                        <div class="toggle-wrap-main">
+                        <div id="topPanelContentFreeDesign" class="top-panel-box row mb-10 landscap-toggle1">
+                          <div class="col-md-12 col-xs-12 ">
                                 <div class="d-flex flex-wrap row align-items-center">
-                                    <div class="lbl-fd col-md-6 col-sm-6 col-xs-8">
+                                    <div class="lbl-fd col-md-6 col-sm-6 col-xs-8 free-design-lbl">
 
                                         <label for="topPanelCheckFreeDesign"
-                                               class="top-panel-label stiled-checkbox-text">@lang('Free Design')</label>
+                                               class="top-panel-label stiled-checkbox-text ">@lang('Free Design')</label>
                                     </div>
-                                    <div class="stiled-checkbox-wrap col-md-6 col-sm-6  col-xs-4 text-right">
+                                    <div class="stiled-checkbox-wrap col-md-6 col-sm-6  col-xs-4 text-right free-design-toggle ">
 
                                         <div class="stiled-checkbox">
                                             <input type="checkbox" id="topPanelCheckFreeDesign" />
@@ -133,26 +132,28 @@
                                 </div>
 
                             </div>
+                       </div>
+                       <div id="topPanelCheckFreeDesignRotateBox" class="top-panel-box row mb-10 landscap-toggle2">
+                          <div class="col-md-12 col-xs-12 ">
+                                <div class="d-flex flex-wrap row align-items-center ">
+                                    <div class="lbl-fd col-md-6 col-sm-6 col-xs-8 rotate-lbl">
 
-                            <div id="topPanelCheckFreeDesignRotateBox" class="top-panel-box">
-
-                                <div class="d-flex flex-wrap row rotate-set align-items-center">
-                                    <div class="lbl-fd col-md-6 col-sm-6 col-xs-8">
-
-                                        <label for="topPanelCheckFreeDesignRotate"
-                                               class="top-panel-label stiled-checkbox-text">@lang('Rotate By Click')</label>
+                                        <label for="topPanelCheckFreeDesign"
+                                               class="top-panel-label stiled-checkbox-text ">@lang('Rotate By Click')</label>
                                     </div>
-                                    <div class="stiled-checkbox-wrap col-md-6 col-sm-6  col-xs-4 text-right">
-                                        <div class="stiled-checkbox">
+                                    <div class="stiled-checkbox-wrap col-md-6 col-sm-6  col-xs-4 text-right rotate-toggle ">
+
+                                    <div class="stiled-checkbox">
                                             <input type="checkbox" id="topPanelCheckFreeDesignRotate" />
                                             <label for="topPanelCheckFreeDesignRotate"></label>
                                         </div>
-
                                     </div>
                                 </div>
 
                             </div>
-                        </div>
+                       </div>
+                     </div>
+                        
 
                         <div id="layout-list" class="top-panel-box radio-surface-pattern top-panel-box-cmn-br">
                             <input id="topPanelSurfacePattern_0" type="radio" name="radioSurfacePattern"

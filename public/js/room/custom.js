@@ -163,21 +163,40 @@ function isCanvasFullscreen() {
 //     }
 // }
 function toggleShareElements() {
-
     var screenWidth = $(window).width();
+    var screenHeight = $(window).height();
 
-    if (screenWidth <= 767) {
-
-        $('.share-btn-img').show();
-        $('.share-div').hide();
-        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 20);
-
+    // Determine layoutMode based on orientation
+    if (screenWidth > screenHeight) {
+        layoutMode = "LANDSCAPE";
     } else {
-        $('.share-btn-img').hide();
-        $('.share-div').show();
+        layoutMode = "PORTRAIT";
     }
 
+    // If screen width is 767px or less (mobile view)
+    if (screenWidth <= 767) {
+        $('.share-btn-img').show();
+
+        // Check layoutMode to handle .share-div visibility
+        if (layoutMode === "PORTRAIT") {
+            $('.share-div').hide(); // Hide .share-div in portrait mode
+        } else {
+            $('.share-div').hide(); // Hide .share-div in landscape mode on small screens
+        }
+
+        // Adjust .share-btn-img position
+        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 20);
+    } else {
+        // For larger screens (desktop/tablet)
+        $('.share-btn-img').hide();
+        
+        // Show .share-div on large screens
+        $('.share-div').show();
+    }
 }
+$(window).on('orientationchange', function() {
+    toggleShareElements(); // Re-run the function when orientation changes
+});
 $(window).on('load', function () {
 
     if (isCanvasFullscreen()) {
@@ -664,3 +683,16 @@ function showAllFilters(p_show) {
 
 /*this._body.id =
 */
+
+$('#roomCanvas').on('click', function () {
+    var roomCanvasTitle = $('#roomCanvas').attr('title').trim();  // Get the title and trim any extra spaces
+     var titleWords = roomCanvasTitle.split(' ');  // Split the title by spaces
+    var firstTwoWords = titleWords.slice(0, 2).join(' ');  // Take the first two words and join them with a space
+    
+    // Check if the title contains "change counter" or "change paint"
+    if (firstTwoWords.toLowerCase() === "change counter" || firstTwoWords.toLowerCase() === "change paint") {
+        $('.serach-pad-set').hide();  // Hide the search panel
+    } else {
+        $('.serach-pad-set').show();  // Show the search panel
+    }
+});
