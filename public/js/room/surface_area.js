@@ -43,16 +43,19 @@ window.onload = function getRoomSurface() {
 
 }
 
-//This function calling from the HTML of the wall A, wall B, Wall C, floor A, Floor B etc
+//This function calling from the HTML of the wall A, wall B, Wall C, floor A, Floor B, Paint A, Counter, Theme etc
+//surface_name = Clicked button from the right panel
+
 function openTileSelectionPanel(surface_name) {
+    
     let oldSurfaceName = surface_name;
     setCurrentListID(surface_name);//List_wall_a
 
-    var newName = String(surface_name).split("_");
-    surface_name = convertFirstLetterCapital(newName[0] + " " + newName[1]);
-
+    surface_name = getSurfaceNameForLabeling(surface_name);
+    
     // Show the info panel
     showMainInfoPanel("MAINLISTING_HIDE", oldSurfaceName);
+
     if (oldSurfaceName != "theme") {
         $('#slected-panel .display_surface_name h5#optionText').text(surface_name);
     } else {
@@ -78,6 +81,11 @@ function openTileSelectionPanel(surface_name) {
     }
 
 
+}
+
+function getSurfaceNameForLabeling(p_surfaceName){
+    var newName = String(p_surfaceName).split("_");
+    return convertFirstLetterCapital(newName[0] + " " + newName[1]);
 }
 
 let themeSurfaceUrl = "";
@@ -157,10 +165,13 @@ function showMainInfoPanel(p_type, surface_name) {
     if (p_type == "MAINLISTING_HIDE") {
         //  $('#selectd-data').hide(); //wall A, b , c hide
         $(wallFloorThemeContentParent).show();
+        
+
         if (surface_name == "theme") {
             $(themeContent).show();
         }
         else {
+            hideOpenFilters();
             $(wallFloorContent).show();
         }
     }
@@ -235,12 +246,18 @@ function surfaceClickedByUser(p_surface_name) {
     $("#btnProduct").addClass("top-panel-button-active");
     $("#btnLayout").removeClass("top-panel-button-active");
     $("#btnGrout").removeClass("top-panel-button-active");
+
+
     activeTab = "PRODUCT";
     showHideTabs();
-
+    hideOpenFilters();
     //updateTopPanelText(p_surface_name);
 }
-
+function hideOpenFilters(){
+    showAllFilters(false);
+    $("#topPanelFilter").hide();
+    $("#btnRefine").removeClass("top-panel-button-active");
+}
 function findRoomSurfaceUsingName(p_name) {
     var allSurfaces = currentRoom.tiledSurfaces; // Array
     console.log("allSurfaces.length = " + allSurfaces.length);
