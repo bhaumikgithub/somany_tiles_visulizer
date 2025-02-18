@@ -43,7 +43,7 @@ class UpdateFinishColumn extends Command
 
         $queryParams = http_build_query([
             's' => '2000-01-01',
-            'e' => '2025-02-05',
+            'e' => '2025-02-18',
         ]);
 
         $curl = curl_init();
@@ -66,7 +66,7 @@ class UpdateFinishColumn extends Command
             Log::error('Unable to fetch records: ' . $error);
             return;
         }
-        $this->endDate = "2025-02-06";
+        $this->endDate = "2025-02-18";
         // Parse the response
         $data = json_decode($result, true);
         $updated = $this->updateOrInsertMultiple($data, $this->endDate, count($data));
@@ -116,6 +116,7 @@ class UpdateFinishColumn extends Command
                 // Check if finish value needs an update
                 if ($existing->finish !== $newFinish || ($expProps['finishes'] ?? null) !== $newFinish) {
                     // Update expProps with the new finish value
+                    $expProps['product code'] = $this->mapFinishType($product['design_finish']);
                     $expProps['finishes'] = $newFinish;
                     $expProps['category'] = $this->mapCategoryType(strtolower($product['brand_name'])) ?? null;
 

@@ -645,7 +645,7 @@ body {
         margin-bottom: 20px;
     }
 
-    .tile-list-thumbnail-image-holder-product {
+    /* .tile-list-thumbnail-image-holder-product {
         display: block;
         width: auto;
         height: auto;
@@ -658,7 +658,7 @@ body {
         padding: 0px 10px;
         text-align: center;
         display: block;
-    }
+    } */
 
     .xs-w-100 {
         width: 100%;
@@ -870,9 +870,9 @@ body {
 
 }
 
-#topPanelCheckFreeDesignRotateBox {
+/* #topPanelCheckFreeDesignRotateBox {
     margin-top: -13px;
-}
+} */
 
 .top-panel-button:hover {
 
@@ -1558,7 +1558,9 @@ body {
 .yes-no-btn:hover{
     background-color:#f2f2f2;
 }
-
+.mb-10 {
+    margin-bottom: 10px;
+}
 .mb-15 {
     margin-bottom: 10px;
 }
@@ -1738,6 +1740,9 @@ input[type=checkbox] {
     border-bottom:1px solid var(--primaryColor);
 }
 
+#topPanelContentFreeDesign{
+    margin-bottom: 10px;
+}
 /* select data pannel css end */
 @media (max-width:767px)  {
     .top-panel-product {
@@ -1946,19 +1951,29 @@ input[type=checkbox] {
     #topPanelHideIcon{
         margin-top: 6px;
     }
-    /* .fliter-btn-wrap.hideOnMobile{
-        display: block !important;
-    } */
+   .toggle-wrap-main{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    margin-bottom: 5px;
+   }
+   .landscap-toggle1{
+    width: 41%;
+   }
+   .landscap-toggle2{
+    width: 52%;
+   }
+   .free-design-lbl{
+    width: 40%;
+   }
+   .rotate-lbl{
+    width:65%;
+   }
+   .rotate-toggle{
+      margin-left: -35px;
+   }
    
-    
-    /* .hideOnMobile{
-        display: none !important;
-    }
-    .showOnMobile{
-        display: block !important;
-    } */
-   
-    
 
 }
 
