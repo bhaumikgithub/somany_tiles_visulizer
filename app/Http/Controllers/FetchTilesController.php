@@ -113,7 +113,7 @@ class FetchTilesController extends Controller
                 continue;
             }
 
-            // Check if Image Already Exists in DB
+            // Check if the Image Already Exists in DB
             $existingTile = \DB::table('tiles')->where('sku', $product['sku'])->first();
 
             // Store the image filename to reuse for multiple surfaces
@@ -185,7 +185,13 @@ class FetchTilesController extends Controller
         }
 
         //update companies table
-
+        // Update the last fetched date
+        \DB::table('companies')->update([
+            'last_fetch_date_from_api' => $endDate,
+            'fetch_products_count' => $totalCount,
+            'updated_at' => now(),
+        ]);
+        \Log::info('Updated last fetch date in companies table.');
 
         return response()->json([
             'success' => true,
