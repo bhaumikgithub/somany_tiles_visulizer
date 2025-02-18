@@ -166,28 +166,18 @@ function toggleShareElements() {
     var screenWidth = $(window).width();
     var screenHeight = $(window).height();
 
-    // Determine layoutMode based on orientation
     var layoutMode = screenWidth > screenHeight ? "LANDSCAPE" : "PORTRAIT";
-
-    // If screen width is 767px or less (mobile view)
     if (screenWidth <= 767) {
         $('.share-btn-img').show();
-
-        // Hide .share-div on small screens regardless of the layout mode
         $('.share-div').hide();
-
-        // Adjust .share-btn-img position
-        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : "auto"); // Fix: set right for landscape mode
+        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : "30px"); 
     } else {
-        // For larger screens (desktop/tablet)
         $('.share-btn-img').hide();
-        
-        // Show .share-div on large screens
         $('.share-div').show();
     }
 }
 
-$(window).on('orientationchange resize', function() {
+$(window).on('orientationchange', function() {
     toggleShareElements(); // Re-run the function when orientation changes or window is resized
 });
 $(window).on('load', function () {
@@ -236,6 +226,7 @@ $(window).on('load', function () {
 
 $(window).on('resize', function () {
     AdjustCanvasWidthHeight();
+    toggleShareElements();
     toggleShareElements();
 });
 
