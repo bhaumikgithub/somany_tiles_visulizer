@@ -102,22 +102,6 @@ trait ApiHelper
 
         $surface = strtolower($product['surface']);
 
-        $imageURL = ($product['image'] ) ?? $product['image_variation_1'];
-        // If imageFileName is not passed, fetch and save the image
-        if (!$imageFileName) {
-            $parsedUrl = parse_url($imageURL);
-            $filePath = $parsedUrl['path']; // This gets the file path without query parameters
-            $fileType = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-
-            // Skip record if an image type is TIFF or PSD
-            if (in_array($fileType, ['tif', 'psd', 'tiff'])) {
-                \Log::info("Skipping insertion for file: $filePath (Unsupported type: $fileType)");
-                return null; // Ensure a valid return value
-            }
-
-            $imageFileName = $this->fetchAndSaveImage($imageURL);
-        }
-
         //Prepare an array but remove null values
         $expPropsArray = array_filter([
             'thickness' => $product['thickness'] ?? null,
@@ -139,10 +123,10 @@ trait ApiHelper
             'finish' => $this->mapFinishType($product['design_finish']),
             'design_finish' => $product['design_finish'] ?? null,
             'file' => $imageFileName,
+            'real_file' => $product['image'] ?? null,
             'image_variation_1' => $product['image_variation_1'] ?? null,
             'image_variation_2' => $product['image_variation_2'] ?? null,
             'image_variation_3' => $product['image_variation_3'] ?? null,
-            'real_file' => $imageURL,
             'grout' => ( $surface === "wall" || $surface === "floor" ) ? 1 : null,
             'url' => $product['url'] ?? null,
             'price' => $product['price'] ?? null,

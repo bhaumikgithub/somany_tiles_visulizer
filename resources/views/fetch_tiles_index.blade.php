@@ -141,7 +141,7 @@
                             end_date: endDate
                         },
                         headers: {
-                            'X-CSRF-TOKEN': csrfToken // ✅ Include CSRF Token
+                            'X-CSRF-TOKEN': csrfToken // Include CSRF Token
                         },
                         success: function (response) {
                             console.log("Processing started successfully!");
@@ -154,18 +154,41 @@
                     });
 
                     function updateProgress() {
-                        $.get("/fetch-progress", function (progressData) {
-                            if (progressData.total > 0) {
-                                let percentage = Math.min((progressData.processed / progressData.total) * 100, 100);
-                                progressBar.style.width = `${percentage}%`;
-                                progressBar.innerText = `${Math.round(percentage)}%`;
-                                progressText.innerText = progressData.status;
+                        // $.get("/fetch-progress", function (progressData) {
+                        //     if (progressData.total > 0) {
+                        //         let percentage = Math.min((progressData.processed / progressData.total) * 100, 100);
+                        //         progressBar.style.width = `${percentage}%`;
+                        //         progressBar.innerText = `${Math.round(percentage)}%`;
+                        //         // Update a progress message correctly
+                        //         progressText.innerText = `${progressData.processed} / ${progressData.total} records processed`;
+                        //
+                        //         if (progressData.processed >= progressData.total) {
+                        //             progressText.innerText = "Processing complete!";
+                        //             progressBar.style.width = "100%";
+                        //             fetchButton.prop('disabled', false).text("Fetch Now");
+                        //             clearInterval(progressInterval);
+                        //         }
+                        //     }
+                        // });
 
-                                if (progressData.processed >= progressData.total) {
-                                    progressText.innerText = "Processing complete!";
-                                    progressBar.style.width = "100%";
-                                    fetchButton.prop('disabled', false).text("Fetch Now");
-                                    clearInterval(progressInterval);
+                        $.ajax({
+                            url: "/fetch-progress",
+                            method: "GET",
+                            cache: false,
+                            data: { t: new Date().getTime() }, // Add timestamp to bypass cache
+                            success: function (progressData) {
+                                if (progressData.total > 0) {
+                                    let percentage = Math.min((progressData.processed / progressData.total) * 100, 100);
+                                    progressBar.style.width = `${percentage}%`;
+                                    progressBar.innerText = `${Math.round(percentage)}%`;
+                                    progressText.innerText = `${progressData.processed} / ${progressData.total} records processed`;
+
+                                    if (progressData.processed >= progressData.total) {
+                                        progressText.innerText = "Processing complete!";
+                                        progressBar.style.width = "100%";
+                                        fetchButton.prop('disabled', false).text("Fetch Now");
+                                        clearInterval(progressInterval);
+                                    }
                                 }
                             }
                         });

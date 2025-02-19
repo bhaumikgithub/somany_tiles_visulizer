@@ -34,7 +34,7 @@ class FetchTilesController extends Controller
     {
         $getToken = $this->loginAPI();
         set_time_limit(0);
-        ini_set('memory_limit', '1024M'); // Adjust the limit as needed
+        ini_set('memory_limit', '2048M'); // Adjust the limit as needed
 
         $startDate = $request->start_date;
         $endDate = $request->end_date;
@@ -42,7 +42,7 @@ class FetchTilesController extends Controller
         $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete";
 
         $queryParams = http_build_query([
-            'limit' => 20,
+            'limit' => 10,
             's' => $startDate,
             'e' => $endDate,
         ]);
@@ -118,13 +118,25 @@ class FetchTilesController extends Controller
 
             // Store the image filename to reuse for multiple surfaces
             $imageURL = $product['image'] ?? $product['image_variation_1'];
-            if ($existingTile && $existingTile->real_file === $imageURL) {
-                $imageFileName = $existingTile->file; // Reuse existing image
-            } else {
-                $imageFileName = $this->fetchAndSaveImage($imageURL);
-                if ($imageFileName === null) {
-                    continue; // Skip this record safely if image fails
+
+            if ($imageURL) {
+                $extension = strtolower(pathinfo(strtok($imageURL, '?'), PATHINFO_EXTENSION));
+
+                // Ignore TIFF and PSD files
+                if (in_array($extension, ['tiff', 'tif', 'psd'])) {
+                    $imageFileName = null; // Store null in the database for unsupported formats
+                } else {
+                    if ($existingTile && $existingTile->real_file === $imageURL) {
+                        $imageFileName = $existingTile->file; // Reuse existing image
+                    } else {
+                        $imageFileName = $this->fetchAndSaveImage($imageURL);
+                        if ($imageFileName === null) {
+                            continue; // Skip this record safely if the image fails
+                        }
+                    }
                 }
+            } else {
+                $imageFileName = null; // If no image URL is found, store null
             }
 
             // Determine the surfaces (Wall, Floor, Counter)
@@ -162,17 +174,16 @@ class FetchTilesController extends Controller
 
                     $processedCount++;
 
-                    // ✅ Store progress update **AFTER EACH RECORD**
+                    // Store progress update **AFTER EACH RECORD**
                     $progressPercentage = min(($processedCount / $totalCount) * 100, 100);
-                    Cache::put('tile_processing_progress', [
+                    Cache::forever('tile_processing_progress', [
                         'total' => $totalCount,
                         'processed' => $processedCount,
                         'sku' => $product['sku'],
                         'surface' => $surface,
                         'status' => "{$processedCount} of {$totalCount} records processed (SKU: {$product['sku']}, Surface: {$surface})",
                         'percentage' => $progressPercentage,
-                    ], now()->addMinutes(10));
-
+                    ]);
                 } catch (\Exception $e) {
                     $skippedRecords[] = [
                         'sku' => $product['sku'] ?? 'Unknown',
@@ -186,12 +197,12 @@ class FetchTilesController extends Controller
 
         //update companies table
         // Update the last fetched date
-        \DB::table('companies')->update([
-            'last_fetch_date_from_api' => $endDate,
-            'fetch_products_count' => $totalCount,
-            'updated_at' => now(),
-        ]);
-        \Log::info('Updated last fetch date in companies table.');
+//        \DB::table('companies')->update([
+//            'last_fetch_date_from_api' => $endDate,
+//            'fetch_products_count' => $totalCount,
+//            'updated_at' => now(),
+//        ]);
+//        \Log::info('Updated last fetch date in companies table.');
 
         return response()->json([
             'success' => true,
