@@ -1942,8 +1942,8 @@ input[type=checkbox] {
         width: 350px !important;
     }
     .panel_list .tile-list-thumbnail-image-holder img{
-        height: 100px;
-        width: 100px;
+        height: 85px;
+        width: 85px;
     }
     .top-panel-hide-button-product {
         /* background-color: rgba(163, 163, 163, 1); */
@@ -1987,12 +1987,12 @@ input[type=checkbox] {
     }
 }
 
-@media (max-width:768px) and (orientation:landscape){
+/* @media (max-width:768px) and (orientation:landscape){
     .share-btn-img{
         right:25px !important;
        }
     
-}
+} */
 @media (max-width:400px){
   .csp-btn {
          margin-bottom: 5px; 
