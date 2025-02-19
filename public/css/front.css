@@ -1942,7 +1942,7 @@ input[type=checkbox] {
         width: 350px !important;
     }
     .panel_list .tile-list-thumbnail-image-holder img{
-        height: auto;
+        height: 100px;
         width: 100px;
     }
     .top-panel-hide-button-product {
@@ -1962,6 +1962,7 @@ input[type=checkbox] {
     #topPanelHideIcon{
         margin-top: 6px;
     }
+<<<<<<< HEAD
     .toggle-wrap-main{
         display: flex;
         width: 100%;
@@ -1984,10 +1985,14 @@ input[type=checkbox] {
     .rotate-toggle{
         margin-left: -35px;
     }
-
-
 }
 
+@media (max-width:768px) and (orientation:landscape){
+    .share-btn-img{
+        right:25px !important;
+       }
+    
+}
 
 
 /* @media (max-width:500px) {
