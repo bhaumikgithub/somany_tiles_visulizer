@@ -42,7 +42,7 @@ class FetchTilesController extends Controller
         $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete";
 
         $queryParams = http_build_query([
-            'limit' => 10,
+            'limit' => 100,
             's' => $startDate,
             'e' => $endDate,
         ]);
@@ -89,13 +89,14 @@ class FetchTilesController extends Controller
         \Log::info('Starting record-by-record processing. Total records: ' . $totalCount);
 
         // Initialize Progress Cache
-        Cache::put('tile_processing_progress', [
+        Cache::forever('tile_processing_progress', [
             'total' => $totalCount,
-            'processed' => 0,
             'sku' => null,
             'surface' => null,
-            'status' => 'Starting...',
-        ], now()->addMinutes(10));
+            'processed' => 0,
+            'status' => "Waiting...",
+            'skipped_records' => [],
+        ]);
 
         foreach ($records as $index => $aTile) {
             $product = $aTile['attributes'];
@@ -104,12 +105,24 @@ class FetchTilesController extends Controller
             // Skip specific SKUs
             if (in_array($product['sku'], ['12345678', '1223324324'])) {
                 \Log::info("Skipping SKU: {$product['sku']} due to exclusion.");
+                $skippedRecords[] = [
+                    'name' => $product['product_name'] ?? 'Unknown',
+                    'sku' => $product['sku'],
+                    'date' => now()->format('Y-m-d H:i:s'),
+                    'reason' => 'Excluded SKU'
+                ];
                 continue;
             }
 
             // Skip records based on a deletion flag
             if (isset($product['deletion']) && !in_array($product['deletion'], ['RUNNING', 'SLOW MOVING'])) {
                 \Log::info("Skipping SKU: {$product['sku']} due to deletion flag: {$product['deletion']}");
+                $skippedRecords[] = [
+                    'name' => $product['product_name'] ?? 'Unknown',
+                    'sku' => $product['sku'],
+                    'date' => now()->format('Y-m-d H:i:s'),
+                    'reason' => "Deletion flag: {$product['deletion']}"
+                ];
                 continue;
             }
 
@@ -121,22 +134,40 @@ class FetchTilesController extends Controller
 
             if ($imageURL) {
                 $extension = strtolower(pathinfo(strtok($imageURL, '?'), PATHINFO_EXTENSION));
-
                 // Ignore TIFF and PSD files
                 if (in_array($extension, ['tiff', 'tif', 'psd'])) {
                     $imageFileName = null; // Store null in the database for unsupported formats
+
+                    // Store this record in a skipped records list
+                    $skippedRecords[] = [
+                        'name' => $product['product_name'] ?? 'Unknown',
+                        'sku' => $product['sku'],
+                        'date' => now()->format('Y-m-d H:i:s'),
+                        'reason' => "Unsupported image format: {$extension}"
+                    ];
+
+                    // Skip the entire record, ensuring it is NOT inserted or updated in DB
+                    continue;
+                }
+
+                // If the record already exists with the same image, do nothing
+                if ($existingTile && $existingTile->real_file === $imageURL) {
+                    $imageFileName = $existingTile->file; // Reuse existing image
                 } else {
-                    if ($existingTile && $existingTile->real_file === $imageURL) {
-                        $imageFileName = $existingTile->file; // Reuse existing image
-                    } else {
-                        $imageFileName = $this->fetchAndSaveImage($imageURL);
-                        if ($imageFileName === null) {
-                            continue; // Skip this record safely if the image fails
-                        }
+                    // Fetch and save image if not a PSD/TIFF
+                    $imageFileName = $this->fetchAndSaveImage($imageURL);
+
+                    // If image download fails, skip the record
+                    if ($imageFileName === null) {
+                        $skippedRecords[] = [
+                            'name' => $product['product_name'] ?? 'Unknown',
+                            'sku' => $product['sku'],
+                            'date' => now()->format('Y-m-d H:i:s'),
+                            'reason' => "Failed to fetch image"
+                        ];
+                        continue; // Skip the record safely
                     }
                 }
-            } else {
-                $imageFileName = null; // If no image URL is found, store null
             }
 
             // Determine the surfaces (Wall, Floor, Counter)
@@ -146,9 +177,20 @@ class FetchTilesController extends Controller
                 $product['surface'] = trim($surface);
                 $data = $this->prepareTileData($product, $creation_time, $imageFileName);
 
+                // Skip record if the `skip` flag is set
+                if (isset($data['skip']) && $data['skip'] === true) {
+                    $skippedRecords[] = [
+                        'name' => $product['product_name'] ?? 'Unknown',
+                        'sku' => $product['sku'] ?? 'Unknown',
+                        'date' => now()->format('Y-m-d H:i:s'),
+                        'reason' => $data['reason'] // Dynamic reason based on missing fields
+                    ];
+                    continue; // Skip processing this record
+                }
+
                 try {
                     $existing = \DB::table('tiles')->where('sku', $product['sku'])->where('surface', $surface)->first();
-
+                    $action = $existing ? 'Updated' : 'Inserted';
                     if ($existing) {
                         // Check for changes
                         $isDifferent = false;
@@ -176,19 +218,25 @@ class FetchTilesController extends Controller
 
                     // Store progress update **AFTER EACH RECORD**
                     $progressPercentage = min(($processedCount / $totalCount) * 100, 100);
-                    Cache::forever('tile_processing_progress', [
+                    Cache::put('tile_processing_progress', [
                         'total' => $totalCount,
                         'processed' => $processedCount,
-                        'sku' => $product['sku'],
-                        'surface' => $surface,
-                        'status' => "{$processedCount} of {$totalCount} records processed (SKU: {$product['sku']}, Surface: {$surface})",
                         'percentage' => $progressPercentage,
-                    ]);
+                        'status' => "$processedCount / $totalCount records processed",
+                        'last_record' => [
+                            'name' => $product['name'] ?? 'Unknown',
+                            'sku' => $product['sku'],
+                            'surface' => $surface,
+                            'action' => $action,
+                        ],
+                        'skipped_records' => $skippedRecords, // Store skipped/error records
+                    ], now()->addMinutes(10));
                 } catch (\Exception $e) {
                     $skippedRecords[] = [
-                        'sku' => $product['sku'] ?? 'Unknown',
-                        'surface' => $surface,
-                        'error' => $e->getMessage(),
+                        'name' => $product['product_name'] ?? 'Unknown',
+                        'sku' => $product['sku'],
+                        'date' => now()->format('Y-m-d H:i:s'),
+                        'reason' => $e->getMessage(),
                     ];
                     \Log::error("Error inserting SKU: {$product['sku']} - " . $e->getMessage());
                 }

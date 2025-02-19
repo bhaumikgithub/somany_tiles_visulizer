@@ -236,15 +236,18 @@ Route::group(['middleware' => 'role:administrator'], function () {
     Route::post('/maximum_images/update', 'App\Http\Controllers\MaxImageController@update');
     Route::post('/fetch-data', 'App\Http\Controllers\FetchTilesController@fetchData')->name('fetch.data');
 
-    Route::get('/fetch-progress', function (Request $request) {
-        return response()->json(Cache::get('tile_processing_progress', [
+    Route::get('/fetch-progress', function () {
+        $progress = Cache::get('tile_processing_progress', [
             'total' => 0,
             'processed' => 0,
-            'sku' => null,
-            'surface' => null,
             'status' => 'Waiting...',
-        ]));
+        ]);
+
+        \Log::info("Progress Data:", $progress); // ✅ Debug cache content
+
+        return response()->json($progress);
     });
+
     Route::get('/process-record/{id}', 'App\Http\Controllers\FetchTilesController@processRecord');
 
     Route::resource('fetch_showroom', ShowroomController::class);

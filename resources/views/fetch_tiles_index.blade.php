@@ -34,14 +34,14 @@
                     <div class="progress" style="position: relative !important;width: 100% !important;margin: auto !important;height: 15px;height: 22px;font-weight: 600;">
                         <div id="progress-bar" class="progress-bar" style="width: 0%;height: 30px !important;background-color: green !important;width: 0% !important;text-align: center !important;color: white !important;"></div>
                     </div>
-                    <p id="progress-text" class="text-primary">0 records processed...</p>
+                    <p id="progress-text">Waiting...</p>
                 </div>
                 <button id="fetch-now" class="btn btn-primary">Fetch Now</button>
             </div>
 
-            <div class="form-group">
-                <h3>Skipped Records</h3>
-                <ul id="error-list"></ul>
+            <div class="form-group skippedRecordWrapper" style="display: none;">
+                <h4 style="color: red;">Skipped / Error Records</h4>
+                <ul id="error-list"></ul> <!-- Skipped/Error records list -->
             </div>
         </div>
     </div>
@@ -116,7 +116,6 @@
                 $('#fetch-now').on('click', function () {
                     let startDate = $('#last_fetch_date_val').val();
                     let endDate = new Date().toISOString().slice(0, 10);
-                    let progressContainer = $('#progress-container');
                     let errorList = $('#error-list');
 
                     let progressBar = document.getElementById('progress-bar');
@@ -154,35 +153,57 @@
                     });
 
                     function updateProgress() {
-                        // $.get("/fetch-progress", function (progressData) {
-                        //     if (progressData.total > 0) {
-                        //         let percentage = Math.min((progressData.processed / progressData.total) * 100, 100);
-                        //         progressBar.style.width = `${percentage}%`;
-                        //         progressBar.innerText = `${Math.round(percentage)}%`;
-                        //         // Update a progress message correctly
-                        //         progressText.innerText = `${progressData.processed} / ${progressData.total} records processed`;
-                        //
-                        //         if (progressData.processed >= progressData.total) {
-                        //             progressText.innerText = "Processing complete!";
-                        //             progressBar.style.width = "100%";
-                        //             fetchButton.prop('disabled', false).text("Fetch Now");
-                        //             clearInterval(progressInterval);
-                        //         }
-                        //     }
-                        // });
-
                         $.ajax({
                             url: "/fetch-progress",
                             method: "GET",
                             cache: false,
                             data: { t: new Date().getTime() }, // Add timestamp to bypass cache
                             success: function (progressData) {
+                                console.log("Progress Response:", progressData); // ✅ Debug in Console
                                 if (progressData.total > 0) {
                                     let percentage = Math.min((progressData.processed / progressData.total) * 100, 100);
                                     progressBar.style.width = `${percentage}%`;
                                     progressBar.innerText = `${Math.round(percentage)}%`;
                                     progressText.innerText = `${progressData.processed} / ${progressData.total} records processed`;
 
+                                    // Display skipped/error records with unique SKUs
+                                    let errorList = $("#error-list");
+                                    errorList.html(""); // Clear previous records
+
+                                    let seenSkus = new Set(); // Track unique SKUs
+                                    if (progressData.skipped_records && progressData.skipped_records.length > 0) {
+                                        $('.skippedRecordWrapper').show();
+                                        let table = `
+                                        <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                                            <thead>
+                                                <tr style="background-color: #f8d7da; color: #721c24;">
+                                                    <th style="padding: 8px;">#</th>
+                                                    <th style="padding: 8px;">Tile Name</th>
+                                                    <th style="padding: 8px;">SAP (SKU)</th>
+                                                    <th style="padding: 8px;">Date</th>
+                                                    <th style="padding: 8px;">Reason</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>`;
+
+                                            let index = 1;
+                                            progressData.skipped_records.forEach((record) => {
+                                                if (!seenSkus.has(record.sku)) { // ✅ Prevent duplicate SKUs
+                                                    seenSkus.add(record.sku);
+                                                    table += `
+                                                        <tr>
+                                                            <td style="padding: 8px;">${index++}</td>
+                                                            <td style="padding: 8px;">${record.name}</td>
+                                                            <td style="padding: 8px;">${record.sku}</td>
+                                                            <td style="padding: 8px;">${record.date}</td>
+                                                            <td style="padding: 8px; color: red;">${record.reason}</td>
+                                                        </tr>`;
+                                                }
+                                            });
+
+                                        table += `</tbody></table>`;
+                                        errorList.append(table);
+                                    }
                                     if (progressData.processed >= progressData.total) {
                                         progressText.innerText = "Processing complete!";
                                         progressBar.style.width = "100%";

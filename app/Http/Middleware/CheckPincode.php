@@ -24,7 +24,7 @@ class CheckPincode
         Log::info('Pincode session: ' . (session()->has('pincode') ? 'Present' : 'Not Present'));
 
         // List of routes that should NOT be redirected
-        $excludedRoutes = ['generate-pdf', 'fetch-progress']; // ✅ Added fetch-progress
+        $excludedRoutes = ['generate-pdf', 'fetch-progress','fetch_tiles']; // ✅ Added fetch-progress
         $isPdfSummaryRoute = str_contains($request->path(), 'pdf-summary');
 
         // Check if redirection is required

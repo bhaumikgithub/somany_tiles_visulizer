@@ -89,15 +89,29 @@ trait ApiHelper
      */
     protected function prepareTileData(array $product, $creation_time , $imageFileName): ?array
     {
+
+        // Track missing fields
+        $missingFields = [];
+
         // Check if 'design_finish' key is missing and log a warning
         if (!isset($product['design_finish'])) {
             \Log::warning("Missing key 'design_finish' for SKU: " . ($product['sku'] ?? 'Unknown'));
+            $missingFields[] = "design_finish";
             $product['design_finish'] = "GLOSSY";
         }
 
         if( !isset($product['brand_name'])){
             \Log::warning("Missing key 'brand_name' for SKU: " . ($product['sku'] ?? 'Unknown'));
+            $missingFields[] = "brand_name";
             $product['brand_name'] = "";
+        }
+
+        //If one or both fields are missing, return null and set reason dynamically
+        if (!empty($missingFields)) {
+            return [
+                'skip' => true, // Special flag to signal skipping in updateOrInsertMultiple()
+                'reason' => "Missing required field(s): " . implode(" & ", $missingFields)
+            ];
         }
 
         $surface = strtolower($product['surface']);
