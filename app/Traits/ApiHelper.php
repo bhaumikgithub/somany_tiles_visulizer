@@ -118,11 +118,10 @@ trait ApiHelper
             $imageFileName = $this->fetchAndSaveImage($imageURL);
         }
 
-
         //Prepare an array but remove null values
         $expPropsArray = array_filter([
             'thickness' => $product['thickness'] ?? null,
-            'product code' => $product['design_finish'] ?? null,
+            'product code' => $this->mapFinishType($product['design_finish']) ?? null,
             'colour' => $product['color'] ?? null,
             'category' => $this->mapCategoryType(strtolower($product['brand_name'])) ?? null,
             'innovation' => $product['innovation'] ?? null,

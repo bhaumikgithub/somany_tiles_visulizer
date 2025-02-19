@@ -94,12 +94,11 @@ class UpdateFinishColumn extends Command
                 $product['design_finish'] = "GLOSSY"; // Assign default value
             }
 
-            // Check if 'design_finish' key is missing and log a warning
+            // Check if 'brand_name' key is missing and log a warning
             if (!isset($product['brand_name'])) {
                 \Log::warning("Missing key 'brand_name' for SKU: {$product['sku']}.");
                 $product['brand_name'] = ""; // Assign default value
             }
-
 
             // Fetch the existing record by SKU
             $existing = \DB::table('tiles')->where('sku', $product['sku'])->first();
@@ -113,14 +112,31 @@ class UpdateFinishColumn extends Command
                 // Remove 'finish' key if it exists
                 unset($expProps['finish']);
 
-                // Check if finish value needs an update
-                if ($existing->finish !== $newFinish || ($expProps['finishes'] ?? null) !== $newFinish) {
-                    // Update expProps with the new finish value
-                    $expProps['product code'] = $this->mapFinishType($product['design_finish']);
-                    $expProps['finishes'] = $newFinish;
-                    $expProps['category'] = $this->mapCategoryType(strtolower($product['brand_name'])) ?? null;
+                // Add new properties
+                $expProps['product code'] = $this->mapFinishType($product['design_finish']);
+                $expProps['finishes'] = $newFinish;
+                $expProps['category'] = $this->mapCategoryType(strtolower($product['brand_name'])) ?? null;
 
-                    // Update only the finish column and expProps JSON field
+                // Ensure 'colour' is stored only if it's not null
+                if (isset($product['color'])) {
+                    $expProps['colour'] = $product['color'];
+                } else {
+                    unset($expProps['colour']);
+                }
+
+                // Ensure 'innovation' is stored only if it's not null
+                if (isset($product['innovation'])) {
+                    $expProps['innovation'] = $product['innovation'];
+                } else {
+                    unset($expProps['innovation']);
+                }
+
+                // Check if an update is needed
+                if (
+                    $existing->finish !== $newFinish ||
+                    ($expProps['finishes'] ?? null) !== $newFinish
+                ) {
+                    // Update record
                     \DB::table('tiles')->where('sku', $product['sku'])->update([
                         'finish' => $this->mapFinishType($product['design_finish']), // ✅ Apply Mapping
                         'design_finish' => $newFinish,
@@ -139,4 +155,5 @@ class UpdateFinishColumn extends Command
 
         return ['updatedCount' => $updatedCount, 'unchangedCount' => $unchangedCount];
     }
+
 }
