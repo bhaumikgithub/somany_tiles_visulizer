@@ -38,40 +38,55 @@ class ProcessTilesJob implements ShouldQueue
         $insertedCount = 0;
         $updatedCount = 0;
         $unchangedCount = 0;
+        $skippedCount = 0;
         $processedCount = 0;
         $skippedRecords = [];
 
-        \Log::info('Starting record-by-record processing. Total records: ' . $this->totalCount);
+        // Track unique SKUs for counting
+        $uniqueInserted = [];
+        $uniqueUpdated = [];
+        $uniqueSkipped = [];
+
+        Log::info('Starting record-by-record processing. Total records: ' . $this->totalCount);
 
         // Initialize Progress Cache
         Cache::forever('tile_processing_progress', [
             'total' => $this->totalCount,
-            'sku' => null,
-            'surface' => null,
             'processed' => 0,
-            'status' => "Waiting...",
+            'inserted' => 0,
+            'updated' => 0,
+            'skipped' => 0,
+            'percentage' => 0,
+            'status' => "Processing started...",
             'skipped_records' => [],
         ]);
 
         foreach ($this->records as $aTile) {
             $product = $aTile['attributes'];
+            $sku = $product['sku'] ?? 'Unknown';
+            $processedCount++;
             $creation_time = Carbon::parse($aTile['creation_time'])->format('Y-m-d H:i:s');
 
             // Skip specific SKUs
             if (in_array($product['sku'], ['12345678', '1223324324'])) {
                 \Log::info("Skipping SKU: {$product['sku']} due to exclusion.");
-                $skippedRecords[] = [
-                    'name' => $product['product_name'] ?? 'Unknown',
-                    'sku' => $product['sku'],
-                    'date' => now()->format('Y-m-d H:i:s'),
-                    'reason' => 'Excluded SKU'
-                ];
+                if (!isset($uniqueSkipped[$sku])) {
+                    $uniqueSkipped[$sku] = true;
+                    $skippedCount++;
+                    $skippedRecords[] = [
+                        'name' => $product['product_name'] ?? 'Unknown',
+                        'sku' => $sku,
+                        'date' => now()->format('Y-m-d H:i:s'),
+                        'reason' => "Missing required fields"
+                    ];
+                }
                 continue;
             }
 
             // Skip records based on a deletion flag
             if (isset($product['deletion']) && !in_array($product['deletion'], ['RUNNING', 'SLOW MOVING'])) {
-                \Log::info("Skipping SKU: {$product['sku']} due to deletion flag: {$product['deletion']}");
+                Log::info("Skipping SKU: {$product['sku']} due to deletion flag: {$product['deletion']}");
+                $skippedCount++;
                 $skippedRecords[] = [
                     'name' => $product['product_name'] ?? 'Unknown',
                     'sku' => $product['sku'],
@@ -92,7 +107,7 @@ class ProcessTilesJob implements ShouldQueue
                 // Ignore TIFF and PSD files
                 if (in_array($extension, ['tiff', 'tif', 'psd'])) {
                     $imageFileName = null; // Store null in the database for unsupported formats
-
+                    $skippedCount++;
                     // Store this record in a skipped records list
                     $skippedRecords[] = [
                         'name' => $product['product_name'] ?? 'Unknown',
@@ -155,17 +170,20 @@ class ProcessTilesJob implements ShouldQueue
                                 break;
                             }
                         }
-
                         if ($isDifferent) {
+                            if (!isset($uniqueUpdated[$sku])) {
+                                $uniqueUpdated[$sku] = true;
+                                $updatedCount++;
+                            }
                             DB::table('tiles')->where('sku', $product['sku'])->where('surface', $surface)->update($data);
-                            $updatedCount++;
                             Log::info("Updated SKU: {$product['sku']} for Surface: $surface");
-                        } else {
-                            $unchangedCount++;
                         }
                     } else {
+                        if (!isset($uniqueInserted[$sku])) {
+                            $uniqueInserted[$sku] = true;
+                            $insertedCount++;
+                        }
                         DB::table('tiles')->insert($data);
-                        $insertedCount++;
                         Log::info("Inserted new SKU: {$product['sku']} for Surface: $surface");
                     }
 
@@ -177,6 +195,9 @@ class ProcessTilesJob implements ShouldQueue
                         'total' => $this->totalCount,
                         'processed' => $processedCount,
                         'percentage' => $progressPercentage,
+                        'inserted' => $insertedCount,
+                        'updated' => $updatedCount,
+                        'skipped' => $skippedCount,
                         'status' => "$processedCount / $this->totalCount records processed",
                         'last_record' => [
                             'name' => $product['product_name'] ?? 'Unknown',
@@ -187,13 +208,17 @@ class ProcessTilesJob implements ShouldQueue
                         'skipped_records' => $skippedRecords, // Store skipped/error records
                     ], now()->addMinutes(10));
                 } catch (\Exception $e) {
+                    if (!isset($uniqueSkipped[$sku])) {
+                        $uniqueSkipped[$sku] = true;
+                        $skippedCount++;
+                    }
                     $skippedRecords[] = [
                         'name' => $product['product_name'] ?? 'Unknown',
-                        'sku' => $product['sku'],
+                        'sku' => $sku,
                         'date' => now()->format('Y-m-d H:i:s'),
-                        'reason' => $e->getMessage(),
+                        'reason' => "Error: " . $e->getMessage()
                     ];
-                    Log::error("Error inserting SKU: {$product['sku']} - " . $e->getMessage());
+                    Log::error("Error processing SKU: {$sku} - " . $e->getMessage());
                 }
             }
         }

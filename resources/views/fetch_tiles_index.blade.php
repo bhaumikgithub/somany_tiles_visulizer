@@ -39,6 +39,14 @@
                 <button id="fetch-now" class="btn btn-primary">Fetch Now</button>
             </div>
 
+            <h3>Processing Summary:</h3>
+            <ul>
+                <li><strong>Inserted Records:</strong> <span id="inserted-count">0</span></li>
+                <li><strong>Updated Records:</strong> <span id="updated-count">0</span></li>
+                <li><strong>Skipped Due to Error:</strong> <span id="skipped-count">0</span></li>
+            </ul>
+
+
             <div class="form-group skippedRecordWrapper" style="display: none;">
                 <h4 style="color: red;">Skipped / Error Records</h4>
                 <ul id="error-list"></ul> <!-- Skipped/Error records list -->
@@ -101,6 +109,11 @@
                                     progressBar.style.width = `${percentage}%`;
                                     progressBar.innerText = `${Math.round(percentage)}%`;
                                     progressText.innerText = `${progressData.processed} / ${progressData.total} records processed`;
+
+                                    // Display counts in UI
+                                    $("#inserted-count").text(progressData.inserted);
+                                    $("#updated-count").text(progressData.updated);
+                                    $("#skipped-count").text(progressData.skipped);
 
                                     // Display skipped/error records with unique SKUs
                                     let errorList = $("#error-list");

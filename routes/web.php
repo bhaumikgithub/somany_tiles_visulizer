@@ -240,7 +240,12 @@ Route::group(['middleware' => 'role:administrator'], function () {
         $progress = Cache::get('tile_processing_progress', [
             'total' => 0,
             'processed' => 0,
+            'inserted' => 0,
+            'updated' => 0,
+            'skipped' => 0,
+            'percentage' => 0,
             'status' => 'Waiting...',
+            'skipped_records' => [],
         ]);
 
         \Log::info("Progress Data:", $progress); // ✅ Debug cache content
