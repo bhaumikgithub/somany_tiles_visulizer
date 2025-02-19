@@ -11,6 +11,7 @@ var filterButtonPressed = false;
 var newLeft;
 var newRight;
 var panelStatusManager;
+var isTablet = false;
 //var searchPanelOpen = true;
 
 document.getElementById("roomLoaderBackground").style.visibility = "hidden";
@@ -122,13 +123,16 @@ function AdjustCanvasWidthHeight() {
         $(".share-div").css("right", "26px");
     }
     else {
+        
         $(".back-btn").css({ left: newLeft });
         $(".cn-btn").css({ right: newRight });
         $(".share-btn-img").css({ right: newRight + 6 });
         $(".share-div").css({ right: newRight });
+        if (windowWidth <= 991) {
+            $(".share-btn-img").css({ right: newRight + 20 });
+        }
     }
     if(currentRoom._ui.isMobileDevice()==true){
-        //$(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : "30px");
         $('.share-btn-img').show();
         $('.share-div').hide();
     }
