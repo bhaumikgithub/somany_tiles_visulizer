@@ -65,6 +65,7 @@ function AdjustCanvasWidthHeight() {
 
         setTimeout(function () {
             $("#container").scrollLeft((newCanvasWidth - windowWidth) / 2);
+
         }, 300);
     }
 
@@ -126,7 +127,15 @@ function AdjustCanvasWidthHeight() {
         $(".share-btn-img").css({ right: newRight + 6 });
         $(".share-div").css({ right: newRight });
     }
-
+    if(currentRoom._ui.isMobileDevice()==true){
+        //$(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : "30px");
+        $('.share-btn-img').show();
+        $('.share-div').hide();
+    }
+    else{
+        $('.share-btn-img').hide();
+        $('.share-div').show();
+    }
     showHideTabs();
 
 }
@@ -162,24 +171,8 @@ function isCanvasFullscreen() {
 //         $(".share-div").css('visibility', 'hidden');
 //     }
 // }
-function toggleShareElements() {
-    var screenWidth = $(window).width();
-    var screenHeight = $(window).height();
 
-    var layoutMode = screenWidth > screenHeight ? "LANDSCAPE" : "PORTRAIT";
-    if (screenWidth <= 767) {
-        $('.share-btn-img').show();
-        $('.share-div').hide();
-        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : "30px"); 
-    } else {
-        $('.share-btn-img').hide();
-        $('.share-div').show();
-    }
-}
 
-$(window).on('orientationchange', function() {
-    toggleShareElements(); // Re-run the function when orientation changes or window is resized
-});
 $(window).on('load', function () {
 
     if (isCanvasFullscreen()) {
@@ -206,7 +199,9 @@ $(window).on('load', function () {
                 $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
                 $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 6);
                 $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight);
-                toggleShareElements();
+
+
+
 
             }, 19);
         }
@@ -226,8 +221,6 @@ $(window).on('load', function () {
 
 $(window).on('resize', function () {
     AdjustCanvasWidthHeight();
-    toggleShareElements();
-    toggleShareElements();
 });
 
 //This function calling from 2d.min.js
@@ -392,28 +385,23 @@ function showHideTabs() {
 
 
 function showProductContent() {
-    console.log("showProductContent");
     $('#topPanelGrout').hide();
     $('#topPanelLayout').hide();
     $('.radio-surface-rotation-wrap').show();
 
-    if (layoutMode == "PORTRAIT") {
-        $(".partOfProductTabButtons").show();
-        setPanelToggleStatus('.serach-pad-set', '#searchIconToggle');
-        setPanelToggleStatus('.filterContentPanel', '#sliderIconToggle');
-    }
-    else {
-        $(".partOfProductTabButtons").hide();
-    }
+
     $(".partOfProductTabContent").show();
     $('.partOfProductTabContent-wrap').show();
-    var screenWidth = $(window).width();
-    if (screenWidth <= 767 && layoutMode === "LANDSCAPE") {
+
+    if(currentRoom._ui.isMobileDevice()==true){
         $(".partOfProductTabButtons").show();
         setPanelToggleStatus('.serach-pad-set', '#searchIconToggle');
         setPanelToggleStatus('.filterContentPanel', '#sliderIconToggle');
-
     }
+    else{
+        $(".partOfProductTabButtons").hide();
+    }
+
 }
 //this._room.currentTiledSurface
 function showLayoutContent() {

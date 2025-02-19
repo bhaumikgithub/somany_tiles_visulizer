@@ -47,12 +47,12 @@ window.onload = function getRoomSurface() {
 //surface_name = Clicked button from the right panel
 
 function openTileSelectionPanel(surface_name) {
-    
+
     let oldSurfaceName = surface_name;
     setCurrentListID(surface_name);//List_wall_a
 
     surface_name = getSurfaceNameForLabeling(surface_name);
-    
+
     // Show the info panel
     showMainInfoPanel("MAINLISTING_HIDE", oldSurfaceName);
 
@@ -72,6 +72,15 @@ function openTileSelectionPanel(surface_name) {
     else {
         $(".serch-box-wrap").show();
         $(".top-panel-box-first").show();
+    }
+
+    if(currentRoom._ui.isMobileDevice()==true){
+        if (String(surface_name).indexOf("Paint") > -1 || String(surface_name).indexOf("Theme") > -1) {
+            $(".title-area").show();
+        }
+        else{
+            $(".title-area").hide();
+        }
     }
     let clickedSurface = findRoomSurfaceUsingName(surface_name);
 
@@ -165,7 +174,7 @@ function showMainInfoPanel(p_type, surface_name) {
     if (p_type == "MAINLISTING_HIDE") {
         //  $('#selectd-data').hide(); //wall A, b , c hide
         $(wallFloorThemeContentParent).show();
-        
+
 
         if (surface_name == "theme") {
             $(themeContent).show();

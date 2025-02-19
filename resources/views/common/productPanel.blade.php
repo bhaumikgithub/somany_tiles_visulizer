@@ -9,7 +9,7 @@
                 @include('common.exists_surface_area')
             </div>
             <div id="slected-panel">
-                <div class="top-panel-box hideOnMobile">
+                <div class="top-panel-box hideOnMobile title-area">
                     <div class="h5-wrapper display_surface_name">
                         <button class="selcte-data-btn">
                             <span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span>
