@@ -120,14 +120,14 @@ function AdjustCanvasWidthHeight() {
         $(".back-btn").css({ left: newLeft });
         $(".cn-btn").css("right", "0px");
         $(".share-btn-img").css("right", "18px");
-        $(".share-div").css("right", "26px");
+        $(".share-div").css("right", "18px");
     }
     else {
         
         $(".back-btn").css({ left: newLeft });
         $(".cn-btn").css({ right: newRight });
         $(".share-btn-img").css({ right: newRight + 6 });
-        $(".share-div").css({ right: newRight });
+        $(".share-div").css({ right: newRight + 21 });
         if (windowWidth <= 991) {
             $(".share-btn-img").css({ right: newRight + 20 });
         }
@@ -202,7 +202,7 @@ $(window).on('load', function () {
                 $(".back-btn").css({ left: newLeft });
                 $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
                 $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 6);
-                $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight);
+                $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight + 21);
 
 
 
