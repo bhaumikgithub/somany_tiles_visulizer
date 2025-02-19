@@ -9,7 +9,7 @@
                 @include('common.exists_surface_area')
             </div>
             <div id="slected-panel">
-                <div class="top-panel-box hideOnMobile">
+                <div class="top-panel-box hideOnMobile title-area">
                     <div class="h5-wrapper display_surface_name">
                         <button class="selcte-data-btn">
                             <span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span>
@@ -114,46 +114,46 @@
                             </div>
                         @endif
                         <div class="toggle-wrap-main">
-                        <div id="topPanelContentFreeDesign" class="top-panel-box row mb-10 landscap-toggle1">
-                          <div class="col-md-12 col-xs-12 ">
-                                <div class="d-flex flex-wrap row align-items-center">
-                                    <div class="lbl-fd col-md-6 col-sm-6 col-xs-8 free-design-lbl">
+                            <div id="topPanelContentFreeDesign" class="top-panel-box row mb-10 landscap-toggle1">
+                                <div class="col-md-12 col-xs-12 ">
+                                    <div class="d-flex flex-wrap row align-items-center">
+                                        <div class="lbl-fd col-md-6 col-sm-6 col-xs-8 free-design-lbl">
 
-                                        <label for="topPanelCheckFreeDesign"
-                                               class="top-panel-label stiled-checkbox-text ">@lang('Free Design')</label>
-                                    </div>
-                                    <div class="stiled-checkbox-wrap col-md-6 col-sm-6  col-xs-4 text-right free-design-toggle ">
+                                            <label for="topPanelCheckFreeDesign"
+                                                   class="top-panel-label stiled-checkbox-text ">@lang('Free Design')</label>
+                                        </div>
+                                        <div class="stiled-checkbox-wrap col-md-6 col-sm-6  col-xs-4 text-right free-design-toggle ">
 
-                                        <div class="stiled-checkbox">
-                                            <input type="checkbox" id="topPanelCheckFreeDesign" />
-                                            <label for="topPanelCheckFreeDesign"></label>
+                                            <div class="stiled-checkbox">
+                                                <input type="checkbox" id="topPanelCheckFreeDesign" />
+                                                <label for="topPanelCheckFreeDesign"></label>
+                                            </div>
                                         </div>
                                     </div>
+
                                 </div>
-
                             </div>
-                       </div>
-                       <div id="topPanelCheckFreeDesignRotateBox" class="top-panel-box row mb-10 landscap-toggle2">
-                          <div class="col-md-12 col-xs-12 ">
-                                <div class="d-flex flex-wrap row align-items-center ">
-                                    <div class="lbl-fd col-md-6 col-sm-6 col-xs-8 rotate-lbl">
+                            <div id="topPanelCheckFreeDesignRotateBox" class="top-panel-box row mb-10 landscap-toggle2">
+                                <div class="col-md-12 col-xs-12 ">
+                                    <div class="d-flex flex-wrap row align-items-center ">
+                                        <div class="lbl-fd col-md-6 col-sm-6 col-xs-8 rotate-lbl">
 
-                                        <label for="topPanelCheckFreeDesign"
-                                               class="top-panel-label stiled-checkbox-text ">@lang('Rotate By Click')</label>
-                                    </div>
-                                    <div class="stiled-checkbox-wrap col-md-6 col-sm-6  col-xs-4 text-right rotate-toggle ">
+                                            <label for="topPanelCheckFreeDesign"
+                                                   class="top-panel-label stiled-checkbox-text ">@lang('Rotate By Click')</label>
+                                        </div>
+                                        <div class="stiled-checkbox-wrap col-md-6 col-sm-6  col-xs-4 text-right rotate-toggle ">
 
-                                    <div class="stiled-checkbox">
-                                            <input type="checkbox" id="topPanelCheckFreeDesignRotate" />
-                                            <label for="topPanelCheckFreeDesignRotate"></label>
+                                            <div class="stiled-checkbox">
+                                                <input type="checkbox" id="topPanelCheckFreeDesignRotate" />
+                                                <label for="topPanelCheckFreeDesignRotate"></label>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
+                                </div>
                             </div>
-                       </div>
-                     </div>
-                        
+                        </div>
+
 
                         <div id="layout-list" class="top-panel-box radio-surface-pattern top-panel-box-cmn-br">
                             <input id="topPanelSurfacePattern_0" type="radio" name="radioSurfacePattern"
