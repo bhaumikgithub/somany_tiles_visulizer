@@ -126,11 +126,9 @@ function AdjustCanvasWidthHeight() {
         
         $(".back-btn").css({ left: newLeft });
         $(".cn-btn").css({ right: newRight });
-        $(".share-btn-img").css({ right: newRight + 6 });
+        $(".share-btn-img").css({ right: newRight + 21 });
         $(".share-div").css({ right: newRight + 21 });
-        if (windowWidth <= 991) {
-            $(".share-btn-img").css({ right: newRight + 20 });
-        }
+       
     }
     if(currentRoom._ui.isMobileDevice()==true){
         $('.share-btn-img').show();
@@ -140,6 +138,7 @@ function AdjustCanvasWidthHeight() {
         $('.share-btn-img').hide();
         $('.share-div').show();
     }
+
     showHideTabs();
 
 }
@@ -201,7 +200,7 @@ $(window).on('load', function () {
                 $(".partOfProductTabContent-wrap").show(); // Show the content wrapper
                 $(".back-btn").css({ left: newLeft });
                 $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
-                $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 6);
+                $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 21);
                 $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight + 21);
 
 

@@ -1988,12 +1988,6 @@ input[type=checkbox] {
    
 }
 
-/* @media (max-width:768px) and (orientation:landscape){
-    .share-btn-img{
-        right:25px !important;
-       }
-    
-} */
 @media (max-width:400px){
   .csp-btn {
          margin-bottom: 5px; 
