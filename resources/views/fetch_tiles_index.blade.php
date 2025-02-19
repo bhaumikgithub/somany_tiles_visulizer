@@ -47,69 +47,6 @@
     </div>
 
     @push('custom-scripts')
-{{--        <script>--}}
-{{--            document.getElementById('fetch-now').addEventListener('click', function () {--}}
-{{--                let fetchButton = document.getElementById('fetch-now');--}}
-{{--                let progressContainer = document.getElementById('progress-container');--}}
-{{--                let progressBar = document.getElementById('progress-bar');--}}
-{{--                let progressText = document.getElementById('progress-text');--}}
-{{--                let errorList = document.getElementById('error-list');--}}
-
-{{--                const lastFetchedDate = $('#last_fetch_date_val').val() || "2000-01-01";--}}
-{{--                const todayDate = new Date().toISOString().slice(0, 10);--}}
-
-{{--                fetchButton.disabled = true;--}}
-{{--                fetchButton.innerText = "Processing...";--}}
-
-{{--                progressContainer.style.display = 'block';--}}
-{{--                progressBar.style.width = '0%';--}}
-{{--                progressText.innerText = '0 records processed...';--}}
-{{--                errorList.innerHTML = '';--}}
-
-{{--                fetch("/fetch-data", {--}}
-{{--                    method: "POST",--}}
-{{--                    headers: {--}}
-{{--                        "Content-Type": "application/json",--}}
-{{--                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')--}}
-{{--                    },--}}
-{{--                    body: JSON.stringify({ start_date: lastFetchedDate, end_date: todayDate })--}}
-{{--                })--}}
-{{--                    .then(response => response.json())--}}
-{{--                    .then(result => {--}}
-{{--                        let totalRecords = result.total_records;--}}
-{{--                        let progressInterval = setInterval(() => {--}}
-{{--                            fetch("/fetch-progress")--}}
-{{--                                .then(res => res.json())--}}
-{{--                                .then(progressData => {--}}
-{{--                                    if (progressData.total > 0) {--}}
-{{--                                        let percentage = (progressData.processed / progressData.total) * 100;--}}
-{{--                                        progressBar.style.width = `${percentage}%`;--}}
-
-{{--                                        // ✅ Show individual record progress--}}
-{{--                                        progressText.innerText = progressData.status;--}}
-
-{{--                                        if (progressData.processed >= progressData.total) {--}}
-{{--                                            clearInterval(progressInterval);--}}
-{{--                                            progressText.innerText = "Processing complete!";--}}
-{{--                                            progressBar.style.width = "100%";--}}
-{{--                                            fetchButton.disabled = false;--}}
-{{--                                            fetchButton.innerText = "Fetch Now";--}}
-{{--                                        }--}}
-{{--                                    }--}}
-{{--                                })--}}
-{{--                                .catch(error => {--}}
-{{--                                    console.error("Error fetching progress:", error);--}}
-{{--                                });--}}
-{{--                        }, 2000);--}}
-{{--                    })--}}
-{{--                    .catch(error => {--}}
-{{--                        progressText.innerText = "Error fetching data!";--}}
-{{--                        console.error(error);--}}
-{{--                        fetchButton.disabled = false;--}}
-{{--                        fetchButton.innerText = "Fetch Now";--}}
-{{--                    });--}}
-{{--            });--}}
-{{--        </script>--}}
         <script>
             $(document).ready(function () {
                 let csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -159,7 +96,6 @@
                             cache: false,
                             data: { t: new Date().getTime() }, // Add timestamp to bypass cache
                             success: function (progressData) {
-                                console.log("Progress Response:", progressData); // ✅ Debug in Console
                                 if (progressData.total > 0) {
                                     let percentage = Math.min((progressData.processed / progressData.total) * 100, 100);
                                     progressBar.style.width = `${percentage}%`;
