@@ -224,7 +224,7 @@ class FetchTilesController extends Controller
                         'percentage' => $progressPercentage,
                         'status' => "$processedCount / $totalCount records processed",
                         'last_record' => [
-                            'name' => $product['name'] ?? 'Unknown',
+                            'name' => $product['product_name'] ?? 'Unknown',
                             'sku' => $product['sku'],
                             'surface' => $surface,
                             'action' => $action,
