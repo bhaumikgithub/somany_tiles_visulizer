@@ -65,6 +65,7 @@ function AdjustCanvasWidthHeight() {
 
         setTimeout(function () {
             $("#container").scrollLeft((newCanvasWidth - windowWidth) / 2);
+
         }, 300);
     }
 
@@ -126,7 +127,15 @@ function AdjustCanvasWidthHeight() {
         $(".share-btn-img").css({ right: newRight + 6 });
         $(".share-div").css({ right: newRight });
     }
-
+    if(currentRoom._ui.isMobileDevice()==true){
+        //$(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : "30px");
+        $('.share-btn-img').show();
+        $('.share-div').hide();
+    }
+    else{
+        $('.share-btn-img').hide();
+        $('.share-div').show();
+    }
     showHideTabs();
 
 }
@@ -162,41 +171,8 @@ function isCanvasFullscreen() {
 //         $(".share-div").css('visibility', 'hidden');
 //     }
 // }
-function toggleShareElements() {
-    var screenWidth = $(window).width();
-    var screenHeight = $(window).height();
 
-    // Determine layoutMode based on orientation
-    if (screenWidth > screenHeight) {
-        layoutMode = "LANDSCAPE";
-    } else {
-        layoutMode = "PORTRAIT";
-    }
 
-    // If screen width is 767px or less (mobile view)
-    if (screenWidth <= 767) {
-        $('.share-btn-img').show();
-
-        // Check layoutMode to handle .share-div visibility
-        if (layoutMode === "PORTRAIT") {
-            $('.share-div').hide(); // Hide .share-div in portrait mode
-        } else {
-            $('.share-div').hide(); // Hide .share-div in landscape mode on small screens
-        }
-
-        // Adjust .share-btn-img position
-        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 20);
-    } else {
-        // For larger screens (desktop/tablet)
-        $('.share-btn-img').hide();
-        
-        // Show .share-div on large screens
-        $('.share-div').show();
-    }
-}
-$(window).on('orientationchange', function() {
-    toggleShareElements(); // Re-run the function when orientation changes
-});
 $(window).on('load', function () {
 
     if (isCanvasFullscreen()) {
@@ -223,7 +199,9 @@ $(window).on('load', function () {
                 $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
                 $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 6);
                 $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight);
-                toggleShareElements();
+
+
+
 
             }, 19);
         }
@@ -243,7 +221,6 @@ $(window).on('load', function () {
 
 $(window).on('resize', function () {
     AdjustCanvasWidthHeight();
-    toggleShareElements();
 });
 
 //This function calling from 2d.min.js
@@ -408,28 +385,23 @@ function showHideTabs() {
 
 
 function showProductContent() {
-    console.log("showProductContent");
     $('#topPanelGrout').hide();
     $('#topPanelLayout').hide();
     $('.radio-surface-rotation-wrap').show();
 
-    if (layoutMode == "PORTRAIT") {
-        $(".partOfProductTabButtons").show();
-        setPanelToggleStatus('.serach-pad-set', '#searchIconToggle');
-        setPanelToggleStatus('.filterContentPanel', '#sliderIconToggle');
-    }
-    else {
-        $(".partOfProductTabButtons").hide();
-    }
+
     $(".partOfProductTabContent").show();
     $('.partOfProductTabContent-wrap').show();
-    var screenWidth = $(window).width();
-    if (screenWidth <= 767 && layoutMode === "LANDSCAPE") {
+
+    if(currentRoom._ui.isMobileDevice()==true){
         $(".partOfProductTabButtons").show();
         setPanelToggleStatus('.serach-pad-set', '#searchIconToggle');
         setPanelToggleStatus('.filterContentPanel', '#sliderIconToggle');
-
     }
+    else{
+        $(".partOfProductTabButtons").hide();
+    }
+
 }
 //this._room.currentTiledSurface
 function showLayoutContent() {
@@ -686,9 +658,9 @@ function showAllFilters(p_show) {
 
 $('#roomCanvas').on('click', function () {
     var roomCanvasTitle = $('#roomCanvas').attr('title').trim();  // Get the title and trim any extra spaces
-     var titleWords = roomCanvasTitle.split(' ');  // Split the title by spaces
+    var titleWords = roomCanvasTitle.split(' ');  // Split the title by spaces
     var firstTwoWords = titleWords.slice(0, 2).join(' ');  // Take the first two words and join them with a space
-    
+
     // Check if the title contains "change counter" or "change paint"
     if (firstTwoWords.toLowerCase() === "change counter" || firstTwoWords.toLowerCase() === "change paint") {
         $('.serach-pad-set').hide();  // Hide the search panel
