@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('analytics', function (Blueprint $table) {
             $table->id();
+            $table->string('session_id')->nullable();
             $table->string('pincode')->nullable();
             $table->string('zone')->nullable();
-            $table->string('category')->nullable();
-            $table->string('room')->nullable();
+            $table->json('category')->nullable(); // Ensure category is stored as JSON
+            $table->json('room')->nullable(); // Ensure category is stored as JSON
             $table->json('viewed_tiles')->nullable();
             $table->json('used_tiles')->nullable();
             $table->json('tile_usage_count')->nullable(); // Stores count of each used tile

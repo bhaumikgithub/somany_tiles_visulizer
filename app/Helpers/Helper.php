@@ -5,6 +5,8 @@ namespace App\Helpers;
 use App\Models\CartItem;
 use App\Models\Showroom;
 use App\Tile;
+use GuzzleHttp\Client;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class Helper
@@ -69,5 +71,59 @@ class Helper
     {
         $tile = Tile::find($tile_id);
         return $tile->sku;
+    }
+
+    public static function getZoneFromState($state): string
+    {
+        $zones = [
+            'Central' => ['Madhya Pradesh', 'Chhattisgarh'],
+            'West' => ['Maharashtra', 'Gujarat', 'Goa', 'Daman & Diu', 'Dadra & Nagar Haveli'],
+            'North' => ['Delhi', 'NCR', 'Rajasthan', 'Punjab', 'Haryana', 'Chandigarh', 'Himachal Pradesh', 'Jammu & Kashmir', 'Uttarakhand', 'Uttar Pradesh'],
+            'South' => ['Lakshadweep', 'Pondicherry', 'Tamil Nadu', 'Kerala', 'Karnataka', 'Andhra Pradesh', 'Telangana'],
+            'East' => ['Andaman & Nicobar', 'West Bengal', 'Bihar', 'Jharkhand', 'Odisha', 'Assam', 'Manipur', 'Arunachal Pradesh', 'Nagaland', 'Mizoram', 'Tripura'],
+        ];
+
+        foreach ($zones as $zone => $states) {
+            if (in_array($state, $states)) {
+                return $zone;
+            }
+        }
+
+        return 'Unknown';
+    }
+
+    // Fetch Zone Based on Pincode
+    public static function getZoneByPincode($pincode): string | JsonResponse
+    {
+        try {
+            // Create a Guzzle client
+            $client = new Client();
+
+            // Call the external pincode API
+            $response = $client->request('GET', "http://www.postalpincode.in/api/pincode/{$pincode}", [
+                'timeout' => 5, // Set timeout to avoid long delays
+                'connect_timeout' => 3, // Connection timeout
+            ]);
+
+            // Decode the response
+            $data = json_decode($response->getBody()->getContents(), true);
+
+            // Check if the API call was successful
+            if (!isset($data['Status']) || $data['Status'] !== 'Success' || empty($data['PostOffice'])) {
+                throw new \Exception("Invalid response from API.");
+            }
+
+            // Extract area and state
+            $postOffice = $data['PostOffice'][0];
+            $state = $postOffice['State'] ?? 'Gujarat'; // Use Gujarat if the state is missing
+
+        } catch (\Exception $e) {
+            \Log::error("Pincode API Failed: " . $e->getMessage());
+
+            // Default to Gujarat when API fails
+            $state = 'Gujarat';
+        }
+
+        return self::getZoneFromState($state); // Call Helper Function
     }
 }

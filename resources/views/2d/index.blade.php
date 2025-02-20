@@ -3,7 +3,7 @@
     <div class="onLoadWrapper" style="display: none;">
         <div class="container-fluid mt-2 desktop-div" style="padding-right: 2px;">
             <div class="grow hover_1 first_width hover_2">
-                <a href="{{url('/listing/livingroom')}}" onclick="fetchCategory('livingroom');">
+                <a href="javascript:void(0);" onclick="fetchCategory('livingroom');">
                     <div class="image1" style="writing-mode: vertical-rl;">
                         <h1 style="text-orientation: mixed;padding: 60px 5px 5px 5px;">Living Room</h1>
                     </div>

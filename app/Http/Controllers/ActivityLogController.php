@@ -6,17 +6,45 @@ use App\Models\Analytics;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Helpers\Helper;
 
 class ActivityLogController extends Controller
 {
     public function trackCategory(Request $request): \Illuminate\Http\JsonResponse
     {
-        $pincode = session('pincode');
-        dd($pincode);
-        Analytics::create([
-            'pincode' => $pincode,
-        ]);
+        $sessionId = session()->getId();
+        $category = $request->input('category');
 
+        // Check if an analytics record exists for the session
+        $analytics = Analytics::where('session_id', $sessionId)->first();
+        if ($analytics) {
+            // Decode existing category JSON
+            $existingCategories = json_decode($analytics->category, true) ?? [];
+
+            // Append new category if not already present
+            if (!in_array($category, $existingCategories)) {
+                $existingCategories[] = $category;
+                $analytics->update([
+                    'category' => json_encode($existingCategories),
+                ]);
+            }
+        } else {
+            // New session, create a new analytics entry
+            Analytics::create([
+                'pincode' => $pincode,
+                'zone' => $zone,
+                'session_id' => $sessionId,
+                'category' => json_encode([$category]), // Store as JSON array
+            ]);
+        }
+
+        Analytics::create([
+            'pincode' => session('pincode'),
+            'zone' => Helper::getZoneByPincode(session('pincode')),
+            'session_id' => $request->get('session_id'),
+            'category' => $request->category,
+
+        ]);
         return response()->json(['success' => true]);
     }
 

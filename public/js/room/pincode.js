@@ -48,13 +48,20 @@ $('#pincodeForm').on('submit', function (e) {
     });
 });
 
-function fetchCategory(category){
+function fetchCategory(category) {
     fetch("/track-category", {
         method: "POST",
         headers: {
             "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({category: category}),
-    }).then(r =>{});
+        body: JSON.stringify({ category: category }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Redirect to the respective category page
+                window.location.href = `/listing/${category}`;
+            }
+        });
 }
