@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\PincodeController;
 use App\Http\Controllers\ZipcodeController;
 use App\Http\Controllers\UserPdfController;
@@ -281,6 +282,7 @@ Route::post('/update-preference', 'App\Http\Controllers\AddToPdfRoomsController@
 
 Route::post('check-selection-has-data','App\Http\Controllers\AddToPdfRoomsController@checkSelectionHasData');
 Route::post('/get-tile-summary', 'App\Http\Controllers\AddToPdfRoomsController@getTileSummary');
+Route::post('/track-category', [ActivityLogController::class, 'trackCategory']);
 // Route::get('/test', 'App\Http\Controllers\HomeController@index');
 // Route::get('/test', function () {
 //     return response($_SERVER['SERVER_NAME']);
