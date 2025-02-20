@@ -11,6 +11,7 @@ var filterButtonPressed = false;
 var newLeft;
 var newRight;
 var panelStatusManager;
+var isTablet = false;
 //var searchPanelOpen = true;
 
 document.getElementById("roomLoaderBackground").style.visibility = "hidden";
@@ -119,16 +120,17 @@ function AdjustCanvasWidthHeight() {
         $(".back-btn").css({ left: newLeft });
         $(".cn-btn").css("right", "0px");
         $(".share-btn-img").css("right", "18px");
-        $(".share-div").css("right", "26px");
+        $(".share-div").css("right", "18px");
     }
     else {
+
         $(".back-btn").css({ left: newLeft });
         $(".cn-btn").css({ right: newRight });
-        $(".share-btn-img").css({ right: newRight + 6 });
-        $(".share-div").css({ right: newRight });
+        $(".share-btn-img").css({ right: newRight + 21 });
+        $(".share-div").css({ right: newRight + 21 });
+
     }
-    if(currentRoom._ui.isMobileDevice()==true){
-        //$(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : "30px");
+    if(isThisMobileDevice()==true){
         $('.share-btn-img').show();
         $('.share-div').hide();
     }
@@ -136,9 +138,20 @@ function AdjustCanvasWidthHeight() {
         $('.share-btn-img').hide();
         $('.share-div').show();
     }
+
     showHideTabs();
 
 }
+
+function isThisMobileDevice(){
+    if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/Opera Mini/i) || navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/Windows Phone/i)) {
+
+        return true;
+
+    }
+    return false;
+};
+
 
 function allLoadCompleted() {
     $(".cmn-room-btn").css('visibility', 'visible');
@@ -197,8 +210,8 @@ $(window).on('load', function () {
                 $(".partOfProductTabContent-wrap").show(); // Show the content wrapper
                 $(".back-btn").css({ left: newLeft });
                 $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
-                $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 6);
-                $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight);
+                $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 21);
+                $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight + 21);
 
 
 
@@ -393,7 +406,7 @@ function showProductContent() {
     $(".partOfProductTabContent").show();
     $('.partOfProductTabContent-wrap').show();
 
-    if(currentRoom._ui.isMobileDevice()==true){
+    if(isThisMobileDevice()==true){
         $(".partOfProductTabButtons").show();
         setPanelToggleStatus('.serach-pad-set', '#searchIconToggle');
         setPanelToggleStatus('.filterContentPanel', '#sliderIconToggle');

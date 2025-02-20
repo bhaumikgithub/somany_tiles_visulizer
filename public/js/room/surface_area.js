@@ -74,7 +74,7 @@ function openTileSelectionPanel(surface_name) {
         $(".top-panel-box-first").show();
     }
 
-    if(currentRoom._ui.isMobileDevice()==true){
+    if(isThisMobileDevice()==true){
         if (String(surface_name).indexOf("Paint") > -1 || String(surface_name).indexOf("Theme") > -1) {
             $(".title-area").show();
         }
