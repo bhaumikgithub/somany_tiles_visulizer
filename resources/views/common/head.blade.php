@@ -3,6 +3,7 @@
 <title>{{ App\Company::findOrFail(1)->name }}</title>
 
 <link rel="shortcut icon" href="{{ App\Company::findOrFail(1)->logo }}" />
+<link rel="icon" type="image/x-icon" href="{{asset('img/favicon.ico') }}">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 

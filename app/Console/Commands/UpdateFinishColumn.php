@@ -142,7 +142,6 @@ class UpdateFinishColumn extends Command
                         'design_finish' => $newFinish,
                         'expProps' => json_encode($expProps),
                         'brand' => $product['brand_name'] ?? null,
-                        'updated_at' => now(),
                     ]);
 
                     $updatedCount++;

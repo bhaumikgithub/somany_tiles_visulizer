@@ -125,7 +125,6 @@ class MapSkuAndUpdateImage extends Command
                 if ($fileName) {
                     \DB::table('tiles')->where('sku', $product['sku'])->update([
                         'real_file' => $fileName, // ✅ Save image URL instead of downloading
-                        'updated_at' => now(),
                     ]);
 
                     \Log::info("Updated SKU: {$product['sku']} | Image URL: {$fileName}");
