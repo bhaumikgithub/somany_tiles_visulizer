@@ -175,6 +175,8 @@ class ProcessTilesJob implements ShouldQueue
                                 $uniqueUpdated[$sku] = true;
                                 $updatedCount++;
                             }
+                            // Update the record and only modify `updated_at`
+                            $data['updated_at'] = now();
                             DB::table('tiles')->where('sku', $product['sku'])->where('surface', $surface)->update($data);
                             Log::info("Updated SKU: {$product['sku']} for Surface: $surface");
                         }
@@ -183,6 +185,10 @@ class ProcessTilesJob implements ShouldQueue
                             $uniqueInserted[$sku] = true;
                             $insertedCount++;
                         }
+                        // Set both `created_at` and `updated_at` when inserting a new record
+                        $now = now();
+                        $data['created_at'] = $now;
+                        $data['updated_at'] = $now;
                         DB::table('tiles')->insert($data);
                         Log::info("Inserted new SKU: {$product['sku']} for Surface: $surface");
                     }

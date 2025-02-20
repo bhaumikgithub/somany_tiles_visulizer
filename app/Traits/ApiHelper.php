@@ -167,8 +167,7 @@ trait ApiHelper
             'yes_no' => $product['yes_no'] ?? null,
             'record_creation_time' => $creation_time,
             'deletion' => $product['deletion'] ?? null,
-            'from_api' => '1',
-            'updated_at' => now(),
+            'from_api' => '1'
         ];
     }
 
