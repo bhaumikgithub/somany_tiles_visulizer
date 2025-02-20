@@ -337,27 +337,34 @@ class AjaxController extends Controller
 
     private function getZoneByPincode($pincode): string | JsonResponse
     {
-        // Create a Guzzle client
-        $client = new Client();
+        try {
+            // Create a Guzzle client
+            $client = new Client();
 
-        // Call the external pincode API
-        $response = $client->request('GET', "http://www.postalpincode.in/api/pincode/{$pincode}");
+            // Call the external pincode API
+            $response = $client->request('GET', "http://www.postalpincode.in/api/pincode/{$pincode}", [
+                'timeout' => 5, // Set timeout to avoid long delays
+                'connect_timeout' => 3, // Connection timeout
+            ]);
 
-        // Decode the response
-        $data = json_decode($response->getBody()->getContents(), true);
+            // Decode the response
+            $data = json_decode($response->getBody()->getContents(), true);
 
-        // Check if the API call was successful
-        if ($data['Status'] !== 'Success' || empty($data['PostOffice'])) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid pincode or data not found.'
-            ], 404);
+            // Check if the API call was successful
+            if (!isset($data['Status']) || $data['Status'] !== 'Success' || empty($data['PostOffice'])) {
+                throw new \Exception("Invalid response from API.");
+            }
+
+            // Extract area and state
+            $postOffice = $data['PostOffice'][0];
+            $state = $postOffice['State'] ?? 'Gujarat'; // Use Gujarat if state is missing
+
+        } catch (\Exception $e) {
+            \Log::error("Pincode API Failed: " . $e->getMessage());
+
+            // Default to Gujarat when API fails
+            $state = 'Gujarat';
         }
-
-        // Extract area and state
-        $postOffice = $data['PostOffice'][0];
-        $area = $postOffice['Name'];
-        $state = $postOffice['State'];
 
         return $this->getZoneFromState($state);
     }
