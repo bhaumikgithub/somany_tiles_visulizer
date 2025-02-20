@@ -9,7 +9,5 @@ class Analytics extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id','session_id','event_type','event_details','event_data','ip_address','user_agent'];
-
-    protected $casts = ['event_data' => 'array'];
+    protected $fillable = ['session_id','pincode','zone','category','room','viewed_tiles','used_tiles','tile_usage_count','visited_at','user_logged_in','downloaded_pdf','showroom'];
 }

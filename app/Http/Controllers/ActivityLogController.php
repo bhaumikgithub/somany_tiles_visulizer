@@ -12,8 +12,10 @@ class ActivityLogController extends Controller
 {
     public function trackCategory(Request $request): \Illuminate\Http\JsonResponse
     {
-        $sessionId = session()->getId();
-        $category = $request->input('category');
+        $sessionId = session()->getId(); // Get session ID
+        $pincode = session('pincode');
+        $zone = Helper::getZoneByPincode($pincode);
+        $category = $request->category;
 
         // Check if an analytics record exists for the session
         $analytics = Analytics::where('session_id', $sessionId)->first();
@@ -26,25 +28,19 @@ class ActivityLogController extends Controller
                 $existingCategories[] = $category;
                 $analytics->update([
                     'category' => json_encode($existingCategories),
+                    'user_logged_in' => "Guest",
                 ]);
             }
         } else {
             // New session, create a new analytics entry
             Analytics::create([
-                'pincode' => $pincode,
-                'zone' => $zone,
                 'session_id' => $sessionId,
+                'pincode' => json_encode([$pincode]),
+                'zone' => json_encode([$zone]),
                 'category' => json_encode([$category]), // Store as JSON array
+                'user_logged_in' => "Guest",
             ]);
         }
-
-        Analytics::create([
-            'pincode' => session('pincode'),
-            'zone' => Helper::getZoneByPincode(session('pincode')),
-            'session_id' => $request->get('session_id'),
-            'category' => $request->category,
-
-        ]);
         return response()->json(['success' => true]);
     }
 
