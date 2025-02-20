@@ -1942,8 +1942,8 @@ input[type=checkbox] {
         width: 350px !important;
     }
     .panel_list .tile-list-thumbnail-image-holder img{
-        height: auto;
-        width: 100px;
+        height: 85px;
+        width: 85px;
     }
     .top-panel-hide-button-product {
         /* background-color: rgba(163, 163, 163, 1); */
@@ -1962,60 +1962,38 @@ input[type=checkbox] {
     #topPanelHideIcon{
         margin-top: 6px;
     }
-    .toggle-wrap-main{
-        display: flex;
-        width: 100%;
-        flex-wrap: wrap;
-        margin-top: 10px;
-        margin-bottom: 5px;
-    }
-    .landscap-toggle1{
-        width: 41%;
-    }
-    .landscap-toggle2{
-        width: 52%;
-    }
-    .free-design-lbl{
-        width: 40%;
-    }
-    .rotate-lbl{
-        width:65%;
-    }
-    .rotate-toggle{
-        margin-left: -35px;
-    }
-
-
+   .toggle-wrap-main{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    margin-bottom: 5px;
+   }
+   .landscap-toggle1{
+    width: 41%;
+   }
+   .landscap-toggle2{
+    width: 52%;
+   }
+   .free-design-lbl{
+    width: 40%;
+   }
+   .rotate-lbl{
+    width:65%;
+   }
+   .rotate-toggle{
+      margin-left: -35px;
+   }
+  
+   
 }
 
-
-
-/* @media (max-width:500px) {
-
-
-    .cmn-room-btn.back-btn, .cmn-room-btn.cn-btn {
-
-        padding: 5px 8px !important;
+@media (max-width:400px){
+  .csp-btn {
+         margin-bottom: 5px; 
     }
-
-    .cmn-room-btn.back-btn{
-        left:0px !important;
+    #cartInfoTilesList .modify-btn{
+        padding: 8px;
+        font-size: 13px;
     }
-    .cmn-room-btn.cn-btn , .share-btn-img , .share-div {
-        right: 0px !important;
-    }
-
-    .share-div{
-        margin-right: 10px;
-        left: 10px;
-
-    }
-
-
-} */
-
-/* @media (min-height: 480px) and (max-height: 576px) {
-    .top-panel-box-overflow-y {
-        max-height: 100vh !important;
-    }
-} */
+}
