@@ -219,6 +219,9 @@ class ControllerPanorama extends Controller
         if ($request->hasFile('image')) {
             Storage::disk('public')->delete($room->getOriginal('image'));
             $room->image = $request->file('image')->store('panoramas', 'public');
+            $room->theme0 = $request->file('image')->store('panoramas', 'public');
+        }else {
+            $room->theme0 = str_replace('/storage/', '', $request->theme0);
         }
         if ($request->hasFile('shadow')) {
             Storage::disk('public')->delete($room->getOriginal('shadow'));
