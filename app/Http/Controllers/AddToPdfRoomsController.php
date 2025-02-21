@@ -180,45 +180,8 @@ class AddToPdfRoomsController extends Controller
         $productInfo->cart_id = $cart_id;
         $productInfo->save();
 
-
-        //Store data into analytics table
-        // Check if an analytics record exists for the session
-        $analytics = Analytics::where('session_id', $sessionId)->first();
-        $usedTiles = $selectedTiles ?? []; // Extract used tiles data
-
-        // Format tiles data (tile_id, tile_name, surface_title)
-        $formattedTiles = [];
-        foreach ($usedTiles as $tile) {
-            if (!empty($tile['tileId']) && !empty($tile['surfaceTitle'])) {
-                $tileDetails = Helper::getTileNameAndSurface($tile['tileId']); // Fetch details
-                $formattedTiles[] = [
-                    'tile_id' => $tile['tileId'],
-                    'tile_name' => $tileDetails['tile_name'],
-                    'surface' => $tileDetails['surface']
-                ];
-            }
-        }
-
         $getCartId = Cart::where('user_id',$sessionId)->first();
-        $uniqueCartId = $getCartId ? $getCartId->random_key : null;
-
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
-
-        if ($analytics) {
-            $existingTiles = json_decode($analytics->used_tiles, true) ?? [];
-            // Append new used tiles if not already present
-            foreach ($formattedTiles as $tile) {
-                if (!in_array($tile, $existingTiles)) {
-                    $existingTiles[] = $tile;
-                }
-            }
-            $analytics->update([
-                'used_tiles' => json_encode($existingTiles),
-                'unique_cart_id' => $uniqueCartId,
-            ]);
-        }
-
-
         $count = $allProduct->count();
         $url = '/pdf-summary/'.$getCartId->random_key;
         return response()->json([
@@ -253,16 +216,45 @@ class AddToPdfRoomsController extends Controller
     public function pdfSummary(Request $request , $randomKey): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
         $pincode = Session::get('pincode'); // Store the pincode temporarily
+        //Update pin code in cart summary page
+        $getCartId = Cart::where('random_key',$randomKey)->first();
+        $getCartId->pincode = $pincode;
+        $getCartId->update();
+
+        if( $getCartId ){
+            $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
+            $usedTiles = [];
+
+            foreach ($allProduct as $product) {
+                $tiles = json_decode($product->tiles_json, true); // Decode JSON to array
+
+                if (!empty($tiles) && is_array($tiles)) {
+                    foreach ($tiles as $tile) {
+                        $usedTiles[] = [
+                            'tile_id' => $tile['id'],
+                            'tile_name' => $tile['name'],
+                            'surface' => $tile['surface'],
+                        ];
+                    }
+                }
+            }
+        }
+        //Save data into analytics table
+        $analytics = Analytics::where('session_id', $getCartId->user_id)->first();
+
+        if ($analytics) {
+            $existingTiles = json_decode($analytics->used_tiles, true) ?? [];
+            $existingTiles = array_merge($existingTiles, $usedTiles); // Append new tiles
+            $analytics->update([
+                'used_tiles' => json_encode(array_values($existingTiles)), // Store updated JSON
+                'unique_cart_id' => $getCartId->random_key, // Store unique cart ID
+            ]);
+        }
 
         Session::flush(); // Clears all session data
 
-        Session::put('pincode', $pincode); // Restore the pincode session
-            
         // Optionally, regenerate session ID for the user
         $request->session()->regenerate();  // This generates a new session ID
-
-        $getCartId = Cart::where('random_key',$randomKey)->first();
-        $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
         $firstProduct = $allProduct->first(); // This returns the first CartItem model
         if ($firstProduct && $firstProduct->user_showroom_info) {
             $userShowroomInfo = json_decode($firstProduct->user_showroom_info, true);
@@ -272,8 +264,7 @@ class AddToPdfRoomsController extends Controller
                 'showrooms' => [],
             ];
         }        // Retrieve the pincode from the session
-        $pincode = session('pincode', null); // Default to null if not set
-
+        $pincode = $getCartId->pincode ?? null;
 
         $groupedTiles = $this->getProcessedTiles($allProduct);
 
@@ -286,10 +277,6 @@ class AddToPdfRoomsController extends Controller
             $isReadOnly = true;
             $upform_data = $savedUserpdfData->first();
         }
-
-        // if($isReadOnly){
-        //     $upform_data = UserPdfData::where([['unique_id',$randomKey],['name',base64_decode(request()->query('name'))]])->get()->first();
-        // }
 
         $cc_date = $getCartId->created_at->format('d-m-y');
         return view('pdf.cart_summary',compact('allProduct','randomKey','groupedTiles','upform_data','isReadOnly','cc_date','groupedTiles','pincode','userShowroomInfo'));
@@ -339,7 +326,6 @@ class AddToPdfRoomsController extends Controller
         $existingPdfPath = storage_path('app/public/Tile_Visualizer_PDF_1_4.pdf'); // Path to the existing PDF
         $existingPdfContent = file_get_contents($existingPdfPath);
 
-
         $getCartId = Cart::where('random_key',$request->random_key)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
         $basic_info = [
@@ -348,7 +334,7 @@ class AddToPdfRoomsController extends Controller
             'contact_no' => $request->mobileNumber,
             'state' => $request->state,
             'city' => $request->city,
-            'pin_code' => session('pincode', null)// Default to null if not set
+            'pin_code' => $getCartId->pincode ?? null// Default to null if not set
         ];
 
         $firstProduct = $allProduct->first(); // This returns the first CartItem model
@@ -371,7 +357,6 @@ class AddToPdfRoomsController extends Controller
         $userPdfData = UserPdfData::where('unique_id',$request->random_key)->get();
 
         if($userPdfData->isEmpty()){
-
             $savedPdf = UserPdfData::create([
                 'name' => $request->firstName . ' ' . $request->lastName,
                 'first_name' => $request->firstName,
@@ -384,6 +369,10 @@ class AddToPdfRoomsController extends Controller
                 'city' => $request->city
             ]);
 
+            //Save data into analytics table
+            $analytics = Analytics::where('session_id', $getCartId->user_id)->first();
+            $analytics->downloaded_pdf = $userPdfData->count();
+            $analytics->update();
         }
 
         // Generate the second PDF (dynamic content) using mPDF (in landscape mode)

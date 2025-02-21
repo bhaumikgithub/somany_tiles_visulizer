@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Analytics;
+use App\Models\Showroom;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,6 +26,14 @@ class ActivityLogController extends Controller
             'room_id' => $request->room_id,
             'room_name' => $request->room
         ];
+
+        $user = "gurst";
+
+        //Check if user has logged in backend or not
+        if (auth()->check()) {
+            $loged_user = auth()->user();
+            $user = $loged_user->id;
+        }
 
         // Check if an analytics record exists for the session
         $analytics = Analytics::where('session_id', $sessionId)->first();
@@ -65,10 +74,12 @@ class ActivityLogController extends Controller
             // New session, create a new analytics entry
             Analytics::create([
                 'session_id' => $sessionId,
-                'pincode_zone' => json_encode([$pinCodeZoneData]),
+                'pincode' => json_encode([$pincode]),
+                'zone' => json_encode([$zone]),
                 'category' => json_encode($categoryData), // Store non-null categories
                 'room' => json_encode($roomDataArray), // Store non-null room data
-                'user_logged_in' => "Guest",
+                'user_logged_in' => $user,
+                'showroom' => $loged_user->showroom_id ?? null,
             ]);
         }
         return response()->json(['success' => true]);

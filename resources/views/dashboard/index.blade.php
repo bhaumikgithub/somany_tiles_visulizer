@@ -17,8 +17,10 @@
         <div class="row">
             <h4>Zone/Pincode Analytics</h4>
             <div class="col-md-6">
-                <canvas id="zoneChart"></canvas>
+                <canvas id="zonePincodeChart"></canvas>
             </div>
+            <ul id="legend" class="legend"></ul>
+
             <div class="col-md-6" style="display: none;">
                 <table class="table table-bordered">
                     <thead>

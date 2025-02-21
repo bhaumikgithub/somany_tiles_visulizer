@@ -26,39 +26,57 @@ $('#filterButton').click(function() {
 
     let startDate = convertDateFormat(dates[0]);
     let endDate = convertDateFormat(dates[1]);
+    fetchAnalyticsData(startDate , endDate);
 
-    console.log("Start Date:", startDate, "End Date:", endDate);
-    fetchZoneData(startDate,endDate);
 });
 
-function fetchZoneData(startDate,endDate) {
+function fetchAnalyticsData(startDate , endDate)
+{
     $.ajax({
-        url: "/get_analytics_data", // Laravel Route for fetching data
-        method: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        data: { startDate: startDate , endDate : endDate },
+        url: '/get_analytics_data',  // Update with your actual API endpoint
+        type: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+        },
+        data: { start_date: startDate, end_date: endDate },
         success: function(response) {
-            //updateZoneTable(response.data);
-            updateZoneChart(response.chartData.labels , response.chartData.values);
+            renderChart(response.chartData);
+        },
+        error: function(error) {
+            console.log("Error fetching zone data:", error);
         }
     });
 }
 
-function updateZoneChart(labels, values) {
-    let ctx = document.getElementById('zoneChart').getContext('2d');
-    window.zoneChart = new Chart(ctx, {
-        type: 'pie',
+
+function renderChart(chartData) {
+    let ctx = document.getElementById("zonePincodeChart").getContext("2d");
+    let zoneChart = new Chart(ctx, {
+        type: 'doughnut',
         data: {
-            labels: labels,
+            labels: chartData.labels,
             datasets: [{
-                label: 'Visits by Zone',
-                data: values,
+                data: chartData.values,
                 backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-                borderWidth: 1
             }]
         },
         options: {
-            responsive: true
+            plugins: {
+                legend: { display: true },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return chartData.labels[tooltipItem.dataIndex] +
+                                ": " + chartData.values[tooltipItem.dataIndex] +
+                                " (" + chartData.percentages[tooltipItem.dataIndex] + ")";
+                        }
+                    }
+                }
+            }
         }
     });
 }
+
+
+fetchAnalyticsData('2025-02-14', '2025-02-21');

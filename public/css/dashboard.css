@@ -1,0 +1,19 @@
+.chart-container {
+    width: 50%;
+    margin: auto;
+}
+.legend {
+    list-style: none;
+    padding: 0;
+}
+.legend li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.legend .color-box {
+    width: 12px;
+    height: 12px;
+    margin-right: 8px;
+    display: inline-block;
+}
