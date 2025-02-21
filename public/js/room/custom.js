@@ -12,6 +12,7 @@ var newLeft;
 var newRight;
 var panelStatusManager;
 var isTablet = false;
+
 //var searchPanelOpen = true;
 
 document.getElementById("roomLoaderBackground").style.visibility = "hidden";
@@ -302,32 +303,35 @@ function isMobilePortrait() {
     // Check for mobile screens (width <= 768px) and portrait mode (height > width)
     return (window.innerWidth <= 991 && window.innerHeight > window.innerWidth);
 }
-// $('#topPanelHideBtn').on('click', function (e) {
-//     e.stopPropagation(); // Prevent the click event from bubbling up to the parent
-//     var panelWidth = $('#topPanel').outerWidth();
+$('#topPanelHideBtn').on('click', function (e) {
+    e.stopPropagation(); // Prevent the click event from bubbling up to the parent
+    var panelWidth = $('#topPanel').outerWidth();
     
-//     if (!isMobilePortrait()) {
+    if (!isMobilePortrait()) {
 
-//         // Check if the panel is currently visible by comparing the 'right' position
-//         if ($('#topPanel').css('right') === '0px') {
-//             // If the panel is visible, slide it out
-//             $('#topPanel').stop(true, true).animate({ right: -panelWidth + 'px' }, 500, function () {
-//                 // After the animation is done, change the icon
-//                 $('#topPanelHideIcon').removeClass('glyphicon-menu-right').addClass('glyphicon-menu-left');
-//                 alert("hide");
-//             });
-//         } else {
-//             // If the panel is hidden, slide it back in
+        // Check if the panel is currently visible by comparing the 'right' position
+        if ($('#topPanel').css('right') === '0px') {
+            // If the panel is visible, slide it out
+            $('#topPanel').stop(true, true).animate({ right: -panelWidth + 'px' }, 500, function () {
+                // After the animation is done, change the icon
+                $('#topPanelHideIcon').removeClass('glyphicon-menu-right').addClass('glyphicon-menu-left');
+                $('#topPanel').stop(true, true).animate({ right: -panelWidth + 'px'});
+            });
+        } else {
+            // If the panel is hidden, slide it back in
         
-//             $('#topPanel').stop(true, true).animate({ right: '0px' }, 500, function () {
-//                 // After the animation is done, change the icon
-//                 $('#topPanelHideIcon').removeClass('glyphicon-menu-left').addClass('glyphicon-menu-right');
-//             });
-//         }
+            $('#topPanel').stop(true, true).animate({ right: '0px' }, 500, function () {
+                // After the animation is done, change the icon
+                $('#topPanelHideIcon').removeClass('glyphicon-menu-left').addClass('glyphicon-menu-right');
+                $('#topPanel').stop(true, true).animate({ right: '0px' });  
+            });
+        }
 
-//     }
+    }
 
-// });
+});
+
+
 
 $("#btnProduct").addClass("top-panel-button-active");
 
