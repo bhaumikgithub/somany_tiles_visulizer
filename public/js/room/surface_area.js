@@ -49,7 +49,7 @@ window.onload = function getRoomSurface() {
 function openTileSelectionPanel(surface_name) {
 
 
-    //added by vikesha
+    /////////added by vikesha////////////////////////////
     let firstWord = surface_name.split('_')[0];
     // Hide or show .top-panel-search based on the first word
     var isCounterOrPaint = firstWord === "counter" || firstWord === "paint";
@@ -59,7 +59,8 @@ function openTileSelectionPanel(surface_name) {
 
     // Hide or show #btnGrout based on the first word
     $('#btnGrout').toggle(firstWord !== "counter");
-
+  
+    /////////code end////////////////////////
   
     let oldSurfaceName = surface_name;
     setCurrentListID(surface_name);//List_wall_a
