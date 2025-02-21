@@ -220,7 +220,7 @@ class UpdateFinishColumn extends Command
             'sedimento collection' => 'Large Format Tiles',
             'colorato collection' => 'Large Format Tiles',
             'ceramica' => 'Ceramic',
-            'duragres' => ' Glazed Vitrified Tiles',
+            'duragres' => 'Glazed Vitrified Tiles',
             'vitro' => 'Polished Vitrified Tiles',
             'durastone' => 'Heavy Duty Vitrified Tiles',
             'italmarmi' => 'Subway Tiles',
