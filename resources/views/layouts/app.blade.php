@@ -11,6 +11,7 @@
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/daterangepicker.css" rel="stylesheet">
     <link href="/css/admin_custom.css" rel="stylesheet">
 
     <!-- Scripts -->
@@ -150,7 +151,10 @@
     <!-- Scripts -->
     <script src="/js/app.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
+    <script src="/js/dashboard/moment.min.js"></script>
+    <script src="/js/dashboard/daterangepicker.min.js"></script>
     <script src="/js/add_theme_option_to_room.js"></script>
+    <script src="/js/dashboard.js"></script>
     @stack('custom-scripts')
 </body>
 </html>
