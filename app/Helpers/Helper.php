@@ -126,4 +126,20 @@ class Helper
 
         return self::getZoneFromState($state); // Call Helper Function
     }
+
+    public static function getTileNameAndSurface($tileId): array
+    {
+        $tile = Tile::find($tileId);
+        if ($tile) {
+            return [
+                'tile_name' => $tile->name,
+                'surface' => $tile->surface ?? 'Unknown Surface' // Assuming `surface` is a column in the Tile table
+            ];
+        }
+
+        return [
+            'tile_name' => 'Unknown Tile',
+            'surface' => 'Unknown Surface'
+        ];
+    }
 }

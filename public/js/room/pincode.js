@@ -65,3 +65,22 @@ function fetchCategory(category) {
             }
         });
 }
+
+function fetchRoom(room_id,room) {
+    fetch("/track-category", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ room_id: room_id , room:room }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Redirect to the respective category page
+                window.location.href = `/room2d/${room_id}`;
+            }
+        });
+}
+

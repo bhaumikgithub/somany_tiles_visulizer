@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
+use App\Models\Analytics;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Showroom;
@@ -60,8 +61,6 @@ class AddToPdfRoomsController extends Controller
 
         // Retrieve session ID
         $sessionId = $request->session()->getId();
-        // Retrieve or initialize cart from session
-        //$allProduct = $request->session()->get('allProduct', []);
 
         // Decode base64 image
         $image = str_replace('data:image/jpeg;base64,', '', $imageData);
@@ -91,7 +90,6 @@ class AddToPdfRoomsController extends Controller
 
         $filePath1 = 'largeImages/' . $imageName1;
         Storage::disk('public')->put($filePath1, base64_decode($image1));
-
 
 
         //Check if the same session key exists or not
@@ -182,9 +180,45 @@ class AddToPdfRoomsController extends Controller
         $productInfo->cart_id = $cart_id;
         $productInfo->save();
 
-        //$request->session()->put('allProduct', $productInfo);
+
+        //Store data into analytics table
+        // Check if an analytics record exists for the session
+        $analytics = Analytics::where('session_id', $sessionId)->first();
+        $usedTiles = $selectedTiles ?? []; // Extract used tiles data
+
+        // Format tiles data (tile_id, tile_name, surface_title)
+        $formattedTiles = [];
+        foreach ($usedTiles as $tile) {
+            if (!empty($tile['tileId']) && !empty($tile['surfaceTitle'])) {
+                $tileDetails = Helper::getTileNameAndSurface($tile['tileId']); // Fetch details
+                $formattedTiles[] = [
+                    'tile_id' => $tile['tileId'],
+                    'tile_name' => $tileDetails['tile_name'],
+                    'surface' => $tileDetails['surface']
+                ];
+            }
+        }
+
         $getCartId = Cart::where('user_id',$sessionId)->first();
+        $uniqueCartId = $getCartId ? $getCartId->random_key : null;
+
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
+
+        if ($analytics) {
+            $existingTiles = json_decode($analytics->used_tiles, true) ?? [];
+            // Append new used tiles if not already present
+            foreach ($formattedTiles as $tile) {
+                if (!in_array($tile, $existingTiles)) {
+                    $existingTiles[] = $tile;
+                }
+            }
+            $analytics->update([
+                'used_tiles' => json_encode($existingTiles),
+                'unique_cart_id' => $uniqueCartId,
+            ]);
+        }
+
+
         $count = $allProduct->count();
         $url = '/pdf-summary/'.$getCartId->random_key;
         return response()->json([

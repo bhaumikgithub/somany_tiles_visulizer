@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PincodeController;
 use App\Http\Controllers\ZipcodeController;
 use App\Http\Controllers\UserPdfController;
@@ -245,6 +246,10 @@ Route::group(['middleware' => 'role:administrator'], function () {
     Route::post('/showrooms/delete', [ShowroomController::class, 'showroomsDelete']);
     Route::get('/user_pdf_list', [UserPdfController::class , 'viewUserPdfList'])->name(name: 'user_pdf-summary'); //yash changes
     Route::get('/filter_pdf_list', [UserPdfController::class , 'filteredPdfList'])->name(name: 'filter_pdf_list'); //yash changes
+
+
+    //Dashboard controller
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 

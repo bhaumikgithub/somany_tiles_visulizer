@@ -16,78 +16,50 @@ class ActivityLogController extends Controller
         $pincode = session('pincode');
         $zone = Helper::getZoneByPincode($pincode);
         $category = $request->category;
+        $roomData = [
+            'room_id' => $request->room_id,
+            'room_name' => $request->room
+        ];
 
         // Check if an analytics record exists for the session
         $analytics = Analytics::where('session_id', $sessionId)->first();
         if ($analytics) {
             // Decode existing category JSON
             $existingCategories = json_decode($analytics->category, true) ?? [];
-
-            // Append new category if not already present
-            if (!in_array($category, $existingCategories)) {
+            $existingRooms = json_decode($analytics->room, true) ?? [];
+            // **Filter out null categories before appending**
+            if (!empty($category) && !in_array($category, $existingCategories)) {
                 $existingCategories[] = $category;
                 $analytics->update([
-                    'category' => json_encode($existingCategories),
-                    'user_logged_in' => "Guest",
+                    'category' => json_encode(array_values(array_filter($existingCategories))), // Remove null values
                 ]);
             }
+
+            // **Filter out null room data before appending**
+            if (!empty($roomData['room_id']) && !empty($roomData['room_name']) && !in_array($roomData, $existingRooms)) {
+                $existingRooms[] = $roomData;
+                $analytics->update([
+                    'room' => json_encode(array_values(array_filter($existingRooms, function ($room) {
+                        return !empty($room['room_id']) && !empty($room['room_name']);
+                    }))), // Remove null room entries
+                ]);
+            }
+
         } else {
+            // **Filter null values for the new session entry**
+            $categoryData = !empty($category) ? [$category] : [];
+            $roomDataArray = (!empty($roomData['room_id']) && !empty($roomData['room_name'])) ? [$roomData] : [];
+
             // New session, create a new analytics entry
             Analytics::create([
                 'session_id' => $sessionId,
                 'pincode' => json_encode([$pincode]),
                 'zone' => json_encode([$zone]),
-                'category' => json_encode([$category]), // Store as JSON array
+                'category' => json_encode($categoryData), // Store non-null categories
+                'room' => json_encode($roomDataArray), // Store non-null room data
                 'user_logged_in' => "Guest",
             ]);
         }
         return response()->json(['success' => true]);
     }
-
-    private function getZoneByPincode($pincode): string | JsonResponse
-    {
-        // Create a Guzzle client
-        $client = new Client();
-
-        // Call the external pincode API
-        $response = $client->request('GET', "http://www.postalpincode.in/api/pincode/{$pincode}");
-
-        // Decode the response
-        $data = json_decode($response->getBody()->getContents(), true);
-
-        // Check if the API call was successful
-        if ($data['Status'] !== 'Success' || empty($data['PostOffice'])) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid pincode or data not found.'
-            ], 404);
-        }
-
-        // Extract area and state
-        $postOffice = $data['PostOffice'][0];
-        $area = $postOffice['Name'];
-        $state = $postOffice['State'];
-
-        return $this->getZoneFromState($state);
-    }
-
-    private function getZoneFromState($state): string
-    {
-        $zones = [
-            'Central' => ['Madhya Pradesh','Chhattisgarh'],
-            'West' => ['Maharashtra', 'Gujarat','Goa','Daman & Diu','Dadra & Nagar Haveli'],
-            'North' => ['Delhi', 'NCR','Rajasthan','Punjab', 'Haryana','Chandigarh','Himachal Pradesh','Jammu & Kashmir','Uttarakhand','Uttar Pradesh'],
-            'South' => ['Lakshadweep','Pondicherry','Tamil Nadu', 'Kerala', 'Karnataka','Andhra Pradesh','Telangana'],
-            'East' => ['Andaman & Nicobar', 'West Bengal','Bihar','Jharkhand','Odisha','Assam','Manipur','Arunachal Pradesh','Nagaland','Mizoram','Tripura'],
-        ];
-
-        foreach ($zones as $zone => $states) {
-            if (in_array($state, $states)) {
-                return $zone;
-            }
-        }
-
-        return 'Unknown';
-    }
-
 }

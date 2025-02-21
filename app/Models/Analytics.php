@@ -9,5 +9,6 @@ class Analytics extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['session_id','pincode','zone','category','room','viewed_tiles','used_tiles','tile_usage_count','visited_at','user_logged_in','downloaded_pdf','showroom'];
+    protected $fillable = ['session_id','pincode','zone','category','room','viewed_tiles','used_tiles',
+        'tile_usage_count','visited_at','unique_cart_id','user_logged_in','downloaded_pdf','showroom'];
 }

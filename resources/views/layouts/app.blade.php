@@ -84,6 +84,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         <li @if ($view_name == 'home') class="active" @endif ><a href="/home">Home</a></li>
+                        <li @if ($view_name == 'dashboard.index') class="active" @endif ><a href="/dashboard">Dashboard</a></li>
 
                         @if (Auth::check() && Auth::user()->hasRole('editor'))
                             <li @if ($view_name == 'tiles') class="active" @endif ><a href="/tiles">Tiles</a></li>
