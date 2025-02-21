@@ -214,16 +214,16 @@ class UpdateFinishColumn extends Command
     protected function mapCategoryType($brand_name): string
     {
         $mapping = [
-            'coverstone' => 'Large Format Slab',
-            'regalia collection' => 'Large Format Tiles',
-            'porto collection' => 'Large Format Tiles',
-            'sedimento collection' => 'Large Format Tiles',
-            'colorato collection' => 'Large Format Tiles',
-            'ceramica' => 'Ceramic',
-            'duragres' => 'Glazed Vitrified Tiles',
-            'vitro' => 'Polished Vitrified Tiles',
-            'durastone' => 'Heavy Duty Vitrified Tiles',
-            'italmarmi' => 'Subway Tiles',
+            'coverstone' => 'Large Format Slab - Coverstone',
+            'regalia collection' => 'Large Format Tiles - Regalia Collection',
+            'porto collection' => 'Large Format Tiles - Porto Collection',
+            'sedimento collection' => 'Large Format Tiles - Sedimento Collection',
+            'colorato collection' => 'Large Format Tiles - Colorato Collection',
+            'ceramica' => 'Ceramic - Ceramica',
+            'duragres' => 'Glazed Vitrified Tiles - Duragres',
+            'vitro' => 'Polished Vitrified Tiles - Vitro',
+            'durastone' => 'Heavy Duty Vitrified Tiles - Durastone',
+            'italmarmi' => 'Subway Tiles - Italmarmi',
         ];
 
         return $mapping[$brand_name] ?? $brand_name; // Default to original value if not in mapping
