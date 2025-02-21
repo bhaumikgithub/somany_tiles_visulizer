@@ -153,6 +153,7 @@
     <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/dashboard/moment.min.js"></script>
     <script src="/js/dashboard/daterangepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/js/add_theme_option_to_room.js"></script>
     <script src="/js/dashboard.js"></script>
     @stack('custom-scripts')

@@ -15,6 +15,11 @@ class ActivityLogController extends Controller
         $sessionId = session()->getId(); // Get session ID
         $pincode = session('pincode');
         $zone = Helper::getZoneByPincode($pincode);
+        $pinCodeZoneData  = [
+            'pincode' => $pincode,
+            'zone' => $zone
+        ];
+
         $category = $request->category;
         $roomData = [
             'room_id' => $request->room_id,
@@ -27,6 +32,13 @@ class ActivityLogController extends Controller
             // Decode existing category JSON
             $existingCategories = json_decode($analytics->category, true) ?? [];
             $existingRooms = json_decode($analytics->room, true) ?? [];
+            $existingPincodeZones = json_decode($analytics->pincode_zone, true) ?? [];
+
+            // **Update Pincode & Zone**
+            if (!in_array($pinCodeZoneData , $existingPincodeZones)) {
+                $existingPincodeZones[] = $pinCodeZoneData;
+            }
+
             // **Filter out null categories before appending**
             if (!empty($category) && !in_array($category, $existingCategories)) {
                 $existingCategories[] = $category;
@@ -53,8 +65,7 @@ class ActivityLogController extends Controller
             // New session, create a new analytics entry
             Analytics::create([
                 'session_id' => $sessionId,
-                'pincode' => json_encode([$pincode]),
-                'zone' => json_encode([$zone]),
+                'pincode_zone' => json_encode([$pinCodeZoneData]),
                 'category' => json_encode($categoryData), // Store non-null categories
                 'room' => json_encode($roomDataArray), // Store non-null room data
                 'user_logged_in' => "Guest",

@@ -17,35 +17,48 @@ $('#daterange').daterangepicker({
 // Fetch data and update UI on button click
 $('#filterButton').click(function() {
     let dateRange = $('#daterange').val();
-    console.log(dateRange);
-    fetchZoneData(dateRange);
+    let dates = dateRange.split(" - ");
+
+    function convertDateFormat(date) {
+        let [day, month, year] = date.split("-");
+        return `${year}-${month}-${day}`;
+    }
+
+    let startDate = convertDateFormat(dates[0]);
+    let endDate = convertDateFormat(dates[1]);
+
+    console.log("Start Date:", startDate, "End Date:", endDate);
+    fetchZoneData(startDate,endDate);
 });
 
-function fetchZoneData(dateRange) {
+function fetchZoneData(startDate,endDate) {
     $.ajax({
-        url: "/get-zone-data", // Laravel Route for fetching data
-        method: "GET",
-        data: { daterange: dateRange },
+        url: "/get_analytics_data", // Laravel Route for fetching data
+        method: "POST",
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        data: { startDate: startDate , endDate : endDate },
         success: function(response) {
             //updateZoneTable(response.data);
-            updateZoneChart(response.chartData);
+            updateZoneChart(response.chartData.labels , response.chartData.values);
         }
     });
 }
 
-function updateZoneChart(chartData) {
+function updateZoneChart(labels, values) {
     let ctx = document.getElementById('zoneChart').getContext('2d');
-    if (window.zoneChartInstance) {
-        window.zoneChartInstance.destroy();
-    }
-    window.zoneChartInstance = new Chart(ctx, {
+    window.zoneChart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: chartData.labels,
+            labels: labels,
             datasets: [{
-                data: chartData.values,
-                backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff']
+                label: 'Visits by Zone',
+                data: values,
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                borderWidth: 1
             }]
+        },
+        options: {
+            responsive: true
         }
     });
 }
