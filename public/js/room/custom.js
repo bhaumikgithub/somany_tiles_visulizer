@@ -123,14 +123,14 @@ function AdjustCanvasWidthHeight() {
         $(".share-div").css("right", "18px");
     }
     else {
-
+        
         $(".back-btn").css({ left: newLeft });
         $(".cn-btn").css({ right: newRight });
         $(".share-btn-img").css({ right: newRight + 21 });
         $(".share-div").css({ right: newRight + 21 });
-
+       
     }
-    if(isThisMobileDevice()==true){
+    if(currentRoom._ui.isMobileDevice()==true){
         $('.share-btn-img').show();
         $('.share-div').hide();
     }
@@ -142,16 +142,6 @@ function AdjustCanvasWidthHeight() {
     showHideTabs();
 
 }
-
-function isThisMobileDevice(){
-    if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/Opera Mini/i) || navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/Windows Phone/i)) {
-
-        return true;
-
-    }
-    return false;
-};
-
 
 function allLoadCompleted() {
     $(".cmn-room-btn").css('visibility', 'visible');
@@ -212,8 +202,7 @@ $(window).on('load', function () {
                 $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
                 $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 21);
                 $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight + 21);
-
-
+             
 
 
             }, 19);
@@ -305,16 +294,43 @@ function setTopPanelClosedPosition(p_animation_required,) {
 // });
 $('#topPanelmainpanel').on('click', function () {
     hideTopPanelMainPanel();
+
+    if (!isMobilePortrait()) {
+        $('#topPanel').show();
+        $('#topPanel').animate({ right: '0px' }); // Move the panel to the right
+        $('#topPanelHideIcon').addClass('glyphicon-menu-right');
+    }
+   
 });
 
 function hideTopPanelMainPanel() {
     $('#topPanel').show(); // Toggle visibility of the topPanel
     $('#topPanelmainpanel').hide();
 }
+function isMobilePortrait() {
+    // Check for mobile screens (width <= 768px) and portrait mode (height > width)
+    return (window.innerWidth <= 991 && window.innerHeight > window.innerWidth);
+}
+// $('#topPanelHideIcon').on('click', function (e) {
+//     e.stopPropagation(); // Prevent the click event from bubbling up to the parent
+//     var panelWidth = $('#topPanel').outerWidth();
+//     if (!isMobilePortrait()) {
+//        if ($('#topPanel').css('right') === '0px') {
+//             // If the panel is visible, slide it out
+//             $('#topPanel').animate({ right: -panelWidth + 'px' }, function () {
+//                 $('#topPanelHideIcon').removeClass('glyphicon-menu-right').addClass('glyphicon-menu-left');
+//                 $('#topPanelHideIcon').addClass('glyphicon-menu-left')
+//             });
+//         } else {
+//             // If the panel is hidden, slide it back in
+//             $('#topPanel').animate({ right: '0px' });
+//             $('#topPanelHideIcon').removeClass('glyphicon-menu-left').addClass('glyphicon-menu-right');
+            
+//         }
 
+//     }
 
-
-
+// });
 $("#btnProduct").addClass("top-panel-button-active");
 
 $('#btnProduct').on('click', function () {
@@ -406,7 +422,7 @@ function showProductContent() {
     $(".partOfProductTabContent").show();
     $('.partOfProductTabContent-wrap').show();
 
-    if(isThisMobileDevice()==true){
+    if(currentRoom._ui.isMobileDevice()==true){
         $(".partOfProductTabButtons").show();
         setPanelToggleStatus('.serach-pad-set', '#searchIconToggle');
         setPanelToggleStatus('.filterContentPanel', '#sliderIconToggle');
