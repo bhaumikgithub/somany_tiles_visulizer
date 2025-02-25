@@ -182,8 +182,8 @@ function isCanvasFullscreen() {
 $(window).on('load', function () {
 
     if (isCanvasFullscreen()) {
-        $(".cmn-room-btn").css('visibility', 'visible');
-        $(".share-div").css('visibility', 'visible');
+        $(".cmn-room-btn").css('visibility', 'hidden');
+        $(".share-div").css('visibility', 'hidden');
 
         AdjustCanvasWidthHeight();
     }
