@@ -166,7 +166,8 @@ class AddToPdfRoomsController extends Controller
                 'finish' => $tile->finish,
                 'file' => $tile->file,
                 'price' => $tile->price,
-                'icon' => $tile->icon, // Access the appended 'icon' attribute
+                'icon' => $tile->icon, // Access the appended 'icon' attribute,
+                'free_tile' => $selectedTile['isFreeTile']
             ];
         });
 

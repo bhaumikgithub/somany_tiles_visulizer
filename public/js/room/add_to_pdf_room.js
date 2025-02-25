@@ -7,8 +7,6 @@ function addToPDF(){
     let thumbnailData = generateAndDownloadThumbnail();
     let currentDesign = canvasImage();
 
-    console.log(selected_tiles_ids);
-    return false;
     if( selected_tiles_ids.length === 0 ) {
         alert("Please select any tiles first");
     } else { // Show the loading message
@@ -110,11 +108,18 @@ let ids = [];
 
 function getTileId(id) {
     let surface_title = $('#slected-panel .display_surface_name h5#optionText').text(); // Get surface type
-    let current_room_type = $('#current_room_type').val();
-    const excludedRoomTypes = ["kitchen", "bedroom", "prayer-room", "commercial", "livingroom", "bathroom", "outdoor"];
+    // let current_room_type = $('#current_room_type').val();
+    // const excludedRoomTypes = ["kitchen", "bedroom", "prayer-room", "commercial", "livingroom", "bathroom", "outdoor"];
 
     // Retrieve and parse the existing array from the hidden field
     let ids = JSON.parse($('#selected_tile_ids').val() || '[]');
+
+    // if (!excludedRoomTypes.includes(current_room_type)) {
+    //     // Filter out any existing entries with the same surfaceTitle
+    //     ids = [];
+    // } else {
+    //     ids = ids.filter(tile => tile.surfaceTitle !== surface_title);
+    // }
 
     // Get the selected tile ID from the clicked <li>
     let selectedTileId = $('li#' + id).data('tile');
@@ -122,17 +127,23 @@ function getTileId(id) {
     // Check if the free tile checkbox is checked
     let isFreeTileEnabled = $('#free_tile_checkbox_value').val() === "on";
 
-    if (isFreeTileEnabled) {
-        // If free tile checkbox is checked, add a new entry as a free tile
-        ids.push({
-            tileId: selectedTileId,
-            surfaceTitle: surface_title,
-            isFreeTile: true
-        });
-    } else {
-        // If free tile is NOT checked, add as a regular tile
-        let existingRegularTile = ids.find(tile => tile.surfaceTitle === surface_title && !tile.isFreeTile);
+    // Track whether a free tile was added
+    let freeTileAdded = false;
 
+    if (isFreeTileEnabled) {
+        // If free tile checkbox is checked, ensure only one free tile per surface
+        let existingFreeTile = ids.find(tile => tile.surfaceTitle === surface_title && tile.isFreeTile);
+        if (!existingFreeTile) {
+            ids.push({
+                tileId: selectedTileId,
+                surfaceTitle: surface_title,
+                isFreeTile: true
+            });
+            freeTileAdded = true; // Mark that we added a free tile
+        }
+    } else {
+        // If free tile checkbox is NOT checked, add as a regular tile
+        let existingRegularTile = ids.find(tile => tile.surfaceTitle === surface_title && !tile.isFreeTile);
         if (!existingRegularTile) {
             ids.push({
                 tileId: selectedTileId,
@@ -144,11 +155,12 @@ function getTileId(id) {
 
     // Store the updated array in the hidden field
     $('#selected_tile_ids').val(JSON.stringify(ids));
+
+    // If a free tile was added, reset the checkbox value to "off"
+    if (freeTileAdded) {
+        $('#free_tile_checkbox_value').val("off");
+    }
 }
-
-
-
-
 
 function removeProductFromCart(id) {
     let totalProductCount = $('.productCount').text();

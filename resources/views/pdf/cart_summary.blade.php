@@ -53,6 +53,9 @@
                                     @else
                                         {{ucfirst($tile_detail->surface)}}
                                     @endif
+                                    @if( isset($tile_detail->free_tile ) && $tile_detail->free_tile === true )
+                                        ( Free Tile )
+                                    @endif
                                 </h5>
                                 <div class="details-card" id="{{$index . '_' . $loop->index}}">
                                     <div class="row">
