@@ -415,7 +415,7 @@ body {
 
 .total-product-title {
     color: #3F3F46 !important;
-    font-size: 18px;
+    font-size: 16px;
     padding-left: 10px;
     margin-bottom: 10px;
     font-weight: bold;
@@ -441,7 +441,7 @@ body {
 .tile-list-thumbnail-image-holder-product img {
     max-width: max-content !important;
     max-height: max-content !important;
-    border-radius: 20px;
+    border-radius: 10px;
 }
 
 .top-panel-content-tiles-list-item-product:hover {
@@ -505,14 +505,14 @@ body {
 
 .top-panel-content-tiles-list-item-product .tile-list-text {
     color: #3F3F46;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     padding: 0px 20px;
 }
 
 
 .top-panel-content-tiles-list-item-product .cart-summary-link {
-    font-size: 14px;
+    font-size: 10px;
     color: #3F3F46;
     text-decoration: underline;
     margin-top: 10px;
