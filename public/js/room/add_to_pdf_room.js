@@ -124,6 +124,7 @@ function getTileId(id){
     $('#selected_tile_ids').val(JSON.stringify(ids));
 
 }
+
 function removeProductFromCart(id) {
     let totalProductCount = $('.productCount').text();
     window.$.ajax({
@@ -263,6 +264,7 @@ $(function(){
 
     });
 });
+
 $(function(){
     $('.mobile_hover_2').on("click", function () {
         $('.mobile_hover_1').removeClass('mobile_first_width');
@@ -510,6 +512,7 @@ function calculateBoxCoverageArea(){
         }
     }
 }
+
 function findDataFromTable(p_row,p_col,p_value){
     var rows = $(".summary-page-table").find("tr");
     var row = $(rows).eq(p_row);
