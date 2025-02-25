@@ -140,8 +140,10 @@ class AjaxController extends Controller
     public function getSavedRoomByUrl($url) {
         $savedroom = Savedroom::where('url', $url)->first();
         $room = Room2d::where('id', $savedroom->roomid)->first();
-        $savedroom->name = $room->name;
-        $savedroom->type = $room->type;
+        if( $room != null ) {
+            $savedroom->name = $room->name;
+            $savedroom->type = $room->type;
+        }
         return response()->json($savedroom);
     }
 
