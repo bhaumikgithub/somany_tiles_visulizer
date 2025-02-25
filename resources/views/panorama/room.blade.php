@@ -18,6 +18,8 @@
                     <i class="fa-regular fa-share-from-square"></i><span class="btn-text-set">Share </span>
                 </a>
             @endif
+            <button id = "btnDialogSaveSceneAsPanorama" class="share-link d-flex flex-wrap align-items-center"><i
+            class="fa-solid fa-panorama"></i> <span class="btn-text-set">Bake Panorama </span></button>
             <button class="share-link d-flex flex-wrap align-items-center"onclick="downloadImage();"><i
                         class="fa-solid fa-download"></i> <span class="btn-text-set">Download </span></button>
             <button class="share-link d-flex flex-wrap align-items-center" onclick="addToPDF();"><i
