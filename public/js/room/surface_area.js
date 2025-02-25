@@ -48,6 +48,20 @@ window.onload = function getRoomSurface() {
 
 function openTileSelectionPanel(surface_name) {
 
+
+    /////////added by vikesha////////////////////////////
+    let firstWord = surface_name.split('_')[0];
+    // Hide or show .top-panel-search based on the first word
+    var isCounterOrPaint = firstWord === "counter" || firstWord === "paint";
+    $('.top-panel-search').toggle(!isCounterOrPaint);
+    $('.partOfProductTabContent-wrap').toggle(!isCounterOrPaint);
+    
+
+    // Hide or show #btnGrout based on the first word
+    $('#btnGrout').toggle(firstWord !== "counter");
+  
+    /////////code end////////////////////////
+  
     let oldSurfaceName = surface_name;
     setCurrentListID(surface_name);//List_wall_a
 
@@ -73,7 +87,7 @@ function openTileSelectionPanel(surface_name) {
         $(".serch-box-wrap").show();
         $(".top-panel-box-first").show();
     }
-
+   
     if(isThisMobileDevice()==true){
         if (String(surface_name).indexOf("Paint") > -1 || String(surface_name).indexOf("Theme") > -1) {
             $(".title-area").show();
@@ -204,8 +218,9 @@ function themeBtnPressed(p_id, p_imageLoadByPass) {
     $("#theme_thumb_" + p_id).addClass("active_theme");
     //list_theme
     clickedTiles(themeData[p_id], "theme");
-
-
+    //added by vikesha (serchbox and grout check)
+    showHideTabs();
+    
 }
 function clickedTiles(p_tile, p_surfaceName) {
     let textForMainPanel = "";
@@ -233,6 +248,7 @@ function clickedTiles(p_tile, p_surfaceName) {
 
     $(detailDiv).html(textForMainPanel);
     $(imageDiv).attr("src", thumbImage);
+
 
 
 }
