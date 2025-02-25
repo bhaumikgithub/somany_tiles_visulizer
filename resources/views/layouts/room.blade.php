@@ -50,7 +50,7 @@
 
     @include('common.roomsList')
 
-    @include('common.modalDialogs')
+{{--    @include('common.modalDialogs')--}}
 
 
     @yield('content')
