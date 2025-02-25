@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\CartItem;
 use App\Models\Showroom;
+use App\Room2d;
 use App\Tile;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
@@ -133,7 +134,10 @@ class Helper
         if ($tile) {
             return [
                 'tile_name' => $tile->name,
-                'surface' => $tile->surface ?? 'Unknown Surface' // Assuming `surface` is a column in the Tile table
+                'surface' => $tile->surface ?? 'Unknown Surface', // Assuming `surface` is a column in the Tile table
+                'photo' => $tile->icon,
+                'size' => $tile->size,
+                'finish' => $tile->finish
             ];
         }
 
@@ -141,5 +145,11 @@ class Helper
             'tile_name' => 'Unknown Tile',
             'surface' => 'Unknown Surface'
         ];
+    }
+
+    public static function getRoomCatgory($room_id): string
+    {
+        $room = Room2d::find($room_id);
+        return ucwords($room->type);
     }
 }

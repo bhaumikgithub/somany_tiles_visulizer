@@ -250,7 +250,9 @@ Route::group(['middleware' => 'role:administrator'], function () {
 
     //Dashboard controller
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/analytics/details/{type}', [DashboardController::class, 'showDetails'])->name('analytics.details');
     Route::post('/get_analytics_data',[DashboardController::class, 'getAnalyticsResult'])->name('getAnalyticsResult');
+
 });
 
 

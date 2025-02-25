@@ -27,7 +27,7 @@ class ActivityLogController extends Controller
             'room_name' => $request->room
         ];
 
-        $user = "gurst";
+        $user = "guest";
 
         //Check if user has logged in backend or not
         if (auth()->check()) {
