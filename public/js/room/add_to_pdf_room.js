@@ -1,5 +1,5 @@
 function addToPDF(){
-    'ue strict';
+    'use strict';
     let current_room_id = $('#current_room_id').val();
     let current_room_name = $('#current_room_name').val();
     let current_room_type = $("#current_room_type").val();
@@ -7,9 +7,11 @@ function addToPDF(){
     let thumbnailData = generateAndDownloadThumbnail();
     let currentDesign = canvasImage();
 
-    if( selected_tiles_ids.length == 0 ) {
+    if( selected_tiles_ids.length === 0 ) {
         alert("Please select any tiles first");
-    } else {
+    } else { // Show the loading message
+        // Show the loading message
+        $('#loadingMessage').show();
         window.$.ajax({
             url: '/add-to-pdf-data-store', // Laravel route URL
             method: 'POST',
@@ -25,6 +27,9 @@ function addToPDF(){
                 },
             },
             success: function (response) {
+                // Hide the loading message
+                $('#loadingMessage').remove();
+
                 $('#dialogSaveModalBox').modal('hide');
                 $('.product_title').text('Selected Rooms');
                 $('.braces').css('display','inline');
@@ -49,6 +54,8 @@ function addToPDF(){
                 //$('.continue-modal a#cart_url').attr('href', response.url);
             },
             error: function (xhr, status, error) {
+                // Hide the loading message on error
+                $('#loadingMessage').remove();
                 alert('Failed to stored!');
                 console.error(error);
             },
