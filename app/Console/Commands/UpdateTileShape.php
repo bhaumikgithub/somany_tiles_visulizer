@@ -26,16 +26,20 @@ class UpdateTileShape extends Command
      */
     public function handle(): void
     {
-        $tiles = DB::table('tiles')->get();
-        foreach ($tiles as $tile) {
-            $shape = ($tile->width == $tile->height) ? 'square' : 'rectangle';
+        // Update tiles where width = height to 'square'
+        $squareCount = DB::table('tiles')
+            ->whereColumn('width', '=', 'height')
+            ->where('shape', '!=', 'square') // Avoid unnecessary updates
+            ->update(['shape' => 'square']);
 
-            if ($tile->shape !== $shape) { // Update only if different
-                DB::table('tiles')->update(['shape' => $shape]);
-                //$this->info("Updated Tile ID {$tile->id} to {$shape}");
-            }
-        }
+        // Update tiles where width != height to 'rectangle'
+        $rectangleCount = DB::table('tiles')
+            ->whereColumn('width', '!=', 'height')
+            ->where('shape', '!=', 'rectangle') // Avoid unnecessary updates
+            ->update(['shape' => 'rectangle']);
 
-        $this->info('Tile shapes updated successfully.');
+        // Output results
+        $this->info("Updated $squareCount tiles to 'square'");
+        $this->info("Updated $rectangleCount tiles to 'rectangle'");
     }
 }
