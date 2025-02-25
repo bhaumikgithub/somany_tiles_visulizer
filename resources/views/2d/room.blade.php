@@ -54,6 +54,7 @@
         <input type="hidden" value="{{ @$room_type }}" id="current_room_type">
         <input type="hidden" value="" id="selected_tile_ids">
         <input type="hidden" value="{{ session()->getId() }}" id="currentSessionId">
+        <input type="hidden" value="" id="free_tile_checkbox_value">
 
         @if (config('view.visualizer_layout') != 'iorena.')
             @include('common.' . config('app.bottom_menu') . 'bottomMenu2d')

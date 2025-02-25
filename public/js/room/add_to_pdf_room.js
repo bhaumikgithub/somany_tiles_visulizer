@@ -7,6 +7,8 @@ function addToPDF(){
     let thumbnailData = generateAndDownloadThumbnail();
     let currentDesign = canvasImage();
 
+    console.log(selected_tiles_ids);
+    return false;
     if( selected_tiles_ids.length === 0 ) {
         alert("Please select any tiles first");
     } else { // Show the loading message
@@ -87,7 +89,6 @@ function generateAndDownloadThumbnail(){
     return thumbnailCanvas.toDataURL('image/jpeg');
 }
 
-
 function canvasImage() {
     let canvas;
     if( pathSegments1[1] === "room2d") {
@@ -106,31 +107,48 @@ function canvasImage() {
 
 // Initialize an empty array
 let ids = [];
-function getTileId(id){
-    let surface_title = $('#slected-panel .display_surface_name h5#optionText').text();
+
+function getTileId(id) {
+    let surface_title = $('#slected-panel .display_surface_name h5#optionText').text(); // Get surface type
     let current_room_type = $('#current_room_type').val();
-    const excludedRoomTypes = ["kitchen", "bedroom", "prayer-room", "commercial",'livingroom','bathroom','outdoor'];
+    const excludedRoomTypes = ["kitchen", "bedroom", "prayer-room", "commercial", "livingroom", "bathroom", "outdoor"];
 
     // Retrieve and parse the existing array from the hidden field
     let ids = JSON.parse($('#selected_tile_ids').val() || '[]');
 
-    if (!excludedRoomTypes.includes(current_room_type)) {
-        // Filter out any existing entries with the same surfaceTitle
-        ids = [];
-    } else {
-        ids = ids.filter(tile => tile.surfaceTitle !== surface_title);
-    }
+    // Get the selected tile ID from the clicked <li>
+    let selectedTileId = $('li#' + id).data('tile');
 
-    // Add the new object to the array
-    ids.push({
-        tileId: $('li#' + id).data('tile'),
-        surfaceTitle: surface_title
-    });
+    // Check if the free tile checkbox is checked
+    let isFreeTileEnabled = $('#free_tile_checkbox_value').val() === "on";
+
+    if (isFreeTileEnabled) {
+        // If free tile checkbox is checked, add a new entry as a free tile
+        ids.push({
+            tileId: selectedTileId,
+            surfaceTitle: surface_title,
+            isFreeTile: true
+        });
+    } else {
+        // If free tile is NOT checked, add as a regular tile
+        let existingRegularTile = ids.find(tile => tile.surfaceTitle === surface_title && !tile.isFreeTile);
+
+        if (!existingRegularTile) {
+            ids.push({
+                tileId: selectedTileId,
+                surfaceTitle: surface_title,
+                isFreeTile: false
+            });
+        }
+    }
 
     // Store the updated array in the hidden field
     $('#selected_tile_ids').val(JSON.stringify(ids));
-
 }
+
+
+
+
 
 function removeProductFromCart(id) {
     let totalProductCount = $('.productCount').text();
@@ -666,13 +684,13 @@ function downloadImage() {
 
 
 
-    var imageCanvasContext = imageCanvas.getContext('2d');
+    let imageCanvasContext = imageCanvas.getContext('2d');
 
     imageCanvasContext.drawImage(canvas, 0, 0, canvas.width, canvas.height);
 
 
 
-    var companyLogo = document.getElementById('companyLogo');
+    let companyLogo = document.getElementById('companyLogo');
 
     imageCanvasContext.drawImage(companyLogo, 20, 20, companyLogo.clientWidth, companyLogo.clientHeight);
 
@@ -710,9 +728,7 @@ function downloadImage() {
 
 }
 
-var JPEG = 'image/jpeg';
-
-
+let JPEG = 'image/jpeg';
 
 function changeDpiOnArray(dataArray, dpi, format) {
 
@@ -733,8 +749,6 @@ function changeDpiOnArray(dataArray, dpi, format) {
     }
 
 }
-
-
 
 function changeDpiDataUrl(base64Image, dpi) {
 
@@ -782,34 +796,47 @@ function changeDpiDataUrl(base64Image, dpi) {
 
 }
 
-$('input[type="checkbox"]').change(function() {
-    const $checkbox = $(this);
-    const itemId = $checkbox.data('cart-item-id');
-    const $imageWrapper = $('#imageWrapper_' + itemId);
-    const isChecked = $checkbox.is(':checked');
-    const showImage = isChecked ? 'yes' : 'no';
+if( $('.pdf-summary-container').length > 0 ) {
+    $('input[type="checkbox"]').change(function () {
+        const $checkbox = $(this);
+        const itemId = $checkbox.data('cart-item-id');
+        const $imageWrapper = $('#imageWrapper_' + itemId);
+        const isChecked = $checkbox.is(':checked');
+        const showImage = isChecked ? 'yes' : 'no';
 
-    $imageWrapper.toggle(isChecked);
-    $checkbox.val(showImage);
+        $imageWrapper.toggle(isChecked);
+        $checkbox.val(showImage);
 
-    // You can call updatePreference here if needed
-    updatePreference(isChecked, itemId);
-});
+        // You can call updatePreference here if needed
+        updatePreference(isChecked, itemId);
+    });
 
-function updatePreference(showImage,cart_item_id) {
-    $.ajax({
-        url: '/update-preference', // URL to the controller method for updating the price
-        method: 'POST',
-        data: {
-            _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
-            show_image: ( showImage === false ) ? "no" : "yes",
-            cart_item_id: cart_item_id,
-        },
-        success: function(response) {
-            console.log('Preference updated successfully');
-        },
-        error: function(error) {
-            console.error('Error updating preference:', error);
+    function updatePreference(showImage, cart_item_id) {
+        $.ajax({
+            url: '/update-preference', // URL to the controller method for updating the price
+            method: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token for security
+                show_image: (showImage === false) ? "no" : "yes",
+                cart_item_id: cart_item_id,
+            },
+            success: function (response) {
+                console.log('Preference updated successfully');
+            },
+            error: function (error) {
+                console.error('Error updating preference:', error);
+            }
+        });
+    }
+} else {
+    $('input[type="checkbox"]').change(function () {
+        const $checkbox = $(this);
+        if( $checkbox.attr('id') == "topPanelCheckFreeDesign"){
+            if( $checkbox.prop('checked') === true){
+                $('#free_tile_checkbox_value').val($checkbox.val());
+            } else {
+                $('#free_tile_checkbox_value').val("off");
+            }
         }
     });
 }
