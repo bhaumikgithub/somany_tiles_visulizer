@@ -10,3 +10,15 @@
     margin-bottom: 13px;
     margin-top: 13px;
 }
+
+#loadingMessage{
+    position: fixed;
+    background: #fff;
+    border: 2px solid #ce1f22;
+    border-radius: 12px;
+    left: calc(50% - 54px);
+    padding: 10px;
+    text-align: center;
+    top: calc(50% - 34px);
+    z-index: 9999;
+}

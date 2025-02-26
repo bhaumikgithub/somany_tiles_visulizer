@@ -18,6 +18,8 @@
                     <i class="fa-regular fa-share-from-square"></i><span class="btn-text-set">Share </span>
                 </a>
             @endif
+            <button id="btnDialogSaveSceneAsPanorama" class="share-link d-flex flex-wrap align-items-center"><i
+            class="fa-solid fa-panorama"></i> <span class="btn-text-set">Bake Panorama </span></button>
             <button class="share-link d-flex flex-wrap align-items-center"onclick="downloadImage();"><i
                         class="fa-solid fa-download"></i> <span class="btn-text-set">Download </span></button>
             <button class="share-link d-flex flex-wrap align-items-center" onclick="addToPDF();"><i
@@ -26,11 +28,8 @@
                         class="fa-solid fa-xmark"></i></button>
         </div>
 
-
-        <!-- <a href="{{ url('listing/' . @$room_type) }}" class="cmn-room-btn back-btn d-flex flex-wrap align-items-center"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
-                                </span> <span class="btn-text-set">Back </span> </a> -->
         <div class=" cmn-room-btn cmn-room-back-btn back-btn">
-            <a href="{{ url('/') }}"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
+            <a href="{{ url('panorama-listing/' . @$room_type) }}"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
                 </span></a>
             <p class="btn-text-set-back">Back </p>
         </div>
@@ -45,6 +44,7 @@
 <input type="hidden" value="{{@$room_type}}" id="current_room_type">
 <input type="hidden" value="" id="selected_tile_ids">
 <input type="hidden" value="{{ session()->getId() }}" id="currentSessionId">
+<input type="hidden" value="" id="free_tile_checkbox_value">
 
 
 @include('common.topPanelCeilingColor')
@@ -116,6 +116,28 @@
                 </div>
 
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialogSavedRoomUrl" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Room successfully saved</h3>
+            </div>
+            <div class="modal-body">
+                <h4 >Url to your room</h4>
+                <input type="text" id="dialogSavedRoomUrlInput" value="/room3d" class="form-control" onclick="window.$(this).select();" readonly>
+                <div class="text-right">
+                    <button id="bookmarkSavedRoomLink" type="button" class="btn btn-default">Bookmark link</button>
+                    <a id="savedRoomGoToUrl" href="#" class="btn btn-default" role="button" style="display: none">Go to your room</a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@lang('Close')</button>
             </div>
         </div>
     </div>

@@ -50,7 +50,7 @@
 
     @include('common.roomsList')
 
-    @include('common.modalDialogs')
+{{--    @include('common.modalDialogs')--}}
 
 
     @yield('content')
@@ -65,6 +65,8 @@
     @include('common.addToCartInfoPanel')
 
     @include('common.applyingTilesAnimation')
+
+    @include('common.addingToPdf')
 
     @if (config('app.tiles_designer'))
         @include('2d.tilesDesigner')

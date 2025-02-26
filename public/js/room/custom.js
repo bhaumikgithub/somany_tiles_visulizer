@@ -123,7 +123,6 @@ function AdjustCanvasWidthHeight() {
         $(".share-div").css("right", "18px");
     }
     else {
-
         $(".back-btn").css({ left: newLeft });
         $(".cn-btn").css({ right: newRight });
         $(".share-btn-img").css({ right: newRight + 21 });
@@ -137,6 +136,7 @@ function AdjustCanvasWidthHeight() {
     else{
         $('.share-btn-img').hide();
         $('.share-div').show();
+        $(".share-btn-img").css({right:70});
     }
 
     showHideTabs();
@@ -189,8 +189,8 @@ function isCanvasFullscreen() {
 $(window).on('load', function () {
 
     if (isCanvasFullscreen()) {
-        $(".cmn-room-btn").css('visibility', 'visible');
-        $(".share-div").css('visibility', 'visible');
+        $(".cmn-room-btn").css('visibility', 'hidden');
+        $(".share-div").css('visibility', 'hidden');
 
         AdjustCanvasWidthHeight();
     }
@@ -212,10 +212,6 @@ $(window).on('load', function () {
                 $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
                 $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 21);
                 $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight + 21);
-
-
-
-
             }, 19);
         }
     }, 500);
@@ -305,12 +301,48 @@ function setTopPanelClosedPosition(p_animation_required,) {
 // });
 $('#topPanelmainpanel').on('click', function () {
     hideTopPanelMainPanel();
+    if (!isMobilePortrait()) {
+        $('#topPanel').show();
+        $('#topPanel').animate({ right: '0px' }); // Move the panel to the right
+        $('#topPanelHideIcon').addClass('glyphicon-menu-right');
+    }
 });
 
 function hideTopPanelMainPanel() {
     $('#topPanel').show(); // Toggle visibility of the topPanel
     $('#topPanelmainpanel').hide();
 }
+
+function isMobilePortrait() {
+    // Check for mobile screens (width <= 768px) and portrait mode (height > width)
+    return (window.innerWidth <= 991 && window.innerHeight > window.innerWidth);
+}
+$('#topPanelHideBtn').on('click', function (e) {
+    e.stopPropagation(); // Prevent the click event from bubbling up to the parent
+    var panelWidth = $('#topPanel').outerWidth();
+
+    if (!isMobilePortrait()) {
+
+        // Check if the panel is currently visible by comparing the 'right' position
+        if ($('#topPanel').css('right') === '0px') {
+            // If the panel is visible, slide it out
+            $('#topPanel').stop(true, true).animate({right: -panelWidth + 'px'}, 500, function () {
+                // After the animation is done, change the icon
+                $('#topPanelHideIcon').removeClass('glyphicon-menu-right').addClass('glyphicon-menu-left');
+                $('#topPanel').stop(true, true).animate({right: -panelWidth + 'px'});
+            });
+        } else {
+            // If the panel is hidden, slide it back in
+
+            $('#topPanel').stop(true, true).animate({right: '0px'}, 500, function () {
+                // After the animation is done, change the icon
+                $('#topPanelHideIcon').removeClass('glyphicon-menu-left').addClass('glyphicon-menu-right');
+                $('#topPanel').stop(true, true).animate({right: '0px'});
+            });
+        }
+    }
+});
+
 
 
 
@@ -679,5 +711,11 @@ $('#roomCanvas').on('click', function () {
         $('.serach-pad-set').hide();  // Hide the search panel
     } else {
         $('.serach-pad-set').show();  // Show the search panel
+    }
+    if (firstTwoWords.toLowerCase() === "change counter"){
+        $('#btnGrout').hide();
+    }
+    else{
+        $('#btnGrout').show();
     }
 });

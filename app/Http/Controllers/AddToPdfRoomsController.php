@@ -166,7 +166,8 @@ class AddToPdfRoomsController extends Controller
                 'finish' => $tile->finish,
                 'file' => $tile->file,
                 'price' => $tile->price,
-                'icon' => $tile->icon, // Access the appended 'icon' attribute
+                'icon' => $tile->icon, // Access the appended 'icon' attribute,
+                'free_tile' => $selectedTile['isFreeTile']
             ];
         });
 
@@ -651,8 +652,11 @@ class AddToPdfRoomsController extends Controller
     public function checkSelectionHasData(Request $request): JsonResponse
     {
         $cart = Cart::where('user_id',$request->input('session_id'))->get();
+        $cartItems = CartItem::where('cart_id', $cart[0]->id)->count();
         if( $cart->count() === 0 ){
             return response()->json(['success' => false, 'message' => 'No selection in Cart Found.','count'=>$cart->count()]);
+        } else if( $cart->count() > 0 && $cartItems === 0 ){
+            return response()->json(['success' => false, 'message' => 'No selection in Cart Found.','count'=>$cartItems]);
         } else {
             return response()->json(['success' => true,'message' => 'selection in Cart.','count'=>$cart->count()]);
         }
