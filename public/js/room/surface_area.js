@@ -55,13 +55,13 @@ function openTileSelectionPanel(surface_name) {
     var isCounterOrPaint = firstWord === "counter" || firstWord === "paint";
     $('.top-panel-search').toggle(!isCounterOrPaint);
     $('.partOfProductTabContent-wrap').toggle(!isCounterOrPaint);
-    
+
 
     // Hide or show #btnGrout based on the first word
     $('#btnGrout').toggle(firstWord !== "counter");
-  
+
     /////////code end////////////////////////
-  
+
     let oldSurfaceName = surface_name;
     setCurrentListID(surface_name);//List_wall_a
 
@@ -87,7 +87,7 @@ function openTileSelectionPanel(surface_name) {
         $(".serch-box-wrap").show();
         $(".top-panel-box-first").show();
     }
-   
+
     if(isThisMobileDevice()==true){
         if (String(surface_name).indexOf("Paint") > -1 || String(surface_name).indexOf("Theme") > -1) {
             $(".title-area").show();
@@ -183,22 +183,28 @@ function addThemeData(p_obj) {
         themeData.push(p_obj)
 }
 function showMainInfoPanel(p_type, surface_name) {
+    console.log("SHOW MAIN INFO TYPE = " + p_type + " SURFACE = " + surface_name);
     allRightPanelContentHide();
 
     if (p_type == "MAINLISTING_HIDE") {
+        console.log("MAINLISTING HIDE");
         //  $('#selectd-data').hide(); //wall A, b , c hide
         $(wallFloorThemeContentParent).show();
 
 
         if (surface_name == "theme") {
+            console.log("IN surface_name THEME");
             $(themeContent).show();
         }
         else {
+            console.log("IN surface_name NOT THEME");
             hideOpenFilters();
             $(wallFloorContent).show();
         }
     }
+
     if (p_type == "MAINLISTING_SHOW") {
+        console.log("IN MAINLISTING_SHOW");
         $(wallAwallBwallCListing).show();
     }
 }
@@ -220,7 +226,7 @@ function themeBtnPressed(p_id, p_imageLoadByPass) {
     clickedTiles(themeData[p_id], "theme");
     //added by vikesha (serchbox and grout check)
     showHideTabs();
-    
+
 }
 function clickedTiles(p_tile, p_surfaceName) {
     let textForMainPanel = "";
