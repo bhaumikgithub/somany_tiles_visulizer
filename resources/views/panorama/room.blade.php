@@ -44,6 +44,7 @@
 <input type="hidden" value="{{@$room_type}}" id="current_room_type">
 <input type="hidden" value="" id="selected_tile_ids">
 <input type="hidden" value="{{ session()->getId() }}" id="currentSessionId">
+<input type="hidden" value="" id="free_tile_checkbox_value">
 
 
 @include('common.topPanelCeilingColor')
