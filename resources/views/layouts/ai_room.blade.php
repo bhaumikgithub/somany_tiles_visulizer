@@ -18,6 +18,7 @@
     <script src="/js/app.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
 
-    <script src="/js/room/2d.min.js"></script>
+    <script src="/js/roomAI/2d_room_ai.min.js"></script>
+    <script src="/js/roomAI/custom.js"></script>
 
 </body>

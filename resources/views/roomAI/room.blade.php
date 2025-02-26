@@ -8,6 +8,6 @@
             <span id="mainpage-panel-btn" class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
         </div>
 
-        <script src="/js/room/three.min.js"></script>
+        <script src="/js/roomAI/three.min.js"></script>
 
 @endsection
