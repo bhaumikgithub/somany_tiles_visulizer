@@ -89,7 +89,6 @@ trait ApiHelper
      */
     protected function prepareTileData(array $product, $creation_time , $imageFileName): ?array
     {
-
         // Track missing fields
         $missingFields = [];
 
@@ -117,19 +116,11 @@ trait ApiHelper
         $surface = strtolower($product['surface']);
 
         //Prepare an array but remove null values
-        $expPropsArray = array_filter([
-            'thickness' => $product['thickness'] ?? null,
-            'product code' => $this->mapFinishType($product['design_finish']) ?? null,
-            'colour' => $product['color'] ?? null,
-            'category' => $this->mapCategoryType(strtolower($product['brand_name'])) ?? null,
-            'innovation' => $product['innovation'] ?? null,
-        ], function ($value) {
-            return $value !== null; //Remove keys with null values
-        });
+        $expPropsArray = $this->extraProps($product);
 
         return [
             'name' => $product['product_name'] ?? null,
-            'shape' => $product['shape'] ?? 'square',
+            'shape' => $this->getShapeFromWidthHeight($product['size_wt'],$product['size_ht']),
             'width' => intval($product['size_wt']) ?? 0,
             'height' => intval($product['size_ht']) ?? 0,
             'size' => $product['size'] ?? null,
@@ -171,7 +162,37 @@ trait ApiHelper
         ];
     }
 
+    /**
+     * @param $width
+     * @param $height
+     * @return string
+     */
+    private function getShapeFromWidthHeight($width, $height): string
+    {
+        return ( $width === $height ) ? "square" : "rectangle";
+    }
 
+    /**
+     * @param $product
+     * @return mixed
+     */
+    private function extraProps($product): mixed
+    {
+        return array_filter([
+            'thickness' => $product['thickness'] ?? null,
+            'product code' => $this->mapFinishType($product['design_finish']) ?? null,
+            'colour' => $product['color'] ?? null,
+            'category' => $this->mapCategoryType(strtolower($product['brand_name'])) ?? null,
+            'innovation' => $product['innovation'] ?? null,
+        ], function ($value) {
+            return $value !== null; //Remove keys with null values
+        });
+    }
+
+    /**
+     * @param $designFinish
+     * @return string
+     */
     private function mapFinishType($designFinish): string
     {
         $mapping = [
