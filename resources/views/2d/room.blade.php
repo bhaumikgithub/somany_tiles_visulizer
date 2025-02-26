@@ -25,10 +25,6 @@
             <button class="share-link d-flex flex-wrap align-items-center share-btn-close"><i
                         class="fa-solid fa-xmark"></i></button>
         </div>
-
-
-        <!-- <a href="{{ url('listing/' . @$room_type) }}" class="cmn-room-btn back-btn d-flex flex-wrap align-items-center"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
-                                </span> <span class="btn-text-set">Back </span> </a> -->
         <div class=" cmn-room-btn cmn-room-back-btn back-btn">
             <a href="{{ url('/') }}"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
                 </span></a>
@@ -39,15 +35,6 @@
                 </span></button>
             <p class="btn-text-set-back">Continue </p>
         </div>
-
-        <!-- <button class="cmn-room-btn cn-btn d-flex flex-wrap align-items-center" >
-                                    <span class="span-icon">
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                    </span>
-                                    <span class="btn-text-set">Continue </span>
-                                </button> -->
-
-
 
         <input type="hidden" value="{{ @$roomId }}" id="current_room_id">
         <input type="hidden" value="{{ @$room_name }}" id="current_room_name">

@@ -99,16 +99,14 @@ if ($engine_panorama_enabled) {
     Route::get('/get/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@getRoom');
     Route::post('/get_room_surface_panorama','App\Http\Controllers\ControllerPanorama@getRoomSurfacePanorama');
 }
-
 if ($engine_roomai_enabled) {
     Route::middleware(['check.pincode'])->group(function () {
-        Route::get('/room_ai', 'App\Http\Controllers\ControllerRoomAI@index');
-//        Route::get('/listing/{roomType}', 'App\Http\Controllers\ControllerRoomAI@roomListing');
-//        Route::get('/room_ai/{id}', 'App\Http\Controllers\ControllerRoomAI@room');
-//        Route::get('/get/room_ai/{id}', 'App\Http\Controllers\ControllerRoomAI@getRoom');
+        Route::get('/room_ai', 'App\Http\Controllers\ControllerRoomAI@index')->name('room_ai.index');
+        // Handle file upload via AJAX
+        Route::post('/uploadRoom', 'App\Http\Controllers\ControllerRoomAI@store')->name('room_ai.upload');
     });
-//    Route::get('/get/room_ai/{id}', 'App\Http\Controllers\ControllerRoomAI@getRoom');
-//    Route::post('/get_room_surface','App\Http\Controllers\ControllerRoomAI@getRoomSurface');
+    // Redirect to room page after upload
+    Route::get('/ai_room/{id}', 'App\Http\Controllers\ControllerRoomAI@getRoom')->name('room_ai.room');
 }
 
 
