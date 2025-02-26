@@ -29,6 +29,7 @@ View::composer('*', function($view){
 $engine_2d_enabled = config('app.engine_2d_enabled');
 $engine_3d_enabled = config('app.engine_3d_enabled');
 $engine_panorama_enabled = config('app.engine_panorama_enabled');
+$engine_roomai_enabled = config('app.engine_roomai_enabled');
 
 if ($engine_3d_enabled) {
     Route::get('/', function () { return redirect('/room3d'); });
@@ -36,6 +37,8 @@ if ($engine_3d_enabled) {
     Route::get('/', function () { return redirect('/room2d'); });
 } elseif ($engine_panorama_enabled) {
     Route::get('/', function () { return redirect('/panorama'); });
+} elseif ($engine_roomai_enabled) {
+    Route::get('/', function () { return redirect('/roomai'); });
 }
 
 Route::get('/home', 'App\Http\Controllers\HomeController@index');
@@ -96,6 +99,18 @@ if ($engine_panorama_enabled) {
     Route::get('/get/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@getRoom');
     Route::post('/get_room_surface_panorama','App\Http\Controllers\ControllerPanorama@getRoomSurfacePanorama');
 }
+
+if ($engine_roomai_enabled) {
+    Route::middleware(['check.pincode'])->group(function () {
+        Route::get('/room_ai', 'App\Http\Controllers\ControllerRoomAI@index');
+//        Route::get('/listing/{roomType}', 'App\Http\Controllers\ControllerRoomAI@roomListing');
+//        Route::get('/room_ai/{id}', 'App\Http\Controllers\ControllerRoomAI@room');
+//        Route::get('/get/room_ai/{id}', 'App\Http\Controllers\ControllerRoomAI@getRoom');
+    });
+//    Route::get('/get/room_ai/{id}', 'App\Http\Controllers\ControllerRoomAI@getRoom');
+//    Route::post('/get_room_surface','App\Http\Controllers\ControllerRoomAI@getRoomSurface');
+}
+
 
 if ($engine_3d_enabled) {
     Route::get('/room3d', 'App\Http\Controllers\Controller3d@roomDefault');

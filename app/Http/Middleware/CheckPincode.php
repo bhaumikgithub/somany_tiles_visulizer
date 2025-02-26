@@ -19,6 +19,7 @@ class CheckPincode
     {
         $engine_2d_enabled = config('app.engine_2d_enabled');
         $engine_panorama_enabled = config('app.engine_panorama_enabled');
+        $engine_roomai_enabled = config('app.engine_roomai_enabled');
 
         Log::info('Redirect check - Current Path: ' . $request->path());
         Log::info('Pincode session: ' . (session()->has('pincode') ? 'Present' : 'Not Present'));
@@ -38,9 +39,14 @@ class CheckPincode
                 $redirectPath = '/panorama';
             } elseif (str_contains($request->path(), 'room2d') && $engine_2d_enabled) {
                 $redirectPath = '/room2d';
+            } elseif (str_contains($request->path(), 'room_ai') && $engine_roomai_enabled) { // Room AI condition
+                $redirectPath = '/room_ai';
             } else {
                 // Default redirection based on available engines
-                $redirectPath = $engine_2d_enabled ? '/room2d' : ($engine_panorama_enabled ? '/panorama' : '/');
+                $redirectPath =
+                    $engine_roomai_enabled ? '/room_ai' :
+                        ($engine_2d_enabled ? '/room2d' :
+                            ($engine_panorama_enabled ? '/panorama' : '/'));
             }
 
             // Mark as redirected
