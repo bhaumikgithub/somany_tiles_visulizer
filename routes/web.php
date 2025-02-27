@@ -52,6 +52,9 @@ Route::get('/get/room/url/{url}', 'App\Http\Controllers\AjaxController@getSavedR
 
 
 Route::get('/get/tiles', 'App\Http\Controllers\AjaxController@getTiles');
+//tilesForBackedPanorama
+Route::get('/get/tilesForBackedPanorama', 'App\Http\Controllers\AjaxController@getTilesForBackedPanorama');
+
 Route::get('/get/filters', 'App\Http\Controllers\AjaxController@getFilters');
 
 
