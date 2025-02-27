@@ -27,6 +27,11 @@ class CheckPincode
         $excludedRoutes = ['generate-pdf'];
         $isPdfSummaryRoute = str_contains($request->path(), 'pdf-summary');
 
+        // Exclude direct room URLs from redirection
+        if (preg_match('/^room\/url\/[a-f0-9]{32}$/', $request->path())) {
+            return $next($request);
+        }
+
         // Check if redirection is required
         if (!session()->has('pincode') &&
             !session()->has('redirected_to_room') &&
