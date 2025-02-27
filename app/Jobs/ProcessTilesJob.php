@@ -68,8 +68,8 @@ class ProcessTilesJob implements ShouldQueue
             $creation_time = Carbon::parse($aTile['creation_time'])->format('Y-m-d H:i:s');
 
             // Skip specific SKUs
-            if (in_array($product['sku'], ['12345678', '1223324324'])) {
-                \Log::info("Skipping SKU: {$product['sku']} due to exclusion.");
+            if (in_array($sku, ['12345678', '1223324324'])) {
+                Log::info("Skipping SKU: {$sku} due to exclusion.");
                 if (!isset($uniqueSkipped[$sku])) {
                     $uniqueSkipped[$sku] = true;
                     $skippedCount++;
@@ -77,157 +77,152 @@ class ProcessTilesJob implements ShouldQueue
                         'name' => $product['product_name'] ?? 'Unknown',
                         'sku' => $sku,
                         'date' => now()->format('Y-m-d H:i:s'),
-                        'reason' => "Missing required fields"
+                        'reason' => "Excluded SKU"
                     ];
                 }
                 continue;
             }
 
-            // Skip records based on a deletion flag
+            // Skip records based on deletion flag
             if (isset($product['deletion']) && !in_array($product['deletion'], ['RUNNING', 'SLOW MOVING'])) {
-                Log::info("Skipping SKU: {$product['sku']} due to deletion flag: {$product['deletion']}");
+                Log::info("Skipping SKU: {$sku} due to deletion flag: {$product['deletion']}");
                 $skippedCount++;
                 $skippedRecords[] = [
                     'name' => $product['product_name'] ?? 'Unknown',
-                    'sku' => $product['sku'],
+                    'sku' => $sku,
                     'date' => now()->format('Y-m-d H:i:s'),
                     'reason' => "Deletion flag: {$product['deletion']}"
                 ];
                 continue;
             }
 
-            // Check if the Image Already Exists in DB
-            $existingTile = \DB::table('tiles')->where('sku', $product['sku'])->first();
+            // Define image variations
+            $imageVariations = [
+                'image' => $product['image'] ?? null,
+                'image_variation_1' => $product['image_variation_1'] ?? null,
+                'image_variation_2' => $product['image_variation_2'] ?? null,
+                'image_variation_3' => $product['image_variation_3'] ?? null,
+                'image_variation_4' => $product['image_variation_4'] ?? null,
+            ];
 
-            // Store the image filename to reuse for multiple surfaces
-            $imageURL = $product['image'] ?? $product['image_variation_1'];
-
-            if ($imageURL) {
-                $extension = strtolower(pathinfo(strtok($imageURL, '?'), PATHINFO_EXTENSION));
-                // Ignore TIFF and PSD files
-                if (in_array($extension, ['tiff', 'tif', 'psd'])) {
-                    $imageFileName = null; // Store null in the database for unsupported formats
-                    $skippedCount++;
-                    // Store this record in a skipped records list
-                    $skippedRecords[] = [
-                        'name' => $product['product_name'] ?? 'Unknown',
-                        'sku' => $product['sku'],
-                        'date' => now()->format('Y-m-d H:i:s'),
-                        'reason' => "Unsupported image format: {$extension}"
-                    ];
-
-                    // Skip the entire record, ensuring it is NOT inserted or updated in DB
-                    continue;
-                }
-
-                // If the record already exists with the same image, do nothing
-                if ($existingTile && $existingTile->real_file === $imageURL) {
-                    $imageFileName = $existingTile->file; // Reuse existing image
-                } else {
-                    // Fetch and save image if not a PSD/TIFF
-                    $imageFileName = $this->fetchAndSaveImage($imageURL);
-
-                    // If image download fails, skip the record
-                    if ($imageFileName === null) {
-                        $skippedRecords[] = [
-                            'name' => $product['product_name'] ?? 'Unknown',
-                            'sku' => $product['sku'],
-                            'date' => now()->format('Y-m-d H:i:s'),
-                            'reason' => "Failed to fetch image"
-                        ];
-                        continue; // Skip the record safely
-                    }
-                }
-            }
-
-            // Determine the surfaces (Wall, Floor, Counter)
+            // Determine surfaces (Wall, Floor, etc.)
             $surfaces = $this->determineSurfaceValues($product);
 
-            foreach ($surfaces as $surface) {
-                $product['surface'] = trim($surface);
-                $data = $this->prepareTileData($product, $creation_time, $imageFileName);
+            foreach ($this->records as $aTile) {
+                $product = $aTile['attributes'];
+                $sku = $product['sku'] ?? 'Unknown';
+                $processedCount++;
+                $creation_time = Carbon::parse($aTile['creation_time'])->format('Y-m-d H:i:s');
 
-                // Skip record if the `skip` flag is set
-                if (isset($data['skip']) && $data['skip'] === true) {
-                    $skippedRecords[] = [
-                        'name' => $product['product_name'] ?? 'Unknown',
-                        'sku' => $product['sku'] ?? 'Unknown',
-                        'date' => now()->format('Y-m-d H:i:s'),
-                        'reason' => $data['reason'] // Dynamic reason based on missing fields
-                    ];
-                    continue; // Skip processing this record
-                }
-
-                try {
-                    $existing = DB::table('tiles')->where('sku', $product['sku'])->where('surface', $surface)->first();
-                    $action = $existing ? 'Updated' : 'Inserted';
-                    if ($existing) {
-                        // Check for changes
-                        $isDifferent = false;
-                        foreach ($data as $key => $value) {
-                            if ($existing->$key != $value) {
-                                $isDifferent = true;
-                                break;
-                            }
-                        }
-                        if ($isDifferent) {
-                            if (!isset($uniqueUpdated[$sku])) {
-                                $uniqueUpdated[$sku] = true;
-                                $updatedCount++;
-                            }
-                            // Update the record and only modify `updated_at`
-                            $data['updated_at'] = now();
-                            DB::table('tiles')->where('sku', $product['sku'])->where('surface', $surface)->update($data);
-                            Log::info("Updated SKU: {$product['sku']} for Surface: $surface");
-                        }
-                    } else {
-                        if (!isset($uniqueInserted[$sku])) {
-                            $uniqueInserted[$sku] = true;
-                            $insertedCount++;
-                        }
-                        // Set both `created_at` and `updated_at` when inserting a new record
-                        $now = now();
-                        $data['created_at'] = $now;
-                        $data['updated_at'] = $now;
-                        DB::table('tiles')->insert($data);
-                        Log::info("Inserted new SKU: {$product['sku']} for Surface: $surface");
-                    }
-
-                    $processedCount++;
-
-                    // Store progress update **AFTER EACH RECORD**
-                    $progressPercentage = min(($processedCount / $this->totalCount) * 100, 100);
-                    Cache::put('tile_processing_progress', [
-                        'total' => $this->totalCount,
-                        'processed' => $processedCount,
-                        'percentage' => $progressPercentage,
-                        'inserted' => $insertedCount,
-                        'updated' => $updatedCount,
-                        'skipped' => $skippedCount,
-                        'status' => "$processedCount / $this->totalCount records processed",
-                        'last_record' => [
-                            'name' => $product['product_name'] ?? 'Unknown',
-                            'sku' => $product['sku'],
-                            'surface' => $surface,
-                            'action' => $action,
-                        ],
-                        'skipped_records' => $skippedRecords, // Store skipped/error records
-                    ], now()->addMinutes(10));
-                } catch (\Exception $e) {
-                    if (!isset($uniqueSkipped[$sku])) {
-                        $uniqueSkipped[$sku] = true;
-                        $skippedCount++;
-                    }
+                // Skip specific SKUs
+                if (in_array($sku, ['12345678', '1223324324'])) {
+                    \Log::info("Skipping SKU: {$sku} due to exclusion.");
                     $skippedRecords[] = [
                         'name' => $product['product_name'] ?? 'Unknown',
                         'sku' => $sku,
                         'date' => now()->format('Y-m-d H:i:s'),
-                        'reason' => "Error: " . $e->getMessage()
+                        'reason' => "Excluded SKU"
                     ];
-                    Log::error("Error processing SKU: {$sku} - " . $e->getMessage());
+                    continue;
+                }
+
+                // Skip records based on a deletion flag
+                if (isset($product['deletion']) && !in_array($product['deletion'], ['RUNNING', 'SLOW MOVING'])) {
+                    Log::info("Skipping SKU: {$sku} due to deletion flag: {$product['deletion']}");
+                    $skippedRecords[] = [
+                        'name' => $product['product_name'] ?? 'Unknown',
+                        'sku' => $sku,
+                        'date' => now()->format('Y-m-d H:i:s'),
+                        'reason' => "Deletion flag: {$product['deletion']}"
+                    ];
+                    continue;
+                }
+
+                // Determine surfaces (Wall, Floor, Counter)
+                $surfaces = $this->determineSurfaceValues($product);
+                if (empty($surfaces)) {
+                    Log::warning("No surfaces found for SKU: {$sku}");
+                    continue;
+                }
+
+                // Image variations
+                $imageVariations = [
+                    'image' => $product['image'] ?? null,
+                    'image_variation_1' => $product['image_variation_1'] ?? null,
+                    'image_variation_2' => $product['image_variation_2'] ?? null,
+                    'image_variation_3' => $product['image_variation_3'] ?? null,
+                    'image_variation_4' => $product['image_variation_4'] ?? null,
+                ];
+
+                // Store the first image filename for each surface
+                $surfaceImageFiles = [];
+
+                foreach ($surfaces as $surface) {
+                    $product['surface'] = trim($surface);
+
+                    $variationIndex = 0;
+
+                    foreach ($imageVariations as $key => $imageURL) {
+                        if (!$imageURL) continue; // Skip missing images
+
+                        $variationIndex++;
+                        $formattedIndex = $variationIndex > 1 ? " " . str_pad($variationIndex, 2, '0', STR_PAD_LEFT) : "";
+                        $newProductName = trim($product['product_name']) . $formattedIndex;
+
+                        // Check if an exact record already exists
+                        $existingTile = DB::table('tiles')
+                            ->where('sku', $sku)
+                            ->where('surface', $surface)
+                            ->where('real_file', $imageURL)
+                            ->first();
+
+                        if ($existingTile) {
+                            // If record exists with the same image, update instead of inserting
+                            DB::table('tiles')->where('id', $existingTile->id)->update([
+                                'updated_at' => now()
+                            ]);
+                            Log::info("Updated existing record for SKU: {$sku}, Surface: {$surface}, Image: {$imageURL}");
+                            continue; // Skip to the next variation
+                        }
+
+                        // Fetch and save image only for the first surface, then reuse for other surfaces
+                        if (!isset($surfaceImageFiles[$surface])) {
+                            $surfaceImageFiles[$surface] = $this->fetchAndSaveImage($imageURL);
+                            if ($surfaceImageFiles[$surface] === null) {
+                                Log::error("Failed to fetch image for SKU: {$sku}");
+                                $skippedRecords[] = [
+                                    'name' => $newProductName,
+                                    'sku' => $sku,
+                                    'date' => now()->format('Y-m-d H:i:s'),
+                                    'reason' => "Failed to fetch image"
+                                ];
+                                continue;
+                            }
+                        }
+
+                        // Reuse the first saved image file for all variations of this surface
+                        $imageFileName = $surfaceImageFiles[$surface];
+
+                        // Prepare data for insertion
+                        $data = $this->prepareTileData($product, $creation_time, $imageFileName);
+                        $data['name'] = $newProductName;
+                        $data['created_at'] = now();
+                        $data['updated_at'] = now();
+
+                        // Insert new record
+                        DB::table('tiles')->insert($data);
+                        Log::info("Inserted new SKU: {$sku}, Surface: {$surface}, Name: {$newProductName}, Image: $imageFileName");
+                        $insertedCount++;
+
+                        // Store the first saved image filename for the next surfaces
+                        if (!isset($surfaceImageFiles[$surface])) {
+                            $surfaceImageFiles[$surface] = $imageFileName;
+                        }
+                    }
                 }
             }
         }
+
 
         //update companies table
         DB::table('companies')->update([
