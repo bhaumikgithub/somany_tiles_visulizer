@@ -1849,6 +1849,7 @@ input[type=checkbox] {
         padding: 8px;
         border-radius: 20px;
         border: 1px solid #3F3F46;
+        width: auto !important;
     }
 
     .share-div {
@@ -1962,7 +1963,6 @@ input[type=checkbox] {
     #topPanelHideIcon{
         margin-top: 6px;
     }
-<<<<<<< HEAD
     .toggle-wrap-main{
         display: flex;
         width: 100%;
@@ -1995,4 +1995,18 @@ input[type=checkbox] {
         padding: 8px;
         font-size: 13px;
     }
+}
+
+@media (max-width:767px) and (orientation:portrait){
+.panorama-share-div{
+    left:30px;
+    gap:10px;
+}
+ .panorama-share-div .share-link-main {
+    width:36%;
+} 
+.downalod-link{
+    margin-left: -6px !important;
+    width: 41.6%;
+}
 }
