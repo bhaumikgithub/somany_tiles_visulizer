@@ -33,9 +33,9 @@ $engine_panorama_enabled = config('app.engine_panorama_enabled');
 if ($engine_3d_enabled) {
     Route::get('/', function () { return redirect('/room3d'); });
 } elseif ($engine_2d_enabled) {
-    Route::get('/', function () { return redirect('/room2d'); });
+    Route::get('/', function () { return redirect('/2d-studio'); });
 } elseif ($engine_panorama_enabled) {
-    Route::get('/', function () { return redirect('/panorama'); });
+    Route::get('/', function () { return redirect('/panorama-studio'); });
 }
 
 Route::get('/home', 'App\Http\Controllers\HomeController@index');
@@ -78,25 +78,25 @@ Route::post('/save-pincode', [PincodeController::class, 'store'])->name('save-pi
 if ($engine_2d_enabled) {
 //    Route::get('/room2d', 'App\Http\Controllers\Controller2d@roomDefault');
     Route::middleware(['check.pincode'])->group(function () {
-        Route::get('/room2d', 'App\Http\Controllers\Controller2d@index');
+        Route::get('/2d-studio', 'App\Http\Controllers\Controller2d@index');
         Route::get('/listing/{roomType}', 'App\Http\Controllers\Controller2d@roomListing');
-        Route::get('/room2d/{id}', 'App\Http\Controllers\Controller2d@room');
-        Route::get('/get/room2d/{id}', 'App\Http\Controllers\Controller2d@getRoom');
+        Route::get('/2d-studio/{id}', 'App\Http\Controllers\Controller2d@room');
+        Route::get('/get/2d-studio/{id}', 'App\Http\Controllers\Controller2d@getRoom');
     });
 //    Route::get('/room2d/{id}', 'App\Http\Controllers\Controller2d@room');
-    Route::get('/get/room2d/{id}', 'App\Http\Controllers\Controller2d@getRoom');
+    Route::get('/get/2d-studio/{id}', 'App\Http\Controllers\Controller2d@getRoom');
 //    Route::get('/listing/{roomType}', 'App\Http\Controllers\Controller2d@roomListing');
     Route::post('/get_room_surface','App\Http\Controllers\Controller2d@getRoomSurface');
 }
 if ($engine_panorama_enabled) {
     Route::middleware(['check.pincode'])->group(function () {
-        Route::get('/panorama', 'App\Http\Controllers\ControllerPanorama@index');
+        Route::get('/panorama-studio', 'App\Http\Controllers\ControllerPanorama@index');
         Route::get('/panorama-listing/{roomType}', 'App\Http\Controllers\ControllerPanorama@roomListing');
         //Route::get('/panorama', 'App\Http\Controllers\ControllerPanorama@roomDefault');
-        Route::get('/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@room');
-        Route::get('/get/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@getRoom');
+        Route::get('/panorama-studio/{id}', 'App\Http\Controllers\ControllerPanorama@room');
+        Route::get('/get/panorama-studio/{id}', 'App\Http\Controllers\ControllerPanorama@getRoom');
     });
-    Route::get('/get/panorama/{id}', 'App\Http\Controllers\ControllerPanorama@getRoom');
+    Route::get('/get/panorama-studio/{id}', 'App\Http\Controllers\ControllerPanorama@getRoom');
     Route::post('/get_room_surface_panorama','App\Http\Controllers\ControllerPanorama@getRoomSurfacePanorama');
 }
 
