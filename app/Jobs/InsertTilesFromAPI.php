@@ -48,6 +48,7 @@ class InsertTilesFromAPI implements ShouldQueue
         // Get tiles data
         $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete";
         $queryParams = http_build_query([
+            'limit' => 1,
             's' => $this->startDate,
             'e' => $this->endDate,
         ]);
