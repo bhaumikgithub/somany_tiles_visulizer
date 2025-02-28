@@ -215,7 +215,8 @@ class AddToPdfRoomsController extends Controller
 
     public function pdfSummary(Request $request , $randomKey): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
-        $pincode = Session::get('pincode'); // Store the pincode temporarily
+        $pincode = Session::get('pincode'); // Store the pin code temporarily
+
         //Update pin code in cart summary page
         $getCartId = Cart::where('random_key',$randomKey)->first();
         $getCartId->pincode = $pincode;
