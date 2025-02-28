@@ -1995,3 +1995,23 @@ input[type=checkbox] {
         font-size: 13px;
     }
 }
+
+@media (max-width:767px) and (orientation:portrait){
+    .panorama-share-div{
+        left:30px;
+        gap:10px;
+    }
+     .panorama-share-div .share-link-main {
+        width:35%;
+    } 
+    .downalod-link{
+        margin-left: -6px !important;
+        width: 40%;
+    }
+    .panorama-share-div i{
+        font-size: 13px !important;
+    }
+    .share-div{
+        margin-right: 0px !important;
+    }
+    }
