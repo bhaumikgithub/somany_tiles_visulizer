@@ -70,7 +70,7 @@ let pathSegments1 = url1.pathname.split("/");
 function generateAndDownloadThumbnail(){
     // Create an offscreen canvas for the thumbnail
     let mainCanvas ;
-    if( pathSegments1[1] === "room2d") {
+    if( pathSegments1[1] === "2d-studio") {
         mainCanvas = document.getElementById('roomCanvas');
     } else {
         let containerDiv = document.getElementById("container");
@@ -89,7 +89,7 @@ function generateAndDownloadThumbnail(){
 
 function canvasImage() {
     let canvas;
-    if( pathSegments1[1] === "room2d") {
+    if( pathSegments1[1] === "2d-studio") {
         canvas = document.getElementById('roomCanvas');
     } else {
         let containerDiv = document.getElementById("container");
@@ -682,6 +682,7 @@ function downloadImage() {
     let category_name = formatRoomName($('#current_room_name').val());
     let category_type = $('#current_room_type').val();
 
+    console.log(window.location.pathname.includes("panorama"));
     let is3D = window.location.pathname.includes("panorama"); // Check if in 3D mode
     let prefix = is3D ? "3d_" : "";
     let key = `${category_type}_${category_name}`;
@@ -694,7 +695,7 @@ function downloadImage() {
     let fileName = `${prefix}${category_type}_${category_name}_img_${count}.jpg`;
 
     let canvas;
-    if( pathSegments1[1] === "room2d") {
+    if( pathSegments1[1] === "2d-studio") {
         canvas = document.getElementById('roomCanvas');
     } else {
         let containerDiv = document.getElementById("container");

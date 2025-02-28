@@ -44,7 +44,7 @@ class AjaxController extends Controller
         if (config('app.tiles_access_level')) {
             $roomID = $request->input('room_id');
             $currentRoomType = $request->input('room_type');
-            if( $currentRoomType === "room2d") {
+            if( $currentRoomType === "2d-studio") {
                 $findRoom = Room2d::select('type')->findOrFail($roomID);
             } else {
                 $findRoom = Panorama::select('type')->findOrFail($roomID);
