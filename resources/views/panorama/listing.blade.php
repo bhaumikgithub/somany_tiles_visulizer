@@ -19,7 +19,7 @@
             @endif
         </div>
         <div class=" cmn-back-btn" >
-            <a href="{{ url('/') }}"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
+            <a href="{{ url('/panorama') }}"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
     </span></a>
             <p class="btn-text-set-back">Back </p></div>
 

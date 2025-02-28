@@ -26,9 +26,6 @@
                         class="fa-solid fa-xmark"></i></button>
         </div>
 
-
-        <!-- <a href="{{ url('listing/' . @$room_type) }}" class="cmn-room-btn back-btn d-flex flex-wrap align-items-center"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
-                                </span> <span class="btn-text-set">Back </span> </a> -->
         <div class=" cmn-room-btn cmn-room-back-btn back-btn">
             <a href="{{ url('listing/' . @$room_type) }}"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
                 </span></a>
@@ -54,6 +51,7 @@
         <input type="hidden" value="{{ @$room_type }}" id="current_room_type">
         <input type="hidden" value="" id="selected_tile_ids">
         <input type="hidden" value="{{ session()->getId() }}" id="currentSessionId">
+        <input type="hidden" value="" id="free_tile_checkbox_value">
 
         @if (config('view.visualizer_layout') != 'iorena.')
             @include('common.' . config('app.bottom_menu') . 'bottomMenu2d')
