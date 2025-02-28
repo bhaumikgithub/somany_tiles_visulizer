@@ -1997,22 +1997,44 @@ input[type=checkbox] {
     }
 }
 
-@media (max-width:767px) and (orientation:portrait){
-    .panorama-share-div{
-        left:18px;
-        gap:10px;
+@media (max-width:767px) and (orientation:portrait) {
+    .panorama-share-div {
+        left: 18px;
+        gap: 10px;
     }
-     .panorama-share-div .share-link-main {
-        width:35%;
-    } 
-    .downalod-link{
+
+    .panorama-share-div .share-link-main {
+        width: 35%;
+    }
+
+    .downalod-link {
         margin-left: -6px !important;
         width: 38%;
     }
-    .panorama-share-div i{
+
+    .panorama-share-div i {
         font-size: 13px !important;
     }
-    .share-div{
+
+    .share-div {
         margin-right: 0px !important;
+        left: 21px;
     }
+
+
+    @media (max-width: 350px) and (orientation: portrait) {
+
+        .share-div i {
+            font-size: 14px !important;
+        }
+
+        .share-div {
+            gap: 10px;
+        }
+
+        .normal-pdf-link {
+            margin-left: -6px !important;
+
+        }
     }
+}

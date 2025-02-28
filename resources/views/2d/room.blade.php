@@ -18,9 +18,9 @@
                     <i class="fa-regular fa-share-from-square"></i><span class="btn-text-set">Share </span>
                 </a>
             @endif
-            <button class="share-link d-flex flex-wrap align-items-center"onclick="downloadImage();"><i
+            <button class="share-link d-flex flex-wrap align-items-center "onclick="downloadImage();"><i
                         class="fa-solid fa-download"></i> <span class="btn-text-set">Download </span></button>
-            <button class="share-link d-flex flex-wrap align-items-center" onclick="addToPDF();"><i
+            <button class="share-link d-flex flex-wrap align-items-center normal-pdf-link" onclick="addToPDF();"><i
                         class="fa-regular fa-file-lines"></i> <span class="btn-text-set">Add to Selection </span></button>
             <button class="share-link d-flex flex-wrap align-items-center share-btn-close"><i
                         class="fa-solid fa-xmark"></i></button>
