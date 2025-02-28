@@ -11,16 +11,16 @@
             <i class="fa-regular fa-share-from-square"></i>
 
         </button>
-        <div class="share-div d-flex flex-wrap social-share">
+        <div class="share-div d-flex flex-wrap social-share panorama-share-div">
             @if (config('app.share_button_whatsapp'))
                 <a href="https://wa.me/?text={{ urlencode(__('SHARE_WHATSAPP_MESSAGE')) }}%20" title="@lang('Whatsapp Share')"
-                   target="_blank" class="share-link d-flex flex-wrap align-items-center">
+                   target="_blank" class="share-link d-flex flex-wrap align-items-center share-link-main">
                     <i class="fa-regular fa-share-from-square"></i><span class="btn-text-set">Share </span>
                 </a>
             @endif
             <button id="btnDialogSaveSceneAsPanorama" class="share-link d-flex flex-wrap align-items-center"><i
             class="fa-solid fa-panorama"></i> <span class="btn-text-set">Bake Panorama </span></button>
-            <button class="share-link d-flex flex-wrap align-items-center"onclick="downloadImage();"><i
+            <button class="share-link d-flex flex-wrap align-items-center downalod-link"onclick="downloadImage();"><i
                         class="fa-solid fa-download"></i> <span class="btn-text-set">Download </span></button>
             <button class="share-link d-flex flex-wrap align-items-center" onclick="addToPDF();"><i
                         class="fa-regular fa-file-lines"></i> <span class="btn-text-set">Add to Selection </span></button>
