@@ -106,12 +106,12 @@ trait ApiHelper
         }
 
         //If one or both fields are missing, return null and set reason dynamically
-        if (!empty($missingFields)) {
-            return [
-                'skip' => true, // Special flag to signal skipping in updateOrInsertMultiple()
-                'reason' => "Missing required field(s): " . implode(" & ", $missingFields)
-            ];
-        }
+        // if (!empty($missingFields)) {
+        //     return [
+        //         'skip' => true, // Special flag to signal skipping in updateOrInsertMultiple()
+        //         'reason' => "Missing required field(s): " . implode(" & ", $missingFields)
+        //     ];
+        // }
 
         $surface = strtolower($product['surface']);
 
@@ -136,7 +136,7 @@ trait ApiHelper
             'url' => $product['url'] ?? null,
             'price' => $product['price'] ?? null,
             'expProps' =>  json_encode($expPropsArray),
-            'rotoPrintSetName' => str_replace(" FP", "", $product['product_name']) ?? null,
+            'rotoPrintSetName' => $product['rotoPrintSetName'],
             'access_level' => $product['access_level'] ?? null,
             'sku' => $product['sku'] ?? null,
             'application_room_area' => $product['application_room_area'] ?? null,
@@ -169,7 +169,12 @@ trait ApiHelper
      */
     private function getShapeFromWidthHeight($width, $height): string
     {
-        return ( $width === $height ) ? "square" : "rectangle";
+        // Ensure numeric comparison
+        if ((int)$width === (int)$height) {
+            return "square";
+        }
+        
+        return "rectangle";
     }
 
     /**
@@ -223,16 +228,16 @@ trait ApiHelper
     private function mapCategoryType($brand_name): string
     {
         $mapping = [
-            'Coverstone' => 'Large Format Slab',
-            'Regalia Collection' => 'Large Format Tiles',
-            'Porto Collection' => 'Large Format Tiles',
-            'Sedimento Collection' => 'Large Format Tiles',
-            'Colorato Collection' => 'Large Format Tiles',
-            'Ceramica' => 'Ceramic',
-            'Duragres' => ' Glazed Vitrified Tiles',
-            'Vitro' => 'Polished Vitrified Tiles',
-            'Durastone' => 'Heavy Duty Vitrified Tiles',
-            'Italmarmi' => 'Subway Tiles',
+            'coverstone' => 'Large Format Slab - Coverstone',
+            'regalia collection' => 'Large Format Tiles - Regalia Collection',
+            'porto collection' => 'Large Format Tiles - Porto Collection',
+            'sedimento collection' => 'Large Format Tiles - Sedimento Collection',
+            'colorato collection' => 'Large Format Tiles - Colorato Collection',
+            'ceramica' => 'Ceramic - Ceramica',
+            'duragres' => 'Glazed Vitrified Tiles - Duragres',
+            'vitro' => 'Polished Vitrified Tiles - Vitro',
+            'durastone' => 'Heavy Duty Vitrified Tiles - Durastone',
+            'italmarmi' => 'Subway Tiles - Italmarmi',
         ];
 
         return $mapping[$brand_name] ?? $brand_name; // Default to original value if not in mapping

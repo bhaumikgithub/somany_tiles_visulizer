@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\InsertTilesFromAPI;
+use Exception;
 use Illuminate\Console\Command;
 
 class DispatchInsertTilesJob extends Command
@@ -23,14 +24,14 @@ class DispatchInsertTilesJob extends Command
 
     /**
      * Execute the console command.
+     * @throws Exception
      */
-    public function handle()
+    public function handle(): void
     {
         $startDate = '2000-01-01'; // Set your start date
-        $endDate = '2025-02-04';   // Set your end date
+        $endDate = now()->toDateString(); // Set end date to today's date
 
-        // Dispatch the job
-        InsertTilesFromAPI::dispatch($startDate, $endDate);
+        (new InsertTilesFromAPI($startDate, $endDate))->handle();
 
         $this->info('Job dispatched successfully!');
     }

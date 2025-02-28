@@ -20,8 +20,8 @@ class CheckPincode
         $engine_2d_enabled = config('app.engine_2d_enabled');
         $engine_panorama_enabled = config('app.engine_panorama_enabled');
 
-        Log::info('Redirect check - Current Path: ' . $request->path());
-        Log::info('Pincode session: ' . (session()->has('pincode') ? 'Present' : 'Not Present'));
+//        Log::info('Redirect check - Current Path: ' . $request->path());
+//        Log::info('Pincode session: ' . (session()->has('pincode') ? 'Present' : 'Not Present'));
 
         // List of routes that should NOT be redirected
         $excludedRoutes = ['generate-pdf', 'fetch-progress','fetch_tiles']; // ✅ Added fetch-progress
