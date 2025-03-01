@@ -187,6 +187,7 @@ trait ApiHelper
             'thickness' => $product['thickness'] ?? null,
             'product code' => $this->mapFinishType($product['design_finish']) ?? null,
             'colour' => $product['color'] ?? null,
+            'finishes' => $product['design_finish'] ?? null,
             'category' => $this->mapCategoryType(strtolower($product['brand_name'])) ?? null,
             'innovation' => $product['innovation'] ?? null,
         ], function ($value) {
