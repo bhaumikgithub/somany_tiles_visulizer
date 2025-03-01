@@ -137,7 +137,7 @@ class InsertTilesFromAPI implements ShouldQueue
                     $product['surface'] = trim($surface);
 
                     if (!isset($imageCache[$imageURL])) {
-                        $imageFileName = $imageURL;
+                        $imageFileName = $this->fetchAndSaveImage($imageURL);
                         if ($imageFileName === null) continue;
                         $imageCache[$imageURL] = $imageFileName;
                     } else {
