@@ -36,7 +36,7 @@
                     </div>
                     <p id="progress-text">Waiting...</p>
                 </div>
-                <button id="fetch-now" class="btn btn-primary">Fetch Now</button>
+{{--                <button id="fetch-now" class="btn btn-primary">Fetch Now</button>--}}
             </div>
 
             <h3>Processing Summary:</h3>

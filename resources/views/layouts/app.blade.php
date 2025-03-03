@@ -131,7 +131,7 @@
                                     <li><a href="/storage-link">Storage Link</a></li>
                                     <li><a href="{{url('maximum_images')}}">Maximum Tiles</a></li>
                                     <li><a href="{{url('pincode_zone')}}">Zone</a></li>
-                                    <li><a href="{{url('fetch_tiles')}}">Fetching Tiles</a></li>
+{{--                                    <li><a href="{{url('fetch_tiles')}}">Fetching Tiles</a></li>--}}
                                     <li><a href="{{url('fetch_showroom')}}">Showrooms</a></li>
                                     <li><a href="{{route('user_pdf-summary')}}">Pdf-Summary</a></li>
                                 </ul>
