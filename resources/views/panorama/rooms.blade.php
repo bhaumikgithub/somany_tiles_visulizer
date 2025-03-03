@@ -427,7 +427,7 @@ function showBigIconImageModal(name, image) {
           </td>
           <td class="table-text bold"><a href="#" onclick="editRoom( {{ $room->id }} );" title="Edit">{{ $room->name }}</a></td>
           <td class="table-text"> @if (isset($roomTypes[$room->type])) {{ $roomTypes[$room->type] }} @else {{ $room->type }} @endif </td>
-          <td class="table-text"><a href="/panorama/{{ $room->id }}" title="/panorama/{{ $room->id }}"><img src="/img/icons/panorama.png" alt="" width="32"></a></td>
+          <td class="table-text"><a href="/panorama-studio/{{ $room->id }}" title="/panorama-studio/{{ $room->id }}"><img src="/img/icons/panorama.png" alt="" width="32"></a></td>
           <td class="table-text">@if ($room->enabled) Yes @else No @endif</td>
           <td class="table-text">
             <button type="button" class="close" onclick="deleteRoom({{ $room->id }});" title="Remove Room">&times;</button>
