@@ -14,6 +14,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -60,8 +61,6 @@ class AddToPdfRoomsController extends Controller
 
         // Retrieve session ID
         $sessionId = $request->session()->getId();
-        // Retrieve or initialize cart from session
-        //$allProduct = $request->session()->get('allProduct', []);
 
         // Decode base64 image
         $image = str_replace('data:image/jpeg;base64,', '', $imageData);
@@ -183,7 +182,9 @@ class AddToPdfRoomsController extends Controller
         $productInfo->cart_id = $cart_id;
         $productInfo->save();
 
-        //$request->session()->put('allProduct', $productInfo);
+        // Store cart session
+        $request->session()->put('cart', $cart_id);
+
         $getCartId = Cart::where('user_id',$sessionId)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
         $count = $allProduct->count();
@@ -220,14 +221,22 @@ class AddToPdfRoomsController extends Controller
     public function pdfSummary(Request $request , $randomKey): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
         $pincode = Session::get('pincode'); // Store the pin code temporarily
+        
+        // Store authenticated user session before flushing
+        $authenticatedUser = auth()->user();
 
         //Update pin code in cart summary page
         $getCartId = Cart::where('random_key',$randomKey)->first();
         $getCartId->pincode = $pincode;
         $getCartId->update();
 
-        Session::flush(); // Clears all session data
+        // Destroy only the cart session, keeping user login session
+        Session::forget(['cart','pincode']);
 
+        // Restore authentication session if user was logged in
+        if ($authenticatedUser) {
+            Auth::login($authenticatedUser);
+        }
 
         // Optionally, regenerate session ID for the user
         $request->session()->regenerate();  // This generates a new session ID
