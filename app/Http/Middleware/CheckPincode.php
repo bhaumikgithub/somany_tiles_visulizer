@@ -39,13 +39,13 @@ class CheckPincode
             !$isPdfSummaryRoute) {
 
             // Determine a redirect path based on user's requested route
-            if (str_contains($request->path(), 'panorama') && $engine_panorama_enabled) {
-                $redirectPath = '/panorama';
-            } elseif (str_contains($request->path(), 'room2d') && $engine_2d_enabled) {
-                $redirectPath = '/room2d';
+            if (str_contains($request->path(), 'panorama-studio') && $engine_panorama_enabled) {
+                $redirectPath = '/panorama-studio';
+            } elseif (str_contains($request->path(), '2d-studio') && $engine_2d_enabled) {
+                $redirectPath = '/2d-studio';
             } else {
                 // Default redirection based on available engines
-                $redirectPath = $engine_2d_enabled ? '/room2d' : ($engine_panorama_enabled ? '/panorama' : '/');
+                $redirectPath = $engine_2d_enabled ? '/2d-studio' : ($engine_panorama_enabled ? '/panorama-studio' : '/');
             }
 
             // Mark as redirected

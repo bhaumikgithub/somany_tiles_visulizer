@@ -14,7 +14,7 @@ let pathSegments = url.pathname.split("/");
 let surfaceUrl = "";
 
 window.onload = function getRoomSurface() {
-    if(pathSegments[1] === "panorama"){
+    if(pathSegments[1] === "panorama-studio"){
         surfaceUrl = '/get_room_surface_panorama';
     } else {
         surfaceUrl = '/get_room_surface';
@@ -113,10 +113,10 @@ function getSurfaceNameForLabeling(p_surfaceName){
 
 let themeSurfaceUrl = "";
 function loadThemeData() {
-    if(pathSegments[1] === "panorama"){
-        themeSurfaceUrl = '/get/panorama/';
+    if(pathSegments[1] === "panorama-studio"){
+        themeSurfaceUrl = '/get/panorama-studio/';
     } else {
-        themeSurfaceUrl = '/get/room2d/';
+        themeSurfaceUrl = '/get/2d-studio/';
     }
     $.ajax({
         url: themeSurfaceUrl + $('#current_room_id').val(), // Replace with the actual endpoint for room2d
@@ -213,11 +213,11 @@ function themeBtnPressed(p_id, p_imageLoadByPass) {
 
     }
     else {
-        console.log(currentRoom);
-        if(pathSegments[1] === "room2d"){
+        if(pathSegments[1] === "2d-studio"){
             currentRoom._engine2d.loadAndDrawForegroundImage(themeData[p_id].theme_bigimage);
         } else {
-            currentRoom.currentTiledSurface.loadAndDrawForegroundImage(themeData[p_id].theme_bigimage,currentRoom.currentTiledSurface._surfaceData.json);
+            //,currentRoom.currentTiledSurface._surfaceData.json
+            currentRoom._view.loadAndDrawForegroundImage(p_id);
         }
     }
     $(".top-panel-content-tiles-list-item").removeClass("active_theme");
