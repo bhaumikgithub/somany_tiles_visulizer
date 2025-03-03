@@ -222,9 +222,6 @@ class AddToPdfRoomsController extends Controller
     {
         $pincode = Session::get('pincode'); // Store the pin code temporarily
         
-        // Store authenticated user session before flushing
-        $authenticatedUser = auth()->user();
-
         //Update pin code in cart summary page
         $getCartId = Cart::where('random_key',$randomKey)->first();
         $getCartId->pincode = $pincode;
@@ -232,11 +229,6 @@ class AddToPdfRoomsController extends Controller
 
         // Destroy only the cart session, keeping user login session
         Session::forget(['cart','pincode']);
-
-        // Restore authentication session if user was logged in
-        if ($authenticatedUser) {
-            Auth::login($authenticatedUser);
-        }
 
         // Optionally, regenerate session ID for the user
         $request->session()->regenerate();  // This generates a new session ID
