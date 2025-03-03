@@ -213,11 +213,11 @@ function themeBtnPressed(p_id, p_imageLoadByPass) {
 
     }
     else {
-        console.log(currentRoom);
         if(pathSegments[1] === "2d-studio"){
             currentRoom._engine2d.loadAndDrawForegroundImage(themeData[p_id].theme_bigimage);
         } else {
-            currentRoom.currentTiledSurface.loadAndDrawForegroundImage(themeData[p_id].theme_bigimage,currentRoom.currentTiledSurface._surfaceData.json);
+            //,currentRoom.currentTiledSurface._surfaceData.json
+            currentRoom._view.loadAndDrawForegroundImage(p_id);
         }
     }
     $(".top-panel-content-tiles-list-item").removeClass("active_theme");
