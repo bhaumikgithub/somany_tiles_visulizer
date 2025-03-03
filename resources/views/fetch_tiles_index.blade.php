@@ -27,7 +27,7 @@
                     </div>
                     <p id="progress-text" style="text-align: center; margin-top: 5px;">0 of 0 records processed...</p>
                 </div>
-                <button id="fetch-now" class="btn btn-primary">Fetch Now</button>
+{{--                <button id="fetch-now" class="btn btn-primary">Fetch Now</button>--}}
             </div>
         </div>
     </div>
