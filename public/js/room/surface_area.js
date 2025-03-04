@@ -100,7 +100,7 @@ function openTileSelectionPanel(surface_name) {
 
     if (clickedSurface != false) {
         //This function directly go to 2d.min.js and set the current surface
-        currentRoom._onSurfaceClick(clickedSurface);
+        currentRoom._onSurfaceClick(clickedSurface,true);
     }
 
 
