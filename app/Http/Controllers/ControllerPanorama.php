@@ -125,7 +125,7 @@ class ControllerPanorama extends Controller
         if ($request->hasFile('image')) {
             $room->image = $request->file('image')->store('panoramas', 'public');
             $room->theme0 = $request->file('image')->store('panoramas', 'public');
-            $room->theme_thumbnail0 = $request->file('theme_thumbnail0')->store('rooms2d', 'public');
+            $room->theme_thumbnail0 = $request->file('theme_thumbnail0')->store('panoramas', 'public');
             $room->text0 = $request->text0;
         }
         if ($request->hasFile('shadow')) {
