@@ -161,45 +161,40 @@ class InsertTilesFromAPI implements ShouldQueue
                     // Prepare data for DB
                     $data = $this->prepareTileData($product, $creation_time, $imageFileName);
 
-//                    $existing = DB::table('tiles')->where([
-//                        ['sku', $product['sku']],
-//                        ['surface', $surface],
-//                        ['file', $imageFileName]
-//                    ])->first();
+                    $existing = DB::table('tiles')->where([
+                        ['sku', $product['sku']],
+                        ['surface', $surface],
+                        ['file', $imageFileName]
+                    ])->first();
 
-//                    if ($existing) {
-//                        $isDifferent = false;
-//                        foreach ($data as $key => $value) {
-//                            if ($existing->$key != $value) {
-//                                $isDifferent = true;
-//                                break;
-//                            }
-//                        }
-//
-//                        if ($isDifferent) {
-//                            $data['updated_at'] = now();
-//                            DB::table('tiles')->where([
-//                                ['sku', $product['sku']],
-//                                ['surface', $surface],
-//                                ['file', $imageFileName]
-//                            ])->update($data);
-//                            $updatedCount++;
-//                            Log::info("Updated SKU: {$product['sku']} - Surface: {$surface} - Name: {$variationName}");
-//                        } else {
-//                            $unchangedCount++;
-//                        }
-//                    } else {
-//                        $data['created_at'] = now();
-//                        $data['updated_at'] = now();
-//                        DB::table('tiles')->insert($data);
-//                        $insertedCount++;
-//                        Log::info("Inserted SKU: {$product['sku']} - Surface: {$surface} - Name: {$variationName}");
-//                    }
-                    $data['created_at'] = now();
-                    $data['updated_at'] = now();
-                    DB::table('tiles')->insert($data);
-                    $insertedCount++;
-                    Log::info("Inserted SKU: {$product['sku']} - Surface: {$surface} - Name: {$variationName}");
+                    if ($existing) {
+                        $isDifferent = false;
+                        foreach ($data as $key => $value) {
+                            if ($existing->$key != $value) {
+                                $isDifferent = true;
+                                break;
+                            }
+                        }
+
+                        if ($isDifferent) {
+                            $data['updated_at'] = now();
+                            DB::table('tiles')->where([
+                                ['sku', $product['sku']],
+                                ['surface', $surface],
+                                ['file', $imageFileName]
+                            ])->update($data);
+                            $updatedCount++;
+                            Log::info("Updated SKU: {$product['sku']} - Surface: {$surface} - Name: {$variationName}");
+                        } else {
+                            $unchangedCount++;
+                        }
+                    } else {
+                        $data['created_at'] = now();
+                        $data['updated_at'] = now();
+                        DB::table('tiles')->insert($data);
+                        $insertedCount++;
+                        Log::info("Inserted SKU: {$product['sku']} - Surface: {$surface} - Name: {$variationName}");
+                    }
                     $count++;
                 }
                 $variationIndex++;

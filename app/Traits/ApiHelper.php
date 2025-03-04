@@ -106,12 +106,12 @@ trait ApiHelper
         }
 
         //If one or both fields are missing, return null and set reason dynamically
-        // if (!empty($missingFields)) {
-        //     return [
-        //         'skip' => true, // Special flag to signal skipping in updateOrInsertMultiple()
-        //         'reason' => "Missing required field(s): " . implode(" & ", $missingFields)
-        //     ];
-        // }
+         if (!empty($missingFields)) {
+             return [
+                 'skip' => true, // Special flag to signal skipping in updateOrInsertMultiple()
+                 'reason' => "Missing required field(s): " . implode(" & ", $missingFields)
+             ];
+         }
 
         $surface = strtolower($product['surface']);
 
@@ -345,6 +345,17 @@ trait ApiHelper
 
         // ✅ Ensure unique values & default to "wall" if no surfaces found
         return !empty($surfaces) ? array_unique($surfaces) : ["wall"];
+    }
+
+    /**
+     * @param $url
+     * @return bool
+     */
+    private function isInvalidFormat($url): bool
+    {
+        $invalidFormats = ['tiff', 'tif', 'psd'];
+        $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
+        return in_array(strtolower($extension), $invalidFormats);
     }
 
 

@@ -40,15 +40,12 @@ class ProcessTilesJob implements ShouldQueue
         $skippedCount = 0;
         $processedCount = 0;
         $skippedRecords = [];
-
-        // Track unique SKUs for counting
         $uniqueInserted = [];
         $uniqueUpdated = [];
         $uniqueSkipped = [];
 
-        Log::info('Starting record-by-record processing. Total records: ' . $this->totalCount);
+        Log::info('Starting tile processing. Total records: ' . $this->totalCount);
 
-        // Initialize Progress Cache
         Cache::forever('tile_processing_progress', [
             'total' => $this->totalCount,
             'processed' => 0,
@@ -60,108 +57,72 @@ class ProcessTilesJob implements ShouldQueue
             'skipped_records' => [],
         ]);
 
+
         foreach ($this->records as $aTile) {
             $product = $aTile['attributes'];
             $sku = $product['sku'] ?? 'Unknown';
             $processedCount++;
             $creation_time = Carbon::parse($aTile['creation_time'])->format('Y-m-d H:i:s');
 
-            // Skip specific SKUs
-            if (in_array($product['sku'], ['12345678', '1223324324'])) {
-                Log::info("Skipping SKU: {$product['sku']} due to exclusion.");
-                if (!isset($uniqueSkipped[$sku])) {
-                    $uniqueSkipped[$sku] = true;
-                    $skippedCount++;
-                    $skippedRecords[] = [
-                        'name' => $product['product_name'] ?? 'Unknown',
-                        'sku' => $sku,
-                        'date' => now()->format('Y-m-d H:i:s'),
-                        'reason' => "Missing required fields"
-                    ];
-                }
-                continue;
-            }
-
-            // Skip records based on a deletion flag
-            if (isset($product['deletion']) && !in_array($product['deletion'], ['RUNNING', 'SLOW MOVING'])) {
-                Log::info("Skipping SKU: {$product['sku']} due to deletion flag: {$product['deletion']}");
-                $skippedCount++;
+            if (in_array($sku, ['12345678', '1223324324']) || (isset($product['deletion']) && !in_array($product['deletion'], ['RUNNING', 'SLOW MOVING']))) {
                 $skippedRecords[] = [
                     'name' => $product['product_name'] ?? 'Unknown',
-                    'sku' => $product['sku'],
+                    'sku' => $sku,
                     'date' => now()->format('Y-m-d H:i:s'),
-                    'reason' => "Deletion flag: {$product['deletion']}"
+                    'reason' => "Excluded SKU or deletion flag",
                 ];
+                $skippedCount++;
                 continue;
             }
 
-            // Check if the Image Already Exists in DB
-            $existingTile = DB::table('tiles')->where('sku', $product['sku'])->first();
+            $surfaces = $this->determineSurfaceValues($product);
+            $imageVariations = array_filter([
+                'real_file' => $product['image'] ?? null,
+                'image_variation_1' => $product['image_variation_1'] ?? null,
+                'image_variation_2' => $product['image_variation_2'] ?? null,
+                'image_variation_3' => $product['image_variation_3'] ?? null,
+                'image_variation_4' => $product['image_variation_4'] ?? null,
+            ], fn($url) => !empty($url) && !$this->isInvalidFormat($url));
 
-            // Store the image filename to reuse for multiple surfaces
-            $imageURL = $product['image'] ?? $product['image_variation_1'];
-
-            if ($imageURL) {
-                $extension = strtolower(pathinfo(strtok($imageURL, '?'), PATHINFO_EXTENSION));
-                // Ignore TIFF and PSD files
-                if (in_array($extension, ['tiff', 'tif', 'psd'])) {
-                    $imageFileName = null; // Store null in the database for unsupported formats
-                    $skippedCount++;
-                    // Store this record in a skipped records list
-                    $skippedRecords[] = [
-                        'name' => $product['product_name'] ?? 'Unknown',
-                        'sku' => $product['sku'],
-                        'date' => now()->format('Y-m-d H:i:s'),
-                        'reason' => "Unsupported image format: {$extension}"
-                    ];
-
-                    // Skip the entire record, ensuring it is NOT inserted or updated in DB
-                    continue;
-                }
-
-                // If the record already exists with the same image, do nothing
-                if ($existingTile && $existingTile->real_file === $imageURL) {
-                    $imageFileName = $existingTile->file; // Reuse existing image
-                } else {
-                    // Fetch and save image if not a PSD/TIFF
-                    $imageFileName = $this->fetchAndSaveImage($imageURL);
-
-                    // If image download fails, skip the record
-                    if ($imageFileName === null) {
-                        $skippedRecords[] = [
-                            'name' => $product['product_name'] ?? 'Unknown',
-                            'sku' => $product['sku'],
-                            'date' => now()->format('Y-m-d H:i:s'),
-                            'reason' => "Failed to fetch image"
-                        ];
-                        continue; // Skip the record safely
-                    }
-                }
+            if (empty($imageVariations)) {
+                $skippedRecords[] = [
+                    'name' => $product['product_name'] ?? 'Unknown',
+                    'sku' => $sku,
+                    'date' => now()->format('Y-m-d H:i:s'),
+                    'reason' => "No valid images found",
+                ];
+                $skippedCount++;
+                continue;
             }
 
-            // Determine the surfaces (Wall, Floor, Counter)
-            $surfaces = $this->determineSurfaceValues($product);
+            $imageCache = [];
+            $baseName = trim($product['product_name']);
+            $rotoPrintSetName = str_replace(" FP", "", $baseName);
+            $variationIndex = 1;
 
-            foreach ($surfaces as $surface) {
-                $product['surface'] = trim($surface);
-                $data = $this->prepareTileData($product, $creation_time, $imageFileName);
+            foreach ($imageVariations as $column => $imageURL) {
+                foreach ($surfaces as $surface) {
+                    $product['surface'] = trim($surface);
 
-                // Skip record if the `skip` flag is set
-                if (isset($data['skip']) && $data['skip'] === true) {
-                    $skippedRecords[] = [
-                        'name' => $product['product_name'] ?? 'Unknown',
-                        'sku' => $product['sku'] ?? 'Unknown',
-                        'date' => now()->format('Y-m-d H:i:s'),
-                        'reason' => $data['reason'] // Dynamic reason based on missing fields
-                    ];
-                    continue; // Skip processing this record
-                }
+                    if (!isset($imageCache[$imageURL])) {
+                        $imageFileName = $this->fetchAndSaveImage($imageURL);
+                        if ($imageFileName === null) continue;
+                        $imageCache[$imageURL] = $imageFileName;
+                    } else {
+                        $imageFileName = $imageCache[$imageURL];
+                    }
 
-                try {
-                    $existing = DB::table('tiles')->where('sku', $product['sku'])->where('surface', $surface)->first();
-                    $action = $existing ? 'Updated' : 'Inserted';
+                    $variationName = ($variationIndex === 1) ? $baseName : "{$baseName} " . str_pad($variationIndex, 2, '0', STR_PAD_LEFT);
+
+                    // Clear all image fields
+                    $product[$column] = $imageURL;
+                    $product['product_name'] = $variationName;
+                    $product['rotoPrintSetName'] = $rotoPrintSetName;
+                    $data = $this->prepareTileData($product, $creation_time, $imageFileName);
+
+                    $existing = DB::table('tiles')->where([['sku', $sku], ['surface', $surface], ['file', $imageFileName]])->first();
+
                     if ($existing) {
-                        // Check for changes
                         $isDifferent = false;
                         foreach ($data as $key => $value) {
                             if ($existing->$key != $value) {
@@ -169,72 +130,50 @@ class ProcessTilesJob implements ShouldQueue
                                 break;
                             }
                         }
+
                         if ($isDifferent) {
-                            if (!isset($uniqueUpdated[$sku])) {
-                                $uniqueUpdated[$sku] = true;
-                                $updatedCount++;
-                            }
-                            // Update the record and only modify `updated_at`
                             $data['updated_at'] = now();
-                            DB::table('tiles')->where('sku', $product['sku'])->where('surface', $surface)->update($data);
-                            Log::info("Updated SKU: {$product['sku']} for Surface: $surface");
+                            DB::table('tiles')->where([
+                                ['sku', $sku],
+                                ['surface', $surface],
+                                ['file', $imageFileName]
+                            ])->update($data);
+                            $updatedCount++;
+                            Log::info("Updated SKU: {$sku} - Surface: {$surface} - Name: {$variationName}");
                         }
                     } else {
-                        if (!isset($uniqueInserted[$sku])) {
-                            $uniqueInserted[$sku] = true;
-                            $insertedCount++;
-                        }
-                        // Set both `created_at` and `updated_at` when inserting a new record
-                        $now = now();
-                        $data['created_at'] = $now;
-                        $data['updated_at'] = $now;
+                        $data['created_at'] = now();
+                        $data['updated_at'] = now();
                         DB::table('tiles')->insert($data);
-                        Log::info("Inserted new SKU: {$product['sku']} for Surface: $surface");
+                        $insertedCount++;
+                        Log::info("Inserted SKU: {$sku} - Surface: {$surface} - Name: {$variationName}");
                     }
 
                     $processedCount++;
-
-                    // Store progress update **AFTER EACH RECORD**
-                    $progressPercentage = min(($processedCount / $this->totalCount) * 100, 100);
-                    Cache::put('tile_processing_progress', [
-                        'total' => $this->totalCount,
-                        'processed' => $processedCount,
-                        'percentage' => $progressPercentage,
-                        'inserted' => $insertedCount,
-                        'updated' => $updatedCount,
-                        'skipped' => $skippedCount,
-                        'status' => "$processedCount / $this->totalCount records processed",
-                        'last_record' => [
-                            'name' => $product['product_name'] ?? 'Unknown',
-                            'sku' => $product['sku'],
-                            'surface' => $surface,
-                            'action' => $action,
-                        ],
-                        'skipped_records' => $skippedRecords, // Store skipped/error records
-                    ], now()->addMinutes(10));
-                } catch (\Exception $e) {
-                    if (!isset($uniqueSkipped[$sku])) {
-                        $uniqueSkipped[$sku] = true;
-                        $skippedCount++;
-                    }
-                    $skippedRecords[] = [
-                        'name' => $product['product_name'] ?? 'Unknown',
-                        'sku' => $sku,
-                        'date' => now()->format('Y-m-d H:i:s'),
-                        'reason' => "Error: " . $e->getMessage()
-                    ];
-                    Log::error("Error processing SKU: {$sku} - " . $e->getMessage());
                 }
+                $variationIndex++;
             }
         }
 
-        //update companies table
         DB::table('companies')->update([
             'last_fetch_date_from_api' => $this->endDate,
             'fetch_products_count' => $this->totalCount,
             'updated_at' => now(),
         ]);
-        Log::info('Updated last fetch date in companies table.');
-        Log::info("Tile processing completed successfully.");
+
+        Cache::put('tile_processing_progress', [
+            'total' => $this->totalCount,
+            'processed' => $processedCount,
+            'percentage' => min(($processedCount / $this->totalCount) * 100, 100),
+            'inserted' => $insertedCount,
+            'updated' => $updatedCount,
+            'skipped' => $skippedCount,
+            'status' => "$processedCount / $this->totalCount records processed",
+            'skipped_records' => $skippedRecords,
+        ], now()->addMinutes(10));
+
+        Log::info('Tile processing completed successfully.');
     }
+
+
 }
