@@ -146,12 +146,12 @@ function share_button(){
     var windowWidth = $(window).width();
     if( windowWidth <= 991){
         $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 20);
-      }
-      else{
-       
-          $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 5);
-      }
-    
+    }
+    else{
+
+        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 5);
+    }
+
 
 
 }
@@ -222,12 +222,12 @@ $(window).on('load', function () {
                 $(".partOfProductTabContent-wrap").show(); // Show the content wrapper
                 $(".back-btn").css({ left: newLeft });
                 $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
-               // $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 5);
+                // $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 5);
                 $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight + 21);
                 share_button();
-            
-              
-                        
+
+
+
             }, 19);
         }
     }, 500);
@@ -252,6 +252,7 @@ $(window).on('resize', function () {
 function openTopPanel() {
     topPanelCustomVisible = true;
     setTopPanelOpenPosition(true);
+    $('#topPanelTilesListUl').show();
 }
 function closeTopPanel() {
     topPanelCustomVisible = false;
