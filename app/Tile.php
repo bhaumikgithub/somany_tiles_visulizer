@@ -249,15 +249,19 @@ class Tile extends Model
             if (is_array($roomType)) {
                 $query->orWhere(function ($subQuery) use ($roomType) {
                     foreach ($roomType as $room) {
-                        $subQuery->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$room])
+                        $subQuery->orWhereRaw("FIND_IN_SET(?, application_room_area)", [$room])
+                            ->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$room]) // Matches "LivingRoom" too
                             ->orWhereRaw("LOWER(application_room_area) REGEXP ?", ['(^|[ ,])' . strtolower($room) . '($|[ ,])']);
                     }
                 });
             } else {
-                $query->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$roomType])
+                $query->orWhereRaw("FIND_IN_SET(?, application_room_area)", [$roomType])
+                    ->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$roomType]) // Matches "LivingRoom" too
                     ->orWhereRaw("LOWER(application_room_area) REGEXP ?", ['(^|[ ,])' . strtolower($roomType) . '($|[ ,])']);
             }
         });
     }
+
+
 
 }
