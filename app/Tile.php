@@ -222,7 +222,7 @@ class Tile extends Model
         return $query->where(function ($query) use ($getZone) {
             $query->whereNull('service_geography')
                 ->orWhere('service_geography', 'Pan India')
-                ->orWhereRaw('LOWER(service_geography) LIKE ?', ['%' . strtolower($getZone) . '%']);
+                ->orWhereRaw("LOWER(service_geography) REGEXP ?", ['(^|[ ,&])' . preg_quote(strtolower($getZone), '/') . '([ ,&]|$)']);
         })->where('enabled', 1);
     }
 
@@ -244,18 +244,24 @@ class Tile extends Model
     public function scopeFilterByRoomType($query, $roomType)
     {
         return $query->where(function ($query) use ($roomType) {
+            $query->whereNull('application_room_area'); // Include NULL values
+
             if (is_array($roomType)) {
-                foreach ($roomType as $room) {
-                    $query->whereNull('application_room_area')
-                        ->orWhereRaw("FIND_IN_SET(?, application_room_area)", [$room])
-                        ->orWhereRaw("LOWER(application_room_area) LIKE ?", ['%' . strtolower($room) . '%']);
-                }
+                $query->orWhere(function ($subQuery) use ($roomType) {
+                    foreach ($roomType as $room) {
+                        $subQuery->orWhereRaw("FIND_IN_SET(?, application_room_area)", [$room])
+                            ->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$room]) // Matches "LivingRoom" too
+                            ->orWhereRaw("LOWER(application_room_area) REGEXP ?", ['(^|[ ,])' . strtolower($room) . '($|[ ,])']);
+                    }
+                });
             } else {
-                $query->whereNull('application_room_area') // Include NULL values
-                ->orWhereRaw("FIND_IN_SET(?, application_room_area)", [$roomType])
-                    ->orWhereRaw("LOWER(application_room_area) LIKE ?", ['%' . strtolower($roomType) . '%']);
+                $query->orWhereRaw("FIND_IN_SET(?, application_room_area)", [$roomType])
+                    ->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$roomType]) // Matches "LivingRoom" too
+                    ->orWhereRaw("LOWER(application_room_area) REGEXP ?", ['(^|[ ,])' . strtolower($roomType) . '($|[ ,])']);
             }
         });
     }
+
+
 
 }
