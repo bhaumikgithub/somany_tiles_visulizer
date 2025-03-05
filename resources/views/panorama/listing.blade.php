@@ -7,7 +7,7 @@
                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 padding-section">
                         <div class="cms-element-text">
                             <div class="body-selection-item">
-                                <a title="{{$aRoom->name}}" href="{{'/panorama/' . $aRoom->id}}">
+                                <a title="{{$aRoom->name}}" href="{{'/panorama-studio/' . $aRoom->id}}">
                                     <div class="body-selection-item-text">{{$aRoom->name}}</div>
                                     <div style="background-image:url({{$aRoom->icon}});" class="body-selection-item-image"></div>
                                     <!-- <div style="background-image:url(../images/l-1.jpg);" class="body-selection-item-image"></div> -->
@@ -19,7 +19,7 @@
             @endif
         </div>
         <div class=" cmn-back-btn" >
-            <a href="{{ url('/panorama') }}"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
+            <a href="{{ url('/panorama-studio') }}"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
     </span></a>
             <p class="btn-text-set-back">Back </p></div>
 

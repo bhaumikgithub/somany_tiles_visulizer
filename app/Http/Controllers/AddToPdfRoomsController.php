@@ -14,6 +14,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -60,8 +61,6 @@ class AddToPdfRoomsController extends Controller
 
         // Retrieve session ID
         $sessionId = $request->session()->getId();
-        // Retrieve or initialize cart from session
-        //$allProduct = $request->session()->get('allProduct', []);
 
         // Decode base64 image
         $image = str_replace('data:image/jpeg;base64,', '', $imageData);
@@ -183,7 +182,9 @@ class AddToPdfRoomsController extends Controller
         $productInfo->cart_id = $cart_id;
         $productInfo->save();
 
-        //$request->session()->put('allProduct', $productInfo);
+        // Store cart session
+        $request->session()->put('cart', $cart_id);
+
         $getCartId = Cart::where('user_id',$sessionId)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
         $count = $allProduct->count();
@@ -219,12 +220,16 @@ class AddToPdfRoomsController extends Controller
 
     public function pdfSummary(Request $request , $randomKey): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
-        $pincode = Session::get('pincode'); // Store the pincode temporarily
+        $pincode = Session::get('pincode'); // Store the pin code temporarily
+        
+        //Update pin code in cart summary page
+        $getCartId = Cart::where('random_key',$randomKey)->first();
+        $getCartId->pincode = $pincode;
+        $getCartId->update();
 
-        Session::flush(); // Clears all session data
+        // Destroy only the cart session, keeping user login session
+        Session::forget(['cart','pincode']);
 
-        Session::put('pincode', $pincode); // Restore the pincode session
-            
         // Optionally, regenerate session ID for the user
         $request->session()->regenerate();  // This generates a new session ID
 
@@ -239,7 +244,7 @@ class AddToPdfRoomsController extends Controller
                 'showrooms' => [],
             ];
         }        // Retrieve the pincode from the session
-        $pincode = session('pincode', null); // Default to null if not set
+        $pincode = $getCartId->pincode ?? null;
 
 
         $groupedTiles = $this->getProcessedTiles($allProduct);
@@ -253,10 +258,6 @@ class AddToPdfRoomsController extends Controller
             $isReadOnly = true;
             $upform_data = $savedUserpdfData->first();
         }
-
-        // if($isReadOnly){
-        //     $upform_data = UserPdfData::where([['unique_id',$randomKey],['name',base64_decode(request()->query('name'))]])->get()->first();
-        // }
 
         $cc_date = $getCartId->created_at->format('d-m-y');
         return view('pdf.cart_summary',compact('allProduct','randomKey','groupedTiles','upform_data','isReadOnly','cc_date','groupedTiles','pincode','userShowroomInfo'));
@@ -315,7 +316,7 @@ class AddToPdfRoomsController extends Controller
             'contact_no' => $request->mobileNumber,
             'state' => $request->state,
             'city' => $request->city,
-            'pin_code' => session('pincode', null)// Default to null if not set
+            'pin_code' => $getCartId->pincode ?? null
         ];
 
         $firstProduct = $allProduct->first(); // This returns the first CartItem model

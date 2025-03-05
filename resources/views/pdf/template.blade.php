@@ -481,8 +481,8 @@
                             <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Tiles/Box</th>
                             <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Box Coverage<br>Area Sq. Ft.</th>
                             <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">Box<br> Required</th>
+                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">MRP</th>
                             <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">MRP/<br>Box</th>
-                            <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #cbd3be;">MRP<br>Price</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -500,8 +500,8 @@
                                     <td style="border: 1px solid #b7bab2;padding: 8px;text-align: center;background-color: #eff2eb;">{{ $tile['tiles_per_box'] }}</td>
                                     <td style="border: 1px solid #b7bab2;padding: 8px;text-align: center;background-color: #eff2eb;">{{ ( $tile['box_coverage_area_sq_ft'] === "-" ) ? "-" : $tile['box_coverage_area_sq_ft'] }}</td>
                                     <td style="border: 1px solid #b7bab2;padding: 8px;text-align: center;background-color: #eff2eb;">{{ $tile['box_required'] }}</td>
-                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['mrp_per_sq_ft'] }}</td>
                                     <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
+                                    <td style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #eff2eb;">{{ $tile['mrp_per_sq_ft'] }}</td>
                                     @php
                                         $i++; // Increment only when a valid row is printed
                                     @endphp
@@ -520,8 +520,8 @@
                                 <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;"></th>
                                 <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;"></th>
                                 <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;"></th>
-                                <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;"></th>
                                 <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;">{{ ( $totalMrpPrice === 0 ) ? "" : "Rs. ". number_format($totalMrpPrice) }}</th>
+                                <th style="border: 1px solid #b7bab2;padding: 8px;text-align: left;background-color: #e5efd7;"></th>
                             </tr>
                         </tbody>
                     </table>
@@ -543,11 +543,9 @@
                     <h3 style="color:#413f41;">Disclaimer:</h3>
                     <ul style="margin-left:10px;list-style-type: decimal;  " class="normalText">
                         <li style="margin-left:-25px;">The visuals are for reference purposes only; actual colors, finishes, and tile dimensions may vary.</li>
-                        <li style="margin-left:-25px;">Shade variation is an inherent characteristic of tiles; therefore, physical inspection is recommended for accurate selection.
-                        </li>
+                        <li style="margin-left:-25px;">Shade variation is a natural characteristic of tiles, making each piece unique. We highly recommend a physical inspection for accurate selection. Visit our showroom for the best selection and precise assessment.</li>
                         <li style="margin-left:-25px;">Tiles with multiple faces exhibit varied patterns, resulting in natural design variations.</li>
-                        <li style="margin-left:-25px;">Prices quoted are subject to change without prior notice. The final price applicable at the time of purchase will prevail.
-                        </li>
+                        <li style="margin-left:-25px;">Prices quoted are subject to change without prior notice. For the best offers and discounts, visit our nearest showroom.</li>
                     </ul>
                 </div>
             </div>

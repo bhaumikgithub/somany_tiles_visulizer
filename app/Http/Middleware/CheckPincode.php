@@ -28,6 +28,11 @@ class CheckPincode
         $excludedRoutes = ['generate-pdf'];
         $isPdfSummaryRoute = str_contains($request->path(), 'pdf-summary');
 
+        // Exclude direct room URLs from redirection
+        if (preg_match('/^room\/url\/[a-f0-9]{32}$/', $request->path())) {
+            return $next($request);
+        }
+
         // Check if redirection is required
         if (!session()->has('pincode') &&
             !session()->has('redirected_to_room') &&
@@ -35,9 +40,9 @@ class CheckPincode
             !$isPdfSummaryRoute) {
 
             // Determine a redirect path based on user's requested route
-            if (str_contains($request->path(), 'panorama') && $engine_panorama_enabled) {
+            if (str_contains($request->path(), 'panorama-studio') && $engine_panorama_enabled) {
                 $redirectPath = '/panorama';
-            } elseif (str_contains($request->path(), 'room2d') && $engine_2d_enabled) {
+            } elseif (str_contains($request->path(), '2d-studio') && $engine_2d_enabled) {
                 $redirectPath = '/room2d';
             } elseif (str_contains($request->path(), 'room_ai') && $engine_roomai_enabled) { // Room AI condition
                 $redirectPath = '/room_ai';
@@ -45,8 +50,8 @@ class CheckPincode
                 // Default redirection based on available engines
                 $redirectPath =
                     $engine_roomai_enabled ? '/room_ai' :
-                        ($engine_2d_enabled ? '/room2d' :
-                            ($engine_panorama_enabled ? '/panorama' : '/'));
+                        ($engine_2d_enabled ? '/2d-studio' :
+                            ($engine_panorama_enabled ? '/panorama-studio' : '/'));
             }
 
             // Mark as redirected

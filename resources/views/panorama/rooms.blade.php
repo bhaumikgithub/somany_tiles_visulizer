@@ -101,7 +101,7 @@ function editRoom(id) {
     window.$('#form-update-room-theme-5-img').attr('src', '');
 
     window.$.ajax({
-        url: '/get/panorama/' + id,
+        url: '/get/panorama-studio/' + id,
         success: function (room) {
             window.$('#form-update-room-id').val(room.id);
             window.$('#form-update-room-name').val(room.name);
@@ -399,7 +399,7 @@ function showBigIconImageModal(name, image) {
     </ul>
   </div>
 
-  <h3 class="panel-heading">2D Rooms list</h3>
+  <h3 class="panel-heading">Panorama Rooms list</h3>
 
   <div class="panel-body">
     <table class="table table-striped">
@@ -425,9 +425,9 @@ function showBigIconImageModal(name, image) {
           <td class="table-text">
             <img src="{{ $room->icon }}" alt="" class="img-thumbnail" style="max-width: 64px; max-height: 64px; cursor: pointer;" onclick="showBigIconImageModal('{{ $room->name }}', this.src);">
           </td>
-          <td class="table-text bold"><a href="#" onclick="editRoom( {{ $room->id }} );" title="Edit">{{ $room->name }}</a></td>
+          <td class="table-text bold"><a href="javascript:void(0);" onclick="editRoom( {{ $room->id }} );" title="Edit">{{ $room->name }}</a></td>
           <td class="table-text"> @if (isset($roomTypes[$room->type])) {{ $roomTypes[$room->type] }} @else {{ $room->type }} @endif </td>
-          <td class="table-text"><a href="/panorama/{{ $room->id }}" title="/panorama/{{ $room->id }}"><img src="/img/icons/panorama.png" alt="" width="32"></a></td>
+          <td class="table-text"><a href="/panorama-studio/{{ $room->id }}" title="/panorama-studio/{{ $room->id }}"><img src="/img/icons/panorama.png" alt="" width="32"></a></td>
           <td class="table-text">@if ($room->enabled) Yes @else No @endif</td>
           <td class="table-text">
             <button type="button" class="close" onclick="deleteRoom({{ $room->id }});" title="Remove Room">&times;</button>

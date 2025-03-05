@@ -101,7 +101,7 @@ function editRoom(id) {
     window.$('#form-update-room-theme-5-img').attr('src', '');
 
     window.$.ajax({
-        url: '/get/room2d/' + id,
+        url: '/get/2d-studio/' + id,
         success: function (room) {
             window.$('#form-update-room-id').val(room.id);
             window.$('#form-update-room-name').val(room.name);
@@ -406,9 +406,9 @@ function showBigIconImageModal(name, image) {
           <td class="table-text">
             <img src="{{ $room->icon }}" alt="" class="img-thumbnail" style="max-width: 64px; max-height: 64px; cursor: pointer;" onclick="showBigIconImageModal('{{ $room->name }}', this.src);">
           </td>
-          <td class="table-text bold"><a href="#" onclick="editRoom( {{ $room->id }} );" title="Edit">{{ $room->name }}</a></td>
+          <td class="table-text bold"><a href="javascript:void(0);" onclick="editRoom( {{ $room->id }} );" title="Edit">{{ $room->name }}</a></td>
           <td class="table-text"> @if (isset($roomTypes[$room->type])) {{ $roomTypes[$room->type] }} @else {{ $room->type }} @endif </td>
-          <td class="table-text"><a href="/room2d/{{ $room->id }}" title="/room2d/{{ $room->id }}"><img src="/img/icons/2d.png" alt="" width="32"></a></td>
+          <td class="table-text"><a href="/2d-studio/{{ $room->id }}" title="/2d-studio/{{ $room->id }}"><img src="/img/icons/2d.png" alt="" width="32"></a></td>
           <td class="table-text">@if ($room->enabled) Yes @else No @endif</td>
           <td class="table-text">
             <a href="/room2d/{{ $room->id }}/surfaces">Edit Tiled Surfaces</a>

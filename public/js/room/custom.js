@@ -125,8 +125,8 @@ function AdjustCanvasWidthHeight() {
     else {
         $(".back-btn").css({ left: newLeft });
         $(".cn-btn").css({ right: newRight });
-        $(".share-btn-img").css({ right: newRight + 21 });
         $(".share-div").css({ right: newRight + 21 });
+        share_button();
 
     }
     if(isThisMobileDevice()==true){
@@ -142,7 +142,19 @@ function AdjustCanvasWidthHeight() {
     showHideTabs();
 
 }
+function share_button(){
+    var windowWidth = $(window).width();
+    if( windowWidth <= 991){
+        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 20);
+    }
+    else{
 
+        $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 5);
+    }
+
+
+
+}
 function isThisMobileDevice(){
     if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/Opera Mini/i) || navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/Windows Phone/i)) {
 
@@ -210,8 +222,12 @@ $(window).on('load', function () {
                 $(".partOfProductTabContent-wrap").show(); // Show the content wrapper
                 $(".back-btn").css({ left: newLeft });
                 $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
-                $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 21);
+                // $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 5);
                 $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight + 21);
+                share_button();
+
+
+
             }, 19);
         }
     }, 500);
@@ -236,6 +252,7 @@ $(window).on('resize', function () {
 function openTopPanel() {
     topPanelCustomVisible = true;
     setTopPanelOpenPosition(true);
+    $('#topPanelTilesListUl').show();
 }
 function closeTopPanel() {
     topPanelCustomVisible = false;

@@ -70,7 +70,7 @@ let pathSegments1 = url1.pathname.split("/");
 function generateAndDownloadThumbnail(){
     // Create an offscreen canvas for the thumbnail
     let mainCanvas ;
-    if( pathSegments1[1] === "room2d") {
+    if( pathSegments1[1] === "2d-studio") {
         mainCanvas = document.getElementById('roomCanvas');
     } else {
         let containerDiv = document.getElementById("container");
@@ -89,7 +89,7 @@ function generateAndDownloadThumbnail(){
 
 function canvasImage() {
     let canvas;
-    if( pathSegments1[1] === "room2d") {
+    if( pathSegments1[1] === "2d-studio") {
         canvas = document.getElementById('roomCanvas');
     } else {
         let containerDiv = document.getElementById("container");
@@ -679,9 +679,23 @@ function validationCheck(){
 }
 
 function downloadImage() {
+    let category_name = formatRoomName($('#current_room_name').val());
+    let category_type = $('#current_room_type').val();
+
+    console.log(window.location.pathname.includes("panorama"));
+    let is3D = window.location.pathname.includes("panorama"); // Check if in 3D mode
+    let prefix = is3D ? "3d_" : "";
+    let key = `${category_type}_${category_name}`;
+
+    // Retrieve count from sessionStorage
+    let count = sessionStorage.getItem(key) ? parseInt(sessionStorage.getItem(key)) : 0;
+    count++;
+    sessionStorage.setItem(key, count);
+
+    let fileName = `${prefix}${category_type}_${category_name}_img_${count}.jpg`;
 
     let canvas;
-    if( pathSegments1[1] === "room2d") {
+    if( pathSegments1[1] === "2d-studio") {
         canvas = document.getElementById('roomCanvas');
     } else {
         let containerDiv = document.getElementById("container");
@@ -689,55 +703,30 @@ function downloadImage() {
     }
 
     let imageCanvas = document.createElement('canvas');
-
     imageCanvas.width = canvas.width;
-
     imageCanvas.height = canvas.height;
-
-
-
     let imageCanvasContext = imageCanvas.getContext('2d');
-
     imageCanvasContext.drawImage(canvas, 0, 0, canvas.width, canvas.height);
-
-
-
     let companyLogo = document.getElementById('companyLogo');
-
     imageCanvasContext.drawImage(companyLogo, 20, 20, companyLogo.clientWidth, companyLogo.clientHeight);
-
-
-
     if (imageCanvas.msToBlob) {
-
-        // for IE
-
-        var blob = imageCanvas.msToBlob();
-
-        window.navigator.msSaveBlob(blob, document.title + '.png');
-
+        let blob = imageCanvas.msToBlob();
+        window.navigator.msSaveBlob(blob, fileName);
     } else {
-
-        var imgDataUrl = imageCanvas.toDataURL('image/jpeg');
-
-        var link = document.createElement('a');
-
+        let imgDataUrl = imageCanvas.toDataURL('image/jpeg');
+        let link = document.createElement('a');
         if (typeof link.download === 'string') {
-
             document.body.appendChild(link);
-
             link.href = changeDpiDataUrl(imgDataUrl, 300);
-
-            link.download = document.title + '.jpg';
-
+            link.download = fileName;
             link.click();
-
             document.body.removeChild(link);
-
         }
-
     }
+}
 
+function formatRoomName(roomName) {
+    return roomName.toLowerCase().replace(/\s+/g, '_');
 }
 
 let JPEG = 'image/jpeg';
