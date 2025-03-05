@@ -251,7 +251,7 @@ Route::group(['middleware' => 'role:administrator'], function () {
             'skipped_records' => [],
         ]);
 
-        \Log::info("Progress Data:", $progress); // ✅ Debug cache content
+        //\Log::info("Progress Data:", $progress); // ✅ Debug cache content
 
         return response()->json($progress);
     });
