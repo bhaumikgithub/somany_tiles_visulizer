@@ -153,7 +153,7 @@ class InsertTilesFromAPI implements ShouldQueue
                     $product['real_file'] = $product['image_variation_1'] = $product['image_variation_2'] = $product['image_variation_3'] = null;
 
                     // Assign the image to the correct column
-                    $product[$column] = $imageFileName;
+                    $product[$column] = $imageURL;
 
                     // Assign variation name
                     $product['product_name'] = $variationName;
@@ -163,9 +163,7 @@ class InsertTilesFromAPI implements ShouldQueue
 
                     $existing = DB::table('tiles')->where([
                         ['sku', $product['sku']],
-                        ['surface', $surface],
-                        ['file', $imageFileName]
-                    ])->first();
+                        ['surface', $surface]])->first();
 
                     if ($existing) {
                         $isDifferent = false;
@@ -209,9 +207,9 @@ class InsertTilesFromAPI implements ShouldQueue
 
         return [
             'insertedCount' => $insertedCount,
-//            'updatedCount' => $updatedCount,
+            'updatedCount' => $updatedCount,
             'count' => $count,
-//            'unchangedCount' => $unchangedCount
+            'unchangedCount' => $unchangedCount
         ];
     }
 

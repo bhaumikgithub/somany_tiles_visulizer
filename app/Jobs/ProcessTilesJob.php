@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Traits\ApiHelper;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -31,7 +32,7 @@ class ProcessTilesJob implements ShouldQueue
 
     /**
      * Execute the job.
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(): void
     {
@@ -112,8 +113,6 @@ class ProcessTilesJob implements ShouldQueue
 
                 foreach ($surfaces as $surface) {
                     $product['surface'] = trim($surface);
-
-                    // Check if this variant already exists (SKU + Surface + Image)
                     $existingTile = $existingTilesMap[$sku][$surface][$imageURL] ?? null;
                     $variantName = ($variationIndex === 1) ? $baseName : "{$baseName} " . str_pad($variationIndex, 2, '0', STR_PAD_LEFT);
 
@@ -127,10 +126,9 @@ class ProcessTilesJob implements ShouldQueue
                     $data = $this->prepareTileData($product, $creation_time, $imageFileName);
 
                     if ($existingTile) {
-                        // Update only if data has changed
                         $existingDBTile = DB::table('tiles')->where('id', $existingTile['id'])->first();
-                        $isDifferent = false;
 
+                        $isDifferent = false;
                         foreach ($data as $key => $value) {
                             if ($existingDBTile->$key != $value) {
                                 $isDifferent = true;
@@ -142,7 +140,7 @@ class ProcessTilesJob implements ShouldQueue
                             $data['updated_at'] = now();
                             DB::table('tiles')->where('id', $existingTile['id'])->update($data);
                             $updatedCount++;
-                            Log::info("Updated Tile ID: {$existingTile['id']} SKU: {$sku} - Surface: {$surface} - Name: {$variantName}");
+                            Log::info("Updated Tile ID: {$existingTile['id']}");
                         } else {
                             $skippedRecords[] = ['sku' => $sku, 'reason' => "No changes detected"];
                             $skippedCount++;
