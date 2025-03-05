@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('room_ais', function (Blueprint $table) {
             $table->id();
+            $table->string('name', '255');
+            $table->string('type', '32')->nullable();
+            $table->string('icon', '255')->nullable();
+            $table->string('shadow', '1000');
+            $table->string('shadow_matt', '1000');
+            $table->text('surfaces');
             $table->string('thumbnailUrl')->nullable();
             $table->string('file')->nullable();
             $table->string('visitorId')->nullable();
