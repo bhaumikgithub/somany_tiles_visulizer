@@ -486,6 +486,7 @@ $("#calculate_btn").click(function () {
         let tileSelector = $('div#tile' + tile_id + ' div.tiles_carton_wrapper_'+cart_item_id+'_'+blockId);
         tileSelector.css('display','block');
         tileSelector.find('input#require_box').val(boxNeeded);
+        tileSelector.find('p.textBoxWrap').css('display','block');
         tileSelector.find('span.require_box').text(boxNeeded);
         $('#required_box').show();
         displayResult("#required_box","Required Boxes : <b>" + boxNeeded+"</b> <small>(1 box have "+tilesIn1Box+" Tiles)</small>");
