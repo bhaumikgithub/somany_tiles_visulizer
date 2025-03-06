@@ -11,7 +11,7 @@ function addToPDF(){
         alert("Please select any tiles first");
     } else { // Show the loading message
         // Show the loading message
-        $('#loadingMessage').show();
+        $('.loadingMessage').show();
         window.$.ajax({
             url: '/add-to-pdf-data-store', // Laravel route URL
             method: 'POST',
@@ -28,7 +28,7 @@ function addToPDF(){
             },
             success: function (response) {
                 // Hide the loading message
-                $('#loadingMessage').remove();
+                $('.loadingMessage').hide();
 
                 $('#dialogSaveModalBox').modal('hide');
                 $('.product_title').text('Selected Rooms');
