@@ -100,7 +100,7 @@
                                                             </div>
                                                             <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
                                                         @endif
-                                                        @if( session()->has('pincode') )
+                                                        @if( isset($pincode) )
                                                             @php
                                                                 $surface_title = (  isset($tile_detail->surface_title ) ) ? ucfirst($tile_detail->surface_title) : ucfirst($tile_detail->surface) ;
                                                             @endphp
