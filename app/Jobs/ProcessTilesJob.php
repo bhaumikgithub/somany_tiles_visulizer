@@ -75,10 +75,32 @@ class ProcessTilesJob implements ShouldQueue
             $processedCount++;
             $creation_time = Carbon::parse($aTile['creation_time'])->format('Y-m-d H:i:s');
 
-            // Skip excluded SKUs and deleted products
-            if (in_array($sku, ['12345678', '1223324324']) || (isset($product['deletion']) && !in_array($product['deletion'], ['RUNNING', 'SLOW MOVING']))) {
-                $skippedRecords[] = ['sku' => $sku, 'reason' => "Excluded SKU or deletion flag"];
+            // Skip specific SKUs
+            if (in_array($product['sku'], ['12345678', '1223324324'])) {
+                Log::info("Skipping SKU: {$product['sku']} due to exclusion.");
+                if (!isset($uniqueSkipped[$sku])) {
+                    $uniqueSkipped[$sku] = true;
+                    $skippedCount++;
+                    $skippedRecords[] = [
+                        'name' => $product['product_name'] ?? 'Unknown',
+                        'sku' => $sku,
+                        'date' => now()->format('Y-m-d H:i:s'),
+                        'reason' => "Missing required fields"
+                    ];
+                }
+                continue;
+            }
+
+            // Skip records based on a deletion flag
+            if (isset($product['deletion']) && !in_array($product['deletion'], ['RUNNING', 'SLOW MOVING'])) {
+                Log::info("Skipping SKU: {$product['sku']} due to deletion flag: {$product['deletion']}");
                 $skippedCount++;
+                $skippedRecords[] = [
+                    'name' => $product['product_name'] ?? 'Unknown',
+                    'sku' => $product['sku'],
+                    'date' => now()->format('Y-m-d H:i:s'),
+                    'reason' => "Deletion flag: {$product['deletion']}"
+                ];
                 continue;
             }
 
@@ -93,6 +115,14 @@ class ProcessTilesJob implements ShouldQueue
 
             if (empty($imageVariations)) {
                 $skippedRecords[] = ['sku' => $sku, 'reason' => "No valid images found"];
+                // Store this record in a skipped records list
+                $skippedRecords[] = [
+                    'name' => $product['product_name'] ?? 'Unknown',
+                    'sku' => $product['sku'],
+                    'date' => now()->format('Y-m-d H:i:s'),
+                    'reason' => "Unsupported image format"
+                ];
+
                 $skippedCount++;
                 continue;
             }
@@ -160,6 +190,36 @@ class ProcessTilesJob implements ShouldQueue
                 }
                 $variationIndex++;
             }
+        }
+
+        // Step 1: Extract API SKUs
+        $apiSkus = collect($this->records)->pluck('attributes.sku')->filter()->unique()->toArray();
+
+        // Step 2: Fetch Existing SKUs and Names from Database
+        $existingTiles = DB::table('tiles')->select('sku', 'name')->get();
+        $existingTilesMap = $existingTiles->pluck('name', 'sku')->toArray();
+        $existingSkus = array_keys($existingTilesMap); // Extract only SKUs
+
+        // Step 3: Identify SKUs to Delete
+        $skusToDelete = array_diff($existingSkus, $apiSkus);
+
+        if (!empty($skusToDelete)) {
+            // Update deleted_at column instead of deleting
+            DB::table('tiles')
+                ->whereIn('sku', $skusToDelete)
+                ->update(['deleted_at' => now()]);
+
+            // Log skipped records with tile names
+            foreach ($skusToDelete as $sku) {
+                $skippedRecords[] = [
+                    'name' => $existingTilesMap[$sku] ?? '-',
+                    'sku' => $sku,
+                    'date' => now()->format('Y-m-d H:i:s'),
+                    'reason' => "Marked tile as deleted"
+                ];
+            }
+
+            Log::info("Marked tiles as deleted (soft delete) for missing SKUs: " . implode(', ', $skusToDelete));
         }
 
         // Update processing status
