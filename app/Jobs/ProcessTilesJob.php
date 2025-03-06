@@ -60,7 +60,7 @@ class ProcessTilesJob implements ShouldQueue
         $existingTilesMap = [];
 
         foreach ($existingTiles as $tile) {
-            $existingTilesMap[$tile->sku][$tile->surface][$tile->real_file] = [
+            $existingTilesMap[$tile->sku][$tile->surface] = [
                 'id' => $tile->id,
                 'file' => $tile->file,
                 'product_name' => $tile->name,
@@ -113,7 +113,7 @@ class ProcessTilesJob implements ShouldQueue
 
                 foreach ($surfaces as $surface) {
                     $product['surface'] = trim($surface);
-                    $existingTile = $existingTilesMap[$sku][$surface][$imageURL] ?? null;
+                    $existingTile = $existingTilesMap[$sku][$surface] ?? null;
                     $variantName = ($variationIndex === 1) ? $baseName : "{$baseName} " . str_pad($variationIndex, 2, '0', STR_PAD_LEFT);
 
                     // Clear all image fields before assigning
@@ -127,11 +127,13 @@ class ProcessTilesJob implements ShouldQueue
 
                     if ($existingTile) {
                         $existingDBTile = DB::table('tiles')->where('id', $existingTile['id'])->first();
-
                         $isDifferent = false;
+                        // Define columns to ignore in comparison
+                        $ignoredColumns = ['file','name'];
                         foreach ($data as $key => $value) {
-                            if ($existingDBTile->$key != $value) {
+                            if (!in_array($key, $ignoredColumns) && $existingDBTile->$key != $value) {
                                 $isDifferent = true;
+                                Log::info( "Key difference : {$existingDBTile->$key}: {$isDifferent}");
                                 break;
                             }
                         }
