@@ -555,7 +555,7 @@ $('#btnProduct').on('click', function () {
     var optionText = $('#optionText').text().trim();
     var firstWord = optionText.split(' ')[0].toLowerCase();
 
-    if (firstWord === "counter" || firstWord === "paint") {
+    if ( firstWord === "paint") {
         $('.top-panel-search').hide();
     } else {
         $('.top-panel-search').show();
@@ -724,7 +724,7 @@ $('#roomCanvas').on('click', function () {
     var firstTwoWords = titleWords.slice(0, 2).join(' ');  // Take the first two words and join them with a space
 
     // Check if the title contains "change counter" or "change paint"
-    if (firstTwoWords.toLowerCase() === "change counter" || firstTwoWords.toLowerCase() === "change paint") {
+    if (firstTwoWords.toLowerCase() === "change paint") {
         $('.serach-pad-set').hide();  // Hide the search panel
     } else {
         $('.serach-pad-set').show();  // Show the search panel
