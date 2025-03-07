@@ -1297,7 +1297,9 @@ Select All items on all pages
         } ?>
 
         <td class="table-text">
-            <a href="javascript:void(0);" onclick="openJsonModal({{$tile->api_json}})">View</a>
+            @if( $tile->from_api === '1')
+                <a href="javascript:void(0);" onclick="openJsonModal({{$tile->api_json}})">View</a>
+            @endif
         </td>
         <td class="table-text">
           <button type="button" class="close" onclick="deleteTile({{ $tile->id }})" title="Remove Tile">&times;</button>
