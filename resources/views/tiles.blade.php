@@ -672,6 +672,11 @@ function selectAllItemsOnAllPages(checked) {
     window.$('#warningAlertBox').slideUp();
 }
 
+function openJsonModal(data) {
+    $('#jsonData').text(JSON.stringify(data, null, 4)); // Format and insert JSON data
+    $('#jsonModal').modal('show');
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     'use strict';
     loadFilters();
@@ -687,6 +692,7 @@ document.addEventListener('DOMContentLoaded', function () {
         prepareExpPropsJsonString();
     }
 });
+
 </script>
 
 
@@ -941,6 +947,26 @@ document.addEventListener('DOMContentLoaded', function () {
   <input id="tilesFormInput" type="hidden" name="selectedTiles" value="">
 </form>
 
+<!-- Modal -->
+<div class="modal fade" id="jsonModal" tabindex="-1" aria-labelledby="jsonModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title" id="jsonModalLabel">API JSON</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <pre id="jsonData"></pre>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="confirmDialog" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -1122,7 +1148,7 @@ Select All items on all pages
         <th>Plant</th>
         @if (config('app.tiles_access_level'))<th>Access Level</th>@endif
         <th>Enabled</th>
-{{--        <th>API JSON</th>--}}
+        <th>API JSON</th>
         <th>&nbsp;</th>
   </tr>
 </thead>
@@ -1270,7 +1296,9 @@ Select All items on all pages
             echo "<td class=\"table-text\">$access_level</td>";
         } ?>
 
-{{--        <td class="table-text" title="{{$tile->api_json}}">@if ($tile->api_json) {{ substr($tile->api_json, 0, 8) }} @if (mb_strlen($tile->api_json) > 8) ... @endif @endif</td>--}}
+        <td class="table-text">
+            <a href="javascript:void(0);" onclick="openJsonModal({{$tile->api_json}})">View</a>
+        </td>
         <td class="table-text">
           <button type="button" class="close" onclick="deleteTile({{ $tile->id }})" title="Remove Tile">&times;</button>
         </td>
@@ -1284,5 +1312,4 @@ Select All items on all pages
 <div class="page-links" style="text-align: center;">{{ $tiles->links() }}</div>
 </div>
 </div>
-
 @endsection
