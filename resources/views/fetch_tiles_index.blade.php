@@ -48,7 +48,7 @@
 
 
             <div class="form-group skippedRecordWrapper" style="display: none;">
-                <h4 style="color: red;">Skipped / Error Records</h4>
+                <h4 style="color: red;">Skipped / Error / Deleted Records</h4>
                 <ul id="error-list"></ul> <!-- Skipped/Error records list -->
             </div>
         </div>

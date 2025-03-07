@@ -44,28 +44,11 @@ class ProcessTilesJob implements ShouldQueue
 
         Log::info('Starting tile processing. Total records: ' . $this->totalCount);
 
-        Cache::forever('tile_processing_progress', [
-            'total' => $this->totalCount,
-            'processed' => 0,
-            'inserted' => 0,
-            'updated' => 0,
-            'skipped' => 0,
-            'percentage' => 0,
-            'status' => "Processing started...",
-            'skipped_records' => [],
-        ]);
+        // Initialize cache for progress tracking
+        $this->updateProcessingCache(0, 0, 0, 0, "Processing started...", []);
 
-        // Fetch existing tiles (indexed by SKU + Surface + Image)
-        $existingTiles = DB::table('tiles')->select('id', 'sku', 'surface', 'file', 'real_file', 'name')->get();
-        $existingTilesMap = [];
-
-        foreach ($existingTiles as $tile) {
-            $existingTilesMap[$tile->sku][$tile->surface] = [
-                'id' => $tile->id,
-                'file' => $tile->file,
-                'product_name' => $tile->name,
-            ];
-        }
+        // Fetch existing tiles and organize them in a structured array
+        $existingTiles = DB::table('tiles')->get()->groupBy('sku');
 
         $imageCache = []; // Store fetched image filenames for reusability
 
@@ -75,54 +58,16 @@ class ProcessTilesJob implements ShouldQueue
             $processedCount++;
             $creation_time = Carbon::parse($aTile['creation_time'])->format('Y-m-d H:i:s');
 
-            // Skip specific SKUs
-            if (in_array($product['sku'], ['12345678', '1223324324'])) {
-                Log::info("Skipping SKU: {$product['sku']} due to exclusion.");
-                if (!isset($uniqueSkipped[$sku])) {
-                    $uniqueSkipped[$sku] = true;
-                    $skippedCount++;
-                    $skippedRecords[] = [
-                        'name' => $product['product_name'] ?? 'Unknown',
-                        'sku' => $sku,
-                        'date' => now()->format('Y-m-d H:i:s'),
-                        'reason' => "Missing required fields"
-                    ];
-                }
-                continue;
-            }
-
-            // Skip records based on a deletion flag
-            if (isset($product['deletion']) && !in_array($product['deletion'], ['RUNNING', 'SLOW MOVING'])) {
-                Log::info("Skipping SKU: {$product['sku']} due to deletion flag: {$product['deletion']}");
+            if ($this->shouldSkipTile($product, $sku, $skippedRecords)) {
                 $skippedCount++;
-                $skippedRecords[] = [
-                    'name' => $product['product_name'] ?? 'Unknown',
-                    'sku' => $product['sku'],
-                    'date' => now()->format('Y-m-d H:i:s'),
-                    'reason' => "Deletion flag: {$product['deletion']}"
-                ];
                 continue;
             }
 
             $surfaces = $this->determineSurfaceValues($product);
-            $imageVariations = array_filter([
-                'real_file' => $product['image'] ?? null,
-                'image_variation_1' => $product['image_variation_1'] ?? null,
-                'image_variation_2' => $product['image_variation_2'] ?? null,
-                'image_variation_3' => $product['image_variation_3'] ?? null,
-                'image_variation_4' => $product['image_variation_4'] ?? null,
-            ], fn($url) => !empty($url) && !$this->isInvalidFormat($url));
+            $imageVariations = $this->getValidImages($product);
 
             if (empty($imageVariations)) {
-                $skippedRecords[] = ['sku' => $sku, 'reason' => "No valid images found"];
-                // Store this record in a skipped records list
-                $skippedRecords[] = [
-                    'name' => $product['product_name'] ?? 'Unknown',
-                    'sku' => $product['sku'],
-                    'date' => now()->format('Y-m-d H:i:s'),
-                    'reason' => "Unsupported image format"
-                ];
-
+                $this->logSkippedRecord($sku, "No valid images found", $skippedRecords);
                 $skippedCount++;
                 continue;
             }
@@ -132,18 +77,11 @@ class ProcessTilesJob implements ShouldQueue
             $variationIndex = 1;
 
             foreach ($imageVariations as $column => $imageURL) {
-                if (isset($imageCache[$sku][$imageURL])) {
-                    $imageFileName = $imageCache[$sku][$imageURL]; // Reuse cached image filename
-                } else {
-                    $imageFileName = $this->fetchAndSaveImage($imageURL);
-                    $imageCache[$sku][$imageURL] = $imageFileName; // Cache it for future surfaces
-                }
-
+                $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
                 if (!$imageFileName) continue;
 
                 foreach ($surfaces as $surface) {
                     $product['surface'] = trim($surface);
-                    $existingTile = $existingTilesMap[$sku][$surface] ?? null;
                     $variantName = ($variationIndex === 1) ? $baseName : "{$baseName} " . str_pad($variationIndex, 2, '0', STR_PAD_LEFT);
 
                     // Clear all image fields before assigning
@@ -154,36 +92,41 @@ class ProcessTilesJob implements ShouldQueue
                     $product['product_name'] = $variantName;
                     $product['rotoPrintSetName'] = $rotoPrintSetName;
                     $data = $this->prepareTileData($product, $creation_time, $imageFileName);
-
+                    Log::info("Variant Name: {$variantName}");
+                    Log::info("Image Name: {$imageFileName}");
+                    // **Fix: Lookup by SKU + Surface + Image Filename**
+                    $existingTile = DB::table('tiles')
+                        ->where('sku', $sku)
+                        ->where('surface', $surface)
+                        ->where('file', $imageFileName)
+                        ->where('name', $variantName) // 🔹 Ensure we check product_name
+                        ->first();
+                    dd($existingTile);
                     if ($existingTile) {
-                        $existingDBTile = DB::table('tiles')->where('id', $existingTile['id'])->first();
-                        $isDifferent = false;
-                        // Define columns to ignore in comparison
-                        $ignoredColumns = ['file','name'];
-                        foreach ($data as $key => $value) {
-                            if (!in_array($key, $ignoredColumns) && $existingDBTile->$key != $value) {
-                                $isDifferent = true;
-                                Log::info( "Key difference : {$existingDBTile->$key}: {$isDifferent}");
-                                break;
-                            }
-                        }
-
-                        if ($isDifferent) {
-                            $data['updated_at'] = now();
-                            DB::table('tiles')->where('id', $existingTile['id'])->update($data);
+                        if ($this->needsUpdate($existingTile, $data)) {
+                            DB::table('tiles')->where('id', $existingTile->id)->update(array_merge($data, ['updated_at' => now()]));
                             $updatedCount++;
-                            Log::info("Updated Tile ID: {$existingTile['id']}");
+                            Log::info("Updated Tile ID: {$existingTile->id}");
                         } else {
-                            $skippedRecords[] = ['sku' => $sku, 'reason' => "No changes detected"];
+                            $this->logSkippedRecord($sku, "No changes detected", $skippedRecords);
                             $skippedCount++;
                         }
                     } else {
-                        // Insert only if SKU + Surface + Image combination does NOT exist
-                        $data['created_at'] = now();
-                        $data['updated_at'] = now();
-                        DB::table('tiles')->insert($data);
-                        $insertedCount++;
-                        Log::info("Inserted SKU: {$sku} - Surface: {$surface} - Name: {$variantName}");
+                        // Ensure no duplicate insert
+                        $alreadyExists = DB::table('tiles')
+                            ->where('sku', $sku)
+                            ->where('surface', $surface)
+                            ->where('file', $imageFileName)
+                            ->exists();
+
+                        if (!$alreadyExists) {
+                            $data['created_at'] = now();
+                            DB::table('tiles')->insert($data);
+                            $insertedCount++;
+                            Log::info("Inserted SKU: {$sku} - Surface: {$surface} - Name: {$variantName}");
+                        } else {
+                            Log::info("Skipped duplicate insertion: {$sku} - {$surface} - {$imageFileName}");
+                        }
                     }
 
                     $processedCount++;
@@ -192,35 +135,8 @@ class ProcessTilesJob implements ShouldQueue
             }
         }
 
-        // Step 1: Extract API SKUs
-        $apiSkus = collect($this->records)->pluck('attributes.sku')->filter()->unique()->toArray();
-
-        // Step 2: Fetch Existing SKUs and Names from Database
-        $existingTiles = DB::table('tiles')->select('sku', 'name')->get();
-        $existingTilesMap = $existingTiles->pluck('name', 'sku')->toArray();
-        $existingSkus = array_keys($existingTilesMap); // Extract only SKUs
-
-        // Step 3: Identify SKUs to Delete
-        $skusToDelete = array_diff($existingSkus, $apiSkus);
-
-        if (!empty($skusToDelete)) {
-            // Update deleted_at column instead of deleting
-            DB::table('tiles')
-                ->whereIn('sku', $skusToDelete)
-                ->update(['deleted_at' => now()]);
-
-            // Log skipped records with tile names
-            foreach ($skusToDelete as $sku) {
-                $skippedRecords[] = [
-                    'name' => $existingTilesMap[$sku] ?? '-',
-                    'sku' => $sku,
-                    'date' => now()->format('Y-m-d H:i:s'),
-                    'reason' => "Marked tile as deleted"
-                ];
-            }
-
-            Log::info("Marked tiles as deleted (soft delete) for missing SKUs: " . implode(', ', $skusToDelete));
-        }
+        // Soft delete tiles don't present in the API response
+        $this->softDeleteMissingTiles($skippedRecords);
 
         // Update processing status
         DB::table('companies')->update([
@@ -229,17 +145,147 @@ class ProcessTilesJob implements ShouldQueue
             'updated_at' => now(),
         ]);
 
-        Cache::put('tile_processing_progress', [
-            'total' => $this->totalCount,
-            'processed' => $processedCount,
-            'percentage' => min(($processedCount / $this->totalCount) * 100, 100),
-            'inserted' => $insertedCount,
-            'updated' => $updatedCount,
-            'skipped' => $skippedCount,
-            'status' => "$processedCount / $this->totalCount records processed",
-            'skipped_records' => $skippedRecords,
-        ], now()->addMinutes(10));
+        // Update processing progress
+        $this->updateProcessingCache($processedCount, $insertedCount, $updatedCount, $skippedCount, "{$processedCount} / {$this->totalCount} records processed", $skippedRecords);
 
         Log::info('Tile processing completed successfully.');
+    }
+
+    /**
+     * Updates processing cache.
+     */
+    private function updateProcessingCache(int $processed, int $inserted, int $updated, int $skipped, string $status, array $skippedRecords): void
+    {
+        Cache::put('tile_processing_progress', [
+            'total' => $this->totalCount,
+            'processed' => $processed,
+            'percentage' => min(($processed / $this->totalCount) * 100, 100),
+            'inserted' => $inserted,
+            'updated' => $updated,
+            'skipped' => $skipped,
+            'status' => $status,
+            'skipped_records' => $skippedRecords,
+        ], now()->addMinutes(10));
+    }
+
+    /**
+     * Determines whether a tile should be skipped.
+     */
+    private function shouldSkipTile(array $product, string $sku, array &$skippedRecords): bool
+    {
+        if (in_array($sku, ['12345678', '1223324324'])) {
+            $this->logSkippedRecord($sku, "Excluded SKU", $skippedRecords);
+            return true;
+        }
+
+        if (isset($product['deletion']) && !in_array($product['deletion'], ['RUNNING', 'SLOW MOVING'])) {
+            $this->logSkippedRecord($sku, "Deletion flag: {$product['deletion']}", $skippedRecords);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Logs a skipped record.
+     */
+    private function logSkippedRecord(string $sku, string $reason, array &$skippedRecords, string $name = 'Unknown'): void
+    {
+        $skippedRecords[] = [
+            'name' => $name,
+            'sku' => $sku,
+            'date' => now()->format('Y-m-d H:i:s'),
+            'reason' => $reason
+        ];
+    }
+
+    /**
+     * Extracts valid images from the product.
+     */
+    private function getValidImages(array $product): array
+    {
+        return array_filter([
+            'real_file' => $product['image'] ?? null,
+            'image_variation_1' => $product['image_variation_1'] ?? null,
+            'image_variation_2' => $product['image_variation_2'] ?? null,
+            'image_variation_3' => $product['image_variation_3'] ?? null,
+            'image_variation_4' => $product['image_variation_4'] ?? null,
+        ], fn($url) => !empty($url) && !$this->isInvalidFormat($url));
+    }
+
+    /**
+     * Fetches or reuses an image filename.
+     * @throws Exception
+     */
+    private function getOrFetchImage(string $sku, string $imageURL, array &$imageCache): ?string
+    {
+        if (empty($imageURL)) {
+            return null;
+        }
+
+        // Check if the image URL is already cached
+        if (isset($imageCache[$sku][$imageURL])) {
+            return $imageCache[$sku][$imageURL];
+        }
+
+        // Check if the same image URL is already stored in the database
+        $existingFile = DB::table('tiles')
+            ->where('sku', $sku)
+            ->where(function ($query) use ($imageURL) {
+                $query->where('real_file', $imageURL)
+                    ->orWhere('image_variation_1', $imageURL)
+                    ->orWhere('image_variation_2', $imageURL)
+                    ->orWhere('image_variation_3', $imageURL)
+                    ->orWhere('image_variation_4', $imageURL);
+            })
+            ->value('file'); // Get stored file name
+
+        if ($existingFile) {
+            // Log and return existing file name
+            Log::info("Reusing existing file for SKU: {$sku}, File: {$existingFile}");
+            $imageCache[$sku][$imageURL] = $existingFile;
+            return $existingFile;
+        }
+
+        // If no existing file, fetch and save a new image
+        $newFileName = $this->fetchAndSaveImage($imageURL);
+        $imageCache[$sku][$imageURL] = $newFileName;
+
+        return $newFileName;
+    }
+
+
+    /**
+     * Checks if a tile needs an update.
+     */
+    private function needsUpdate($existingTile, array $data): bool
+    {
+        unset($data['created_at']);
+        foreach ($data as $key => $value) {
+            if ($existingTile->$key !== $value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Soft deletes tiles that are no longer in the API response.
+     */
+    private function softDeleteMissingTiles(array &$skippedRecords): void
+    {
+        $apiSkus = collect($this->records)->pluck('attributes.sku')->filter()->unique()->toArray();
+        $existingTiles = DB::table('tiles')->where('from_api', 1)->pluck('name', 'sku')->toArray();
+        $skusToDelete = array_diff(array_keys($existingTiles), $apiSkus);
+
+        if (!empty($skusToDelete)) {
+            DB::table('tiles')->whereIn('sku', $skusToDelete)->update(['enabled' => 0, 'deleted_at' => now()]);
+
+            foreach ($skusToDelete as $sku) {
+                $this->logSkippedRecord($sku, "Product not exists in API", $skippedRecords, $existingTiles[$sku] ?? '-');
+            }
+
+            Log::info("Soft deleted missing SKUs: " . implode(', ', $skusToDelete));
+        }
     }
 }
