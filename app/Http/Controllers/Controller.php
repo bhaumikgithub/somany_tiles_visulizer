@@ -91,7 +91,8 @@ class Controller extends BaseController
         $filterRequest = $this->parseFilter($request);
         $filterQuery = $this->getFilterQuery($filterRequest);
 
-        $tiles = Tile::where($filterQuery)->orderBy('created_at', 'desc')->paginate(30);
+        $tiles = Tile::where($filterQuery)->orderBy('created_at', 'desc');
+
         $surfaceTypes = SurfaceType::optionsAsArray();
 
         $tileIds = Tile::getIds($filterQuery);
@@ -101,13 +102,14 @@ class Controller extends BaseController
         $used_tiles = (int) $usedTilesWithVariantName + (int) $usedTilesWithoutVariantName;
 
         return view('tiles', [
-            'tiles' => $tiles,
+            'tiles' => $tiles->paginate(30),
             'filter' => $filterRequest,
             'surfaceTypes' => $surfaceTypes,
             'tileIds' => $tileIds,
             'product_categories_tree' => Category::getTreeByType(1),
             'maximum_tiles' => Company::first(),
-            'used_tiles' => $used_tiles
+            'used_tiles' => $used_tiles,
+            'total_tiles' => $tiles->count(),
         ]);
     }
 
@@ -146,6 +148,13 @@ class Controller extends BaseController
                 'filterTileFinish' => $request->filterTileFinish,
                 'filterTileUrl' => $request->filterTileUrl,
                 'filterTilePrice' => $request->filterTilePrice,
+                //Newly Added column
+                'filterTileApplicationRoomArea' => $request->filterTileApplicationRoomArea,
+                'filterTileColor' => $request->filterTileColor,
+                'filterTileFinishes' => $request->filterTileFinishes,
+                'filterTileCategories' => $request->filterTileCategories,
+                'filterTileInnovation' => $request->filterTileInnovation,
+
                 'filterTileRotoPrintSetName' => $request->filterTileRotoPrintSetName,
                 'filterTileExpProps' => $request->filterTileExpProps,
                 'filterTileEnabled' => $request->filterTileEnabled,
@@ -163,6 +172,13 @@ class Controller extends BaseController
                 'filterTileFinish' => session('filterTileFinish'),
                 'filterTileUrl' => session('filterTileUrl'),
                 'filterTilePrice' => session('filterTilePrice'),
+                //Newly Added column
+                'filterTileApplicationRoomArea' => session('filterTileApplicationRoomArea'),
+                'filterTileColor' => session('filterTileColor'),
+                'filterTileFinishes' => session('filterTileFinishes'),
+                'filterTileCategories' => session('filterTileCategories'),
+                'filterTileInnovation' => session('filterTileInnovation'),
+
                 'filterTileRotoPrintSetName' => session('filterTileRotoPrintSetName'),
                 'filterTileExpProps' => session('filterTileExpProps'),
                 'filterTileEnabled' => session('filterTileEnabled'),
@@ -189,6 +205,12 @@ class Controller extends BaseController
         if ($request->filterTileFromApi) $filter[] = ['from_api', '=', $request->filterTileFromApi];
         if ($request->filterTileServiceGeography) $filter[] = ['service_geography', 'like', '%' . $request->filterTileServiceGeography . '%'];
 
+        //Newly added columns
+        if ($request->filterTileApplicationRoomArea) $filter[] = ['application_room_area', 'like', '%' . $request->filterTileApplicationRoomArea . '%'];
+        if ($request->filterTileColor) $filter[] = ['color', '=', $request->filterTileColor];
+        if ($request->filterTileFinishes) $filter[] = ['design_finish', '=', $request->filterTileFinishes];
+        if ($request->filterTileCategories) $filter[] = ['brand', 'like', '%' . $request->filterTileCategories . '%'];
+        if ($request->filterTileInnovation) $filter[] = ['innovation', '=', $request->filterTileInnovation];
         return $filter;
     }
 
