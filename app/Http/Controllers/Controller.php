@@ -128,6 +128,7 @@ class Controller extends BaseController
             'filterTileEnabled' => 'nullable|string',
             'filterTileFromApi' => 'nullable|string',
             'filterTileServiceGeography' => 'nullable|string',
+            'filterTilePlant' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -154,6 +155,7 @@ class Controller extends BaseController
                 'filterTileFinishes' => $request->filterTileFinishes,
                 'filterTileCategories' => $request->filterTileCategories,
                 'filterTileInnovation' => $request->filterTileInnovation,
+                'filterTilePlant' => $request->filterTilePlant,
 
                 'filterTileRotoPrintSetName' => $request->filterTileRotoPrintSetName,
                 'filterTileExpProps' => $request->filterTileExpProps,
@@ -178,6 +180,7 @@ class Controller extends BaseController
                 'filterTileFinishes' => session('filterTileFinishes'),
                 'filterTileCategories' => session('filterTileCategories'),
                 'filterTileInnovation' => session('filterTileInnovation'),
+                'filterTilePlant' => session('filterTilePlant'),
 
                 'filterTileRotoPrintSetName' => session('filterTileRotoPrintSetName'),
                 'filterTileExpProps' => session('filterTileExpProps'),
@@ -211,6 +214,7 @@ class Controller extends BaseController
         if ($request->filterTileFinishes) $filter[] = ['design_finish', '=', $request->filterTileFinishes];
         if ($request->filterTileCategories) $filter[] = ['brand', 'like', '%' . $request->filterTileCategories . '%'];
         if ($request->filterTileInnovation) $filter[] = ['innovation', '=', $request->filterTileInnovation];
+        if ($request->filterTilePlant) $filter[] = ['plant', '=', $request->filterTilePlant];
         return $filter;
     }
 

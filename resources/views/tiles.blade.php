@@ -594,6 +594,7 @@ function clearTilesFilterForm() {
     window.$('#filterTileEnabled').val('');
     window.$('#filterTileFromApi').val('');
     window.$('#filterTileServiceGeography').val('');
+    window.$('#filterTilePlant').val('');
 }
 
 function fillTilesFilterForm() {
@@ -625,6 +626,7 @@ function fillTilesFilterForm() {
     if (window.$('#filterTileEnabled').val() !== '') { window.$('#filterTileEnabled').css('background-color', '#aaffaa'); }
     if (window.$('#filterTileFromApi').val() !== '') { window.$('#filterTileFromApi').css('background-color', '#aaffaa'); }
     if (window.$('#filterTileServiceGeography').val() !== '') { window.$('#filterTileServiceGeography').css('background-color', '#aaffaa'); }
+    if (window.$('#filterTilePlant').val() !== '') { window.$('#filterTilePlant').css('background-color', '#aaffaa'); }
 }
 
 function changeFilterInputColor() {
@@ -1117,8 +1119,10 @@ Select All items on all pages
         <th>Expandable Properties</th>
         <th>From API</th>
         <th>Zone</th>
+        <th>Plant</th>
         @if (config('app.tiles_access_level'))<th>Access Level</th>@endif
         <th>Enabled</th>
+{{--        <th>API JSON</th>--}}
         <th>&nbsp;</th>
   </tr>
 </thead>
@@ -1209,8 +1213,12 @@ Select All items on all pages
               <option value="0">No</option>
           </select>
       </td>
+
       <td>
           <input form="tilesFilterForm" type="text" name="filterTileServiceGeography" id="filterTileServiceGeography" @if (isset($filter)) value="{{ $filter->filterTileServiceGeography }}" @endif class="tiles-filter-input" style="width: 100%;">
+      </td>
+      <td>
+          <input form="tilesFilterForm" type="text" name="filterTilePlant" id="filterTilePlant" @if (isset($filter)) value="{{ $filter->filterTilePlant }}" @endif class="tiles-filter-input" style="width: 100%;">
       </td>
 {{--    @if (config('app.tiles_access_level'))<td>&nbsp;</td>@endif--}}
     <td>
@@ -1220,7 +1228,7 @@ Select All items on all pages
         <option value="0">No</option>
       </select>
     </td>
-    <td colspan="3">
+    <td colspan="4">
       <button form="tilesFilterForm" type="submit" class="btn btn-primary btn-xs" title="Apply filter">Filter</button>
       <button form="tilesFilterForm" type="submit" class="btn btn-default btn-xs" onclick="clearTilesFilterForm();" title="Clear filter and show all data">Show All</button>
     </td>
@@ -1254,6 +1262,7 @@ Select All items on all pages
         <td class="table-text" title="{{ $tile->expProps }}">@if ($tile->expProps) {{ substr($tile->expProps, 0, 8) }} @if (mb_strlen($tile->expProps) > 8) ... @endif @endif</td>
         <td class="table-text">@if ($tile->from_api === '1' ) Yes @else <strong>No</strong> @endif</td>
         <td class="table-text">@if ($tile->service_geography === NULL ) - @else {{$tile->service_geography}} @endif</td>
+        <td class="table-text">@if ($tile->plant === NULL ) - @else {{$tile->plant}} @endif</td>
         <td class="table-text">@if ($tile->enabled) Yes @else <strong>No</strong> @endif</td>
         <?php if (config('app.tiles_access_level') && isset($tile->access_level)) {
             $roles = ['All', 'Guests', 'Registered', 'Editors', 'Administrators'];
@@ -1261,6 +1270,7 @@ Select All items on all pages
             echo "<td class=\"table-text\">$access_level</td>";
         } ?>
 
+{{--        <td class="table-text" title="{{$tile->api_json}}">@if ($tile->api_json) {{ substr($tile->api_json, 0, 8) }} @if (mb_strlen($tile->api_json) > 8) ... @endif @endif</td>--}}
         <td class="table-text">
           <button type="button" class="close" onclick="deleteTile({{ $tile->id }})" title="Remove Tile">&times;</button>
         </td>
