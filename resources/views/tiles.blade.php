@@ -582,11 +582,19 @@ function clearTilesFilterForm() {
     window.$('#filterTileFinish').val('');
     window.$('#filterTileUrl').val('');
     window.$('#filterTilePrice').val('');
+    //Newly added columns
+    window.$('#filterTileApplicationRoomArea').val('');
+    window.$('#filterTileColor').val('');
+    window.$('#filterTileFinishes').val('');
+    window.$('#filterTileCategories').val('');
+    window.$('#filterTileInnovation').val('');
+
     window.$('#filterTileRotoPrintSetName').val('');
     window.$('#filterTileExpProps').val('');
     window.$('#filterTileEnabled').val('');
     window.$('#filterTileFromApi').val('');
     window.$('#filterTileServiceGeography').val('');
+    window.$('#filterTilePlant').val('');
 }
 
 function fillTilesFilterForm() {
@@ -605,11 +613,20 @@ function fillTilesFilterForm() {
     if (window.$('#filterTileFinish').val() !== '') { window.$('#filterTileFinish').css('background-color', '#aaffaa'); }
     if (window.$('#filterTileUrl').val() !== '') { window.$('#filterTileUrl').css('background-color', '#aaffaa'); }
     if (window.$('#filterTilePrice').val() !== '') { window.$('#filterTilePrice').css('background-color', '#aaffaa'); }
+    //Newly added column
+    if (window.$('#filterTileApplicationRoomArea').val() !== '') { window.$('#filterTileApplicationRoomArea').css('background-color', '#aaffaa'); }
+    if (window.$('#filterTileColor').val() !== '') { window.$('#filterTileColor').css('background-color', '#aaffaa'); }
+    if (window.$('#filterTileFinishes').val() !== '') { window.$('#filterTileFinishes').css('background-color', '#aaffaa'); }
+    if (window.$('#filterTileCategories').val() !== '') { window.$('#filterTileCategories').css('background-color', '#aaffaa'); }
+    if (window.$('#filterTileInnovation').val() !== '') { window.$('#filterTileInnovation').css('background-color', '#aaffaa'); }
+
+
     if (window.$('#filterTileRotoPrintSetName').val() !== '') { window.$('#filterTileRotoPrintSetName').css('background-color', '#aaffaa'); }
     if (window.$('#filterTileExpProps').val() !== '') { window.$('#filterTileExpProps').css('background-color', '#aaffaa'); }
     if (window.$('#filterTileEnabled').val() !== '') { window.$('#filterTileEnabled').css('background-color', '#aaffaa'); }
     if (window.$('#filterTileFromApi').val() !== '') { window.$('#filterTileFromApi').css('background-color', '#aaffaa'); }
     if (window.$('#filterTileServiceGeography').val() !== '') { window.$('#filterTileServiceGeography').css('background-color', '#aaffaa'); }
+    if (window.$('#filterTilePlant').val() !== '') { window.$('#filterTilePlant').css('background-color', '#aaffaa'); }
 }
 
 function changeFilterInputColor() {
@@ -655,6 +672,11 @@ function selectAllItemsOnAllPages(checked) {
     window.$('#warningAlertBox').slideUp();
 }
 
+function openJsonModal(data) {
+    $('#jsonData').text(JSON.stringify(data, null, 4)); // Format and insert JSON data
+    $('#jsonModal').modal('show');
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     'use strict';
     loadFilters();
@@ -670,6 +692,7 @@ document.addEventListener('DOMContentLoaded', function () {
         prepareExpPropsJsonString();
     }
 });
+
 </script>
 
 
@@ -924,6 +947,26 @@ document.addEventListener('DOMContentLoaded', function () {
   <input id="tilesFormInput" type="hidden" name="selectedTiles" value="">
 </form>
 
+<!-- Modal -->
+<div class="modal fade" id="jsonModal" tabindex="-1" aria-labelledby="jsonModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title" id="jsonModalLabel">API JSON</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <pre id="jsonData"></pre>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="confirmDialog" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -1073,7 +1116,7 @@ Select All items on all pages
 </div>
 
 <h3 class="panel-heading">Tiles list</h3>
-
+<span>Total Tiles : <b>{{$total_tiles}}</b></span>
 <form id="tilesFilterForm" action="/tiles" method="POST" enctype="multipart/form-data" class="form-horizontal">
 {{ csrf_field() }}
 </form>
@@ -1082,24 +1125,31 @@ Select All items on all pages
 <table class="table table-striped">
 <thead>
   <tr>
-    <th>
-      <input type="checkbox" id="selectAllItemsOnCurrentPages" onchange="selectAllItemsOnCurrentPages(this.checked);" title="Select all Tiles on this page">
-    </th>
-    <th>Tile</th>
-    <th>Name</th>
-    <th>Shape</th>
-    <th>Size</th>
-    <th>Surface</th>
-    @if (!$config_app_product_finish)<th>Finish</th>@endif
-    <th>Url</th>
-    <th>Price</th>
-    <th>Variant Set</th>
-    <th>Expandable Properties</th>
-    <th>From API</th>
-    <th>Zone</th>
-    @if (config('app.tiles_access_level'))<th>Access Level</th>@endif
-    <th>Enabled</th>
-    <th>&nbsp;</th>
+        <th>
+          <input type="checkbox" id="selectAllItemsOnCurrentPages" onchange="selectAllItemsOnCurrentPages(this.checked);" title="Select all Tiles on this page">
+        </th>
+        <th>Tile</th>
+        <th>Name</th>
+        <th>Shape</th>
+        <th>Size</th>
+        <th>Surface</th>
+        @if (!$config_app_product_finish)<th>Finish</th>@endif
+        <th>Url</th>
+        <th>Price</th>
+        <th>Apply On</th>
+        <th>Colours</th>
+        <th>Finishes</th>
+        <th>Categories</th>
+        <th>Innovation</th>
+        <th>Variant Set</th>
+        <th>Expandable Properties</th>
+        <th>From API</th>
+        <th>Zone</th>
+        <th>Plant</th>
+        @if (config('app.tiles_access_level'))<th>Access Level</th>@endif
+        <th>Enabled</th>
+        <th>API JSON</th>
+        <th>&nbsp;</th>
   </tr>
 </thead>
 
@@ -1155,6 +1205,27 @@ Select All items on all pages
     <td>
       <input form="tilesFilterForm" type="text" name="filterTilePrice" id="filterTilePrice" @if (isset($filter)) value="{{ $filter->filterTilePrice }}" @endif class="tiles-filter-input" style="width: 100%;">
     </td>
+
+      <!-- added necessary columns -->
+      <td>
+          <input form="tilesFilterForm" type="text" name="filterTileApplicationRoomArea" id="filterTileApplicationRoomArea" @if (isset($filter)) value="{{ $filter->filterTileApplicationRoomArea }}" @endif class="tiles-filter-input" style="width: 100%;">
+      </td>
+
+      <td>
+          <input form="tilesFilterForm" type="text" name="filterTileColor" id="filterTileColor" @if (isset($filter)) value="{{ $filter->filterTileColor }}" @endif class="tiles-filter-input" style="width: 100%;">
+      </td>
+
+      <td>
+          <input form="tilesFilterForm" type="text" name="filterTileFinishes" id="filterTileFinishes" @if (isset($filter)) value="{{ $filter->filterTileFinishes }}" @endif class="tiles-filter-input" style="width: 100%;">
+      </td>
+
+      <td>
+          <input form="tilesFilterForm" type="text" name="filterTileCategories" id="filterTileCategories" @if (isset($filter)) value="{{ $filter->filterTileCategories }}" @endif class="tiles-filter-input" style="width: 100%;">
+      </td>
+
+      <td>
+          <input form="tilesFilterForm" type="text" name="filterTileInnovation" id="filterTileInnovation" @if (isset($filter)) value="{{ $filter->filterTileInnovation }}" @endif class="tiles-filter-input" style="width: 100%;">
+      </td>
     <td>
       <input form="tilesFilterForm" type="text" name="filterTileRotoPrintSetName" id="filterTileRotoPrintSetName" @if (isset($filter)) value="{{ $filter->filterTileRotoPrintSetName }}" @endif class="tiles-filter-input" style="width: 100%;">
     </td>
@@ -1168,8 +1239,12 @@ Select All items on all pages
               <option value="0">No</option>
           </select>
       </td>
+
       <td>
           <input form="tilesFilterForm" type="text" name="filterTileServiceGeography" id="filterTileServiceGeography" @if (isset($filter)) value="{{ $filter->filterTileServiceGeography }}" @endif class="tiles-filter-input" style="width: 100%;">
+      </td>
+      <td>
+          <input form="tilesFilterForm" type="text" name="filterTilePlant" id="filterTilePlant" @if (isset($filter)) value="{{ $filter->filterTilePlant }}" @endif class="tiles-filter-input" style="width: 100%;">
       </td>
 {{--    @if (config('app.tiles_access_level'))<td>&nbsp;</td>@endif--}}
     <td>
@@ -1179,7 +1254,7 @@ Select All items on all pages
         <option value="0">No</option>
       </select>
     </td>
-    <td colspan="3">
+    <td colspan="4">
       <button form="tilesFilterForm" type="submit" class="btn btn-primary btn-xs" title="Apply filter">Filter</button>
       <button form="tilesFilterForm" type="submit" class="btn btn-default btn-xs" onclick="clearTilesFilterForm();" title="Clear filter and show all data">Show All</button>
     </td>
@@ -1188,35 +1263,47 @@ Select All items on all pages
   @if (count($tiles) > 0)
   @foreach ($tiles as $tile)
   <tr @if (!$tile->enabled) style="opacity: 0.5;" @endif>
-    <td class="table-text">
-      <input type="checkbox" value="{{ $tile->id }}" onchange="selectItem(this.checked)" class="tiles-list-checkbox">
-    </td>
-    <td class="table-text">
-      <img src="{{ $tile->icon }}" alt="" class="img-thumbnail" style="max-width: 64px; max-height: 64px; cursor: pointer;" onclick="showBigTileImageModal('{{ $tile->name }}', '{{ $tile->file }}')">
-    </td>
-    <td class="table-text bold"><a href="#" onclick="editTile( {{ $tile->id }} )" title="Edit Tile">{{ $tile->name }}</a></td>
-    <td class="table-text">{{ $tile->shape }}</td>
-    <td class="table-text">{{ $tile->width . 'x' . $tile->height }}</td>
-    <td class="table-text">@if (isset($surfaceTypes[$tile->surface])) {{ $surfaceTypes[$tile->surface] }} @else {{ $tile->surface }} @endif</td>
-    @if (!$config_app_product_finish)
-    <td class="table-text">{{ $tile->finish }}</td>
-    @endif
-    <td class="table-text" title="{{ $tile->url }}">@if ($tile->url) {{ substr($tile->url, 0, 8) }} @if (mb_strlen($tile->url) > 8) ... @endif @endif</td>
-    <td class="table-text">{{ $tile->price }}</td>
-    <td class="table-text" title="{{ $tile->rotoPrintSetName }}">@if ($tile->rotoPrintSetName) {{ substr($tile->rotoPrintSetName, 0, 8) }} @if (mb_strlen($tile->rotoPrintSetName) > 8) ... @endif @endif</td>
-    <td class="table-text" title="{{ $tile->expProps }}">@if ($tile->expProps) {{ substr($tile->expProps, 0, 8) }} @if (mb_strlen($tile->expProps) > 8) ... @endif @endif</td>
-    <td class="table-text">@if ($tile->from_api === '1' ) Yes @else <strong>No</strong> @endif</td>
-    <td class="table-text">@if ($tile->service_geography === NULL ) - @else {{$tile->service_geography}} @endif</td>
-    <td class="table-text">@if ($tile->enabled) Yes @else <strong>No</strong> @endif</td>
-    <?php if (config('app.tiles_access_level') && isset($tile->access_level)) {
-        $roles = ['All', 'Guests', 'Registered', 'Editors', 'Administrators'];
-        $access_level = $roles[$tile->access_level];
-        echo "<td class=\"table-text\">$access_level</td>";
-    } ?>
+        <td class="table-text">
+          <input type="checkbox" value="{{ $tile->id }}" onchange="selectItem(this.checked)" class="tiles-list-checkbox">
+        </td>
+        <td class="table-text">
+          <img src="{{ $tile->icon }}" alt="" class="img-thumbnail" style="max-width: 64px; max-height: 64px; cursor: pointer;" onclick="showBigTileImageModal('{{ $tile->name }}', '{{ $tile->file }}')">
+        </td>
+        <td class="table-text bold"><a href="#" onclick="editTile( {{ $tile->id }} )" title="Edit Tile">{{ $tile->name }}</a></td>
+        <td class="table-text">{{ $tile->shape }}</td>
+        <td class="table-text">{{ $tile->width . 'x' . $tile->height }}</td>
+        <td class="table-text">@if (isset($surfaceTypes[$tile->surface])) {{ $surfaceTypes[$tile->surface] }} @else {{ $tile->surface }} @endif</td>
+        @if (!$config_app_product_finish)
+        <td class="table-text">{{ $tile->finish }}</td>
+        @endif
+        <td class="table-text" title="{{ $tile->url }}">@if ($tile->url) {{ substr($tile->url, 0, 8) }} @if (mb_strlen($tile->url) > 8) ... @endif @endif</td>
 
-    <td class="table-text">
-      <button type="button" class="close" onclick="deleteTile({{ $tile->id }})" title="Remove Tile">&times;</button>
-    </td>
+      <td class="table-text">{{ $tile->price }}</td>
+      <td class="table-text" title="{{ $tile->application_room_area }}">{{ substr($tile->application_room_area, 0, 20) ?? "-"  }}  @if (mb_strlen($tile->application_room_area) > 20) ... @endif</td>
+      <td class="table-text">{{ $tile->color ?? "-"  }}</td>
+      <td class="table-text">{{ $tile->design_finish ?? "-"  }}</td>
+      <td class="table-text">{{ $tile->brand ?? "-"  }}</td>
+      <td class="table-text">{{ $tile->innovation ?? "-" }}</td>
+        <td class="table-text" title="{{ $tile->rotoPrintSetName }}">@if ($tile->rotoPrintSetName) {{ substr($tile->rotoPrintSetName, 0, 8) }} @if (mb_strlen($tile->rotoPrintSetName) > 8) ... @endif @endif</td>
+        <td class="table-text" title="{{ $tile->expProps }}">@if ($tile->expProps) {{ substr($tile->expProps, 0, 8) }} @if (mb_strlen($tile->expProps) > 8) ... @endif @endif</td>
+        <td class="table-text">@if ($tile->from_api === '1' ) Yes @else <strong>No</strong> @endif</td>
+        <td class="table-text">@if ($tile->service_geography === NULL ) - @else {{$tile->service_geography}} @endif</td>
+        <td class="table-text">@if ($tile->plant === NULL ) - @else {{$tile->plant}} @endif</td>
+        <td class="table-text">@if ($tile->enabled) Yes @else <strong>No</strong> @endif</td>
+        <?php if (config('app.tiles_access_level') && isset($tile->access_level)) {
+            $roles = ['All', 'Guests', 'Registered', 'Editors', 'Administrators'];
+            $access_level = $roles[$tile->access_level];
+            echo "<td class=\"table-text\">$access_level</td>";
+        } ?>
+
+        <td class="table-text">
+            @if( $tile->from_api === '1')
+                <a href="javascript:void(0);" onclick="openJsonModal({{$tile->api_json}})">View</a>
+            @endif
+        </td>
+        <td class="table-text">
+          <button type="button" class="close" onclick="deleteTile({{ $tile->id }})" title="Remove Tile">&times;</button>
+        </td>
   </tr>
   @endforeach
   @else
@@ -1227,5 +1314,4 @@ Select All items on all pages
 <div class="page-links" style="text-align: center;">{{ $tiles->links() }}</div>
 </div>
 </div>
-
 @endsection
