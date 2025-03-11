@@ -74,65 +74,71 @@ class ProcessTilesJob implements ShouldQueue
 
             $baseName = trim($product['product_name']);
             $rotoPrintSetName = str_replace(" FP", "", $baseName);
-            $variationIndex = 1;
 
             foreach ($imageVariations as $column => $imageURL) {
                 $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
-                if (!$imageFileName) continue;
+                if ($imageFileName) {
+                    $data[$column] = $imageFileName;
+                }
 
                 foreach ($surfaces as $surface) {
                     $product['surface'] = trim($surface);
-                    $variantName = ($variationIndex === 1) ? $baseName : "{$baseName} " . str_pad($variationIndex, 2, '0', STR_PAD_LEFT);
+                    $variantName = $baseName; // Default to original name
 
-                    // Clear all image fields before assigning
-                    $product['real_file'] = $product['image_variation_1'] = $product['image_variation_2'] = $product['image_variation_3'] = $product['image_variation_4'] = null;
-                    $product[$column] = $imageURL;
-
-                    // Prepare product data
-                    $product['product_name'] = $variantName;
-                    $product['rotoPrintSetName'] = $rotoPrintSetName;
-                    $data = $this->prepareTileData($product, $creation_time, $imageFileName);
-                    Log::info("Variant Name: {$variantName}");
-                    Log::info("Image Name: {$imageFileName}");
-                    // **Fix: Lookup by SKU + Surface + Image Filename**
+                    // Check if an exact SKU + Surface + Image record already exists
                     $existingTile = DB::table('tiles')
                         ->where('sku', $sku)
                         ->where('surface', $surface)
-                        ->where('file', $imageFileName)
-                        ->where('name', $variantName) // 🔹 Ensure we check product_name
+                        ->where(function ($query) use ($imageURL) {
+                            $query->where('real_file', $imageURL)
+                                ->orWhere('image_variation_1', $imageURL)
+                                ->orWhere('image_variation_2', $imageURL)
+                                ->orWhere('image_variation_3', $imageURL)
+                                ->orWhere('image_variation_4', $imageURL);
+                        })
                         ->first();
-                    dd($existingTile);
+
                     if ($existingTile) {
+                        // ✅ If record exists, check if an update is needed
                         if ($this->needsUpdate($existingTile, $data)) {
                             DB::table('tiles')->where('id', $existingTile->id)->update(array_merge($data, ['updated_at' => now()]));
                             $updatedCount++;
-                            Log::info("Updated Tile ID: {$existingTile->id}");
+                            Log::info("✅ Updated Tile ID: {$existingTile->id} (No Name Change) - {$sku} - {$surface}");
                         } else {
-                            $this->logSkippedRecord($sku, "No changes detected", $skippedRecords);
+                            Log::info("⏩ Skipped - No changes detected for SKU: {$sku}, Surface: {$surface}");
                             $skippedCount++;
                         }
-                    } else {
-                        // Ensure no duplicate insert
-                        $alreadyExists = DB::table('tiles')
-                            ->where('sku', $sku)
-                            ->where('surface', $surface)
-                            ->where('file', $imageFileName)
-                            ->exists();
-
-                        if (!$alreadyExists) {
-                            $data['created_at'] = now();
-                            DB::table('tiles')->insert($data);
-                            $insertedCount++;
-                            Log::info("Inserted SKU: {$sku} - Surface: {$surface} - Name: {$variantName}");
-                        } else {
-                            Log::info("Skipped duplicate insertion: {$sku} - {$surface} - {$imageFileName}");
-                        }
+                        continue; // Skip insertion since it's just an update
                     }
 
-                    $processedCount++;
+                    // 🛑 Prevent duplicate insertions with incorrect name
+                    $existingWithSameName = DB::table('tiles')
+                        ->where('sku', $sku)
+                        ->where('surface', $surface)
+                        ->where('product_name', $baseName)
+                        ->exists();
+
+                    if (!$existingWithSameName) {
+                        // If this SKU + Surface already exists but has a new image, create a variant
+                        $variantIndex = DB::table('tiles')
+                                ->where('sku', $sku)
+                                ->where('surface', $surface)
+                                ->count() + 1; // Count existing variations and increment
+
+                        $variantName = "{$baseName} " . str_pad($variantIndex, 2, '0', STR_PAD_LEFT);
+                    }
+
+                    // Finalize product data
+                    $data = $this->prepareTileData($product, $creation_time, $imageFileName);
+                    $data['product_name'] = $variantName; // Assign final name
+
+                    // 🚀 Insert the new variant only if it's a new image
+                    DB::table('tiles')->insert($data);
+                    Log::info("✅ Inserted New Variant: {$variantName} (SKU: {$sku}, Surface: {$surface})");
+                    $insertedCount++;
                 }
-                $variationIndex++;
             }
+
         }
 
         // Soft delete tiles don't present in the API response
@@ -219,16 +225,13 @@ class ProcessTilesJob implements ShouldQueue
      */
     private function getOrFetchImage(string $sku, string $imageURL, array &$imageCache): ?string
     {
-        if (empty($imageURL)) {
-            return null;
-        }
-
-        // Check if the image URL is already cached
+        // First, check if the image is already cached to avoid duplicate DB queries
         if (isset($imageCache[$sku][$imageURL])) {
+            Log::info("Using Cached File for SKU: {$sku} => {$imageCache[$sku][$imageURL]}");
             return $imageCache[$sku][$imageURL];
         }
 
-        // Check if the same image URL is already stored in the database
+        // Check the database for an existing file
         $existingFile = DB::table('tiles')
             ->where('sku', $sku)
             ->where(function ($query) use ($imageURL) {
@@ -238,21 +241,24 @@ class ProcessTilesJob implements ShouldQueue
                     ->orWhere('image_variation_3', $imageURL)
                     ->orWhere('image_variation_4', $imageURL);
             })
-            ->value('file'); // Get stored file name
+            ->value('file');
 
         if ($existingFile) {
-            // Log and return existing file name
-            Log::info("Reusing existing file for SKU: {$sku}, File: {$existingFile}");
+            Log::info("Found Existing File for SKU: {$sku} => {$existingFile}");
             $imageCache[$sku][$imageURL] = $existingFile;
             return $existingFile;
         }
 
-        // If no existing file, fetch and save a new image
-        $newFileName = $this->fetchAndSaveImage($imageURL);
-        $imageCache[$sku][$imageURL] = $newFileName;
+        // If not found, fetch and store it
+        $newFile = $this->fetchAndSaveImage($imageURL);
+        if ($newFile) {
+            Log::info("Fetched New Image for SKU: {$sku} => {$newFile}");
+            $imageCache[$sku][$imageURL] = $newFile;
+        }
 
-        return $newFileName;
+        return $newFile;
     }
+
 
 
     /**

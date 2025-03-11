@@ -18,7 +18,8 @@
         "mpdf/mpdf": "^8.2",
         "nette/schema": "^1.2.3",
         "setasign/fpdf": "^1.8",
-        "setasign/fpdi": "^2.6"
+        "setasign/fpdi": "^2.6",
+        "ext-gd": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",

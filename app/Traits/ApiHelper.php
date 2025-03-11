@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image as InterventionImage;
 
@@ -251,6 +252,8 @@ trait ApiHelper
 
     protected function fetchAndSaveImage($imageURL): JsonResponse|string
     {
+
+        Log::info("Fetch Image URL ". $imageURL);
         // Get tiles data
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $imageURL);
@@ -331,7 +334,7 @@ trait ApiHelper
         }
 
         // ✅ Check for Counter (Vanity, Kitchen Cabinet, Tabletop)
-        $keywords = ['vanity', 'kitchen cabinet', 'tabletop'];
+        $keywords = ['vanity', 'kitchen cabinet', 'tabletop','Bathroom Platform', 'Kitchen Platform'];
         if (isset($product['application_room_area'])) {
             $applicationRoomArea = strtolower($product['application_room_area']);
 

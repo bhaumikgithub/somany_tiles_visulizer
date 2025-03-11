@@ -37,7 +37,8 @@ class UpdateSurfaceCounter extends Command
         $tiles = DB::table('tiles')->select('id', 'sku', 'application_room_area', 'surface', 'enabled')->get();
 
         // Define keywords to check in application_room_area
-        $keywords = ['vanity', 'kitchen cabinet', 'tabletop'];
+        //$keywords = ['vanity', 'kitchen cabinet', 'tabletop'];
+        $keywords = ['Bathroom Platform', 'Kitchen Platform'];
 
         // Group tiles by SKU to find duplicates
         $tilesBySku = $tiles->groupBy('sku');
