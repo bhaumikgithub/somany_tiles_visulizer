@@ -1,5 +1,5 @@
 .room-content-container {
-    height: 100vh; /* or a specific height in pixels, e.g., 500px */
+    height: 100%; /* or a specific height in pixels, e.g., 500px */
     overflow-y: auto;
 }
 .no-data-text{
