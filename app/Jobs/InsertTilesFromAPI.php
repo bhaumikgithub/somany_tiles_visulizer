@@ -99,7 +99,8 @@ class InsertTilesFromAPI implements ShouldQueue
                 continue;
             }
 
-            if (in_array($product['sku'], ['12345678', '1223324324'])) {
+            if (isset($product['sku']) && in_array($product['sku'], ['12345678', '1223324324', '1234'])) {
+                Log::info("Key: {$product['sku']}");
                 continue;
             }
 
