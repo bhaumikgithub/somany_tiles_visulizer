@@ -303,6 +303,9 @@ body {
 .mobile_first_width {
     height: 170px;
 }
+.vs_none{
+    display: none;
+}
 
 @media (max-width: 767px) {
     .desktop-div {
@@ -681,6 +684,10 @@ body {
 
     .product-top-panel-box .loadCartItems {
         height: calc(100vh - 252px);
+    }
+    .vs_none{
+        visibility: hidden;
+        display: block;
     }
 
 }
