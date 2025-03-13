@@ -78,7 +78,10 @@ body {
     text-shadow: 2px 2px 4px #000000;
 
 }
-
+.vs_none{
+    display: none !important;
+    height: 4px !important;
+}
 .image1 {
     background-image: url(../images/4.jpg);
     background-size: cover;
@@ -303,9 +306,7 @@ body {
 .mobile_first_width {
     height: 170px;
 }
-.vs_none{
-    display: none;
-}
+
 
 @media (max-width: 767px) {
     .desktop-div {
@@ -686,8 +687,7 @@ body {
         height: calc(100vh - 252px);
     }
     .vs_none{
-        visibility: hidden;
-        display: block;
+        display: block !important;
     }
 
 }
