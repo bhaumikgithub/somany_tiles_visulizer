@@ -44,13 +44,10 @@ class ProcessTilesJob implements ShouldQueue
 
         Log::info('Starting tile processing. Total records: ' . $this->totalCount);
 
-        // Initialize cache for progress tracking
         $this->updateProcessingCache(0, 0, 0, 0, "Processing started...", []);
 
-        // Fetch existing tiles and organize them in a structured array
         $existingTiles = DB::table('tiles')->get()->groupBy('sku');
-
-        $imageCache = []; // Store fetched image filenames for reusability
+        $imageCache = [];
 
         foreach ($this->records as $aTile) {
             $product = $aTile['attributes'];
@@ -74,86 +71,66 @@ class ProcessTilesJob implements ShouldQueue
 
             $baseName = trim($product['product_name']);
             $rotoPrintSetName = str_replace(" FP", "", $baseName);
+            $variantIndex = 1;
 
             foreach ($imageVariations as $column => $imageURL) {
                 $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
                 if ($imageFileName) {
-                    $data[$column] = $imageFileName;
+                    $data[$column] = $imageURL;
                 }
+
+                // Clear all image fields
+                $product['real_file'] = $product['image_variation_1'] = $product['image_variation_2'] = $product['image_variation_3'] = null;
+
+                // Assign the image to the correct column
+                $product[$column] = $imageURL;
+
 
                 foreach ($surfaces as $surface) {
                     $product['surface'] = trim($surface);
-                    $variantName = $baseName; // Default to original name
+                    $variantName = $variantIndex === 1 ? $baseName : "$baseName " . str_pad($variantIndex, 2, '0', STR_PAD_LEFT);
+                    $variantIndex++;
 
-                    // Check if an exact SKU + Surface + Image record already exists
                     $existingTile = DB::table('tiles')
                         ->where('sku', $sku)
                         ->where('surface', $surface)
-                        ->where(function ($query) use ($imageURL) {
-                            $query->where('real_file', $imageURL)
-                                ->orWhere('image_variation_1', $imageURL)
-                                ->orWhere('image_variation_2', $imageURL)
-                                ->orWhere('image_variation_3', $imageURL)
-                                ->orWhere('image_variation_4', $imageURL);
-                        })
+                        ->where('name', $variantName)
                         ->first();
 
                     if ($existingTile) {
-                        // ✅ If record exists, check if an update is needed
                         if ($this->needsUpdate($existingTile, $data)) {
+                            if ($this->isImageDifferent($existingTile, $imageURL)) {
+                                $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
+                            }
                             DB::table('tiles')->where('id', $existingTile->id)->update(array_merge($data, ['updated_at' => now()]));
                             $updatedCount++;
-                            Log::info("✅ Updated Tile ID: {$existingTile->id} (No Name Change) - {$sku} - {$surface}");
+                            Log::info("Updated Tile ID: {$existingTile->id} - {$sku} - {$surface}");
                         } else {
-                            Log::info("⏩ Skipped - No changes detected for SKU: {$sku}, Surface: {$surface}");
+                            Log::info("Skipped - No changes detected for SKU: {$sku}, Surface: {$surface}");
                             $skippedCount++;
                         }
-                        continue; // Skip insertion since it's just an update
+                        continue;
                     }
 
-                    // 🛑 Prevent duplicate insertions with incorrect name
-                    $existingWithSameName = DB::table('tiles')
-                        ->where('sku', $sku)
-                        ->where('surface', $surface)
-                        ->where('product_name', $baseName)
-                        ->exists();
-
-                    if (!$existingWithSameName) {
-                        // If this SKU + Surface already exists but has a new image, create a variant
-                        $variantIndex = DB::table('tiles')
-                                ->where('sku', $sku)
-                                ->where('surface', $surface)
-                                ->count() + 1; // Count existing variations and increment
-
-                        $variantName = "{$baseName} " . str_pad($variantIndex, 2, '0', STR_PAD_LEFT);
-                    }
-
-                    // Finalize product data
+                    $product['product_name'] = $variantName;
+                    $product['rotoPrintSetName'] = $rotoPrintSetName;
                     $data = $this->prepareTileData($product, $creation_time, $imageFileName);
-                    $data['product_name'] = $variantName; // Assign final name
 
-                    // 🚀 Insert the new variant only if it's a new image
                     DB::table('tiles')->insert($data);
-                    Log::info("✅ Inserted New Variant: {$variantName} (SKU: {$sku}, Surface: {$surface})");
+                    Log::info("Inserted: {$variantName} (SKU: {$sku}, Surface: {$surface})");
                     $insertedCount++;
                 }
             }
-
         }
 
-        // Soft delete tiles don't present in the API response
         $this->softDeleteMissingTiles($skippedRecords);
-
-        // Update processing status
         DB::table('companies')->update([
             'last_fetch_date_from_api' => $this->endDate,
             'fetch_products_count' => $this->totalCount,
             'updated_at' => now(),
         ]);
 
-        // Update processing progress
         $this->updateProcessingCache($processedCount, $insertedCount, $updatedCount, $skippedCount, "{$processedCount} / {$this->totalCount} records processed", $skippedRecords);
-
         Log::info('Tile processing completed successfully.');
     }
 
@@ -293,5 +270,21 @@ class ProcessTilesJob implements ShouldQueue
 
             Log::info("Soft deleted missing SKUs: " . implode(', ', $skusToDelete));
         }
+    }
+
+    /**
+     * @param $existingTile
+     * @param $newImageURL
+     * @return bool
+     */
+    private function isImageDifferent($existingTile, $newImageURL): bool
+    {
+        return !in_array($newImageURL, [
+            $existingTile->real_file,
+            $existingTile->image_variation_1,
+            $existingTile->image_variation_2,
+            $existingTile->image_variation_3,
+            $existingTile->image_variation_4,
+        ]);
     }
 }
