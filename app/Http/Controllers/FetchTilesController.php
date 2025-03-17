@@ -43,7 +43,7 @@ class FetchTilesController extends Controller
         $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete";
 
         $queryParams = http_build_query([
-            'limit' => 1,
+            'limit' => 10,
             's' => $startDate,
             'e' => $endDate,
         ]);

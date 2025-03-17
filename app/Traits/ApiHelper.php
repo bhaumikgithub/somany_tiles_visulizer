@@ -252,8 +252,6 @@ trait ApiHelper
 
     protected function fetchAndSaveImage($imageURL): JsonResponse|string
     {
-
-        Log::info("Fetch Image URL ". $imageURL);
         // Get tiles data
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $imageURL);

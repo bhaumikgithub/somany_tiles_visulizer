@@ -48,6 +48,7 @@ class ProcessTilesJob implements ShouldQueue
 
         $existingTiles = DB::table('tiles')->get()->groupBy('sku');
         $imageCache = [];
+        $variantIndexMap = []; // Keep track of variant index for each SKU
 
         foreach ($this->records as $aTile) {
             $product = $aTile['attributes'];
@@ -71,7 +72,10 @@ class ProcessTilesJob implements ShouldQueue
 
             $baseName = trim($product['product_name']);
             $rotoPrintSetName = str_replace(" FP", "", $baseName);
-            $variantIndex = 1;
+
+            if (!isset($variantIndexMap[$sku])) {
+                $variantIndexMap[$sku] = 1; // Initialize variant index for SKU
+            }
 
             foreach ($imageVariations as $column => $imageURL) {
                 $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
@@ -88,8 +92,8 @@ class ProcessTilesJob implements ShouldQueue
 
                 foreach ($surfaces as $surface) {
                     $product['surface'] = trim($surface);
-                    $variantName = $variantIndex === 1 ? $baseName : "$baseName " . str_pad($variantIndex, 2, '0', STR_PAD_LEFT);
-                    $variantIndex++;
+                    // Keep the same variant number across Wall & Floor
+                    $variantName = $variantIndexMap[$sku] === 1 ? $baseName : "$baseName " . str_pad($variantIndexMap[$sku], 2, '0', STR_PAD_LEFT);
 
                     $existingTile = DB::table('tiles')
                         ->where('sku', $sku)
@@ -102,24 +106,29 @@ class ProcessTilesJob implements ShouldQueue
                             if ($this->isImageDifferent($existingTile, $imageURL)) {
                                 $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
                             }
+                            $data['updated_at'] = date('Y-m-d H:i:s');
                             DB::table('tiles')->where('id', $existingTile->id)->update(array_merge($data, ['updated_at' => now()]));
                             $updatedCount++;
-                            Log::info("Updated Tile ID: {$existingTile->id} - {$sku} - {$surface}");
-                        } else {
-                            Log::info("Skipped - No changes detected for SKU: {$sku}, Surface: {$surface}");
-                            $skippedCount++;
+                            Log::info("Updated Tile ID: {$existingTile->id} - {$existingTile->name} - {$sku} - {$surface}");
                         }
+//                        else {
+//                            //Log::info("Skipped - No changes detected for SKU: {$sku}, Surface: {$surface}");
+//                        }
                         continue;
+                    } else {
+                        $product['product_name'] = $variantName;
+                        $product['rotoPrintSetName'] = $rotoPrintSetName;
+                        $data = $this->prepareTileData($product, $creation_time, $imageFileName);
+
+                        $data['created_at'] = date('Y-m-d H:i:s');
+                        $data['updated_at'] = date('Y-m-d H:i:s');
+                        $data['api_json'] = json_encode($aTile);
+                        DB::table('tiles')->insert($data);
+                        Log::info("Inserted: {$variantName} (SKU: {$sku}, Surface: {$surface})");
+                        $insertedCount++;
                     }
-
-                    $product['product_name'] = $variantName;
-                    $product['rotoPrintSetName'] = $rotoPrintSetName;
-                    $data = $this->prepareTileData($product, $creation_time, $imageFileName);
-
-                    DB::table('tiles')->insert($data);
-                    Log::info("Inserted: {$variantName} (SKU: {$sku}, Surface: {$surface})");
-                    $insertedCount++;
                 }
+                $variantIndexMap[$sku]++; // Increment after both surfaces are handled
             }
         }
 
@@ -204,7 +213,6 @@ class ProcessTilesJob implements ShouldQueue
     {
         // First, check if the image is already cached to avoid duplicate DB queries
         if (isset($imageCache[$sku][$imageURL])) {
-            Log::info("Using Cached File for SKU: {$sku} => {$imageCache[$sku][$imageURL]}");
             return $imageCache[$sku][$imageURL];
         }
 
@@ -229,7 +237,6 @@ class ProcessTilesJob implements ShouldQueue
         // If not found, fetch and store it
         $newFile = $this->fetchAndSaveImage($imageURL);
         if ($newFile) {
-            Log::info("Fetched New Image for SKU: {$sku} => {$newFile}");
             $imageCache[$sku][$imageURL] = $newFile;
         }
 
