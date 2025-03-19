@@ -18,6 +18,7 @@
             @endforeach
         @endif
     </div>
+    <div class="vs_none"> </div>
     <div class=" cmn-back-btn" >  
      <a href="{{ url('/') }}"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
     </span></a>
