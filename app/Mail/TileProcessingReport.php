@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class TileProcessingReport extends Mailable
 {
@@ -24,24 +25,22 @@ class TileProcessingReport extends Mailable
      */
     public function __construct($insertedRecords, $updatedRecords, $deletedRecords)
     {
-        $this->insertedRecords = $insertedRecords;
-        $this->updatedRecords = $updatedRecords;
-        $this->deletedRecords = $deletedRecords;
+        $this->insertedRecords = is_array($insertedRecords) ? $insertedRecords : [];
+        $this->updatedRecords = is_array($updatedRecords) ? $updatedRecords : [];
+        $this->deletedRecords = is_array($deletedRecords) ? $deletedRecords : [];
     }
 
     /**
      * Get the message envelope.
      */
-    public function envelope(): TileProcessingReport
+    public function envelope(): Envelope
     {
-        return $this->from('no-reply@example.com', 'Tile Processor')
-            ->subject('Tile Processing Report')
-            ->view('emails.tile_report')
-            ->with([
-                'insertedRecords' => $this->insertedRecords,
-                'updatedRecords' => $this->updatedRecords,
-                'deletedRecords' => $this->deletedRecords,
-            ]);
+        Log::info("Building email with from address: ", ['from' => 'no-reply@example.com']);
+
+        return new Envelope(
+            from: ['address' => 'no-reply@example.com', 'name' => 'Tile Processor'],
+            subject: 'Tile Processing Report'
+        );
     }
 
     /**
@@ -50,7 +49,12 @@ class TileProcessingReport extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.tile_processing_report',
+            with: [
+                'insertedRecords' => $this->insertedRecords,
+                'updatedRecords' => $this->updatedRecords,
+                'deletedRecords' => $this->deletedRecords,
+            ]
         );
     }
 

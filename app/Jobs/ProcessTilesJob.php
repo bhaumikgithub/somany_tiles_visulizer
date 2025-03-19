@@ -183,7 +183,18 @@ class ProcessTilesJob implements ShouldQueue
 
         $this->updateProcessingCache($processedCount, $insertedCount, $updatedCount, $skippedCount, "{$processedCount} / {$this->totalCount} records processed", $skippedRecords);
 
-        Mail::to("kinjalupadhyay.tps@gmail.com")->send(new TileProcessingReport($insertedRecords, $updatedRecords, $deletedRecords));
+        $email = "kinjalupadhyay.tps@gmail.com"; // Ensure it's a string
+
+        if (is_string($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            Mail::to($email)->send(new TileProcessingReport(
+                $insertedRecords,
+                $updatedRecords,
+                $deletedRecords
+            ));
+        } else {
+            Log::error("Invalid email address: " . json_encode($email));
+        }
+
 
         Log::info('Tile processing completed successfully.');
     }
