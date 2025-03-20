@@ -32,6 +32,7 @@ class CleanupUnusedImages extends Command
         // Fetch all filenames from DB (Adjust column name if different)
         $dbImages = DB::table('tiles')->pluck('file')->toArray();
 
+
         // Define folders
         $folders = ['tiles/icons'];
 
@@ -53,7 +54,6 @@ class CleanupUnusedImages extends Command
                 if (is_file($filePath) && !in_array("$folder/$file", $dbImages)) {
                     unlink($filePath);
                     Log::info("Deleted unused image: $file from $folderPath");
-                    $this->info("Deleted: $file from $folder");
                 }
             }
         }

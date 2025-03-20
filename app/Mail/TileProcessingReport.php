@@ -10,6 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Mail\Mailables\Address; //Import Address class
 
 class TileProcessingReport extends Mailable
 {
@@ -18,16 +19,18 @@ class TileProcessingReport extends Mailable
     public $insertedRecords;
     public $updatedRecords;
     public $deletedRecords;
+    public $skippedRecords;
 
 
     /**
      * Create a new message instance.
      */
-    public function __construct($insertedRecords, $updatedRecords, $deletedRecords)
+    public function __construct($insertedRecords, $updatedRecords, $deletedRecords , $skippedRecords)
     {
         $this->insertedRecords = is_array($insertedRecords) ? $insertedRecords : [];
         $this->updatedRecords = is_array($updatedRecords) ? $updatedRecords : [];
         $this->deletedRecords = is_array($deletedRecords) ? $deletedRecords : [];
+        $this->skippedRecords = is_array($skippedRecords) ? $skippedRecords : [];
     }
 
     /**
@@ -35,10 +38,8 @@ class TileProcessingReport extends Mailable
      */
     public function envelope(): Envelope
     {
-        Log::info("Building email with from address: ", ['from' => 'no-reply@example.com']);
-
         return new Envelope(
-            from: ['address' => 'no-reply@example.com', 'name' => 'Tile Processor'],
+            from: new Address('no-reply@tilesvisualizer.com', 'Tile Processor'), // Correct format
             subject: 'Tile Processing Report'
         );
     }
@@ -54,6 +55,7 @@ class TileProcessingReport extends Mailable
                 'insertedRecords' => $this->insertedRecords,
                 'updatedRecords' => $this->updatedRecords,
                 'deletedRecords' => $this->deletedRecords,
+                'skippedRecords' => $this->skippedRecords,
             ]
         );
     }

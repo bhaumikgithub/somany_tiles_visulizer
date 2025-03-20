@@ -62,7 +62,7 @@ class ProcessTilesJob implements ShouldQueue
             $processedCount++;
             $creation_time = Carbon::parse($aTile['creation_time'])->format('Y-m-d H:i:s');
 
-            if ($this->shouldSkipTile($product, $sku, $skippedRecords)) {
+            if ($this->shouldSkipTile($aTile['code'],$product, $sku, $skippedRecords)) {
                 $skippedCount++;
                 continue;
             }
@@ -170,6 +170,9 @@ class ProcessTilesJob implements ShouldQueue
                     }
                 }
             }
+            unset($imageCache[$imageURL]); // Free memory
+            unset($imageVariations);
+            gc_collect_cycles();
         }
 
 
@@ -183,19 +186,11 @@ class ProcessTilesJob implements ShouldQueue
 
         $this->updateProcessingCache($processedCount, $insertedCount, $updatedCount, $skippedCount, "{$processedCount} / {$this->totalCount} records processed", $skippedRecords);
 
-        $email = "kinjalupadhyay.tps@gmail.com"; // Ensure it's a string
+        Mail::to('kinjalupadhyay.tps@gmail.com')
+            ->send(new TileProcessingReport($insertedRecords, $updatedRecords, $deletedRecords,$skippedRecords));
 
-        if (is_string($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            Mail::to($email)->send(new TileProcessingReport(
-                $insertedRecords,
-                $updatedRecords,
-                $deletedRecords
-            ));
-        } else {
-            Log::error("Invalid email address: " . json_encode($email));
-        }
-
-
+        unset($insertedRecords, $updatedRecords, $deletedRecords);
+        gc_collect_cycles();
         Log::info('Tile processing completed successfully.');
     }
 
@@ -219,10 +214,10 @@ class ProcessTilesJob implements ShouldQueue
     /**
      * Determines whether a tile should be skipped.
      */
-    private function shouldSkipTile(array $product, string $sku, array &$skippedRecords): bool
+    private function shouldSkipTile(string $code , array $product, string $sku, array &$skippedRecords): bool
     {
-        if (in_array($sku, ['12345678', '1223324324'])) {
-            $this->logSkippedRecord($sku, "Excluded SKU", $skippedRecords);
+        if (in_array($code, ['12345678', '1223324324','1234'])) {
+            $this->logSkippedRecord($code, "Excluded SKU", $skippedRecords);
             return true;
         }
 
@@ -301,29 +296,29 @@ class ProcessTilesJob implements ShouldQueue
 
 
 
+//    /**
+//     * Checks if a tile needs an update.
+//     */
+//    private function needsUpdate($existingTile, array $data): bool
+//    {
+//        unset($data['created_at']);
+//
+//        foreach ($data as $key => $value) {
+//            if (!property_exists($existingTile, $key)) {
+//                continue; // Skip if the column does not exist in the DB
+//            }
+//
+//            // Convert null to empty string to avoid type mismatches
+//            if (($existingTile->$key ?? '') !== ($value ?? '')) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
+
     /**
-     * Checks if a tile needs an update.
-     */
-    private function needsUpdate($existingTile, array $data): bool
-    {
-        unset($data['created_at']);
-
-        foreach ($data as $key => $value) {
-            if (!property_exists($existingTile, $key)) {
-                continue; // Skip if the column does not exist in the DB
-            }
-
-            // Convert null to empty string to avoid type mismatches
-            if (($existingTile->$key ?? '') !== ($value ?? '')) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    /**
-     * Soft deletes tiles that are no longer in the API response.
+     * Softly deletes tiles that are no longer in the API response.
      */
     private function softDeleteMissingTiles(array &$skippedRecords ,array &$deletedRecords): void
     {

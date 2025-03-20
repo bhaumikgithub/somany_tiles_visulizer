@@ -250,7 +250,7 @@ trait ApiHelper
      * @throws Exception
      */
 
-    protected function fetchAndSaveImage($imageURL): JsonResponse|string
+    protected function fetchAndSaveImage($imageURL): JsonResponse|array
     {
         // Get tiles data
         $ch = curl_init();
@@ -264,6 +264,8 @@ trait ApiHelper
         $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
 
         curl_close($ch);
+
+        $image = @imagecreatefromstring($imageContent);
 
         if (!$imageContent || !str_starts_with($contentType, 'image/')) {
             return response()->json([
@@ -304,7 +306,12 @@ trait ApiHelper
 
         // Store the image content in the public disk (public/tiles folder in storage)
         Storage::disk('public')->put($fileName, $imageContent);
-        return $fileName;
+
+        return [
+            'width' => imagesx($image),
+            'height' => imagesy($image),
+            'file' => $fileName,
+        ];
     }
 
     /**
