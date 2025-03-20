@@ -1,5 +1,5 @@
 .room-content-container {
-    height: 100vh; /* or a specific height in pixels, e.g., 500px */
+    height: 100%; /* or a specific height in pixels, e.g., 500px */
     overflow-y: auto;
 }
 .no-data-text{
@@ -9,4 +9,16 @@
     padding-top: 16px;
     margin-bottom: 13px;
     margin-top: 13px;
+}
+
+#loadingMessage{
+    position: fixed;
+    background: #fff;
+    border: 2px solid #ce1f22;
+    border-radius: 12px;
+    left: calc(50% - 54px);
+    padding: 10px;
+    text-align: center;
+    top: calc(50% - 34px);
+    z-index: 9999;
 }

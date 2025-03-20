@@ -15,6 +15,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -164,7 +165,8 @@ class AddToPdfRoomsController extends Controller
                 'finish' => $tile->finish,
                 'file' => $tile->file,
                 'price' => $tile->price,
-                'icon' => $tile->icon, // Access the appended 'icon' attribute
+                'icon' => $tile->icon, // Access the appended 'icon' attribute,
+                'free_tile' => $selectedTile['isFreeTile']
             ];
         });
 
@@ -180,9 +182,18 @@ class AddToPdfRoomsController extends Controller
         $productInfo->cart_id = $cart_id;
         $productInfo->save();
 
+       // Store cart session
+        $request->session()->put('cart', $cart_id);
+
         $getCartId = Cart::where('user_id',$sessionId)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
+
+        //Update pin code in cart summary page
+        $pincode = Session::get('pincode'); // Store the pin code temporarily
+        $getCartId->pincode = $pincode;
+        $getCartId->update();
         $count = $allProduct->count();
+
         $url = '/pdf-summary/'.$getCartId->random_key;
         return response()->json([
             'body' => view('common.cartPanel',compact('allProduct','count','url'))->render(),
@@ -215,12 +226,10 @@ class AddToPdfRoomsController extends Controller
 
     public function pdfSummary(Request $request , $randomKey): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
+
         $pincode = Session::get('pincode'); // Store the pincode temporarily
         //Update pin code in cart summary page
         $getCartId = Cart::where('random_key',$randomKey)->first();
-        $getCartId->pincode = $pincode;
-        $getCartId->update();
-
         if( $getCartId ){
             $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
             $usedTiles = [];
@@ -251,7 +260,8 @@ class AddToPdfRoomsController extends Controller
             ]);
         }
 
-        Session::flush(); // Clears all session data
+        // Destroy only the cart session, keeping user login session
+        Session::forget(['cart','pincode']);
 
         // Optionally, regenerate session ID for the user
         $request->session()->regenerate();  // This generates a new session ID
@@ -674,8 +684,23 @@ class AddToPdfRoomsController extends Controller
     public function checkSelectionHasData(Request $request): JsonResponse
     {
         $cart = Cart::where('user_id',$request->input('session_id'))->get();
+        // If no cart found, return response early
+        if ($cart->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No selection in Cart Found.',
+                'count' => 0
+            ]);
+        }
+
+        // Get the first cart safely
+        $cartId = $cart->first()->id;
+        $cartItems = CartItem::where('cart_id', $cartId)->count();
+
         if( $cart->count() === 0 ){
             return response()->json(['success' => false, 'message' => 'No selection in Cart Found.','count'=>$cart->count()]);
+        } else if( $cart->count() > 0 && $cartItems === 0 ){
+            return response()->json(['success' => false, 'message' => 'No selection in Cart Found.','count'=>$cartItems]);
         } else {
             return response()->json(['success' => true,'message' => 'selection in Cart.','count'=>$cart->count()]);
         }

@@ -89,7 +89,6 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         <li @if ($view_name == 'home') class="active" @endif ><a href="/home">Home</a></li>
-                        <li @if ($view_name == 'dashboard.index') class="active" @endif ><a href="/dashboard">Dashboard</a></li>
 
                         @if (Auth::check() && Auth::user()->hasRole('editor'))
                             <li @if ($view_name == 'tiles') class="active" @endif ><a href="/tiles">Tiles</a></li>
@@ -137,13 +136,13 @@
                                     <li><a href="/storage-link">Storage Link</a></li>
                                     <li><a href="{{url('maximum_images')}}">Maximum Tiles</a></li>
                                     <li><a href="{{url('pincode_zone')}}">Zone</a></li>
-                                    <li><a href="{{url('fetch_tiles')}}">Fetching Tiles</a></li>
+{{--                                    <li><a href="{{url('fetch_tiles')}}">Fetching Tiles</a></li>--}}
                                     <li><a href="{{url('fetch_showroom')}}">Showrooms</a></li>
                                     <li><a href="{{route('user_pdf-summary')}}">Pdf-Summary</a></li>
                                 </ul>
                             </li>
                         @endif
-
+                        <li @if ($view_name == 'dashboard.index') class="active" @endif ><a href="/dashboard">Reports</a></li>
                     </ul>
                 </div>
             </div>

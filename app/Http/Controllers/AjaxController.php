@@ -42,11 +42,13 @@ class AjaxController extends Controller
 
     public function getTiles(Request $request): Response | JsonResponse
     {
-        if (config('app.tiles_access_level')) {
+        set_time_limit(0);
+        ini_set('memory_limit', '2048M'); // Adjust the limit as needed
 
+        if (config('app.tiles_access_level')) {
             $roomID = $request->input('room_id');
             $currentRoomType = $request->input('room_type');
-            if( $currentRoomType === "room2d") {
+            if( $currentRoomType === "2d-studio") {
                 $findRoom = Room2d::select('type')->findOrFail($roomID);
             } else {
                 $findRoom = Panorama::select('type')->findOrFail($roomID);
@@ -61,8 +63,7 @@ class AjaxController extends Controller
                 // Check for multiple values in application_room_area
                 $roomType = $commercialRooms;
             }
-
-            if ($request->ids) {
+            if ($request->input('ids')) {
                 $ids = explode(",", $request->ids);
 
                 $tiles = Tile::where('enabled', 1)
@@ -81,6 +82,23 @@ class AjaxController extends Controller
             return response()->json($tiles);
         }
         $tiles = Tile::where('enabled', 1)->get();
+        return response()->json($tiles);
+    }
+
+    public function getTilesForBackedPanorama(Request $request): JsonResponse
+    {
+        $ids = explode(",", $request->ids);
+
+        $tiles = Tile::where('enabled', 1)
+            ->whereIn('id', $ids)
+            ->where(function ($query) {
+                $user = Auth::user();
+                $access_level = isset($user) ? $user->getAccessLevel() : 0;
+
+                $query->where('access_level', '<=', $access_level)
+                    ->orWhere('access_level', null);
+            })
+            ->get();
         return response()->json($tiles);
     }
 
@@ -141,8 +159,10 @@ class AjaxController extends Controller
     public function getSavedRoomByUrl($url) {
         $savedroom = Savedroom::where('url', $url)->first();
         $room = Room2d::where('id', $savedroom->roomid)->first();
-        $savedroom->name = $room->name;
-        $savedroom->type = $room->type;
+        if( $room != null ) {
+            $savedroom->name = $room->name;
+            $savedroom->type = $room->type;
+        }
         return response()->json($savedroom);
     }
 

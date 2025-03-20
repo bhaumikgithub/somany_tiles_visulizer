@@ -53,6 +53,9 @@
                                     @else
                                         {{ucfirst($tile_detail->surface)}}
                                     @endif
+                                    @if( isset($tile_detail->free_tile ) && $tile_detail->free_tile === true )
+                                        ( Free Tile )
+                                    @endif
                                 </h5>
                                 <div class="details-card" id="{{$index . '_' . $loop->index}}">
                                     <div class="row">
@@ -93,11 +96,15 @@
                                                         @if( $tiles_par_box !== NULL )
                                                             <div class="tiles_carton_wrapper_{{$item->id}}_{{$loop->index}}" style="display: <?php echo ($tiles_par_box !== NULL ) ? 'block' : 'none'; ?>">
                                                                 <input type="hidden" value="" id="require_box">
-                                                                <p>Number of Box Required: <span class="require_box">{{@$tile_detail->box_needed}}</span></p>
+                                                                @isset($tile_detail->box_needed)
+                                                                    <p>Number of Box Required: <span class="require_box">{{@$tile_detail->box_needed}}</span></p>
+                                                                @else
+                                                                    <p class="textBoxWrap" style="display: none;">Number of Box Required: <span class="require_box"></span></p>
+                                                                @endisset
                                                             </div>
                                                             <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
                                                         @endif
-                                                        @if( session()->has('pincode') )
+                                                        @if( isset($pincode) )
                                                             @php
                                                                 $surface_title = (  isset($tile_detail->surface_title ) ) ? ucfirst($tile_detail->surface_title) : ucfirst($tile_detail->surface) ;
                                                             @endphp
@@ -179,18 +186,18 @@
                     <table class="table summary-page-table" id="summary-table">
                     <thead>
                         <tr class="table-active">
-                        <th  class="text-center">Sr. No</th>
-                        <th >Name</th>
-                        <th >Size</th>
-                        <th >Finish</th>
-                        <th >Apply<br>On</th>
-                        <th class="text-center">Area<br>Sq. Ft.</th>
-                        <th class="text-center">Tiles/Box</th>
-                        <th class="text-center">Box Coverage<br>Area Sq. Ft.</th>
-                        <th class="text-center">Box<br> Required</th>
-                        <th class="text-center">MRP/<br>Sq. Ft.</th>
-                        <th class="text-center">MRP<br>Price</th>
-                    </tr>
+                            <th  class="text-center">Sr. No</th>
+                            <th >Name</th>
+                            <th >Size</th>
+                            <th >Finish</th>
+                            <th >Apply<br>On</th>
+                            <th class="text-center">Area<br>Sq. Ft.</th>
+                            <th class="text-center">Tiles/Box</th>
+                            <th class="text-center">Box Coverage<br>Area Sq. Ft.</th>
+                            <th class="text-center">Box<br> Required</th>
+                            <th class="text-center">MRP</th>
+                            <th class="text-center">MRP/<br>Sq. Ft.</th>
+                        </tr>
                     </thead>
                     <tbody>
                         @if(isset($groupedTiles))
@@ -208,8 +215,8 @@
                                         <td class="text-center">{{ $tile['tiles_per_box'] }}</td>
                                         <td class="text-center">{{ ( $tile['box_coverage_area_sq_ft'] === "-" ) ? "-" : $tile['box_coverage_area_sq_ft'] }}</td>
                                         <td class="text-center summary-box-needed">{{ $tile['box_required'] }}</td>
-                                        <td class="text-center">{{ $tile['mrp_per_sq_ft'] }}</td>
                                         <td class="text-center summary-mrp-price">{{ ( $tile['mrp_price'] === "-" ) ? "-" : number_format($tile['mrp_price'])  }}</td>
+                                        <td class="text-center">{{ $tile['mrp_per_sq_ft'] }}</td>
                                     </tr>
                                     @php
                                         $i++; // Increment only when a valid row is printed
@@ -228,8 +235,8 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
                                 <td class="text-center" id="summary-total-mrp-price">{{ ( $totalMrpPrice === 0 ) ? "" : "Rs. ". number_format($totalMrpPrice) }}</td>
+                                <td></td>
                             </tr>
                         @endif
                     </tbody>
@@ -243,12 +250,17 @@
                     <h5 class="font-bold">Disclaimer:</h5>
                     <ul class="notes_ul">
                         <li>The visuals are for reference purposes only; actual colors, finishes, and tile dimensions may vary.</li>
-                        <li>Shade variation is an inherent characteristic of tiles; therefore, physical inspection is
-                            recommended for accurate selection</li>
-                        <li>Tiles with multiple faces feature varied patterns, resulting in natural design variations</li>
-                        <li>Prices quoted are subject to change without prior notice. The final price applicable at the time of
-                            delivery will prevail.</li>
+                        <li>Shade variation is a natural characteristic of tiles, making each piece unique. We highly recommend a physical inspection for accurate selection. Visit our showroom for the best selection and precise assessment.</li>
+                        <li>Tiles with multiple faces exhibit varied patterns, resulting in natural design variations.</li>
+                        <li>Prices quoted are subject to change without prior notice. For the best offers and discounts, visit our nearest showroom.</li>
                     </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <h5 class="font-bold">Exciting offers:</h5>
+                    <p class="normalText">The prices listed above are the Maximum Retail Price (MRP). Visit your nearest Somany store to unlock exclusive offers and discover deals that'll make your wallet smile! </p>
                 </div>
             </div>
             @if($userShowroomInfo['user'])

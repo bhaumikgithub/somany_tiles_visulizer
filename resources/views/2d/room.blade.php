@@ -18,17 +18,14 @@
                     <i class="fa-regular fa-share-from-square"></i><span class="btn-text-set">Share </span>
                 </a>
             @endif
-            <button class="share-link d-flex flex-wrap align-items-center"onclick="downloadImage();"><i
+            <button class="share-link d-flex flex-wrap align-items-center "onclick="downloadImage();"><i
                         class="fa-solid fa-download"></i> <span class="btn-text-set">Download </span></button>
-            <button class="share-link d-flex flex-wrap align-items-center" onclick="addToPDF();"><i
+            <button class="share-link d-flex flex-wrap align-items-center normal-pdf-link" onclick="addToPDF();"><i
                         class="fa-regular fa-file-lines"></i> <span class="btn-text-set">Add to Selection </span></button>
             <button class="share-link d-flex flex-wrap align-items-center share-btn-close"><i
                         class="fa-solid fa-xmark"></i></button>
         </div>
 
-
-        <!-- <a href="{{ url('listing/' . @$room_type) }}" class="cmn-room-btn back-btn d-flex flex-wrap align-items-center"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
-                                </span> <span class="btn-text-set">Back </span> </a> -->
         <div class=" cmn-room-btn cmn-room-back-btn back-btn">
             <a href="{{ url('listing/' . @$room_type) }}"> <span class="span-icon"><i class="fa-solid fa-arrow-left"></i>
                 </span></a>
@@ -54,6 +51,7 @@
         <input type="hidden" value="{{ @$room_type }}" id="current_room_type">
         <input type="hidden" value="" id="selected_tile_ids">
         <input type="hidden" value="{{ session()->getId() }}" id="currentSessionId">
+        <input type="hidden" value="" id="free_tile_checkbox_value">
 
         @if (config('view.visualizer_layout') != 'iorena.')
             @include('common.' . config('app.bottom_menu') . 'bottomMenu2d')

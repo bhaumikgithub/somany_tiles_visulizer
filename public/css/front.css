@@ -78,7 +78,10 @@ body {
     text-shadow: 2px 2px 4px #000000;
 
 }
-
+.vs_none{
+    display: none !important;
+    height: 4px !important;
+}
 .image1 {
     background-image: url(../images/4.jpg);
     background-size: cover;
@@ -304,6 +307,7 @@ body {
     height: 170px;
 }
 
+
 @media (max-width: 767px) {
     .desktop-div {
         display: none !important;
@@ -415,7 +419,7 @@ body {
 
 .total-product-title {
     color: #3F3F46 !important;
-    font-size: 18px;
+    font-size: 16px;
     padding-left: 10px;
     margin-bottom: 10px;
     font-weight: bold;
@@ -441,7 +445,7 @@ body {
 .tile-list-thumbnail-image-holder-product img {
     max-width: max-content !important;
     max-height: max-content !important;
-    border-radius: 20px;
+    border-radius: 10px;
 }
 
 .top-panel-content-tiles-list-item-product:hover {
@@ -505,14 +509,14 @@ body {
 
 .top-panel-content-tiles-list-item-product .tile-list-text {
     color: #3F3F46;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     padding: 0px 20px;
 }
 
 
 .top-panel-content-tiles-list-item-product .cart-summary-link {
-    font-size: 14px;
+    font-size: 10px;
     color: #3F3F46;
     text-decoration: underline;
     margin-top: 10px;
@@ -590,6 +594,15 @@ body {
 }
 .radio-skew-size{
     width: 100%;
+}
+
+.filterText{
+    margin-top: 13px;
+    float: left;
+    font-size: 10px;
+    text-align: center;
+    width: 30px;
+    color: #555;
 }
 
 @media (max-width:991px) {
@@ -681,6 +694,9 @@ body {
 
     .product-top-panel-box .loadCartItems {
         height: calc(100vh - 252px);
+    }
+    .vs_none{
+        display: block !important;
     }
 
 }
@@ -1849,6 +1865,7 @@ input[type=checkbox] {
         padding: 8px;
         border-radius: 20px;
         border: 1px solid #3F3F46;
+        width: auto !important;
     }
 
     .share-div {
@@ -1962,7 +1979,6 @@ input[type=checkbox] {
     #topPanelHideIcon{
         margin-top: 6px;
     }
-<<<<<<< HEAD
     .toggle-wrap-main{
         display: flex;
         width: 100%;
@@ -1994,5 +2010,47 @@ input[type=checkbox] {
     #cartInfoTilesList .modify-btn{
         padding: 8px;
         font-size: 13px;
+    }
+}
+
+@media (max-width:767px) and (orientation:portrait) {
+    .panorama-share-div {
+        left: 18px;
+        gap: 10px;
+    }
+
+    .panorama-share-div .share-link-main {
+        width: 35%;
+    }
+
+    .downalod-link {
+        margin-left: -6px !important;
+        width: 38%;
+    }
+
+    .panorama-share-div i {
+        font-size: 13px !important;
+    }
+
+    .share-div {
+        margin-right: 0px !important;
+        left: 21px;
+    }
+
+
+    @media (max-width: 350px) and (orientation: portrait) {
+
+        .share-div i {
+            font-size: 14px !important;
+        }
+
+        .share-div {
+            gap: 10px;
+        }
+
+        .normal-pdf-link {
+            margin-left: -6px !important;
+
+        }
     }
 }

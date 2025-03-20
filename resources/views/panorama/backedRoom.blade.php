@@ -106,7 +106,8 @@
                 : [...new Set(roomSettings?.surfaces?.map(surface => [surface.tileId, surface.tile2Id, ...(surface.freeDesignTiles?.map(tile => tile.id) || [])].filter(item => item)).flat())]
             if (!products?.length) return
 
-            var tiles = await (await fetch('/get/tiles?ids='+products)).json()
+            var tiles = await (await fetch('/get/tilesForBackedPanorama?ids='+products)).json()
+
             if (!tiles) return
 
             var productInfoPanel = document.getElementById('productInfoPanel')

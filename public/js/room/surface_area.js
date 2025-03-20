@@ -14,7 +14,7 @@ let pathSegments = url.pathname.split("/");
 let surfaceUrl = "";
 
 window.onload = function getRoomSurface() {
-    if(pathSegments[1] === "panorama"){
+    if(pathSegments[1] === "panorama-studio"){
         surfaceUrl = '/get_room_surface_panorama';
     } else {
         surfaceUrl = '/get_room_surface';
@@ -52,16 +52,16 @@ function openTileSelectionPanel(surface_name) {
     /////////added by vikesha////////////////////////////
     let firstWord = surface_name.split('_')[0];
     // Hide or show .top-panel-search based on the first word
-    var isCounterOrPaint = firstWord === "counter" || firstWord === "paint";
+    var isCounterOrPaint = firstWord === "paint";
     $('.top-panel-search').toggle(!isCounterOrPaint);
     $('.partOfProductTabContent-wrap').toggle(!isCounterOrPaint);
-    
+
 
     // Hide or show #btnGrout based on the first word
     $('#btnGrout').toggle(firstWord !== "counter");
-  
+
     /////////code end////////////////////////
-  
+
     let oldSurfaceName = surface_name;
     setCurrentListID(surface_name);//List_wall_a
 
@@ -87,7 +87,7 @@ function openTileSelectionPanel(surface_name) {
         $(".serch-box-wrap").show();
         $(".top-panel-box-first").show();
     }
-   
+
     if(isThisMobileDevice()==true){
         if (String(surface_name).indexOf("Paint") > -1 || String(surface_name).indexOf("Theme") > -1) {
             $(".title-area").show();
@@ -100,7 +100,7 @@ function openTileSelectionPanel(surface_name) {
 
     if (clickedSurface != false) {
         //This function directly go to 2d.min.js and set the current surface
-        currentRoom._onSurfaceClick(clickedSurface);
+        currentRoom._onSurfaceClick(clickedSurface,true);
     }
 
 
@@ -113,10 +113,10 @@ function getSurfaceNameForLabeling(p_surfaceName){
 
 let themeSurfaceUrl = "";
 function loadThemeData() {
-    if(pathSegments[1] === "panorama"){
-        themeSurfaceUrl = '/get/panorama/';
+    if(pathSegments[1] === "panorama-studio"){
+        themeSurfaceUrl = '/get/panorama-studio/';
     } else {
-        themeSurfaceUrl = '/get/room2d/';
+        themeSurfaceUrl = '/get/2d-studio/';
     }
     $.ajax({
         url: themeSurfaceUrl + $('#current_room_id').val(), // Replace with the actual endpoint for room2d
@@ -183,22 +183,28 @@ function addThemeData(p_obj) {
         themeData.push(p_obj)
 }
 function showMainInfoPanel(p_type, surface_name) {
+    console.log("SHOW MAIN INFO TYPE = " + p_type + " SURFACE = " + surface_name);
     allRightPanelContentHide();
 
     if (p_type == "MAINLISTING_HIDE") {
+        console.log("MAINLISTING HIDE");
         //  $('#selectd-data').hide(); //wall A, b , c hide
         $(wallFloorThemeContentParent).show();
 
 
         if (surface_name == "theme") {
+            console.log("IN surface_name THEME");
             $(themeContent).show();
         }
         else {
+            console.log("IN surface_name NOT THEME");
             hideOpenFilters();
             $(wallFloorContent).show();
         }
     }
+
     if (p_type == "MAINLISTING_SHOW") {
+        console.log("IN MAINLISTING_SHOW");
         $(wallAwallBwallCListing).show();
     }
 }
@@ -207,11 +213,11 @@ function themeBtnPressed(p_id, p_imageLoadByPass) {
 
     }
     else {
-        console.log(currentRoom);
-        if(pathSegments[1] === "room2d"){
+        if(pathSegments[1] === "2d-studio"){
             currentRoom._engine2d.loadAndDrawForegroundImage(themeData[p_id].theme_bigimage);
         } else {
-            currentRoom.currentTiledSurface.loadAndDrawForegroundImage(themeData[p_id].theme_bigimage,currentRoom.currentTiledSurface._surfaceData.json);
+            //,currentRoom.currentTiledSurface._surfaceData.json
+            currentRoom._view.loadAndDrawForegroundImage(p_id);
         }
     }
     $(".top-panel-content-tiles-list-item").removeClass("active_theme");
@@ -220,7 +226,7 @@ function themeBtnPressed(p_id, p_imageLoadByPass) {
     clickedTiles(themeData[p_id], "theme");
     //added by vikesha (serchbox and grout check)
     showHideTabs();
-    
+
 }
 function clickedTiles(p_tile, p_surfaceName) {
     let textForMainPanel = "";

@@ -65,6 +65,7 @@
                                         <button id="btnRefine"
                                                 class="top-panel-button top-panel-btn-filter">@lang('
                                             <i class="fa-solid fa-sliders"></i>
+                                            <span class="filterText">Filters</span>
                                     ')</button>
                                     </div>
                                 </div>
