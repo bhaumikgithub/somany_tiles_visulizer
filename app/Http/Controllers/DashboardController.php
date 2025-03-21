@@ -6,7 +6,11 @@ use App\Helpers\Helper;
 use App\Models\Analytics;
 use App\Models\Showroom;
 use App\Models\UserPdfData;
+use App\Tile;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -19,65 +23,144 @@ class DashboardController extends Controller
         return view('dashboard.index');
     }
 
-    public function getAnalyticsResult(Request $request): JsonResponse
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getSummaryPdfChart(Request $request): JsonResponse
+    {
+        $startDate = $request->input('startDate') . ' 00:00:00';
+        $endDate = $request->input('endDate') . ' 23:59:59';
+        $chartType = $request->input('chartType');
+
+        $queryAnalyticsBuilder = $this->queryAnalyticsBuilder($startDate, $endDate);
+
+        $response = [];
+
+        if ($chartType === 'summaryPdfDownloadChart') {
+            //TotalUsers
+            $totalGuestUsers = $queryAnalyticsBuilder->where('user_logged_in', 'guest')->count();
+            $totalLoggedInUsers = $queryAnalyticsBuilder->where('user_logged_in', '!=', 'guest')->count();
+            $totalUsers = $totalGuestUsers + $totalLoggedInUsers;
+
+            /** Summary PDF Analytics */
+            $totalSession = Analytics::whereBetween('visited_at', [$startDate, $endDate])->get();
+            $summaryPDFData = $this->summaryPdfChart($startDate, $endDate);
+
+            // Construct response
+            $response = [
+                'total_users' => $totalUsers,
+                'total_logged_in_users' => $totalLoggedInUsers,
+                'total_guest_users' => $totalGuestUsers,
+                'total_session' => $totalSession->count(),
+                'session_reach_summary_page' => $summaryPDFData['sessionReachSummaryPage'],
+                'download_pdf' => $summaryPDFData['downloadPdf'],
+                'summary_pdf_chart_data' => $summaryPDFData['summaryPdfChartData'],
+            ];
+        }
+
+        return response()->json($response);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getPinCodeChart(Request $request): JsonResponse
     {
         $startDate = $request->input('startDate') . ' 00:00:00';
         $endDate = $request->input('endDate') . ' 23:59:59';
 
         /*** Pin code Analytics **/
         $pinCodeChartData = $this->pincodeChartData($startDate, $endDate);
+        return response()->json([
+            'pincode_chartData' => $pinCodeChartData['pincode_chartData'],
+            'pincodeTabularData' => $pinCodeChartData['pincodeTabularData'],
+        ]);
+    }
 
-        /*** Category Analytics **/
-        $categoryChartData = $this->categoryChartData($startDate,$endDate);
-
-        /*** Rooms Analytics **/
-        $roomChartData = $this->roomChartData($startDate,$endDate);
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getTilesAppliedChart(Request $request): JsonResponse
+    {
+        $startDate = $request->input('startDate') . ' 00:00:00';
+        $endDate = $request->input('endDate') . ' 23:59:59';
 
         /*** Tiles Analytics **/
         $finalTiles = $this->tilesTabularData($startDate,$endDate);
 
-        $queryAnalyticsBuilder = $this->queryAnalyticsBuilder($startDate,$endDate);
+        return response()->json([
+            'wall_count' => $finalTiles['wall_count'],
+            'floor_count' => $finalTiles['floor_count'],
+            'counter_count' => $finalTiles['counter_count'],
+        ]);
+    }
 
-        //TotalUsers
-        $totalGuestUsers = $queryAnalyticsBuilder->where('user_logged_in','guest')->count();
-        $totalLoggedInUsers = $queryAnalyticsBuilder->where('user_logged_in','!=' , 'guest')->count();
-        $totalUsers = $totalGuestUsers + $totalLoggedInUsers;
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getRoomCategory(Request $request): JsonResponse
+    {
+        $startDate = $request->input('startDate') . ' 00:00:00';
+        $endDate = $request->input('endDate') . ' 23:59:59';
 
-        /** Summary PDF Analytics */
-        $showRoomsUsers = $queryAnalyticsBuilder->where('user_logged_in','!=',"guest")->whereNotNull('showroom')->get();
+        $appliedTilesChartData = $this->categoryChartData($startDate,$endDate);
 
-        $totalSession = Analytics::whereBetween('visited_at', [$startDate, $endDate])->get();
-        $summaryPDFData = $this->summaryPdfChart($startDate,$endDate);
+        return response()->json([
+            'applied_tiles_chart_data' => $appliedTilesChartData,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getTopTiles(Request $request): JsonResponse
+    {
+        $startDate = $request->input('startDate') . ' 00:00:00';
+        $endDate = $request->input('endDate') . ' 23:59:59';
 
         /** Most used five tiles */
         $topFiveTiles = $this->topFiveTiles($startDate,$endDate);
 
+        return response()->json([
+            'body' => view('dashboard.top_tiles', compact('topFiveTiles'))->render(),
+            'top_five_tiles' => $topFiveTiles,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getTopRooms(Request $request): JsonResponse
+    {
+        $startDate = $request->input('startDate') . ' 00:00:00';
+        $endDate = $request->input('endDate') . ' 23:59:59';
+
         /** Most used five rooms */
-        $topFiveUsedRooms = $this->topFiveUsedRooms($startDate,$endDate);
+         $topFiveUsedRooms = $this->topFiveUsedRooms($startDate,$endDate);
+
+        return response()->json([
+            'body' => view('dashboard.top_rooms', compact('topFiveUsedRooms'))->render(),
+            'top_five_rooms' => $topFiveUsedRooms,
+        ]);
+    }
+
+    public function getTopShowRooms(Request $request): JsonResponse
+    {
+        $startDate = $request->input('startDate') . ' 00:00:00';
+        $endDate = $request->input('endDate') . ' 23:59:59';
 
         /** Most top showrooms */
         $topShowRooms = $this->topShowrooms($startDate,$endDate);
 
         return response()->json([
-            'pincode_chartData' => $pinCodeChartData['pincode_chartData'],
-            'category_chart_data' => $categoryChartData,
-            'pincodeTabularData' => $pinCodeChartData['pincodeTabularData'],
-            'tilesTabularData' => $finalTiles['processedTiles'],
-            'room_chart_data' => $roomChartData,
-            'total_users' => $totalUsers,
-            'total_logged_in_users' => $totalLoggedInUsers,
-            'total_guest_users' => $totalGuestUsers,
-            'total_session' => $totalSession->count(),
-            'showroom_users' => $showRoomsUsers,
-            'session_reach_summary_page' => $summaryPDFData['sessionReachSummaryPage'],
-            'download_pdf' => $summaryPDFData['downloadPdf'],
-            'summary_pdf_chart_data' => $summaryPDFData['summaryPdfChartData'],
-            'wall_count' => $finalTiles['wall_count'],
-            'floor_count' => $finalTiles['floor_count'],
-            'counter_count' => $finalTiles['counter_count'],
-            'top_five_tiles' => $topFiveTiles,
-            'top_five_rooms' => $topFiveUsedRooms,
-            'top_showrooms' => $topShowRooms
+            'body' => view('dashboard.top_show_rooms', compact('topShowRooms'))->render(),
+            'top_five_show_rooms' => $topShowRooms,
         ]);
     }
 
@@ -160,6 +243,7 @@ class DashboardController extends Controller
             'total' => $totalVisits
         ];
     }
+
 
     /**
      * @param $startDate
@@ -375,6 +459,7 @@ class DashboardController extends Controller
                         "surface" => $tilesPhotoSize['surface'] ?? "Unknown",
                         "photo" => $tilesPhotoSize['photo'] ?? "default.jpg",
                         "used_count" => 0,
+                        "finish" => $tilesPhotoSize["finish"] ?? "Unknown",
                     ];
                 }
 
@@ -406,13 +491,14 @@ class DashboardController extends Controller
      * @param $endDate
      * @return array
      */
-    protected function topFiveUsedRooms($startDate , $endDate): array
+    protected function topFiveUsedRooms($startDate, $endDate): array
     {
         $roomData = Analytics::select(
             DB::raw('JSON_UNQUOTE(room) as rooms_json')
         )->whereBetween('visited_at', [$startDate, $endDate])->get();
 
         $processedRooms = [];
+        $bgColors = ['bg-success', 'bg-warning', 'bg-info', 'bg-danger', 'bg-primary'];
 
         // Loop through room data
         foreach ($roomData as $row) {
@@ -444,9 +530,18 @@ class DashboardController extends Controller
             return $b['count'] - $a['count'];
         });
 
-        return array_slice($processedRooms, 0, 5);
+        // Get the highest count to calculate percentages
+        $maxCount = $processedRooms[0]['count'] ?? 1;
 
+        // Assign background colors and percentages
+        foreach ($processedRooms as $index => &$room) {
+            $room['percentage'] = ($room['count'] / $maxCount) * 100;  // Calculate %
+            $room['bg_color'] = $bgColors[$index] ?? 'bg-secondary';  // Assign fixed colors
+        }
+
+        return array_slice($processedRooms, 0, 5);
     }
+
 
     /**
      * @param $startDate
@@ -455,8 +550,8 @@ class DashboardController extends Controller
      */
     protected function topShowrooms($startDate , $endDate): Collection
     {
-        // Fetch showroom_ids from analytics table
-        $showroomIds = Analytics::where('user_logged_in', '!=', 'guest')
+        // Step 1: Fetch showroom_ids and count occurrences
+        $showroomCounts = Analytics::where('user_logged_in', '!=', 'guest')
             ->whereBetween('visited_at', [$startDate, $endDate])
             ->whereNotNull('showroom')
             ->pluck('showroom')
@@ -465,28 +560,36 @@ class DashboardController extends Controller
             })
             ->flatten() // Merge all showroom IDs into a single array
             ->countBy() // Count occurrences of each showroom ID
-            ->sortDesc() // Sort by count descending
-            ->take(5) // Get top 5 showrooms by usage
-            ->keys() // Extract showroom IDs
-            ->toArray();
+            ->sortDesc(); // Sort by count descending
+
+        $showroomIds = $showroomCounts->keys()->take(5)->toArray(); // Get top 5 showroom IDs
 
         // Step 2: Fetch details of the top 5 showrooms
         $topShowrooms = Showroom::whereIn('id', $showroomIds)
             ->get()
             ->keyBy('id'); // Organize it by ID for easier mapping
 
-        // Step 3: Format the response
-        return collect($showroomIds)->map(function ($id) use ($topShowrooms) {
+        // Step 3: Get the highest count to calculate percentages
+        $maxCount = $showroomCounts->first() ?? 1; // Avoid division by zero
+
+        // Step 4: Define background colors
+        $bgColors = ['bg-success', 'bg-warning', 'bg-info', 'bg-danger', 'bg-primary'];
+
+        // Step 5: Format the response
+        return collect($showroomIds)->map(function ($id, $index) use ($topShowrooms, $showroomCounts, $bgColors, $maxCount) {
             return [
                 'id' => $id,
                 'name' => $topShowrooms[$id]->name ?? 'Unknown',
                 'city' => $topShowrooms[$id]->city ?? 'N/A',
-                'usage_count' => Analytics::whereJsonContains('showroom', (string) $id)->count(), // Count exact occurrences
+                'usage_count' => $showroomCounts[$id] ?? 0, // Get showroom count
+                'percentage' => ($showroomCounts[$id] / $maxCount) * 100, // Calculate percentage
+                'bg_color' => $bgColors[$index] ?? 'bg-secondary', // Assign fixed colors
             ];
         });
     }
 
-    public function showDetails($type)
+
+    public function showDetails($type): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
         if ($type === 'zone') {
             /*** Pin code Analytics **/

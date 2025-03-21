@@ -141,8 +141,8 @@
                                     <li><a href="{{route('user_pdf-summary')}}">Pdf-Summary</a></li>
                                 </ul>
                             </li>
+                            <li @if ($view_name == 'dashboard.index') class="active" @endif ><a href="/dashboard">Reports</a></li>
                         @endif
-                        <li @if ($view_name == 'dashboard.index') class="active" @endif ><a href="/dashboard">Reports</a></li>
                     </ul>
                 </div>
             </div>

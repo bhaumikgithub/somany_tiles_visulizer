@@ -254,7 +254,15 @@ Route::group(['middleware' => 'role:administrator'], function () {
     //Dashboard controller
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/analytics/details/{type}', [DashboardController::class, 'showDetails'])->name('analytics.details');
-    Route::post('/get_analytics_data',[DashboardController::class, 'getAnalyticsResult'])->name('getAnalyticsResult');
+
+    //Chart block wise ajax call functions
+    Route::post('/get_summary_pdf_chart',[DashboardController::class, 'getSummaryPdfChart'])->name('getSummaryPdfChart');
+    Route::post('/get_pincode_chart',[DashboardController::class, 'getPinCodeChart'])->name('getPinCodeChart');
+    Route::post('/get_tiles_applied_chart',[DashboardController::class, 'getTilesAppliedChart'])->name('getTilesAppliedChart');
+    Route::post('/get_room_category_chart',[DashboardController::class, 'getRoomCategory'])->name('getRoomCategory');
+    Route::post('/get_top_tiles',[DashboardController::class, 'getTopTiles'])->name('getTopTiles');
+    Route::post('/get_top_rooms',[DashboardController::class, 'getTopRooms'])->name('getTopRooms');
+    Route::post('/get_top_show_rooms',[DashboardController::class, 'getTopShowRooms'])->name('getTopShowRooms');
 
 });
 

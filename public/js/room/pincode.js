@@ -79,7 +79,7 @@ function fetchRoom(room_id,room) {
         .then(data => {
             if (data.success) {
                 // Redirect to the respective category page
-                window.location.href = `/room2d/${room_id}`;
+                window.location.href = `/2d-studio/${room_id}`;
             }
         });
 }
