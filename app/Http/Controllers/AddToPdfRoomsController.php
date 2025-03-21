@@ -165,8 +165,7 @@ class AddToPdfRoomsController extends Controller
                 'finish' => $tile->finish,
                 'file' => $tile->file,
                 'price' => $tile->price,
-                'icon' => $tile->icon, // Access the appended 'icon' attribute,
-                'free_tile' => $selectedTile['isFreeTile']
+                'icon' => $tile->icon, // Access the appended 'icon' attribute
             ];
         });
 
@@ -226,7 +225,6 @@ class AddToPdfRoomsController extends Controller
 
     public function pdfSummary(Request $request , $randomKey): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
-
         $pincode = Session::get('pincode'); // Store the pincode temporarily
         //Update pin code in cart summary page
         $getCartId = Cart::where('random_key',$randomKey)->first();
@@ -699,8 +697,6 @@ class AddToPdfRoomsController extends Controller
 
         if( $cart->count() === 0 ){
             return response()->json(['success' => false, 'message' => 'No selection in Cart Found.','count'=>$cart->count()]);
-        } else if( $cart->count() > 0 && $cartItems === 0 ){
-            return response()->json(['success' => false, 'message' => 'No selection in Cart Found.','count'=>$cartItems]);
         } else {
             return response()->json(['success' => true,'message' => 'selection in Cart.','count'=>$cart->count()]);
         }
