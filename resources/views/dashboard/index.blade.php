@@ -114,7 +114,7 @@
                                         </ul>
                                     </div>
                                     <div class="col-12 mt-2" style="text-align: right;">
-                                        <a href="javascript:void(0);" id="viewAllPincode">View All ></a>
+                                        <a href="{{ route('analytics.details', ['type' => 'pincode']) }}" id="viewAllPincode">View All ></a>
                                     </div>
 
                                 </div>
@@ -142,7 +142,7 @@
                                         </ul>
                                     </div>
                                     <div class="col-12 mt-2" style="text-align: right;">
-                                        <a href="{{ route('analytics.details', ['type' => 'tiles']) }}">View All ></a>
+                                        <a href="{{ route('analytics.details', ['type' => 'appliedTiles']) }}" id="viewAllAppliedTiles">View All ></a>
                                     </div>
 
                                 </div>

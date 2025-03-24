@@ -137,7 +137,10 @@ class Helper
                 'surface' => $tile->surface ?? 'Unknown Surface', // Assuming `surface` is a column in the Tile table
                 'photo' => $tile->icon,
                 'size' => $tile->size,
-                'finish' => $tile->finish
+                'finish' => $tile->finish,
+                'category' => $tile->brand,
+                'innovation' => $tile->innovation,
+                'color' => $tile->color,
             ];
         }
 

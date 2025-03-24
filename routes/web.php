@@ -264,6 +264,9 @@ Route::group(['middleware' => 'role:administrator'], function () {
     Route::post('/get_top_rooms',[DashboardController::class, 'getTopRooms'])->name('getTopRooms');
     Route::post('/get_top_show_rooms',[DashboardController::class, 'getTopShowRooms'])->name('getTopShowRooms');
 
+
+    Route::post('/get_detail_report',[DashboardController::class, 'getDetailReport'])->name('getDetailReport');
+
 });
 
 

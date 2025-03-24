@@ -19,7 +19,7 @@ function formatDateRangeLabel(rangeKey, startDate, endDate) {
     return rangeKey !== "Custom Range" ? rangeKey : `${moment(startDate).format("DD-MM-YYYY")} to ${moment(endDate).format("DD-MM-YYYY")}`;
 }
 
-let defaultStartDate = moment().subtract(6, 'days'); // Last 7 Days default
+let defaultStartDate = moment().subtract(6, 'days'); // Last 7-day default
 let defaultEndDate = moment();
 let selectedRangeKey = "Last 7 Days";
 
@@ -49,6 +49,7 @@ $('#daterange').daterangepicker({
         }
 
         fetchAnalyticsData(start, end);
+        updateViewAllLinks(start, end);
     });
 
 // Set the default text as "Last 7 Days"
@@ -68,6 +69,8 @@ function getLastWeekDates() {
 let dates = getLastWeekDates();
 fetchAnalyticsData(dates.startDate, dates.endDate);
 
+updateViewAllLinks(moment().subtract(7, 'days'), moment());
+
 // Fetch data and update UI on button click
 $('#filterButton').click(function() {
     let selectedRange = $("#daterange").data('daterangepicker');
@@ -82,14 +85,16 @@ function fetchAnalyticsData(startDate , endDate) {
     // Update the display text
     $("#selectedDateRangeText").text(`Showing result from ${moment(startDate).format("Do MMM")} to ${moment(endDate).format("Do MMM YYYY")}`);
 
-    // Call each block's data separately
-    fetchSummaryOrDownloadPDFChart(formattedStart, formattedEnd,"summaryPdfDownloadChart");
-    fetchPincodeChart(formattedStart, formattedEnd , "pincodeChart");
-    fetchAppliedTilesChart(formattedStart, formattedEnd , "appliedTilesBlock");
-    fetchRoomCategoryChart(formattedStart, formattedEnd , "roomCategoryBlock");
-    fetchTopFiveTiles(formattedStart, formattedEnd);
-    fetchTopFiveRooms(formattedStart,formattedEnd);
-    fetchTopFiveShowRooms(formattedStart,formattedEnd);
+    if( !$('.report_wrapper').length ){
+        // Call each block's data separately
+        fetchSummaryOrDownloadPDFChart(formattedStart, formattedEnd,"summaryPdfDownloadChart");
+        fetchPincodeChart(formattedStart, formattedEnd , "pincodeChart");
+        fetchAppliedTilesChart(formattedStart, formattedEnd , "appliedTilesBlock");
+        fetchRoomCategoryChart(formattedStart, formattedEnd , "roomCategoryBlock");
+        fetchTopFiveTiles(formattedStart, formattedEnd);
+        fetchTopFiveRooms(formattedStart,formattedEnd);
+        fetchTopFiveShowRooms(formattedStart,formattedEnd);
+    }
 }
 
 /** Summary PDF chart */
@@ -241,11 +246,14 @@ function renderPinCodeChart(chartData) {
     }
     // Update Summary List
     let summaryHtml = "";
-    chartData.labels.forEach((label, index) => {
-        summaryHtml += `<li><div>${label}</div> <div>${chartData.values[index]} (${chartData.percentages[index]}%)</div></li>`;
-    });
-    summaryHtml += `<li><div><b>Total</b></div> <div><b>${chartData.totalVisitsPinCode} (100%)</b></div></li>`;
-    document.getElementById("summaryList").innerHTML = summaryHtml;
+    let summaryElement = document.getElementById("summaryList");
+    if (summaryElement) {
+        chartData.labels.forEach((label, index) => {
+            summaryHtml += `<li><div>${label}</div> <div>${chartData.values[index]} (${chartData.percentages[index]}%)</div></li>`;
+        });
+        summaryHtml += `<li><div><b>Total</b></div> <div><b>${chartData.totalVisitsPinCode} (100%)</b></div></li>`;
+        summaryElement.innerHTML = summaryHtml;
+    }
 }
 
 
@@ -436,4 +444,121 @@ function fetchTopFiveShowRooms(startDate , endDate){
             console.error("Error loading Data", error);
         }
     });
+}
+
+
+function updateViewAllLinks(start, end) {
+    let startDate = start.format('YYYY-MM-DD');
+    let endDate = end.format('YYYY-MM-DD');
+
+    $("#viewAllPincode").attr("href", `/analytics/details/pincode?start_date=${startDate}&end_date=${endDate}`);
+    $("#viewAllAppliedTiles").attr("href", `/analytics/details/appliedTiles?start_date=${startDate}&end_date=${endDate}`);
+    $("#viewAllRooms").attr("href", `/analytics/details/rooms?start_date=${startDate}&end_date=${endDate}`);
+    $("#viewAllShowrooms").attr("href", `/analytics/details/showrooms?start_date=${startDate}&end_date=${endDate}`);
+    $("#viewAllPDF").attr("href", `/analytics/details/pdf?start_date=${startDate}&end_date=${endDate}`);
+}
+
+
+if( $('.report_wrapper').length) {
+    /**** Detail Page **/
+    // Function to get query parameters from the URL
+    function getQueryParam(param) {
+        let urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // Extract start_date and end_date from URL
+    let startDateFromURL = getQueryParam('start_date'); // Example: "2025-02-01"
+    let endDateFromURL = getQueryParam('end_date'); // Example: "2025-02-28"
+
+    // Convert them to moment.js objects (if found)
+    let defaultStartDateDetail = startDateFromURL ? moment(startDateFromURL, 'YYYY-MM-DD') : moment().subtract(29, 'days');
+    let defaultEndDateDetail = endDateFromURL ? moment(endDateFromURL, 'YYYY-MM-DD') : moment();
+
+    // Function to determine if the selected range matches a predefined option
+    function getRangeLabel(startDate, endDate) {
+        let ranges = {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        };
+
+        for (let key in ranges) {
+            if (startDate.isSame(ranges[key][0], 'day') && endDate.isSame(ranges[key][1], 'day')) {
+                return key; // Return predefined range label
+            }
+        }
+        return "Custom Range";
+    }
+
+
+    let selectedRangeKeyDetail = getRangeLabel(defaultStartDateDetail, defaultEndDateDetail);
+    let defaultLabel = formatDateRangeLabel(selectedRangeKeyDetail, defaultStartDateDetail, defaultEndDateDetail);
+
+
+    $('#daterangeDetail').daterangepicker({
+        locale: {
+            format: 'DD-MM-YYYY'
+        },
+        startDate: defaultStartDateDetail,
+        endDate: defaultEndDateDetail,
+        autoUpdateInput: false,
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, function (start, end, label) {
+        let formattedLabel = formatDateRangeLabel(label, start, end);
+        $("#daterangeDetail").val(formattedLabel);
+
+        // Fetch data based on the selected date range
+        fetchDetailData(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+    });
+
+    // Set initial formatted date range in the input field
+    $('#daterangeDetail').val(defaultLabel);
+    $("#selectedDateRangeDetailText").text(`Showing result from ${moment(defaultStartDateDetail).format("Do MMM")} to ${moment(defaultEndDateDetail).format("Do MMM YYYY")}`);
+    let detailPageType = $('#detailPageType').val();
+
+    function fetchDetailData(startDate , endDate){
+        let formattedStart = moment(startDate).format('YYYY-MM-DD');
+        let formattedEnd = moment(endDate).format('YYYY-MM-DD');
+
+        // Update the display text
+        $("#selectedDateRangeDetailText").text(`Showing result from ${moment(startDate).format("Do MMM")} to ${moment(endDate).format("Do MMM YYYY")}`);
+        getAndFetchDetailPages(formattedStart,formattedEnd,detailPageType);
+    }
+
+    getAndFetchDetailPages(startDateFromURL,endDateFromURL,detailPageType);
+
+    function fetchReportDetail(startDate , endDate , type){
+        $.ajax({
+            url: '/get_detail_report',  // Update with your actual API endpoint
+            type: 'POST',
+            headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content') },
+            data: { startDate, endDate , type },
+            success: function(response) {
+                $('#'+detailPageType+'_tbody').html(response.body);
+            },
+            error: function(error) {
+                console.error("Error loading Data:", error);
+            }
+        });
+    }
+
+    function  getAndFetchDetailPages(formattedStart,formattedEnd,detailPageType)
+    {
+        if( detailPageType === "pincode")
+            fetchReportDetail(formattedStart, formattedEnd , "pincode");
+
+        if( detailPageType === "appliedTiles")
+            fetchReportDetail(formattedStart, formattedEnd , "appliedTiles");
+    }
 }

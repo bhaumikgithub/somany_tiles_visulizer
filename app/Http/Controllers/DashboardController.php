@@ -6,11 +6,7 @@ use App\Helpers\Helper;
 use App\Models\Analytics;
 use App\Models\Showroom;
 use App\Models\UserPdfData;
-use App\Tile;
 use Carbon\Carbon;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -74,8 +70,7 @@ class DashboardController extends Controller
         /*** Pin code Analytics **/
         $pinCodeChartData = $this->pincodeChartData($startDate, $endDate);
         return response()->json([
-            'pincode_chartData' => $pinCodeChartData['pincode_chartData'],
-            'pincodeTabularData' => $pinCodeChartData['pincodeTabularData'],
+            'pincode_chartData' => $pinCodeChartData,
         ]);
     }
 
@@ -183,17 +178,8 @@ class DashboardController extends Controller
         // Calculate total visits
         $totalVisitsPinCode = $pincodeChart->sum('visits');
 
-        $pincodeTabularData = Analytics::select(
-            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(zone, "$[0]")) as zone'),
-            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(pincode, "$[0]")) as pincode'),
-            DB::raw('COUNT(*) as visits')
-        )->whereBetween('visited_at', [$startDate, $endDate])
-            ->groupBy('zone', 'pincode')
-            ->orderBy('zone')
-            ->get();
-
         // Format data for Chart.js
-        $pincode_chartData = [
+        return [
             'labels' => $pincodeChart->pluck('zone')->toArray(),
             'values' => $pincodeChart->pluck('visits')->toArray(),
             'percentages' => $pincodeChart->map(function ($item) use ($totalVisitsPinCode) {
@@ -201,8 +187,6 @@ class DashboardController extends Controller
             })->toArray(),
             'totalVisitsPinCode' => $totalVisitsPinCode
         ];
-
-        return ['pincodeTabularData'=>$pincodeTabularData , 'pincode_chartData' =>$pincode_chartData ];
     }
 
     /**
@@ -589,24 +573,159 @@ class DashboardController extends Controller
     }
 
 
-    public function showDetails($type): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
+    public function showDetails($type, Request $request)
     {
-        if ($type === 'zone') {
-            /*** Pin code Analytics **/
-            $pinCodeChartData = Analytics::select(
-                DB::raw('JSON_UNQUOTE(JSON_EXTRACT(zone, "$[0]")) as zone'),
-                DB::raw('JSON_UNQUOTE(JSON_EXTRACT(pincode, "$[0]")) as pincode'),
-                DB::raw('COUNT(*) as visits')
-            )->groupBy('zone', 'pincode')
-                ->orderBy('zone')
-                ->get();
+        // Get start_date and end_date from request or default to last 7 days
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
 
-        } elseif ($type === 'tiles') {
-            $data = Tile::select('tile_name', 'views_count', 'usage_count')->get();
-        } else {
-            abort(404, 'Invalid Type');
+        // Fetch data based on a type
+        switch ($type) {
+            case 'appliedTiles':
+            case 'pincode':
+                return view('dashboard.details', compact('startDate', 'endDate','type'));
+            default:
+                abort(404);
+        }
+    }
+
+    /**
+     * @param $startDate
+     * @param $endDate
+     */
+    public function getDetailReport (Request $request)
+    {
+        $startDate = $request->input('startDate') . ' 00:00:00';
+        $endDate = $request->input('endDate') . ' 23:59:59';
+        $type = $request->input('type');
+
+        // Fetch data based on a type
+        switch ($type) {
+            case 'pincode':
+                $data = $this->pincodeDetails($startDate , $endDate);
+                break;
+
+            case 'appliedTiles':
+                $data = $this->appliedTilesDetails($startDate , $endDate);
+                break;
+            default:
+                abort(404);
         }
 
-        return view('dashboard.details', compact('pinCodeChartData', 'type'));
+        return $data;
+    }
+
+    protected function pincodeDetails($startDate , $endDate)
+    {
+        $pinCodeDetails =  Analytics::select(
+            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(zone, "$[0]")) as zone'),
+            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(pincode, "$[0]")) as pincode'),
+            DB::raw('COUNT(*) as visits'),
+            DB::raw('MAX(visited_at) as last_visited_at')
+            )
+            ->whereBetween('visited_at', [$startDate, $endDate])
+            ->groupBy('zone', 'pincode')
+            ->orderBy('zone')
+            ->get();
+
+        return response()->json([
+            'body' => view('dashboard.pincode_details', compact('pinCodeDetails'))->render(),
+            'pinCodeDetails' => $pinCodeDetails,
+        ]);
+    }
+
+    protected function appliedTilesDetails($startDate , $endDate) 
+    {
+        $appliedTilesData = Analytics::select(
+            DB::raw('JSON_UNQUOTE(used_tiles) as tiles_json'),
+        )->whereBetween('visited_at', [$startDate, $endDate])->get();
+
+        return response()->json([
+            'body' => view('dashboard.applied_tile_details', compact('appliedTilesData'))->render(),
+            'appliedTilesData' => $appliedTilesData,
+        ]);
+    }
+
+    protected function tilesDetails($startDate , $endDate)
+    {
+        $tilesData = Analytics::select(
+            DB::raw('JSON_UNQUOTE(used_tiles) as tiles_json'),
+        )->whereBetween('visited_at', [$startDate, $endDate])->get();
+
+        $processedTiles = [];
+        // Loop through DB results
+        foreach ($tilesData as $row) {
+            // Check if tiles_json is empty or null
+            if (empty($row->tiles_json)) {
+                continue; // Skip this row
+            }
+
+            // Decode JSON
+            $tiles = json_decode($row->tiles_json, true);
+
+            // Check if JSON decoding failed
+            if (!is_array($tiles)) {
+                dd("JSON decoding failed", json_last_error_msg(), $row->tiles_json);
+            }
+
+            foreach ($tiles as $tile) {
+                $tileId = $tile["tile_id"] ?? null;
+                $surface = $tile["surface"] ?? null;
+
+                if (!$tileId) continue; // Skip invalid tile data
+
+                if (isset($processedTiles[$tileId])) {
+                    $processedTiles[$tileId]['used_count'] += 1;
+                    if ($surface === "floor") {
+                        $processedTiles[$tileId]['floor_count'] += 1;
+                    }
+                    if ($surface === "wall") {
+                        $processedTiles[$tileId]['wall_count'] += 1;
+                    }
+                    if ($surface === "counter") {
+                        $processedTiles[$tileId]['counter_count'] += 1;
+                    }
+                } else {
+                    $tilesPhotoSize = Helper::getTileNameAndSurface($tileId);
+                    $processedTiles[$tileId] = [
+                        "name" => $tile["tile_name"] ?? "Unknown",
+                        "photo" => $tilesPhotoSize['photo'] ?? "default.jpg",
+                        "size" => $tilesPhotoSize['size'] ?? "Unknown",
+                        "finish" => $tilesPhotoSize['finish'] ?? "Unknown",
+                        "view_count" => 0,
+                        "used_count" => 1,
+                        "floor_count" => ($surface === "floor") ? 1 : 0,
+                        "wall_count" => ($surface === "wall") ? 1 : 0,
+                        "counter_count" => ($surface === "counter") ? 1 : 0,
+                        "category" => $tilesPhotoSize['category'],
+                        "color" => $tilesPhotoSize['color'],
+                        "innovation" => $tilesPhotoSize['innovation'] ?? "-",
+                    ];
+                }
+            }
+        }
+
+        $processedTiles = array_values($processedTiles);
+        $wallCount = array_sum(array_column($processedTiles, 'wall_count'));
+        $floorCount = array_sum(array_column($processedTiles, 'floor_count'));
+        $counterCount = array_sum(array_column($processedTiles, 'counter_count'));
+
+        // Add total counts inside each tile in processedTiles
+        foreach ($processedTiles as &$tile) {
+            $tile['total_wall_count'] = $wallCount > 0 ? $wallCount : "-";
+            $tile['total_floor_count'] = $floorCount > 0 ? $floorCount : "-";
+            $tile['total_counter_count'] = $counterCount > 0 ? $counterCount : "-";
+
+            // Also handle individual tile counts
+            $tile['wall_count'] = $tile['wall_count'] > 0 ? $tile['wall_count'] : "-";
+            $tile['floor_count'] = $tile['floor_count'] > 0 ? $tile['floor_count'] : "-";
+            $tile['counter_count'] = $tile['counter_count'] > 0 ? $tile['counter_count'] : "-";
+        }
+
+
+        return response()->json([
+            'body' => view('dashboard.tile_details', compact('processedTiles'))->render(),
+            'processedTiles' => $processedTiles,
+        ]);
     }
 }

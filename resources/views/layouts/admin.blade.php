@@ -37,39 +37,25 @@
                         <p class="sidebar-menu-title"><a href="/home">Back to Admin</a></p>
                     </li>
                     <li class="nav-item {{ $view_name == 'dashboard.index' ? 'active' : '' }}">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/dashboard">
                             <i class="typcn typcn-device-desktop menu-icon"></i>
                             <span class="menu-title">Dashboard </span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                        <a class="nav-link" href="{{ route('analytics.details', ['type' => 'pincode']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
                             <i class="typcn typcn-briefcase menu-icon"></i>
                             <span class="menu-title">Pincode</span>
-{{--                            <i class="typcn typcn-chevron-right menu-arrow"></i>--}}
                         </a>
-{{--                        <div class="collapse" id="ui-basic">--}}
-{{--                            <ul class="nav flex-column sub-menu">--}}
-{{--                                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>--}}
-{{--                                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Dropdowns</a></li>--}}
-{{--                                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>--}}
-{{--                            </ul>--}}
-{{--                        </div>--}}
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
+                        <a class="nav-link" href="{{ route('analytics.details', ['type' => 'appliedTiles']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
                             <i class="typcn typcn-film menu-icon"></i>
                             <span class="menu-title">Tiles Applied On</span>
-{{--                            <i class="menu-arrow"></i>--}}
                         </a>
-{{--                        <div class="collapse" id="form-elements">--}}
-{{--                            <ul class="nav flex-column sub-menu">--}}
-{{--                                <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Basic Elements</a></li>--}}
-{{--                            </ul>--}}
-{{--                        </div>--}}
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+                        <a class="nav-link" href="{{ route('analytics.details', ['type' => 'roomCategories']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
                             <i class="typcn typcn-chart-pie-outline menu-icon"></i>
                             <span class="menu-title">Room Categories</span>
 {{--                            <i class="menu-arrow"></i>--}}
@@ -130,7 +116,6 @@
             </div>
         </div>
     </div>
-
     <!-- Scripts -->
     <!-- base:js -->
     <script src="/css/admin/vendors/js/vendor.bundle.base.js"></script>
