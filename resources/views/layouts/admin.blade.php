@@ -67,7 +67,7 @@
 {{--                        </div>--}}
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
+                        <a class="nav-link" href="{{ route('analytics.details', ['type' => 'tiles']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
                             <i class="typcn typcn-th-small-outline menu-icon"></i>
                             <span class="menu-title">Tiles</span>
 {{--                            <i class="menu-arrow"></i>--}}
@@ -79,7 +79,7 @@
 {{--                        </div>--}}
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
+                        <a class="nav-link" href="{{ route('analytics.details', ['type' => 'rooms']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
                             <i class="typcn typcn-compass menu-icon"></i>
                             <span class="menu-title">Rooms</span>
 {{--                            <i class="menu-arrow"></i>--}}
@@ -91,7 +91,7 @@
 {{--                        </div>--}}
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="pages/documentation/documentation.html">
+                        <a class="nav-link" href="{{ route('analytics.details', ['type' => 'rooms']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}" id="viewAllShowRooms">
                             <i class="typcn typcn-user-add-outline menu-icon"></i>
                             <span class="menu-title">Showrooms</span>
                         </a>
@@ -104,7 +104,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="pages/documentation/documentation.html">
+                        <a class="nav-link" href="{{ route('analytics.details', ['type' => 'pdf']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}" id="pdf">
                             <i class="typcn typcn-document-text menu-icon"></i>
                             <span class="menu-title">Session/PDF</span>
                         </a>

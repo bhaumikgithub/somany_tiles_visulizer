@@ -69,7 +69,7 @@ function getLastWeekDates() {
 let dates = getLastWeekDates();
 fetchAnalyticsData(dates.startDate, dates.endDate);
 
-updateViewAllLinks(moment().subtract(7, 'days'), moment());
+updateViewAllLinks(moment().subtract(6, 'days'), moment());
 
 // Fetch data and update UI on button click
 $('#filterButton').click(function() {
@@ -331,6 +331,7 @@ function renderRoomChart(roomChartData){
     let data = {
         labels: roomChartData.labels,
         datasets: [{
+            label: 'No of visits',
             data: roomChartData.values,
             backgroundColor: getBackgroundColors(7),
             fill: false
@@ -453,8 +454,9 @@ function updateViewAllLinks(start, end) {
 
     $("#viewAllPincode").attr("href", `/analytics/details/pincode?start_date=${startDate}&end_date=${endDate}`);
     $("#viewAllAppliedTiles").attr("href", `/analytics/details/appliedTiles?start_date=${startDate}&end_date=${endDate}`);
+    $("#viewAllTiles").attr("href", `/analytics/details/tiles?start_date=${startDate}&end_date=${endDate}`);
     $("#viewAllRooms").attr("href", `/analytics/details/rooms?start_date=${startDate}&end_date=${endDate}`);
-    $("#viewAllShowrooms").attr("href", `/analytics/details/showrooms?start_date=${startDate}&end_date=${endDate}`);
+    $("#viewAllShowRooms").attr("href", `/analytics/details/showrooms?start_date=${startDate}&end_date=${endDate}`);
     $("#viewAllPDF").attr("href", `/analytics/details/pdf?start_date=${startDate}&end_date=${endDate}`);
 }
 
@@ -560,5 +562,20 @@ if( $('.report_wrapper').length) {
 
         if( detailPageType === "appliedTiles")
             fetchReportDetail(formattedStart, formattedEnd , "appliedTiles");
+
+        if( detailPageType === "roomCategories")
+            fetchReportDetail(formattedStart, formattedEnd , "roomCategories");
+
+        if( detailPageType === "tiles")
+            fetchReportDetail(formattedStart, formattedEnd , "tiles");
+
+        if( detailPageType === "rooms")
+            fetchReportDetail(formattedStart, formattedEnd , "rooms");
+
+        if( detailPageType === "showrooms")
+            fetchReportDetail(formattedStart, formattedEnd , "showrooms");
+
+        if( detailPageType === "pdf")
+            fetchReportDetail(formattedStart, formattedEnd , "pdf");
     }
 }

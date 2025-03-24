@@ -13,7 +13,4 @@
             <hr>
         </div>
     @endforeach
-    <div class="col-12 mt-2" style="text-align: right;">
-        <a href="#">View All ></a>
-    </div>
 @endif

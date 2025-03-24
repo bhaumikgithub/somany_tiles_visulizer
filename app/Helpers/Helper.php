@@ -155,4 +155,20 @@ class Helper
         $room = Room2d::find($room_id);
         return ucwords($room->type);
     }
+
+    public static function getShowroomDetails($showRoomId) 
+    {
+        $showroom = Showroom::find($showRoomId);
+        if ($showroom) {
+            return [
+                'name' => $showroom->name,
+                'city' => $showroom->city ?? 'Unknown city', // Assuming `surface` is a column in the Tile table
+            ];
+        }
+
+        return [
+            'name' => 'Unknown Tile',
+            'city' => 'Unknown Surface'
+        ];
+    }
 }

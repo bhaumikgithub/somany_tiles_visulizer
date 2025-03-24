@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Room2d;
 
 class DashboardController extends Controller
 {
@@ -27,34 +28,29 @@ class DashboardController extends Controller
     {
         $startDate = $request->input('startDate') . ' 00:00:00';
         $endDate = $request->input('endDate') . ' 23:59:59';
-        $chartType = $request->input('chartType');
-
-        $queryAnalyticsBuilder = $this->queryAnalyticsBuilder($startDate, $endDate);
 
         $response = [];
 
-        if ($chartType === 'summaryPdfDownloadChart') {
-            //TotalUsers
-            $totalGuestUsers = $queryAnalyticsBuilder->where('user_logged_in', 'guest')->count();
-            $totalLoggedInUsers = $queryAnalyticsBuilder->where('user_logged_in', '!=', 'guest')->count();
-            $totalUsers = $totalGuestUsers + $totalLoggedInUsers;
+        //TotalUsers
+        $totalGuestUsers = Analytics::whereBetween('visited_at', [$startDate, $endDate])->where('user_logged_in', 'guest')->count();
+        $totalLoggedInUsers = Analytics::whereBetween('visited_at', [$startDate, $endDate])->where('user_logged_in', '!=', 'guest')->count();
+        $totalUsers = $totalGuestUsers + $totalLoggedInUsers;
 
-            /** Summary PDF Analytics */
-            $totalSession = Analytics::whereBetween('visited_at', [$startDate, $endDate])->get();
-            $summaryPDFData = $this->summaryPdfChart($startDate, $endDate);
 
-            // Construct response
-            $response = [
-                'total_users' => $totalUsers,
-                'total_logged_in_users' => $totalLoggedInUsers,
-                'total_guest_users' => $totalGuestUsers,
-                'total_session' => $totalSession->count(),
-                'session_reach_summary_page' => $summaryPDFData['sessionReachSummaryPage'],
-                'download_pdf' => $summaryPDFData['downloadPdf'],
-                'summary_pdf_chart_data' => $summaryPDFData['summaryPdfChartData'],
-            ];
-        }
+        /** Summary PDF Analytics */
+        $totalSession = $totalSession = $this->totalSession($startDate , $endDate);
+        $summaryPDFData = $this->summaryPdfChart($startDate, $endDate);
 
+        // Construct response
+        $response = [
+            'total_users' => $totalUsers,
+            'total_logged_in_users' => $totalLoggedInUsers,
+            'total_guest_users' => $totalGuestUsers,
+            'total_session' => $totalSession->count(),
+            'session_reach_summary_page' => $summaryPDFData['sessionReachSummaryPage'],
+            'download_pdf' => $summaryPDFData['downloadPdf'],
+            'summary_pdf_chart_data' => $summaryPDFData['summaryPdfChartData'],
+        ];
         return response()->json($response);
     }
 
@@ -350,13 +346,9 @@ class DashboardController extends Controller
      */
     protected function summaryPdfChart($startDate , $endDate): array
     {
-        $sessionReachSummaryPage = Analytics::whereNotNull('unique_cart_id')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->orderByRaw('DATE(created_at) ASC')->get();
+        $sessionReachToSummaryPage = $this->sessionReachToSummaryPage($startDate , $endDate);
 
-        $downloadPdf = UserPdfData::whereBetween('created_at', [$startDate, $endDate])
-            ->orderByRaw('DATE(created_at) ASC')->get();
-
+        $downloadPdf = $this->downloadPDF($startDate , $endDate);
         // Fetch Summary Page Sessions
         $sessionData = Analytics::whereNotNull('unique_cart_id')
             ->whereBetween('created_at', [$startDate, $endDate])
@@ -367,7 +359,7 @@ class DashboardController extends Controller
         // Fetch PDF Downloads
         $pdfDownloadData = UserPdfData::whereBetween('created_at', [$startDate, $endDate])
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
-            ->groupByRaw('DATE(created_at)') // ✅ Required Group By
+            ->groupByRaw('DATE(created_at)') // Required Group By
             ->orderByRaw('DATE(created_at) ASC')
             ->pluck('count', 'date')
             ->toArray();
@@ -397,7 +389,7 @@ class DashboardController extends Controller
             'sessionData' => array_column($dateRange, 'sessions'),
             'pdfDownloadData' => array_column($dateRange, 'pdf_downloads')
         ];
-        return ['sessionReachSummaryPage' => $sessionReachSummaryPage->count(), 'downloadPdf' => $downloadPdf->count(),'summaryPdfChartData'=>$summaryPdfChartData];
+        return ['sessionReachSummaryPage' => $sessionReachToSummaryPage->count(), 'downloadPdf' => $downloadPdf->count(),'summaryPdfChartData'=>$summaryPdfChartData];
     }
 
     /**
@@ -581,8 +573,13 @@ class DashboardController extends Controller
 
         // Fetch data based on a type
         switch ($type) {
-            case 'appliedTiles':
             case 'pincode':
+            case 'appliedTiles':
+            case 'roomCategories':
+            case 'tiles':
+            case 'rooms':
+            case 'showrooms':
+            case 'pdf':
                 return view('dashboard.details', compact('startDate', 'endDate','type'));
             default:
                 abort(404);
@@ -608,6 +605,27 @@ class DashboardController extends Controller
             case 'appliedTiles':
                 $data = $this->appliedTilesDetails($startDate , $endDate);
                 break;
+
+            case 'roomCategories':
+                $data = $this->roomCategoriesDetails($startDate , $endDate);
+                break;
+
+            case 'tiles':
+                $data = $this->tilesDetails($startDate , $endDate);
+                break;
+
+            case 'rooms':
+                $data = $this->roomDetails($startDate , $endDate);
+                break;
+
+            case 'showrooms':
+                $data = $this->showRoomDetails($startDate , $endDate);
+                break;
+
+            case 'pdf':
+                $data = $this->sessionPDFDetails($startDate , $endDate);
+                break;
+
             default:
                 abort(404);
         }
@@ -634,15 +652,92 @@ class DashboardController extends Controller
         ]);
     }
 
-    protected function appliedTilesDetails($startDate , $endDate) 
+    protected function appliedTilesDetails($startDate , $endDate)
     {
-        $appliedTilesData = Analytics::select(
-            DB::raw('JSON_UNQUOTE(used_tiles) as tiles_json'),
+        $tilesData = Analytics::select(
+            DB::raw('JSON_UNQUOTE(used_tiles) as tiles_json')
         )->whereBetween('visited_at', [$startDate, $endDate])->get();
+    
+        $appliedTiles = [];
+    
+        foreach ($tilesData as $row) {
+            if (empty($row->tiles_json)) continue; // Skip empty values
+    
+            $tiles = json_decode($row->tiles_json, true);
+            if (!is_array($tiles)) continue; // Skip invalid JSON
+    
+            foreach ($tiles as $tile) {
+                $tileId = $tile["tile_id"] ?? null;
+                $roomName = $tile["room_name"] ?? "-";
+                $roomType = $tile["room_type"] ?? "-";  // Now using room_type as Category Name
+                $surface = $tile["surface"] ?? "-";
+                $tileName = $tile["tile_name"] ?? "Unknown";
+    
+                if (!$tileId) continue; // Skip invalid tile data
+    
+                if (!isset($appliedTiles[$tileId])) {
+                    $tileInfo = Helper::getTileNameAndSurface($tileId);
+    
+                    $appliedTiles[$tileId] = [
+                        "photo" => $tileInfo['photo'] ?? "default.jpg",
+                        "name" => $tileName,
+                        "finish" => $tileInfo['finish'] ?? "-",
+                        "category" => [],  // Store multiple room types
+                        "room_names" => [],
+                        "used_count" => 0,
+                    ];
+                }
+    
+                // Add room name if not already present
+                if (!in_array($roomName, $appliedTiles[$tileId]['room_names'])) {
+                    $appliedTiles[$tileId]['room_names'][] = $roomName;
+                }
+    
+                // Add room type (category) if not already present
+                if (!in_array($roomType, $appliedTiles[$tileId]['category'])) {
+                    $appliedTiles[$tileId]['category'][] = $roomType;
+                }
+    
+                // Increment usage count
+                $appliedTiles[$tileId]['used_count'] += 1;
+            }
+        }
+    
+        // Convert room names & category arrays into a string
+        foreach ($appliedTiles as &$tile) {
+            $tile['room_names'] = implode(", ", array_filter(array_unique($tile['room_names'])));
+            $tile['category'] = implode(", ", array_filter(array_unique($tile['category'])));
+        }
+    
+        return response()->json([
+            'body' => view('dashboard.applied_tile_details', compact('appliedTiles'))->render(),
+            'appliedTiles' => $appliedTiles,
+        ]);
+
+    }
+
+    protected function roomCategoriesDetails($startDate , $endDate)
+    {   
+        $categories = Analytics::whereBetween('visited_at', [$startDate, $endDate])
+            ->pluck('category') // Get only the category column
+            ->filter() // Remove null values
+            ->map(fn($cat) => json_decode($cat, true)) // Decode JSON to array
+            ->toArray(); // Convert collection to array
+
+        
+        $categoryCount = collect($categories)->flatten()->countBy();
+
+        
+       // Transform into the required format
+        $categoryData = $categoryCount->map(fn($count, $category) => [
+            "category_name" => ucwords(str_replace("-", " ", $category)), // Converts "prayer-room" to "Prayer Room"
+            "visits" => $count
+        ])->values();
+
 
         return response()->json([
-            'body' => view('dashboard.applied_tile_details', compact('appliedTilesData'))->render(),
-            'appliedTilesData' => $appliedTilesData,
+            'body' => view('dashboard.room_categories_details', compact('categoryData'))->render(),
+            'categoryData' => $categoryData,
         ]);
     }
 
@@ -724,8 +819,203 @@ class DashboardController extends Controller
 
 
         return response()->json([
-            'body' => view('dashboard.tile_details', compact('processedTiles'))->render(),
+            'body' => view('dashboard.tiles_details', compact('processedTiles'))->render(),
             'processedTiles' => $processedTiles,
         ]);
     }
+
+    protected function roomDetails($startDate , $endDate)
+    {
+         // Fetch room data from Analytics
+        $roomData = Analytics::select(
+            DB::raw('JSON_UNQUOTE(room) as rooms_json')
+        )->whereBetween('visited_at', [$startDate, $endDate])
+            ->get();
+
+        $roomIds = [];
+        foreach ($roomData as $row) {
+            if (empty($row->rooms_json)) continue; // Skip empty JSON
+
+            $rooms = json_decode($row->rooms_json, true);
+            if (!is_array($rooms)) continue;
+
+            foreach ($rooms as $room) {
+                if (!empty($room["room_id"])) {
+                    $roomIds[] = $room["room_id"];
+                }
+            }
+        }
+
+        // Fetch room types from room2ds table
+        $roomTypes = Room2d::whereIn('id', $roomIds)
+            ->pluck('type', 'id')
+            ->toArray(); // Returns [room_id => room_type]
+
+        $processedRooms = [];
+
+        foreach ($roomData as $row) {
+            if (empty($row->rooms_json)) continue;
+
+            $rooms = json_decode($row->rooms_json, true);
+            if (!is_array($rooms)) continue;
+
+            foreach ($rooms as $room) {
+                $roomName = $room["room_name"] ?? "Unknown";
+                $roomId = $room["room_id"] ?? null;
+
+                // Fetch room_type from room2ds table
+                $roomType = $roomId ? ($roomTypes[$roomId] ?? "Unknown") : "Unknown";
+
+                $key = $roomName . "|" . $roomType; // Unique key for grouping
+
+                if (!isset($processedRooms[$key])) {
+                    $processedRooms[$key] = [
+                        "room_name" => $roomName,
+                        "category_name" => ucwords($roomType),
+                        "used_count" => 0,
+                    ];
+                }
+
+                $processedRooms[$key]["used_count"] += 1; // Count usage
+            }
+        }
+
+        // Convert associative array to indexed array for JSON response
+        $rooms = array_values($processedRooms);
+
+        return response()->json([
+            'body' => view('dashboard.rooms_details', compact('rooms'))->render(),
+            'rooms' => $rooms,
+        ]);
+    }
+
+    protected function showRoomDetails($startDate , $endDate)
+    {
+        $totalSessions = $this->totalSession($startDate , $endDate);
+        $sessionReachToSummaryPage = $this->sessionReachToSummaryPage($startDate , $endDate);
+
+        $totalSessionCount = $totalSessions->count();
+        $summaryPageCount = $sessionReachToSummaryPage->count();
+
+
+        // Get unique showrooms
+        $showroomData = [];
+        $customerList = []; // Collect all customers to get total unique customers
+
+        // Loop through sessions and extract showroom-wise details
+        foreach ($totalSessions as $session) {
+            $showroomIds = json_decode($session->showroom, true); // Convert showroom JSON string to array
+            if (!is_array($showroomIds)) {
+                continue; // Skip if decoding fails
+            }
+
+            foreach ($showroomIds as $showroomId) {
+                // 🔹 Ensure showroom ID exists in the array before accessing it
+                if (!isset($showroomData[$showroomId])) {
+                    $showroomDetails = Helper::getShowroomDetails($showroomId); // Fetch showroom details
+                    if (!$showroomDetails) {
+                        continue; // Skip if no showroom details are found
+                    }
+                    // Initialize showroom data
+                    $showroomData[$showroomId] = [
+                        'showroom_id' => $showroomId,
+                        'name' => $showroomDetails['name'] ?? 'Unknown Showroom',
+                        'city' => $showroomDetails['city'] ?? 'Unknown City',
+                        'session_created' => 0,
+                        'summary_page' => 0,
+                        'customers' => [],
+                    ];
+                }
+
+                // Increment session count
+                $showroomData[$showroomId]['session_created']++;
+
+                // Count summary page sessions per showroom
+                if (!is_null($session->unique_cart_id)) {
+                    $showroomData[$showroomId]['summary_page']++;
+                }
+
+                // Extract customers (logged-in users or guest)
+                $userLoggedIn = json_decode($session->user_logged_in, true);
+                if (!empty($userLoggedIn)) {
+                    $showroomData[$showroomId]['customers'] = array_merge($showroomData[$showroomId]['customers'], (array) $userLoggedIn);
+                } else {
+                    $showroomData[$showroomId]['customers'][] = 'Guest';
+                }
+            }
+        }
+
+        // Finalize customer count per showroom
+        foreach ($showroomData as &$showroom) {
+            $showroom['customers'] = count(array_unique($showroom['customers']));
+        }
+
+        // Get total unique customers across all showrooms
+        $totalCustomers = count(array_unique(array_merge(...array_map(fn($x) => (array) $x['customers'], $showroomData))));
+
+        // Format and return the final response
+        return response()->json([
+            'body' => view('dashboard.showroom_details', compact('showroomData', 'totalSessionCount', 'summaryPageCount', 'totalCustomers'))->render(),
+            'showroomData' => array_values($showroomData), // Convert associative array to indexed array
+            'totalSessions' => $totalSessionCount,
+            'summaryPageSessions' => $summaryPageCount,
+            'totalCustomers' => $totalCustomers,
+        ]);
+    }
+
+    protected function totalSession($startDate , $endDate)
+    {
+        return Analytics::whereBetween('visited_at', [$startDate, $endDate])->get();
+    }
+
+    protected function sessionReachToSummaryPage($startDate , $endDate) 
+    {
+        return Analytics::whereNotNull('unique_cart_id')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->orderByRaw('DATE(created_at) ASC')->get();
+
+    }
+
+    protected function downloadPDF($startDate, $endDate) 
+    {
+        return UserPdfData::whereBetween('created_at', [$startDate, $endDate])
+            ->orderByRaw('DATE(created_at) ASC')->get();
+        
+    }
+
+    protected function sessionPDFDetails($startDate, $endDate) 
+    {
+        // Get all sessions in the date range
+        $sessions = $this->totalSession($startDate , $endDate);
+
+        // Count logged-in users
+        $loggedInUsers = $sessions->whereNotNull('user_logged_in')->unique('user_logged_in')->count();
+
+        // Count guest users
+        $guestUsers = $sessions->where('user_logged_in','guest')->count();
+
+        // Total users (Logged-in + Guests)
+        $totalUsers = $loggedInUsers + $guestUsers;
+
+        // Count generated summary pages (sessions that reached summary page)
+        $summaryPages = $sessions->whereNotNull('unique_cart_id')->count();
+
+        // Count PDF downloads
+        $pdfDownloads = UserPdfData::whereBetween('created_at', [$startDate, $endDate])->count();
+
+        $user_analytics = [
+            'guest_users' => $guestUsers,
+            'logged_in_users' => $loggedInUsers,
+            'total_users' => $totalUsers,
+            'generated_summary_pages' => $summaryPages,
+            'pdf_downloads' => $pdfDownloads
+        ];
+
+        return response()->json([
+            'body' => view('dashboard.pdf_session_details', compact('user_analytics'))->render(),
+            'user_analytics' => $user_analytics,
+        ]);
+
+    }
+
 }
