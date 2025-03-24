@@ -241,6 +241,8 @@ class AddToPdfRoomsController extends Controller
                             'tile_id' => $tile['id'],
                             'tile_name' => $tile['name'],
                             'surface' => $tile['surface'],
+                            'room_name' => $product['room_name'],
+                            'room_type' => $product['room_type']
                         ];
                     }
                 }
