@@ -456,7 +456,7 @@ function updateViewAllLinks(start, end) {
     $("#viewAllAppliedTiles").attr("href", `/analytics/details/appliedTiles?start_date=${startDate}&end_date=${endDate}`);
     $("#viewAllTiles").attr("href", `/analytics/details/tiles?start_date=${startDate}&end_date=${endDate}`);
     $("#viewAllRooms").attr("href", `/analytics/details/rooms?start_date=${startDate}&end_date=${endDate}`);
-    $("#viewAllShowRooms").attr("href", `/analytics/details/showrooms?start_date=${startDate}&end_date=${endDate}`);
+    $(".viewAllShowRooms").attr("href", `/analytics/details/showrooms?start_date=${startDate}&end_date=${endDate}`);
     $("#viewAllPDF").attr("href", `/analytics/details/pdf?start_date=${startDate}&end_date=${endDate}`);
 }
 
@@ -520,8 +520,18 @@ if( $('.report_wrapper').length) {
         let formattedLabel = formatDateRangeLabel(label, start, end);
         $("#daterangeDetail").val(formattedLabel);
 
+
+        let startDate = start.format('YYYY-MM-DD');
+        let endDate = end.format('YYYY-MM-DD');
+    
+        // 🔹 Update URL without refreshing the page
+        let newUrl = new URL(window.location.href);
+        newUrl.searchParams.set('start_date', startDate);
+        newUrl.searchParams.set('end_date', endDate);
+        history.pushState(null, '', newUrl.toString());
+
         // Fetch data based on the selected date range
-        fetchDetailData(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+        fetchDetailData(startDate, endDate);
     });
 
     // Set initial formatted date range in the input field

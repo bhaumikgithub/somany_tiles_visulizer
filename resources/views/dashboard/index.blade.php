@@ -218,7 +218,7 @@
                                     @include('dashboard.top_show_rooms')
                                 </div>
                                 <div class="col-12 mt-2" style="text-align: right;">
-                                    <a href="{{ route('analytics.details', ['type' => 'showrooms']) }}" id="viewAllShowRooms">View All ></a>
+                                    <a href="{{ route('analytics.details', ['type' => 'showrooms']) }}" class="viewAllShowRooms">View All ></a>
                                 </div>
                             </div>
                         </div>
