@@ -78,7 +78,10 @@ body {
     text-shadow: 2px 2px 4px #000000;
 
 }
-
+.vs_none{
+    display: none !important;
+    height: 4px !important;
+}
 .image1 {
     background-image: url(../images/4.jpg);
     background-size: cover;
@@ -303,6 +306,7 @@ body {
 .mobile_first_width {
     height: 170px;
 }
+
 
 @media (max-width: 767px) {
     .desktop-div {
@@ -592,6 +596,15 @@ body {
     width: 100%;
 }
 
+.filterText{
+    margin-top: 13px;
+    float: left;
+    font-size: 10px;
+    text-align: center;
+    width: 30px;
+    color: #555;
+}
+
 @media (max-width:991px) {
 
     h1 {
@@ -681,6 +694,9 @@ body {
 
     .product-top-panel-box .loadCartItems {
         height: calc(100vh - 252px);
+    }
+    .vs_none{
+        display: block !important;
     }
 
 }

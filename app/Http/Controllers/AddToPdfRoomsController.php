@@ -187,7 +187,13 @@ class AddToPdfRoomsController extends Controller
 
         $getCartId = Cart::where('user_id',$sessionId)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
+
+        //Update pin code in cart summary page
+        $pincode = Session::get('pincode'); // Store the pin code temporarily
+        $getCartId->pincode = $pincode;
+        $getCartId->update();
         $count = $allProduct->count();
+
         $url = '/pdf-summary/'.$getCartId->random_key;
         return response()->json([
             'body' => view('common.cartPanel',compact('allProduct','count','url'))->render(),
@@ -220,13 +226,6 @@ class AddToPdfRoomsController extends Controller
 
     public function pdfSummary(Request $request , $randomKey): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
-        $pincode = Session::get('pincode'); // Store the pin code temporarily
-        
-        //Update pin code in cart summary page
-        $getCartId = Cart::where('random_key',$randomKey)->first();
-        $getCartId->pincode = $pincode;
-        $getCartId->update();
-
         // Destroy only the cart session, keeping user login session
         Session::forget(['cart','pincode']);
 
@@ -653,7 +652,19 @@ class AddToPdfRoomsController extends Controller
     public function checkSelectionHasData(Request $request): JsonResponse
     {
         $cart = Cart::where('user_id',$request->input('session_id'))->get();
-        $cartItems = CartItem::where('cart_id', $cart[0]->id)->count();
+        // If no cart found, return response early
+        if ($cart->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No selection in Cart Found.',
+                'count' => 0
+            ]);
+        }
+
+        // Get the first cart safely
+        $cartId = $cart->first()->id;
+        $cartItems = CartItem::where('cart_id', $cartId)->count();
+
         if( $cart->count() === 0 ){
             return response()->json(['success' => false, 'message' => 'No selection in Cart Found.','count'=>$cart->count()]);
         } else if( $cart->count() > 0 && $cartItems === 0 ){

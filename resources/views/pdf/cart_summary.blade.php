@@ -96,11 +96,15 @@
                                                         @if( $tiles_par_box !== NULL )
                                                             <div class="tiles_carton_wrapper_{{$item->id}}_{{$loop->index}}" style="display: <?php echo ($tiles_par_box !== NULL ) ? 'block' : 'none'; ?>">
                                                                 <input type="hidden" value="" id="require_box">
-                                                                <p>Number of Box Required: <span class="require_box">{{@$tile_detail->box_needed}}</span></p>
+                                                                @isset($tile_detail->box_needed)
+                                                                    <p>Number of Box Required: <span class="require_box">{{@$tile_detail->box_needed}}</span></p>
+                                                                @else
+                                                                    <p class="textBoxWrap" style="display: none;">Number of Box Required: <span class="require_box"></span></p>
+                                                                @endisset
                                                             </div>
                                                             <p>Tiles in 1 Box: <span class="tiles_in_box">{{$tiles_par_box}}</span></p>
                                                         @endif
-                                                        @if( session()->has('pincode') )
+                                                        @if( isset($pincode) )
                                                             @php
                                                                 $surface_title = (  isset($tile_detail->surface_title ) ) ? ucfirst($tile_detail->surface_title) : ucfirst($tile_detail->surface) ;
                                                             @endphp

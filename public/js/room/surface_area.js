@@ -52,7 +52,7 @@ function openTileSelectionPanel(surface_name) {
     /////////added by vikesha////////////////////////////
     let firstWord = surface_name.split('_')[0];
     // Hide or show .top-panel-search based on the first word
-    var isCounterOrPaint = firstWord === "counter" || firstWord === "paint";
+    var isCounterOrPaint = firstWord === "paint";
     $('.top-panel-search').toggle(!isCounterOrPaint);
     $('.partOfProductTabContent-wrap').toggle(!isCounterOrPaint);
 

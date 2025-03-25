@@ -41,6 +41,9 @@ class AjaxController extends Controller
 
     public function getTiles(Request $request): Response | JsonResponse
     {
+        set_time_limit(0);
+        ini_set('memory_limit', '2048M'); // Adjust the limit as needed
+
         if (config('app.tiles_access_level')) {
             $roomID = $request->input('room_id');
             $currentRoomType = $request->input('room_type');
