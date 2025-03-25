@@ -47,37 +47,40 @@ class AjaxController extends Controller
         if (config('app.tiles_access_level')) {
             $roomID = $request->input('room_id');
             $currentRoomType = $request->input('room_type');
-            if( $currentRoomType === "2d-studio") {
-                $findRoom = Room2d::select('type')->findOrFail($roomID);
+            if( $currentRoomType === 'ai-studio'){
+                $tiles = Tile::where('enabled', 1)->get();
             } else {
-                $findRoom = Panorama::select('type')->findOrFail($roomID);
-            }
+                if( $currentRoomType === "2d-studio" ) {
+                    $findRoom = Room2d::select('type')->findOrFail($roomID);
+                } else {
+                    $findRoom = Panorama::select('type')->findOrFail($roomID);
+                }
+                $roomType = $findRoom->type;
+                $commercialRooms = ['Lobby', 'Mall', 'Hotels','Restaurant','Reception']; // Define commercial room types
+                $outDoorsRooms = ['Balcony','Veranda'];
+                if ($roomType === 'outdoor') {
+                    $roomType = $outDoorsRooms;
+                } elseif ($roomType === 'commercial') {
+                    // Check for multiple values in application_room_area
+                    $roomType = $commercialRooms;
+                }
+                if ($request->input('ids')) {
+                    $ids = explode(",", $request->ids);
 
-            $roomType = $findRoom->type;
-            $commercialRooms = ['Lobby', 'Mall', 'Hotels','Restaurant','Reception']; // Define commercial room types
-            $outDoorsRooms = ['Balcony','Veranda'];
-            if ($roomType === 'outdoor') {
-                $roomType = $outDoorsRooms;
-            } elseif ($roomType === 'commercial') {
-                // Check for multiple values in application_room_area
-                $roomType = $commercialRooms;
-            }
-            if ($request->input('ids')) {
-                $ids = explode(",", $request->ids);
+                    $tiles = Tile::where('enabled', 1)
+                        ->whereIn('id', $ids)
+                        ->where(function ($query) {
+                            $user = Auth::user();
+                            $access_level = isset($user) ? $user->getAccessLevel() : 0;
 
-                $tiles = Tile::where('enabled', 1)
-                    ->whereIn('id', $ids)
-                    ->where(function ($query) {
-                        $user = Auth::user();
-                        $access_level = isset($user) ? $user->getAccessLevel() : 0;
-
-                        $query->where('access_level', '<=', $access_level)
-                            ->orWhere('access_level', null);
-                    })
-                    ->get();
-                    return response()->json($tiles);
+                            $query->where('access_level', '<=', $access_level)
+                                ->orWhere('access_level', null);
+                        })
+                        ->get();
+                        return response()->json($tiles);
+                }
+                $tiles = $this->getTilesByRoomType($roomType);
             }
-            $tiles = $this->getTilesByRoomType($roomType);
             return response()->json($tiles);
         }
         $tiles = Tile::where('enabled', 1)->get();

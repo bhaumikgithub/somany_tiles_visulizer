@@ -8,8 +8,6 @@
 @yield('content')
 @include('common.alerts')
 
-@include('common.sourceLoadProgressBar')
-
 @include('common.pincode_modal')
 
 <!-- Scripts -->

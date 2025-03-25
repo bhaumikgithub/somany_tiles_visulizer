@@ -38,7 +38,7 @@ if ($engine_3d_enabled) {
 } elseif ($engine_panorama_enabled) {
     Route::get('/', function () { return redirect('/panorama-studio'); });
 } elseif ($engine_roomai_enabled) {
-    Route::get('/', function () { return redirect('/roomai'); });
+    Route::get('/', function () { return redirect('/ai-studio'); });
 }
 
 Route::get('/home', 'App\Http\Controllers\HomeController@index');
@@ -104,12 +104,11 @@ if ($engine_panorama_enabled) {
 }
 if ($engine_roomai_enabled) {
     Route::middleware(['check.pincode'])->group(function () {
-        Route::get('/room_ai', 'App\Http\Controllers\ControllerRoomAI@index')->name('room_ai.index');
-        // Handle file upload via AJAX
-        Route::post('/uploadRoom', 'App\Http\Controllers\ControllerRoomAI@store')->name('room_ai.upload');
+        Route::get('/ai-studio', 'App\Http\Controllers\ControllerRoomAI@index')->name('room_ai.index');
+        Route::get('/get/ai-studio', function () {
+            return view('roomAI.room');
+        });
     });
-    // Redirect to room page after upload
-    Route::get('/ai_room/{id}', 'App\Http\Controllers\ControllerRoomAI@getRoom')->name('room_ai.room');
 }
 
 
