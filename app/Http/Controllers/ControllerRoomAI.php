@@ -21,11 +21,7 @@ use Intervention\Image\Facades\Image;
 
 class ControllerRoomAI extends Controller
 {
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|Factory|View|Application
-     */
-    public function index(): Factory|View|Application|\Illuminate\Contracts\Foundation\Application
-    {
-        return view('roomAI.index');
+    public function index() {
+        return view('roomAI.room');
     }
 }

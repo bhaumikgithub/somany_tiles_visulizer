@@ -105,9 +105,8 @@ if ($engine_panorama_enabled) {
 if ($engine_roomai_enabled) {
     Route::middleware(['check.pincode'])->group(function () {
         Route::get('/ai-studio', 'App\Http\Controllers\ControllerRoomAI@index')->name('room_ai.index');
-        Route::get('/get/ai-studio', function () {
-            return view('roomAI.room');
-        });
+        Route::get('/room2d/{id}', 'App\Http\Controllers\Controller2d@room');
+        Route::get('/get/room2d/{id}', 'App\Http\Controllers\Controller2d@getRoom');
     });
 }
 
@@ -293,6 +292,8 @@ Route::post('/update-tile-price','App\Http\Controllers\AddToPdfRoomsController@u
 Route::post('/update-tile-calc','App\Http\Controllers\AddToPdfRoomsController@updateTileCalculation');
 Route::post('/update-preference', 'App\Http\Controllers\AddToPdfRoomsController@updatePreference')->name('update-preference');
 
+
+Route::post('/add-to-pdf-data-store-ai','App\Http\Controllers\AddToPdfRoomsController@addToPdfDataStoreAI');
 
 Route::post('check-selection-has-data','App\Http\Controllers\AddToPdfRoomsController@checkSelectionHasData');
 Route::post('/get-tile-summary', 'App\Http\Controllers\AddToPdfRoomsController@getTileSummary');
