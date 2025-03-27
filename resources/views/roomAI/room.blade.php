@@ -64,6 +64,7 @@
 <script type="module" src="/js/src/2d/interior2d.js"></script>
 @else
 <script src="https://cdn.jsdelivr.net/npm/gammacv@0.5.3/dist/index.min.js" async></script>
+<script src="/js/roomAI/opencv.js" async type="text/javascript"></script>
 <script src="/js/roomAI/image.ops.js"></script>
 <script src="/js/roomAI/zoom.js"></script>
 <script src="/js/roomAI/2d_room_ai.min.js"></script>

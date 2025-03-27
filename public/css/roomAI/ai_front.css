@@ -2169,3 +2169,7 @@ input[type=checkbox] {
         }
     }
 }
+
+.room-canvas-container .surface-select img {
+    opacity: 0.0 !important;
+}
