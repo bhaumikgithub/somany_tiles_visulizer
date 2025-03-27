@@ -243,15 +243,21 @@ class AjaxController extends Controller
     }
 
     public function saveUserRoom(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'roomId' => 'required|integer',
+        $rules = [
             'image' => 'nullable|string',
             'engine' => 'nullable|string|max:16',
             'note' => 'nullable|string',
             'url' => 'nullable|max:1000|alpha_num|exists:savedrooms,url',
             'roomSettings' => 'required|json',
             'sides' => 'nullable|array|size:6',
-        ]);
+        ];
+        
+        // Conditionally apply the `roomId` rule
+        if ($request->engine !== "ai") {
+            $rules['roomId'] = 'required|integer';
+        }
+        
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json([
