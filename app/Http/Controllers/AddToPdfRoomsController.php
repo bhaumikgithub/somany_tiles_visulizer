@@ -186,7 +186,7 @@ class AddToPdfRoomsController extends Controller
         $request->session()->put('cart', $cart_id);
 
         $getCartId = Cart::where('user_id',$sessionId)->first();
-        $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
+        $allProduct = CartItem::where('cart_id',$getCartId->id)->where('room_type','!=','ai_room')->get();
 
         //Update pin code in cart summary page
         $pincode = Session::get('pincode'); // Store the pin code temporarily
@@ -786,7 +786,7 @@ class AddToPdfRoomsController extends Controller
         $request->session()->put('cart', $cart_id);
 
         $getCartId = Cart::where('user_id',$sessionId)->first();
-        $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
+        $allProduct = CartItem::where('cart_id',$getCartId->id)->where('room_type','ai_room')->get();
 
         //Update pin code in cart summary page
         $pincode = Session::get('pincode'); // Store the pin code temporarily

@@ -455,7 +455,8 @@ body {
 
 }
 
-#cartInfoTilesList .top-panel-content-tiles-list-item-product{
+#cartInfoTilesList .top-panel-content-tiles-list-item-product,
+#cartInfoTilesListAI .top-panel-content-tiles-list-item-product{
     border-radius: 0px !important;
 }
 .cart-summary-img-holder img{
