@@ -40,7 +40,7 @@ function AdjustCanvasWidthHeight() {
 
         topPanelTopPosition = 10;
         $("#topPanelHideBtn").css({ "top": "auto" });
-        $("#container").width(windowWidth);
+        //$("#container").width(windowWidth);
     }
     else {//FOR PORTRAIT
         layoutMode = "PORTRAIT";
@@ -97,8 +97,8 @@ function AdjustCanvasWidthHeight() {
     $('.top-panel').css('height', topPanelHeight + 'px'); // Set height dynamically
     $("#productInfoPanel").hide();
     heightAdjust();
-    $("#roomCanvas").height(newCanvasHeight);
-    $("#roomCanvas").width(newCanvasWidth);
+    // $("#roomCanvas").height(newCanvasHeight);
+    // $("#roomCanvas").width(newCanvasWidth);
 
     if (topPanelCustomVisible == true) {
         setTopPanelOpenPosition(false);

@@ -8,7 +8,7 @@
                         class="tile-list-thumbnail tile-list-thumbnail-product">
                 </div>
                 <div class="tile-list-text">
-                    <p>{{ $productInfo->room_type }}</p>
+                    <p>User Room</p>
                     <p><a href="javascript:void(0);" class="cart-summary-link"
                             onclick="removeProductFromCart({{ $productInfo->id }})">Remove</a></p>
                 </div>
