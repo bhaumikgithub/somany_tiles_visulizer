@@ -23,7 +23,7 @@ function showRoomsType(type) {
                     <div class="d-flex flex-wrap align-items-center justify-content-center">
                         <div class="upload-room-img">
                             <h2 class="mt-0 f-bold room_data text-center ">See Products in your room</h2>
-                            <img src="/img/room-product-demo.png" alt="room-product-demo" class="img-responsive mt-2">
+                            <img src="/img/room-product-demo.gif" alt="room-product-demo" class="img-responsive mt-2">
 
                         </div>
                         <div class="upload-data text-center">
