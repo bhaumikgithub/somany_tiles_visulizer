@@ -79,7 +79,7 @@ function AdjustCanvasWidthHeight() {
     $("#topPanelTilesListBox").height(topPanelHeight - 130);
     $("#grout-list").height(topPanelHeight - 250 + 120);
     $("#layout-list").height(topPanelHeight - 130 - 35);
-    $("#topPanelThemeListBox").height(topPanelHeight - 220);
+    // $("#topPanelThemeListBox").height(topPanelHeight - 220);
 
 
 
@@ -97,8 +97,9 @@ function AdjustCanvasWidthHeight() {
     $('.top-panel').css('height', topPanelHeight + 'px'); // Set height dynamically
     $("#productInfoPanel").hide();
     heightAdjust();
-    // $("#roomCanvas").height(newCanvasHeight);
-    // $("#roomCanvas").width(newCanvasWidth);
+
+    $("#roomCanvas").height(newCanvasHeight);
+    $("#roomCanvas").width(newCanvasWidth);
 
     if (topPanelCustomVisible == true) {
         setTopPanelOpenPosition(false);
@@ -447,6 +448,7 @@ function showProductContent() {
     $('.partOfProductTabContent-wrap').show();
 
     if(isThisMobileDevice()==true){
+        console.log("isThisMobileDevice" + isThisMobileDevice());
         $(".partOfProductTabButtons").show();
         setPanelToggleStatus('.serach-pad-set', '#searchIconToggle');
         setPanelToggleStatus('.filterContentPanel', '#sliderIconToggle');
