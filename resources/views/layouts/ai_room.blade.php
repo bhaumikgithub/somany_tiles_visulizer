@@ -44,7 +44,7 @@
 
     @include('common.alerts')
 
-    @include('common.sourceLoadProgressBar')
+    @include('common.roomAI.sourceLoadProgressBar2')
 
     @include('common.roomAI.roomListAI')
 
