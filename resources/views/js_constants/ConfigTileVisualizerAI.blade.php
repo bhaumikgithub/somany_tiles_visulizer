@@ -6,7 +6,7 @@
         // savedId: '{{ isset($savedRoomId) ? $savedRoomId : '' }}' || undefined,
         url: '{{ isset($savedRoomUrl) ? $savedRoomUrl : '' }}' || undefined,
         productCategories: {!! isset($product_categories) ? $product_categories : '[]' !!},
-        isDefault: true,
+        // isDefault: true,
     };
 
     window.JsConstants.config = window.JsConstants.config || {};
