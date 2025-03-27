@@ -1734,7 +1734,112 @@ input[type=checkbox] {
 #topPanelContentFreeDesign{
     margin-bottom: 10px;
 }
+
+/* / modal design / */
+.f-bold{
+    font-weight: bold;
+}
+#dialogRoomSelect .modal-body{
+    padding: 40px;
+}
+.upload-room-img{
+    width: 45%;
+
+}
+.upload-data{
+    width: 45%;
+    padding:0px 20px;
+}
+.upload-data span{
+    font-size: 20px;
+    font-weight: 600;
+    display: inline-block;
+    margin-left: 10px;
+}
+.upload-data-box{
+    margin-bottom: 15px;
+}
+.upload-img-btn{
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1), border-color 250ms cubic-bezier(0.4, 0, 0.2, 1), color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+    border-width: 0px;
+    padding: 20px;
+    background-color: rgb(192, 28, 23);
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    appearance: none;
+    font-weight: 500;
+    line-height: 1.2;
+    font-family: Inter, sans-serif;
+    min-width: 64px;
+    color: #fff;
+    max-width: 90%;
+    width: 90%;
+    margin-top: 10px;
+
+}
+.upload-img-btn:hover, .upload-img-btn:active , .upload-img-btn:focus{
+    background-color: rgb(192, 28, 23);
+    color: #fff;
+    border: none;
+}
+.upload-img-btn span{
+    font-weight: bold;
+    font-size: 20px;
+}
+
+
+.step-data{
+    margin-top: 20px;
+}
+.step-data h3{
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+.step-data  p{
+    font-size: 18px;
+}
+.step-data-wrap{
+    width: 33.33%;
+    text-align: center;
+}
 /* select data pannel css end */
+
+@media (max-width:1200px)  {
+    #dialogRoomSelect .modal-body{
+        padding: 30px;
+    }
+    .step-data h3{
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    .step-data  p{
+        font-size: 16px;
+    }
+    .room_data{
+        font-size: 25px;
+
+    }
+    .upload-data-box svg{
+        width:32px;
+        height: 32px;
+    }
+    .upload-data span {
+        font-size: 17px;
+    }
+
+}
+
+
 @media (max-width:991px)  {
     .top-panel-product {
         width: 100% !important;
@@ -1878,6 +1983,24 @@ input[type=checkbox] {
     #topPanelGroutSizeRange {
         width: 135px;
     }
+    .upload-room-img {
+        width: 100%;
+    }
+    .upload-data{
+        width: 100%;
+    }
+    .upload-room-img img{
+        margin: 0 auto;
+        margin-bottom: 20px;
+    }
+    .upload-img-btn{
+        padding: 15px;
+        max-width: 70%;
+    }
+    .step-data-wrap{
+        width: 100%;
+        
+    }
 
 }
 @media (max-width:991px) and (orientation:portrait){
@@ -1977,12 +2100,29 @@ input[type=checkbox] {
         margin-left: -35px;
     }
 }
+@media (max-width:768px){
 
+    #dialogRoomSelect .modal-body {
+        padding: 15px;
+    }
+    .room_data {
+        font-size: 22px;
+    }
+    .upload-data-box svg {
+        width: 25px;
+        height: 25px;
+    }
+    .upload-data span {
+        font-size: 15px;
+    }
+
+}
 @media (max-width:400px){
   .csp-btn {
          margin-bottom: 5px; 
     }
-    #cartInfoTilesList .modify-btn{
+    #cartInfoTilesList .modify-btn,
+    #cartInfoTilesListAI .modify-btn{
         padding: 8px;
         font-size: 13px;
     }
