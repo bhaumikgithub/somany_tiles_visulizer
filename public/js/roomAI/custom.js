@@ -95,8 +95,8 @@ function AdjustCanvasWidthHeight() {
     $("#productInfoPanel").hide();
     heightAdjust();
 
-    $("#roomCanvas").height(newCanvasHeight);
-    $("#roomCanvas").width(newCanvasWidth);
+    // $("#roomCanvas").height(newCanvasHeight);
+    // $("#roomCanvas").width(newCanvasWidth);
 
     if (topPanelCustomVisible == true) {
         setTopPanelOpenPosition(false);
