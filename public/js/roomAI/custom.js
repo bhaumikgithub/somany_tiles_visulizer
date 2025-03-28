@@ -55,6 +55,7 @@ function AdjustCanvasWidthHeight() {
         topPanelTopPosition = newHeight + 20;
 
         //Center up / down button pressed
+        
         $("#topPanelHideBtn").css({ "top": topPanelTopPosition - 50 });
 
         if (firstTime == true) {
@@ -71,11 +72,7 @@ function AdjustCanvasWidthHeight() {
     }
 
     //row top-panel-box top-panel-box-first top-panel-box-first-btn-wrap top-panel-box-cmn-br
-
-    $("#selectd-data").css("max-height", Math.round(topPanelHeight - 20));
-
-
-
+    
     $("#topPanelTilesListBox").height(topPanelHeight - 130);
     $("#grout-list").height(topPanelHeight - 250 + 120);
     $("#layout-list").height(topPanelHeight - 130 - 35);
@@ -93,7 +90,7 @@ function AdjustCanvasWidthHeight() {
 
     //$("#topPanel").css('top',newHeight + 'px');
 
-    $('.top-panel').css('top', topPanelTopPosition + 'px');
+   // $('.top-panel').css('top', topPanelTopPosition + 'px');
     $('.top-panel').css('height', topPanelHeight + 'px'); // Set height dynamically
     $("#productInfoPanel").hide();
     heightAdjust();
@@ -258,6 +255,7 @@ function setTopPanelOpenPosition(p_animation_required) {
             $("#topPanelHideBtn").animate({ "top": topPanelTopPosition - 50 });
         }
         else {
+           
             window.$('#topPanel').css({ 'right': 0, 'top': topPanelTopPosition });
             $("#topPanelHideBtn").css({ "top": topPanelTopPosition - 50 });
         }
@@ -348,6 +346,7 @@ $('#topPanelHideBtn').on('click', function (e) {
                 $('#topPanelHideIcon').removeClass('glyphicon-menu-left').addClass('glyphicon-menu-right');
                 $('#topPanel').stop(true, true).animate({right: '0px'});
             });
+        
         }
     }
 });

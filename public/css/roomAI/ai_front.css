@@ -2113,16 +2113,7 @@ input[type=checkbox] {
     }
 
 }
-@media (max-width:400px){
-  .csp-btn {
-         margin-bottom: 5px; 
-    }
-    #cartInfoTilesList .modify-btn,
-    #cartInfoTilesListAI .modify-btn{
-        padding: 8px;
-        font-size: 13px;
-    }
-}
+
 
 @media (max-width:767px) and (orientation:portrait) {
     .panorama-share-div {
@@ -2148,6 +2139,21 @@ input[type=checkbox] {
         left: 21px;
     }
 
+    .room-canvas-container{
+        height: auto !important;
+    }
+}
+
+@media (max-width:400px){
+    .csp-btn {
+           margin-bottom: 5px; 
+      }
+      #cartInfoTilesList .modify-btn,
+      #cartInfoTilesListAI .modify-btn{
+          padding: 8px;
+          font-size: 13px;
+      }
+  }
 
     @media (max-width: 350px) and (orientation: portrait) {
 
@@ -2164,8 +2170,8 @@ input[type=checkbox] {
 
         }
     }
-}
 
 .room-canvas-container .surface-select img {
     opacity: 0.0 !important;
 }
+
