@@ -235,6 +235,11 @@ $(window).on('load', function () {
 
 $(window).on('resize', function () {
     AdjustCanvasWidthHeight();
+    // const $topanel = $('#topPanel');
+    // const rightValue = $topanel.css('right');
+    // alert('Current right value of topanel: ' + rightValue);
+   
+
 });
 
 //This function calling from 2d.min.js
@@ -325,6 +330,7 @@ function isMobilePortrait() {
     return (window.innerWidth <= 991 && window.innerHeight > window.innerWidth);
 }
 $('#topPanelHideBtn').on('click', function (e) {
+
     e.stopPropagation(); // Prevent the click event from bubbling up to the parent
     var panelWidth = $('#topPanel').outerWidth();
 
@@ -365,6 +371,7 @@ $('#btnProduct').on('click', function () {
 $('#btnLayout').on('click', function () {
     activeTab = "LAYOUT";
     showHideTabs();
+   
 });
 
 $('#btnGrout').on('click', function () {
@@ -710,21 +717,3 @@ function showAllFilters(p_show) {
 /*this._body.id =
 */
 
-$('#roomCanvas').on('click', function () {
-    var roomCanvasTitle = $('#roomCanvas').attr('title').trim();  // Get the title and trim any extra spaces
-    var titleWords = roomCanvasTitle.split(' ');  // Split the title by spaces
-    var firstTwoWords = titleWords.slice(0, 2).join(' ');  // Take the first two words and join them with a space
-
-    // Check if the title contains "change counter" or "change paint"
-    if (firstTwoWords.toLowerCase() === "change paint") {
-        $('.serach-pad-set').hide();  // Hide the search panel
-    } else {
-        $('.serach-pad-set').show();  // Show the search panel
-    }
-    if (firstTwoWords.toLowerCase() === "change counter"){
-        $('#btnGrout').hide();
-    }
-    else{
-        $('#btnGrout').show();
-    }
-});
