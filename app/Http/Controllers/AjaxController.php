@@ -48,7 +48,7 @@ class AjaxController extends Controller
             $roomID = $request->input('room_id');
             $currentRoomType = $request->input('room_type');
             if( $currentRoomType === 'ai-studio'){
-                $tiles = Tile::where('enabled', 1)->get();
+                $tiles = Tile::select('id','name','size','finish','surface','file','rotoPrintSetName','expProps','width','height','thickness')->where('enabled', 1)->get();
             } else {
                 if( $currentRoomType === "2d-studio" ) {
                     $findRoom = Room2d::select('type')->findOrFail($roomID);
