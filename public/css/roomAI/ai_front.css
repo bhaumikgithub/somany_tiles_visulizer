@@ -1145,6 +1145,7 @@ body {
 .radio-surface-pattern label {
 
     width: 29%;
+    height: auto !important;
 
 }
 
