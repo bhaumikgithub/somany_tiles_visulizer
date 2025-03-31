@@ -499,9 +499,17 @@ function showGroutContent() {
     //$("#otpPanelContentSurfaceTabGroutSizeBody").show();
 }
 
-$('#grout-predefined-color .-btn').on('click', function () {
+// $('#grout-predefined-color .-btn').on('click', function () {
+//     alert("hii");
+//     // Remove 'active' class from all buttons
+//     $('#grout-predefined-color .-btn').removeClass('active');
 
-    // Remove 'active' class from all buttons
+//     // Add 'active' class to the clicked button
+//     $(this).addClass('active');
+// });
+
+$(document).on('click', '#grout-predefined-color .-btn', function () {
+    //Remove 'active' class from all buttons
     $('#grout-predefined-color .-btn').removeClass('active');
 
     // Add 'active' class to the clicked button
