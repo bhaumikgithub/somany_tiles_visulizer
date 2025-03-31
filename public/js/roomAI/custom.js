@@ -106,13 +106,13 @@ function AdjustCanvasWidthHeight() {
     }
     //This function calling from 2d.min.js
     if (layoutMode == "PORTRAIT") {
-        $(".back-btn").css({ left: newLeft });
+        //$(".back-btn").css({ left: newLeft });
         $(".cn-btn").css("right", "0px");
         $(".share-btn-img").css("right", "18px");
         $(".share-div").css("right", "18px");
     }
     else {
-        $(".back-btn").css({ left: newLeft });
+        //$(".back-btn").css({ left: newLeft });
         $(".cn-btn").css({ right: newRight });
         $(".share-div").css({ right: newRight + 21 });
         share_button();
@@ -169,7 +169,11 @@ function isCanvasFullscreen() {
     return $('#container').hasClass('canvas-fullscreen'); // Replace with actual check for fullscreen
 
 }
+function isroomcanvas() {
 
+    return $('#container').hasClass('room-canvas-container'); // Replace with actual check for fullscreen
+
+}
 // function checkCanvasVisibility() {
 //     var canvas = document.querySelector('.canvas-fullscreen canvas');
 //     var container = document.querySelector('.canvas-fullscreen');
@@ -195,6 +199,16 @@ $(window).on('load', function () {
 
         AdjustCanvasWidthHeight();
     }
+
+    if (isroomcanvas()) {
+        $(".cmn-room-btn").css('visibility', 'hidden');
+        $(".share-div").css('visibility', 'hidden');
+
+        AdjustCanvasWidthHeight();
+    }
+
+
+   
     // checkCanvasVisibility();
 
     interval = setInterval(function () {
@@ -330,7 +344,6 @@ function isMobilePortrait() {
     return (window.innerWidth <= 991 && window.innerHeight > window.innerWidth);
 }
 $('#topPanelHideBtn').on('click', function (e) {
-
     e.stopPropagation(); // Prevent the click event from bubbling up to the parent
     var panelWidth = $('#topPanel').outerWidth();
 
@@ -717,3 +730,25 @@ function showAllFilters(p_show) {
 /*this._body.id =
 */
 
+// $('#topPanelHideIcon').on('click', function () {
+//     var $icon = $(this);
+//     var $hideBtn = $('#topPanelHideBtn');
+//     var $roomCanvasContainer = $('.room-canvas-container');
+//     var $mainPanel = $('.top-panel-product');
+
+//     // Get the bottom position of .room-canvas-container
+//     var containerBottom = $roomCanvasContainer.offset().top + $roomCanvasContainer.outerHeight();
+//     var windowHeight = $(window).height();
+
+//     if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-left')) {
+//         // Set the top position of #topPanelHideBtn and #topPanelMainPanel
+//         $hideBtn.css({
+//             'top': containerBottom + 'px'
+//         });
+
+//         $mainPanel.css({
+//             'top': containerBottom + 'px',
+//             'height': (windowHeight - containerBottom) + 'px'
+//         });
+//     }
+// });
