@@ -37,15 +37,6 @@
             <p class="btn-text-set-back">Continue </p>
         </div>
 
-        <!-- <button class="cmn-room-btn cn-btn d-flex flex-wrap align-items-center" >
-                                    <span class="span-icon">
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                    </span>
-                                    <span class="btn-text-set">Continue </span>
-                                </button> -->
-
-
-
         <input type="hidden" value="{{ @$roomId }}" id="current_room_id">
         <input type="hidden" value="{{ @$room_name }}" id="current_room_name">
         <input type="hidden" value="{{ @$room_type }}" id="current_room_type">

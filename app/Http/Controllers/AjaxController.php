@@ -41,40 +41,46 @@ class AjaxController extends Controller
 
     public function getTiles(Request $request): Response | JsonResponse
     {
+        set_time_limit(0);
+        ini_set('memory_limit', '2048M'); // Adjust the limit as needed
+
         if (config('app.tiles_access_level')) {
             $roomID = $request->input('room_id');
             $currentRoomType = $request->input('room_type');
-            if( $currentRoomType === "2d-studio") {
-                $findRoom = Room2d::select('type')->findOrFail($roomID);
+            if( $currentRoomType === 'ai-studio'){
+                $tiles = Tile::select('id','name','size','finish','surface','file','rotoPrintSetName','expProps','width','height','thickness')->where('enabled', 1)->get();
             } else {
-                $findRoom = Panorama::select('type')->findOrFail($roomID);
-            }
+                if( $currentRoomType === "2d-studio" ) {
+                    $findRoom = Room2d::select('type')->findOrFail($roomID);
+                } else {
+                    $findRoom = Panorama::select('type')->findOrFail($roomID);
+                }
+                $roomType = $findRoom->type;
+                $commercialRooms = ['Lobby', 'Mall', 'Hotels','Restaurant','Reception']; // Define commercial room types
+                $outDoorsRooms = ['Balcony','Veranda'];
+                if ($roomType === 'outdoor') {
+                    $roomType = $outDoorsRooms;
+                } elseif ($roomType === 'commercial') {
+                    // Check for multiple values in application_room_area
+                    $roomType = $commercialRooms;
+                }
+                if ($request->input('ids')) {
+                    $ids = explode(",", $request->ids);
 
-            $roomType = $findRoom->type;
-            $commercialRooms = ['Lobby', 'Mall', 'Hotels','Restaurant','Reception']; // Define commercial room types
-            $outDoorsRooms = ['Balcony','Veranda'];
-            if ($roomType === 'outdoor') {
-                $roomType = $outDoorsRooms;
-            } elseif ($roomType === 'commercial') {
-                // Check for multiple values in application_room_area
-                $roomType = $commercialRooms;
-            }
-            if ($request->input('ids')) {
-                $ids = explode(",", $request->ids);
+                    $tiles = Tile::where('enabled', 1)
+                        ->whereIn('id', $ids)
+                        ->where(function ($query) {
+                            $user = Auth::user();
+                            $access_level = isset($user) ? $user->getAccessLevel() : 0;
 
-                $tiles = Tile::where('enabled', 1)
-                    ->whereIn('id', $ids)
-                    ->where(function ($query) {
-                        $user = Auth::user();
-                        $access_level = isset($user) ? $user->getAccessLevel() : 0;
-
-                        $query->where('access_level', '<=', $access_level)
-                            ->orWhere('access_level', null);
-                    })
-                    ->get();
-                    return response()->json($tiles);
+                            $query->where('access_level', '<=', $access_level)
+                                ->orWhere('access_level', null);
+                        })
+                        ->get();
+                        return response()->json($tiles);
+                }
+                $tiles = $this->getTilesByRoomType($roomType);
             }
-            $tiles = $this->getTilesByRoomType($roomType);
             return response()->json($tiles);
         }
         $tiles = Tile::where('enabled', 1)->get();
@@ -237,15 +243,21 @@ class AjaxController extends Controller
     }
 
     public function saveUserRoom(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'roomId' => 'required|integer',
+        $rules = [
             'image' => 'nullable|string',
             'engine' => 'nullable|string|max:16',
             'note' => 'nullable|string',
             'url' => 'nullable|max:1000|alpha_num|exists:savedrooms,url',
             'roomSettings' => 'required|json',
             'sides' => 'nullable|array|size:6',
-        ]);
+        ];
+        
+        // Conditionally apply the `roomId` rule
+        if ($request->engine !== "ai") {
+            $rules['roomId'] = 'required|integer';
+        }
+        
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json([

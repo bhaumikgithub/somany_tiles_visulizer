@@ -186,7 +186,7 @@ class AddToPdfRoomsController extends Controller
         $request->session()->put('cart', $cart_id);
 
         $getCartId = Cart::where('user_id',$sessionId)->first();
-        $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
+        $allProduct = CartItem::where('cart_id',$getCartId->id)->where('room_type','!=','ai_room')->get();
 
         //Update pin code in cart summary page
         $pincode = Session::get('pincode'); // Store the pin code temporarily
@@ -693,5 +693,113 @@ class AddToPdfRoomsController extends Controller
             'success' => true,
             'tiles' => $processedTiles // Pass entire summarized collection
         ]);
+    }
+
+    public function addToPdfDataStoreAI(Request $request) {
+        // Extract the image data
+        $imageData = $request->data['thumbnail'];
+
+        // Retrieve session ID
+        $sessionId = $request->session()->getId();
+
+        // Decode base64 image
+        $image = str_replace('data:image/jpeg;base64,', '', $imageData);
+        $image = str_replace(' ', '+', $image);
+        $imageName = uniqid() . '.jpeg';
+
+        // Save the image to the public folder (e.g., storage/thumbnails)
+        if (!Storage::exists('thumbnails')) {
+            Storage::makeDirectory('thumbnails');
+        }
+
+        $filePath = 'thumbnails/' . $imageName;
+        Storage::disk('public')->put($filePath, base64_decode($image));
+
+
+        //CanvasLargeImage Store
+        $largeImageData = $request->data['currentDesign'];
+        // Decode base64 image
+        $image1 = str_replace('data:image/jpeg;base64,', '', $largeImageData);
+        $image1 = str_replace(' ', '+', $image1);
+        $imageName1 = uniqid() . '.jpeg';
+
+        // Save the image to the public folder (e.g., storage/thumbnails)
+        if (!Storage::exists('largeImages')) {
+            Storage::makeDirectory('largeImages');
+        }
+
+        $filePath1 = 'largeImages/' . $imageName1;
+        Storage::disk('public')->put($filePath1, base64_decode($image1));
+
+        //Check if the same session key exists or not
+        $checkSessionId = Cart::where('user_id',$sessionId)->first();
+    
+        //insert data into the Cart table
+        if( empty($checkSessionId) ) {
+            $cart = new Cart();
+            $cart->user_type = ($sessionId) ? "guest" : "logged_in";
+            $cart->user_id = $sessionId;
+            $cart->random_key = Str::random(8);
+            $cart->save();
+            $cart_id = $cart->id;
+        } else {
+            $cart_id = $checkSessionId->id;
+        }
+        
+        // Decode the JSON string from the request
+        $selectedTiles = collect(json_decode($request->data['selected_tiles_ids'], true)); // Convert to a collection
+
+        // Fetch tiles data from the database using all tile IDs (including duplicates)
+        $tileIds = $selectedTiles->pluck('tileId')->all();
+
+        $tiles = Tile::select('id', 'name', 'width', 'height', 'surface', 'finish', 'file', 'price')
+            ->whereIn('id', $tileIds)
+            ->get();
+
+            // Map surface titles to each tile (considering duplicates)
+        $tilesWithSurfaceTitle = $selectedTiles->map(function ($selectedTile) use ($tiles) {
+            $tile = $tiles->firstWhere('id', $selectedTile['tileId']);
+            return [
+                'id' => $tile->id,
+                'name' => $tile->name,
+                'width' => $tile->width,
+                'height' => $tile->height,
+                'surface' => $tile->surface,
+                'finish' => $tile->finish,
+                'file' => $tile->file,
+                'price' => $tile->price,
+                'icon' => $tile->icon, // Access the appended 'icon' attribute,
+                'free_tile' => $selectedTile['isFreeTile']
+            ];
+        });
+
+        // Save the file path to the database
+        $productInfo = new CartItem();
+        $productInfo->room_type = $request->data['room_type'];
+        $productInfo->current_room_design = $filePath1;
+        $productInfo->current_room_thumbnail = $filePath;
+        $productInfo->tiles_json = $tilesWithSurfaceTitle->toJson();
+        $productInfo->cart_id = $cart_id;
+        $productInfo->save();
+
+        // Store cart session
+        $request->session()->put('cart', $cart_id);
+
+        $getCartId = Cart::where('user_id',$sessionId)->first();
+        $allProduct = CartItem::where('cart_id',$getCartId->id)->where('room_type','ai_room')->get();
+
+        //Update pin code in cart summary page
+        $pincode = Session::get('pincode'); // Store the pin code temporarily
+        $getCartId->pincode = $pincode;
+        $getCartId->update();
+        $count = $allProduct->count();
+
+        $url = '/pdf-summary/'.$getCartId->random_key;
+        return response()->json([
+            'body' => view('common.roomAI.cartPanel',compact('allProduct','count','url'))->render(),
+            'data' => ['product_info'=> $allProduct, 'all_selection' => $count,'url'=>$url],
+            'success' => 'success'
+        ]);
+
     }
 }
