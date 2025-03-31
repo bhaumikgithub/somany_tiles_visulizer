@@ -105,8 +105,6 @@ if ($engine_panorama_enabled) {
 if ($engine_roomai_enabled) {
     Route::middleware(['check.pincode'])->group(function () {
         Route::get('/ai-studio', 'App\Http\Controllers\ControllerRoomAI@index');
-        Route::get('/room2d/{id}', 'App\Http\Controllers\Controller2d@room');
-        Route::get('/get/room2d/{id}', 'App\Http\Controllers\Controller2d@getRoom');
     });
 }
 

@@ -123,9 +123,12 @@ function getTileId(id) {
 
     // Get the selected tile ID from the clicked <li>
     let selectedTileId = $('li#' + id).data('tile');
-
+   
     // Check if the free tile checkbox is checked
     let isFreeTileEnabled = $('#free_tile_checkbox_value').val() === "on";
+
+    // Remove any existing tile entry for this surface
+    ids = ids.filter(tile => tile.surfaceTitle !== surface_title);
 
     // Track whether a free tile was added
     let freeTileAdded = false;
