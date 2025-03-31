@@ -808,7 +808,14 @@ $(window).on('resize', function () {
     }
 });
 
-
+/*** Hide loader when grout slider is use */
+document.getElementById("topPanelGroutSizeRange").addEventListener("input", function (event) {
+    //Hide the loader when the slider is changed
+    let loader = document.getElementById("loadAnimationContainer");
+    if (loader) {
+        loader.style.display = "none"; // Hide the loader
+    }
+});
 
 
 
