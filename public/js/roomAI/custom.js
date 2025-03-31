@@ -193,6 +193,7 @@ function isroomcanvas() {
 
 $(window).on('load', function () {
 
+ 
     if (isCanvasFullscreen()) {
         $(".cmn-room-btn").css('visibility', 'hidden');
         $(".share-div").css('visibility', 'hidden');
@@ -205,8 +206,9 @@ $(window).on('load', function () {
         $(".share-div").css('visibility', 'hidden');
 
         AdjustCanvasWidthHeight();
-    }
 
+
+    }
 
    
     // checkCanvasVisibility();
@@ -249,7 +251,7 @@ $(window).on('load', function () {
 
 $(window).on('resize', function () {
     AdjustCanvasWidthHeight();
-   
+
 
 });
 
@@ -727,7 +729,6 @@ function showAllFilters(p_show) {
 /*this._body.id =
 */
 
-$('.partOfProductTabContent').hide();
 
 $('#topPanelHideIcon').on('click', function () {
     if (isMobilePortrait())
@@ -746,11 +747,11 @@ $('#topPanelHideIcon').on('click', function () {
         // Move the button and panel below the room-canvas-container
       
         $hideBtn.css({
-            'top': (containerBottom - 50) + 'px'
+            'top': (containerBottom - 60) + 'px'
         });
 
         $mainPanel.css({
-            'top': (containerBottom - 30) + 'px',
+            'top': containerBottom  + 'px',
             'height': (windowHeight - containerBottom) + 'px'
         });
 
@@ -760,11 +761,11 @@ $('#topPanelHideIcon').on('click', function () {
        
         // Reset the button and panel to the top of the screen minus 30px
         $hideBtn.css({
-            'top': (topPosition - 50) + 'px'
-        });
+            'top': (topPosition - 60) + 'px'
+        }); 
 
         $mainPanel.css({
-            'top': (topPosition - 50) + 'px',
+            'top': (topPosition - 60) + 'px',
             'height': (windowHeight) + 'px'
         });
 
@@ -772,3 +773,43 @@ $('#topPanelHideIcon').on('click', function () {
     }
 }
 });
+function adjustPanelPosition() {
+    var $hideBtn = $('#topPanelHideBtn');
+    var $roomCanvasContainer = $('.room-canvas-container');
+    var $mainPanel = $('.top-panel-product');
+
+    var containerBottom = $roomCanvasContainer.offset().top + $roomCanvasContainer.outerHeight();
+    var windowHeight = $(window).height();
+
+    $hideBtn.css({
+        'top': (containerBottom - 60) + 'px'
+    });
+
+    $mainPanel.css({
+        'top': containerBottom + 'px',
+        'height': (windowHeight - containerBottom) + 'px'
+    });
+
+    $('#topPanelTilesListBox').css({'display':'block'});
+}
+
+
+// Trigger only if the screen width is less than 768px (mobile)
+$('#roomCanvas').on('click', function () {
+    if ($(window).width() < 768) {
+        adjustPanelPosition();
+    }
+});
+
+// Also handle window resize in case the user switches between mobile and desktop views
+$(window).on('resize', function () {
+    if ($(window).width() < 768) {
+        adjustPanelPosition();
+    }
+});
+
+
+
+
+
+
