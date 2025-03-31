@@ -249,9 +249,6 @@ $(window).on('load', function () {
 
 $(window).on('resize', function () {
     AdjustCanvasWidthHeight();
-    // const $topanel = $('#topPanel');
-    // const rightValue = $topanel.css('right');
-    // alert('Current right value of topanel: ' + rightValue);
    
 
 });
@@ -730,25 +727,46 @@ function showAllFilters(p_show) {
 /*this._body.id =
 */
 
-// $('#topPanelHideIcon').on('click', function () {
-//     var $icon = $(this);
-//     var $hideBtn = $('#topPanelHideBtn');
-//     var $roomCanvasContainer = $('.room-canvas-container');
-//     var $mainPanel = $('.top-panel-product');
+$('.partOfProductTabContent').hide();
 
-//     // Get the bottom position of .room-canvas-container
-//     var containerBottom = $roomCanvasContainer.offset().top + $roomCanvasContainer.outerHeight();
-//     var windowHeight = $(window).height();
+$('#topPanelHideIcon').on('click', function () {
+    if (isMobilePortrait())
+    {
+    var $icon = $(this);
+    var $hideBtn = $('#topPanelHideBtn');
+    var $roomCanvasContainer = $('.room-canvas-container');
+    var $mainPanel = $('.top-panel-product');
 
-//     if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-left')) {
-//         // Set the top position of #topPanelHideBtn and #topPanelMainPanel
-//         $hideBtn.css({
-//             'top': containerBottom + 'px'
-//         });
+    var containerBottom = $roomCanvasContainer.offset().top + $roomCanvasContainer.outerHeight();
+    var windowHeight = $(window).height();
+    var topPosition = windowHeight - 30; // New top position for reset
 
-//         $mainPanel.css({
-//             'top': containerBottom + 'px',
-//             'height': (windowHeight - containerBottom) + 'px'
-//         });
-//     }
-// });
+    if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-left')) {
+       
+        // Move the button and panel below the room-canvas-container
+      
+        $hideBtn.css({
+            'top': (containerBottom - 50) + 'px'
+        });
+
+        $mainPanel.css({
+            'top': (containerBottom - 30) + 'px',
+            'height': (windowHeight - containerBottom) + 'px'
+        });
+    } 
+    else if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-right')) {
+       
+        // Reset the button and panel to the top of the screen minus 30px
+        $hideBtn.css({
+            'top': (topPosition - 50) + 'px'
+        });
+
+        $mainPanel.css({
+            'top': (topPosition - 50) + 'px',
+            'height': (windowHeight) + 'px'
+        });
+
+      $('.partOfProductTabContent').hide();
+    }
+}
+});

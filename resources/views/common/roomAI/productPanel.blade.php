@@ -14,9 +14,9 @@
                 <div class="row top-panel-box top-panel-box-first top-panel-box-first-btn-wrap top-panel-box-cmn-br">
                         <div class="col-md-12 col-xs-12">
                             <div class="d-flex flex-wrap w-100">
-                                <button class="selcte-data-btn smallBackArrowForMobile showOnMobile">
+                                <!-- <button class="selcte-data-btn smallBackArrowForMobile showOnMobile">
                                     <span class="glyphicon-menu-right glyphicon" aria-hidden="true"></span>
-                                </button>
+                                </button> -->
                                 <button id="btnProduct"
                                         class="top-panel-button">@lang('Tiles')</button>
                                 <button id="btnLayout"
