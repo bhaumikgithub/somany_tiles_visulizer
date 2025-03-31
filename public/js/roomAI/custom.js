@@ -754,6 +754,8 @@ $('#topPanelHideIcon').on('click', function () {
             'top': (containerBottom - 30) + 'px',
             'height': (windowHeight - containerBottom) + 'px'
         });
+
+        $('#topPanelTilesListBox').css({'display':'block'});
     } 
     else if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-right')) {
        
