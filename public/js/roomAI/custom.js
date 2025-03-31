@@ -205,6 +205,8 @@ $(window).on('load', function () {
         $(".share-div").css('visibility', 'hidden');
 
         AdjustCanvasWidthHeight();
+
+
     }
 
 
@@ -727,7 +729,6 @@ function showAllFilters(p_show) {
 /*this._body.id =
 */
 
-$('.partOfProductTabContent').hide();
 
 $('#topPanelHideIcon').on('click', function () {
     if (isMobilePortrait())
