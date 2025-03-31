@@ -45,7 +45,7 @@ class CheckPincode
             } elseif (str_contains($request->path(), '2d-studio') && $engine_2d_enabled) {
                 $redirectPath = '/room2d';
             } elseif (str_contains($request->path(), 'ai-studio') && $engine_roomai_enabled) {
-                $redirectPath = '/room_ai';
+                $redirectPath = '/ai-studio';
             } else {
                 // Default redirection based on available engines
                 $redirectPath =
