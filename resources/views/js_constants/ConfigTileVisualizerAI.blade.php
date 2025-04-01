@@ -70,4 +70,7 @@
     window.JsConstants.config.surfaceBacklightColor = '{!! env('SURFACE_BACKLIGHT_COLOR', '#0082e84d') !!}';
 
     window.JsConstants.config.showAllUnfilteredProduct = Boolean({!! env('SHOW_ALL_UNFILTERED_PRODUCT', true) !!});
+
+    window.JsConstants.config.socketServer = '{!! config('app.socket_server') !!}';
+
 </script>
