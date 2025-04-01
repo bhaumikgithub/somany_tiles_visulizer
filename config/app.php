@@ -338,4 +338,6 @@ return [
     'product_finish' => env('PRODUCT_FINISH', null),
 
     'curl' => env('CURL', null),
+
+    'socket_server' => env('SOCKET_SERVER','TileVisualiser'),
 ];
