@@ -1810,9 +1810,7 @@ input[type=checkbox] {
     width: 33.33%;
     text-align: center;
 }
-#topPanel{
-    display: none;
-}
+
 /* select data pannel css end */
 
 @media (max-width:1200px)  {
