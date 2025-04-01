@@ -47,6 +47,7 @@ class UpdateTilesFromAPI implements ShouldQueue
         // Get tiles data
         $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete";
         $queryParams = http_build_query([
+            'limit' => 1,
             's' => $this->startDate,
             'e' => $this->endDate,
         ]);
@@ -71,74 +72,127 @@ class UpdateTilesFromAPI implements ShouldQueue
         $totalRecords = count($data);
 
         // Pass count of data to function
-        $this->updateMultiple($data, $this->endDate, $totalRecords);
+        $updatedRecords = $this->updateMultiple($data, $this->endDate, $totalRecords);
 
         // Log Success
-        Log::info("Tiles data updated successfully from API. Total Records: {$totalRecords}");
-
+        Log::info("Total Records: {$totalRecords}");
+        Log::info("Tiles data updated successfully from API. Updated Records: {$updatedRecords['updatedCount']}");
+        Log::info("Unchanged Records: {$updatedRecords['unchangedCount']}");
     }
 
-     /**
-     * @throws Exception
-     */
     protected function updateMultiple($records, $endDate, $totalCount): array
     {
-        $count = 0;
-        $updatedCount = 0;
-        $unchangedCount = 0;
-
-        // Fetch existing tiles from DB as an associative array (SKU => Data)
-        $existingTiles = DB::table('tiles')->get()->keyBy('sku')->toArray();
-
-        $imageCache = [];
-
-        foreach ($records as $aTile) {
-            $product = $aTile['attributes'];
-            $creation_time = Carbon::parse($aTile['creation_time'])->format('Y-m-d H:i:s');
-
-            if (in_array($aTile['code'], $existingSkus)) {
-                Log::info("Skipping SKU: {$aTile['code']} - Already exists in DB.");
-                continue;
-            }
-
+        $updatedCount = 0;      // Track the number of updated records
+        $unchangedCount = 0;    // Track the number of unchanged records
+        $imageCache = [];       // Cache to store image URLs and filenames
+    
+        foreach ($records as $record) {
+            $sku = $record['code'];
+            $product = $record['attributes'];  
+    
+            // Skip specific SKUs
             if (isset($product['sku']) && in_array($product['sku'], ['12345678', '1223324324', '1234'])) {
-                Log::info("Key: {$product['sku']}");
+                Log::info("Skipping SKU: {$product['sku']}");
                 continue;
             }
-
+    
+            // Skip if product is marked for deletion
             if (isset($product['deletion']) && !in_array($product['deletion'], ["RUNNING", "SLOW MOVING"])) {
                 continue;
             }
-
-            $surfaces = $this->determineSurfaceValues($product);
-            // Extract image variations, ignoring TIFF & PSD files
-            $imageVariations = [];
-
-            if (!empty($product['image']) && !$this->isInvalidFormat($product['image'])) {
-                $imageVariations['real_file'] = $product['image'];
-            }
-            foreach (['image_variation_1', 'image_variation_2', 'image_variation_3','image_variation_4'] as $key) {
-                if (!empty($product[$key]) && !$this->isInvalidFormat($product[$key])) {
-                    $imageVariations[$key] = $product[$key];
+    
+            // Retrieve existing tile record by SKU from the database
+            $tile = DB::table('tiles')->where('sku', $sku)->first();
+    
+            if ($tile) {
+                $hasChanges = false; // Flag to track changes
+    
+                // Compare each non-image attribute from API and update if changed
+                foreach ($product as $attribute => $value) {
+                    // Skip image-related fields
+                    if (in_array($attribute, ['image', 'image_variation_1', 'image_variation_2', 'image_variation_3', 'image_variation_4'])) {
+                        continue;
+                    }
+    
+                    // If the attribute has changed, update it
+                    if (isset($tile->$attribute) && $tile->$attribute !== $value) {
+                        // Update the attribute in the database
+                        DB::table('tiles')->where('sku', $sku)->update([
+                            $attribute => $value,
+                            'updated_at' => now(),
+                        ]);
+                        Log::info("Updated SKU: {$sku} - Attribute: {$attribute} changed to: {$value}");
+                        $hasChanges = true;
+                    }
+                }
+    
+                // Extract URLs from product attributes (for image variations)
+                $real_file_url = $this->extractImageURL($product, 'image');
+                $image_variation_1_url = $this->extractImageURL($product, 'image_variation_1');
+                $image_variation_2_url = $this->extractImageURL($product, 'image_variation_2');
+                $image_variation_3_url = $this->extractImageURL($product, 'image_variation_3');
+                $image_variation_4_url = $this->extractImageURL($product, 'image_variation_4');
+    
+                // Initialize all as blank
+                $image_variation_1_url = $image_variation_1_url ?? null;
+                $image_variation_2_url = $image_variation_2_url ?? null;
+                $image_variation_3_url = $image_variation_3_url ?? null;
+                $image_variation_4_url = $image_variation_4_url ?? null;
+    
+                // Function to check if the image URL has changed and update the database
+                $updateImageVariation = function ($existingUrl, $newUrl, $imageType) use ($sku, $imageCache) {
+                    // Check if the image URL has changed
+                    if ($existingUrl !== $newUrl) {
+                        // Update the image URL in the database with the actual URL
+                        DB::table('tiles')->where('sku', $sku)->update([
+                            $imageType => $newUrl,  // Directly store the URL
+                            'updated_at' => now(),
+                        ]);
+    
+                        Log::info("Updated image for SKU: {$sku} - {$imageType} changed to: {$newUrl}");
+                        return true;
+                    }
+                    return false; // No change in URL
+                };
+    
+                // Check and update image URLs if they have changed
+                $imageUpdated = false;
+                $imageUpdated |= $updateImageVariation($tile->real_file, $real_file_url, 'real_file');
+                $imageUpdated |= $updateImageVariation($tile->image_variation_1, $image_variation_1_url, 'image_variation_1');
+                $imageUpdated |= $updateImageVariation($tile->image_variation_2, $image_variation_2_url, 'image_variation_2');
+                $imageUpdated |= $updateImageVariation($tile->image_variation_3, $image_variation_3_url, 'image_variation_3');
+                $imageUpdated |= $updateImageVariation($tile->image_variation_4, $image_variation_4_url, 'image_variation_4');
+    
+                // If any image URL was updated, mark the record as changed
+                if ($imageUpdated) {
+                    $hasChanges = true;
+                }
+    
+                if ($hasChanges) {
+                    $updatedCount++;
+                } else {
+                    Log::info("Unchanged SKU: {$sku}");
+                    $unchangedCount++;
                 }
             }
-
-            // Skip record if no valid images exist
-            if (empty(array_filter($imageVariations))) {
-                Log::info("Skipping SKU: {$aTile['code']} - No valid images found.");
-                continue;
-            }
-
         }
+    
+        return [
+            'updatedCount' => $updatedCount,
+            'unchangedCount' => $unchangedCount,
+        ];
     }
-
+    
     /**
-     * Check if the image URL has an invalid format (TIFF/PSD).
+     * Extracts the URL from the product attributes.
      */
-    private function isInvalidFormat($url): bool
+    private function extractImageURL($product, $key)
     {
-        $invalidFormats = ['tiff', 'tif', 'psd'];
-        $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
-        return in_array(strtolower($extension), $invalidFormats);
+        // Check if the key exists in the product attributes
+        if (isset($product[$key])) {
+            // Return the URL (assuming it's the full URL you want to store)
+            return $product[$key];
+        }
+        return null; // If not found, return null or a default value
     }
 }

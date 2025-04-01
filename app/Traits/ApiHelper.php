@@ -326,8 +326,17 @@ trait ApiHelper
         if (isset($product['application'])) {
             $applications = explode(' & ', strtolower($product['application']));
             foreach ($applications as $app) {
-                if (in_array(trim($app), ['wall', 'floor'])) {
-                    $surfaces[] = trim($app);
+                $app = trim($app);
+                // Split by '/' if needed (e.g., "Counter Top/Wall/Floor")
+                $subApplications = explode('/', $app);
+                foreach ($subApplications as $subApp) {
+                    $subApp = trim($subApp);
+                    // Specifically treat "Counter Top" as counter
+                    if ($subApp === 'counter top') {
+                        $surfaces[] = 'counter'; // Treat "Counter Top" as "counter"
+                    } elseif (in_array($subApp, ['wall', 'floor', 'counter'])) {
+                        $surfaces[] = $subApp;
+                    }
                 }
             }
         }
@@ -339,7 +348,7 @@ trait ApiHelper
 
             foreach ($keywords as $keyword) {
                 if (str_contains($applicationRoomArea, $keyword)) {
-                    $surfaces[] = "counter"; // ✅ Add counter if keyword is found
+                    $surfaces[] = "counter"; //Add counter if keyword is found
                     break;
                 }
             }
