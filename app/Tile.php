@@ -241,6 +241,27 @@ class Tile extends Model
     /**
      * Scope: Filter by room type.
      */
+    // public function scopeFilterByRoomType($query, $roomType)
+    // {
+    //     return $query->where(function ($query) use ($roomType) {
+    //         $query->whereNull('application_room_area'); // Include NULL values
+
+    //         if (is_array($roomType)) {
+    //             $query->orWhere(function ($subQuery) use ($roomType) {
+    //                 foreach ($roomType as $room) {
+    //                     $subQuery->orWhereRaw("FIND_IN_SET(?, application_room_area)", [$room])
+    //                         ->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$room]) // Matches "LivingRoom" too
+    //                         ->orWhereRaw("LOWER(application_room_area) REGEXP ?", ['(^|[ ,])' . strtolower($room) . '($|[ ,])']);
+    //                 }
+    //             });
+    //         } else {
+    //             $query->orWhereRaw("FIND_IN_SET(?, application_room_area)", [$roomType])
+    //                 ->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$roomType]) // Matches "LivingRoom" too
+    //                 ->orWhereRaw("LOWER(application_room_area) REGEXP ?", ['(^|[ ,])' . strtolower($roomType) . '($|[ ,])']);
+    //         }
+    //     });
+    // }
+
     public function scopeFilterByRoomType($query, $roomType)
     {
         return $query->where(function ($query) use ($roomType) {
@@ -249,15 +270,17 @@ class Tile extends Model
             if (is_array($roomType)) {
                 $query->orWhere(function ($subQuery) use ($roomType) {
                     foreach ($roomType as $room) {
-                        $subQuery->orWhereRaw("FIND_IN_SET(?, application_room_area)", [$room])
-                            ->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$room]) // Matches "LivingRoom" too
-                            ->orWhereRaw("LOWER(application_room_area) REGEXP ?", ['(^|[ ,])' . strtolower($room) . '($|[ ,])']);
+                        $formattedRoom = strtolower(trim(str_replace('-', ' ', $room))); // Convert "prayer-room" to "prayer room"
+
+                        $subQuery->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$formattedRoom])
+                            ->orWhereRaw("LOWER(application_room_area) REGEXP ?", ['(^|[ ,])' . $formattedRoom . '($|[ ,])']);
                     }
                 });
             } else {
-                $query->orWhereRaw("FIND_IN_SET(?, application_room_area)", [$roomType])
-                    ->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$roomType]) // Matches "LivingRoom" too
-                    ->orWhereRaw("LOWER(application_room_area) REGEXP ?", ['(^|[ ,])' . strtolower($roomType) . '($|[ ,])']);
+                $formattedRoom = strtolower(trim(str_replace('-', ' ', $roomType))); // Convert single input
+
+                $query->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$formattedRoom])
+                    ->orWhereRaw("LOWER(application_room_area) REGEXP ?", ['(^|[ ,])' . $formattedRoom . '($|[ ,])']);
             }
         });
     }
