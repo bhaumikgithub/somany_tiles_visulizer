@@ -616,7 +616,8 @@ body {
     .product-top-panel-box .loadCartItems {
         height: calc(100vh - 221px);
     }
-
+   
+     
 
 }
 
@@ -2042,6 +2043,12 @@ input[type=checkbox] {
         left:calc(50vw - 18px);
         z-index: 500;
     }
+    .room-canvas-container{
+        height: auto !important;
+    }
+    #topPanel{
+        display: none;
+    }
 }
 @media (max-width:991px) and (orientation:landscape){
     .showOnMobile{
@@ -2112,6 +2119,7 @@ input[type=checkbox] {
     .upload-data span {
         font-size: 15px;
     }
+   
 
 }
 
@@ -2140,9 +2148,7 @@ input[type=checkbox] {
         left: 21px;
     }
 
-    .room-canvas-container{
-        height: auto !important;
-    }
+   
 }
 
 @media (max-width:400px){

@@ -161,6 +161,7 @@ function allLoadCompleted() {
     // $(".room-canvas").css('visibility', 'visible');
 
     showProductContent();
+   
 
 }
 
@@ -192,6 +193,14 @@ function isroomcanvas() {
 
 
 $(window).on('load', function () {
+
+    if ($(window).width() < 991) {
+    
+        $('#topPanelHideBtn').hide();
+        $('.partOfProductTabContent').css('display', 'none').css('!important', ''); 
+        
+ 
+    }
 
  
     if (isCanvasFullscreen()) {
@@ -250,6 +259,13 @@ $(window).on('load', function () {
 });
 
 $(window).on('resize', function () {
+    if ($(window).width() < 991) {
+    
+        $('#topPanelHideBtn').hide();
+        $('.partOfProductTabContent').css('display', 'none').css('!important', ''); 
+        
+ 
+    }
     AdjustCanvasWidthHeight();
 
 
@@ -739,7 +755,7 @@ function showAllFilters(p_show) {
 
 
 $('#topPanelHideIcon').on('click', function () {
-    if (isMobilePortrait())
+    if  ($(window).width() < 991) 
     {
     var $icon = $(this);
     var $hideBtn = $('#topPanelHideBtn');
@@ -782,6 +798,7 @@ $('#topPanelHideIcon').on('click', function () {
 }
 });
 function adjustPanelPosition() {
+   
     var $hideBtn = $('#topPanelHideBtn');
     var $roomCanvasContainer = $('.room-canvas-container');
     var $mainPanel = $('.top-panel-product');
@@ -804,14 +821,15 @@ function adjustPanelPosition() {
 
 // Trigger only if the screen width is less than 768px (mobile)
 $('#roomCanvas').on('click', function () {
-    if ($(window).width() < 768) {
+    if ($(window).width() < 991) {
+        $('#topPanelHideBtn').show();
         adjustPanelPosition();
     }
 });
 
 // Also handle window resize in case the user switches between mobile and desktop views
 $(window).on('resize', function () {
-    if ($(window).width() < 768) {
+    if ($(window).width() < 991) {
         adjustPanelPosition();
     }
 });
