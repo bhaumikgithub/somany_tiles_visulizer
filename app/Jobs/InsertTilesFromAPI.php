@@ -94,8 +94,8 @@ class InsertTilesFromAPI implements ShouldQueue
             $product = $aTile['attributes'];
             $creation_time = Carbon::parse($aTile['creation_time'])->format('Y-m-d H:i:s');
 
-            if (in_array($product['sku'], $existingSkus)) {
-                Log::info("Skipping SKU: {$product['sku']} - Already exists in DB.");
+            if (in_array($aTile['code'], $existingSkus)) {
+                Log::info("Skipping SKU: {$aTile['code']} - Already exists in DB.");
                 continue;
             }
 
@@ -124,7 +124,7 @@ class InsertTilesFromAPI implements ShouldQueue
 
             // Skip record if no valid images exist
             if (empty(array_filter($imageVariations))) {
-                Log::info("Skipping SKU: {$product['sku']} - No valid images found.");
+                Log::info("Skipping SKU: {$aTile['code']} - No valid images found.");
                 continue;
             }
 
@@ -161,37 +161,9 @@ class InsertTilesFromAPI implements ShouldQueue
                     $product['rotoPrintSetName'] = $rotoPrintSetName;
                     // Prepare data for DB
                     $data = $this->prepareTileData($product, $creation_time, $imageFileName);
-
-//                    $existing = DB::table('tiles')->where([
-//                        ['sku', $product['sku']],
-//                        ['surface', $surface]])->first();
-//
-//                    if ($existing) {
-//                        $isDifferent = false;
-//                        foreach ($data as $key => $value) {
-//                            if ($existing->$key != $value) {
-//                                $isDifferent = true;
-//                                break;
-//                            }
-//                        }
-//
-//                        if ($isDifferent) {
-//                            $data['updated_at'] = now();
-//                            DB::table('tiles')->where([
-//                                ['sku', $product['sku']],
-//                                ['surface', $surface],
-//                                ['file', $imageFileName]
-//                            ])->update($data);
-//                            $updatedCount++;
-//                            Log::info("Updated SKU: {$product['sku']} - Surface: {$surface} - Name: {$variationName}");
-//                        } else {
-//                            $unchangedCount++;
-//                        }
-//                    } else {
-//
-//                    }
                     $data['created_at'] = now();
                     $data['updated_at'] = now();
+                    $data['api_json'] = json_encode($aTile);
                     DB::table('tiles')->insert($data);
                     $insertedCount++;
                     Log::info("Inserted SKU: {$product['sku']} - Surface: {$surface} - Name: {$variationName}");
