@@ -824,7 +824,6 @@ function adjustPanelPosition() {
     });
 
     $('#topPanelTilesListBox').css({'display':'block'});
-    
 }
 
 
@@ -834,7 +833,7 @@ $('#roomCanvas').on('click', function () {
     if ($(window).width() < 991) {
         $('#topPanelHideBtn').show();
         $(".top-panel-product").show();
-     
+       //$('#searchIconToggle, #sliderIconToggle').removeClass('top-panel-button-active');
         adjustPanelPosition();
     }
 });
