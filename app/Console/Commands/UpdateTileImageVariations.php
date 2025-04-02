@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Traits\ApiHelper;
+use App\Tile;
 
 class UpdateTileImageVariations extends Command
 {
@@ -43,7 +44,6 @@ class UpdateTileImageVariations extends Command
         // Get tiles data from API
         $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete";
         $queryParams = http_build_query([
-            'limit' => 1000, // Increase limit to fetch more records
             's' => $startDate,
             'e' => $endDate,
         ]);
@@ -72,117 +72,102 @@ class UpdateTileImageVariations extends Command
         $this->updateImageURLs($data);
     }
 
-    /**
-     * Update tile images based on API response.
-     */
     protected function updateImageURLs($records)
     {
         $updatedCount = 0;
         $unchangedCount = 0;
 
-        foreach ($records as $record) {
-            $sku = $record['code'];
-            $product = $record['attributes'];
+        foreach ($records as $apiTile) {
+            $sku = $apiTile['code'];
+            $product = $apiTile['attributes'];
+            $productName = $product['product_name'] ?? 'Unknown Product';
 
-            // Retrieve tile record by SKU
-            $tile = DB::table('tiles')->where('sku', $sku)->first();
+            // Fetch matching tiles from DB based on SKU
+            $tiles = DB::table('tiles')->where('sku', $sku)->get();
 
-            if (!$tile) {
-                Log::warning("No tile found for SKU: {$sku}");
+            if ($tiles->isEmpty()) {
+                Log::info("Skipping tile (No DB Match): {$productName}");
                 continue;
             }
 
-            $tileVersion = $this->determineTileVersion($tile->name);
-            $imageUpdates = $this->getImageUpdates($tile, $product, $tileVersion);
+            foreach ($tiles as $tile) {
+                // Extract version number from DB tile name
+                $tileVersion = $this->extractTileVariationNumber($tile->name, $productName);
 
-            if (!empty($imageUpdates)) {
-                $imageUpdates['updated_at'] = now();
-                DB::table('tiles')->where('sku', $sku)->update($imageUpdates);
-                Log::info("Updated images for SKU: {$sku}", $imageUpdates);
-                $updatedCount++;
-            } else {
-                $unchangedCount++;
+                if ($tileVersion === null) {
+                    Log::info("Skipping base tile without variation: {$tile->name}");
+                    continue;
+                }
+
+                // Determine the correct image column to update
+                $imageUpdates = $this->getImageUpdates($product, $tileVersion);
+
+                if (!empty($imageUpdates)) {
+                    DB::table('tiles')->where('id', $tile->id)->update($imageUpdates);
+                    Log::info("Updated Tile ID: {$tile->id}, Name: {$tile->name}, Version: $tileVersion", $imageUpdates);
+                    $updatedCount++;
+                } else {
+                    $unchangedCount++;
+                }
             }
         }
 
-        Log::info("Tiles Updated: {$updatedCount}, Unchanged: {$unchangedCount}");
+        Log::info("Tiles Updated: $updatedCount, Unchanged: $unchangedCount");
     }
 
-    /**
-     * Determines the tile version from its name.
-     */
-    private function determineTileVersion($tileName)
+
+    private function extractTileVariationNumber($dbTileName, $apiProductName)
     {
-        // Extract the numeric suffix, if any (V1, V2, etc.)
-        if (preg_match('/\bV?(\d+)\b/', $tileName, $matches)) {
-            return (int) $matches[1];
-        }
-        return 1; // Default version if no number is found
-    }
+        // Remove API product name from DB tile name
+        $variationPart = trim(str_replace($apiProductName, '', $dbTileName));
 
-    /**
-     * Determines which image should be updated based on tile version.
-     */
-    private function getImageUpdates($tile, $product, $tileVersion)
-    {
-        $updates = [];
+        // Extract version number (expecting 02, 03, 04, etc.)
+        preg_match('/\d+$/', $variationPart, $matches);
 
-        // Extract image URLs from API data
-        $imageVar1Url = $this->extractImageURL($product, 'image_variation_1');
-        $imageVar2Url = $this->extractImageURL($product, 'image_variation_2');
-        $imageVar3Url = $this->extractImageURL($product, 'image_variation_3');
-        $imageVar4Url = $this->extractImageURL($product, 'image_variation_4');
-
-        switch ($tileVersion) {
-            case 1:
-                if ($tile->image_variation_1 !== $imageVar1Url) {
-                    $updates['image_variation_1'] = $imageVar1Url;
-                }
-                $updates['real_file'] = null;
-                $updates['image_variation_2'] = null;
-                $updates['image_variation_3'] = null;
-                $updates['image_variation_4'] = null;
-                break;
-
-            case 2:
-                if ($tile->image_variation_2 !== $imageVar2Url) {
-                    $updates['image_variation_2'] = $imageVar2Url;
-                }
-                $updates['real_file'] = null;
-                $updates['image_variation_1'] = null;
-                $updates['image_variation_3'] = null;
-                $updates['image_variation_4'] = null;
-                break;
-
-            case 3:
-                if ($tile->image_variation_3 !== $imageVar3Url) {
-                    $updates['image_variation_3'] = $imageVar3Url;
-                }
-                $updates['real_file'] = null;
-                $updates['image_variation_1'] = null;
-                $updates['image_variation_2'] = null;
-                $updates['image_variation_4'] = null;
-                break;
-
-            case 4:
-                if ($tile->image_variation_4 !== $imageVar4Url) {
-                    $updates['image_variation_4'] = $imageVar4Url;
-                }
-                $updates['real_file'] = null;
-                $updates['image_variation_1'] = null;
-                $updates['image_variation_2'] = null;
-                $updates['image_variation_3'] = null;
-                break;
+        if (!isset($matches[0])) {
+            Log::info("No version found for: {$dbTileName}");
+            return null;
         }
 
-        return array_filter($updates, fn($value) => !is_null($value));
+        return (int) $matches[0]; // Convert to integer (02 → 2, 03 → 3)
     }
 
+
     /**
-     * Extracts image URL safely from API data.
+     * Determines the correct image column for updates.
      */
-    private function extractImageURL($product, $key)
+    private function getImageUpdates($product, $tileVersion)
     {
-        return $product[$key] ?? null;
+        $updates = [
+            'image_variation_1' => null,
+            'image_variation_2' => null,
+            'image_variation_3' => null,
+            'image_variation_4' => null,
+            'real_file' => null, // Set real_file to null only for the updated version
+        ];
+
+        // Get corresponding image URL from API
+        $imageVariations = [
+            2 => $product['image_variation_1'] ?? null,
+            3 => $product['image_variation_2'] ?? null,
+            4 => $product['image_variation_3'] ?? null,
+            5 => $product['image_variation_4'] ?? null,
+        ];
+
+        // Ensure the extracted version is within the valid range
+        if (!isset($imageVariations[$tileVersion])) {
+            Log::info("Skipping version $tileVersion (out of range) for: {$product['product_name']}");
+            return [];
+        }
+
+        // Update only the correct image_variation_X column
+        $columnToUpdate = 'image_variation_' . ($tileVersion - 1);
+        $updates[$columnToUpdate] = $imageVariations[$tileVersion];
+        $updates['real_file'] = null; // Set real_file to null
+
+        Log::info("Updating product: {$product['product_name']} → $columnToUpdate");
+
+        return array_filter($updates, fn($value) => !is_null($value)); // Remove null values
     }
+
 }
