@@ -15,8 +15,8 @@ function showRoomsType(type) {
 }
 </script>
 
-<div id="dialogRoomSelect" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
+<div id="dialogRoomSelect" class="modal fade d-flex align-items-center justify-content-center" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             
            <div class="modal-body">
@@ -64,10 +64,6 @@ function showRoomsType(type) {
                 </div>
              </div>
            
-
-            <div class="modal-footer">
-                <!-- <button type="button" class="btn btn-default" data-dismiss="modal">@lang('Cancel')</button> -->
-            </div>
         </div>
     </div>
 </div>
