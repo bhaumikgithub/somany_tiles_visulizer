@@ -159,6 +159,8 @@ function allLoadCompleted() {
     // $("#topPanelmainpanel").css('visibility', 'visible');
     $(".share-div").css('visibility', 'visible');
     // $(".room-canvas").css('visibility', 'visible');
+    
+    
 
     showProductContent();
    
@@ -199,6 +201,7 @@ $(window).on('load', function () {
         $('#topPanelHideBtn').hide();
         $('.partOfProductTabContent').css('display', 'none').css('!important', ''); 
         
+        
  
     }
 
@@ -213,6 +216,8 @@ $(window).on('load', function () {
     if (isroomcanvas()) {
         $(".cmn-room-btn").css('visibility', 'hidden');
         $(".share-div").css('visibility', 'hidden');
+       
+      
 
         AdjustCanvasWidthHeight();
 
@@ -222,29 +227,31 @@ $(window).on('load', function () {
    
     // checkCanvasVisibility();
 
-    interval = setInterval(function () {
+    let isFirstLoad = true; // Flag to check if it's the first load
 
-        if ($("#sourceLoadProgressBarContainer").length > 0) {
-        }
-        else {
-            //alert($("#sourceLoadProgressBarContainer").length);
-            clearInterval(interval);
-            AdjustCanvasWidthHeight();
+interval = setInterval(function () {
+    if (isFirstLoad) {
+        $(".top-panel-product").hide(); // Hide only on the first load
+        isFirstLoad = false; // Set the flag to false after hiding
+    }
 
-            setTimeout(function () {
-                allLoadCompleted();
-                $(".partOfProductTabContent-wrap").show(); // Show the content wrapper
-                $(".back-btn").css({ left: newLeft });
-                $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
-                // $(".share-btn-img").css("right", layoutMode === "PORTRAIT" ? "18px" : newRight + 5);
-                $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight + 21);
-                share_button();
+    if ($("#sourceLoadProgressBarContainer").length > 0) {
+        // Do nothing if the progress bar exists
+    } else {
+        clearInterval(interval);
+        AdjustCanvasWidthHeight();
 
+        setTimeout(function () {
+            allLoadCompleted();
+            $(".partOfProductTabContent-wrap").show();
+            $(".back-btn").css({ left: newLeft });
+            $(".cn-btn").css("right", layoutMode === "PORTRAIT" ? "0px" : newRight);
+            $(".share-div").css("right", layoutMode === "PORTRAIT" ? "26px" : newRight + 21);
+            share_button();
+        }, 19);
+    }
+}, 500);
 
-
-            }, 19);
-        }
-    }, 500);
 
     $("body").on("click", '.filter-click', function () {
         alert('hello from binded function call');
@@ -263,6 +270,7 @@ $(window).on('resize', function () {
     
         $('#topPanelHideBtn').hide();
         $('.partOfProductTabContent').css('display', 'none').css('!important', ''); 
+       
         
  
     }
@@ -823,6 +831,7 @@ function adjustPanelPosition() {
 $('#roomCanvas').on('click', function () {
     if ($(window).width() < 991) {
         $('#topPanelHideBtn').show();
+        $(".top-panel-product").show();
         adjustPanelPosition();
     }
 });
@@ -842,7 +851,6 @@ document.getElementById("topPanelGroutSizeRange").addEventListener("input", func
         loader.style.display = "none"; // Hide the loader
     }
 });
-
 
 
 

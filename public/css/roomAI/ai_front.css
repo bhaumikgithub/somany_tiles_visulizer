@@ -322,7 +322,10 @@ body {
     .body-selection-item-image {
         height: 250px !important;
     }
-
+    
+    #loadingMessage{
+        text-align: center;
+    }
 
 }
 
@@ -1810,6 +1813,13 @@ input[type=checkbox] {
     width: 33.33%;
     text-align: center;
 }
+
+.modal-body {
+    max-height: 90vh; /* Restrict modal content height */
+    overflow-y: auto; /* Enable vertical scroll inside the modal */
+}
+
+
 /* select data pannel css end */
 
 @media (max-width:1200px)  {
@@ -2046,9 +2056,7 @@ input[type=checkbox] {
     .room-canvas-container{
         height: auto !important;
     }
-    #topPanel{
-        display: none;
-    }
+   
 }
 @media (max-width:991px) and (orientation:landscape){
     .showOnMobile{
