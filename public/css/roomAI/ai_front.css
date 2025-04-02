@@ -322,7 +322,10 @@ body {
     .body-selection-item-image {
         height: 250px !important;
     }
-
+    
+    #loadingMessage{
+        text-align: center;
+    }
 
 }
 
@@ -1815,6 +1818,7 @@ input[type=checkbox] {
     max-height: 90vh; /* Restrict modal content height */
     overflow-y: auto; /* Enable vertical scroll inside the modal */
 }
+
 
 /* select data pannel css end */
 

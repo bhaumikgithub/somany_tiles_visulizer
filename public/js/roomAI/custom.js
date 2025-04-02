@@ -824,14 +824,17 @@ function adjustPanelPosition() {
     });
 
     $('#topPanelTilesListBox').css({'display':'block'});
+    
 }
 
 
 // Trigger only if the screen width is less than 768px (mobile)
 $('#roomCanvas').on('click', function () {
+    
     if ($(window).width() < 991) {
         $('#topPanelHideBtn').show();
         $(".top-panel-product").show();
+     
         adjustPanelPosition();
     }
 });
@@ -841,6 +844,11 @@ $(window).on('resize', function () {
     if ($(window).width() < 991) {
         adjustPanelPosition();
     }
+});
+
+$('#roomCanvas').on('click', function () {
+
+
 });
 
 /*** Hide loader when grout slider is use */
