@@ -762,51 +762,106 @@ function showAllFilters(p_show) {
 */
 
 
+// Function to check for mobile or portrait mode
+function isMobileOrPortrait() {
+    return $(window).width() < 991 || window.matchMedia("(orientation: portrait)").matches;
+    
+}
+
+function isLandscape() {
+    return window.innerWidth > window.innerHeight;
+}
+
 $('#topPanelHideIcon').on('click', function () {
-    if  ($(window).width() < 991) 
-    {
-    var $icon = $(this);
-    var $hideBtn = $('#topPanelHideBtn');
-    var $roomCanvasContainer = $('.room-canvas-container');
-    var $mainPanel = $('.top-panel-product');
+    if (isMobileOrPortrait()) {
+        var $icon = $(this);
+        var $hideBtn = $('#topPanelHideBtn');
+        var $roomCanvasContainer = $('.room-canvas-container');
+        var $mainPanel = $('.top-panel-product');
 
-    var containerBottom = $roomCanvasContainer.offset().top + $roomCanvasContainer.outerHeight();
-    var windowHeight = $(window).height();
-    var topPosition = windowHeight - 30; // New top position for reset
+        var containerBottom = $roomCanvasContainer.offset().top + $roomCanvasContainer.outerHeight();
+        var windowHeight = $(window).height();
+        var topPosition = windowHeight - 30; // New top position for reset
 
-    if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-left')) {
-       
-        // Move the button and panel below the room-canvas-container
-      
-        $hideBtn.css({
-            'top': (containerBottom - 60) + 'px'
-        });
+        if ($(window).width() < 767 && isLandscape()) {
+            if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-left')) {
+                $hideBtn.css({ 'top': 20 + 'px' });
+                $mainPanel.css({
+                   'position': 'fixed',        // Fixed position relative to the viewport
+                   'top': '0px',              // 10px from the top
+                   'height': (windowHeight + 20 ) + 'px', // Full viewport height minus 20px for spacing
+                   'width': '350px',           // Set width to 300px
+                   'right': '-350px' ,
+                   'border-top-right-radius': '0px'            // Shift the panel 300px to the left (off-screen)
+               });
+               $('#topPanelTilesListBox').css({ 'display': 'block' });
 
-        $mainPanel.css({
-            'top': containerBottom  + 'px',
-            'height': (windowHeight - containerBottom) + 'px'
-        });
 
-        $('#topPanelTilesListBox').css({'display':'block'});
-    } 
-    else if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-right')) {
-       
-        // Reset the button and panel to the top of the screen minus 30px
-        $hideBtn.css({
-            'top': (topPosition - 60) + 'px'
-        }); 
+            }
+            else if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-right')) {
 
-        $mainPanel.css({
-            'top': (topPosition - 60) + 'px',
-            'height': (windowHeight) + 'px'
-        });
+                $hideBtn.css({ 'top': 20 + 'px' });
+                $mainPanel.css({
+                   'position': 'fixed',        // Fixed position relative to the viewport
+                   'top': '0px',              // 10px from the top
+                   'height': (windowHeight + 20) + 'px', // Full viewport height minus 20px for spacing
+                   'width': '300px',           // Set width to 300px
+                   'right': '0px' ,
+                   'border-top-right-radius': '0px'         // Shift the panel 300px to the left (off-screen)
+               });
+               $('#topPanelTilesListBox').css({ 'display': 'block' });
 
-      $('.partOfProductTabContent').hide();
+            }
+
+           
+        }
+
+        else{
+
+        if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-left')) {
+            // Move the button and panel below the room-canvas-container
+            $hideBtn.css({ 'top': (containerBottom - 60) + 'px' });
+            $mainPanel.css({
+                'top': containerBottom + 'px',
+                'height': (windowHeight - containerBottom) + 'px'
+            });
+            $('#topPanelTilesListBox').css({ 'display': 'block' });
+        } 
+        else if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-right')) {
+            // Reset the button and panel to the top of the screen minus 30px
+            $hideBtn.css({ 'top': (topPosition - 60) + 'px' });
+            $mainPanel.css({
+                'top': (topPosition - 60) + 'px',
+                'height': windowHeight + 'px'
+            });
+            $('.partOfProductTabContent').hide();
+        }
     }
 }
+
+ 
 });
+
+function landscapadjustPanelPosition() {
+    var $hideBtn = $('#topPanelHideBtn');
+    var $roomCanvasContainer = $('.room-canvas-container');
+    var $mainPanel = $('.top-panel-product');
+    var containerBottom = $roomCanvasContainer.offset().top + $roomCanvasContainer.outerHeight();
+    var windowHeight = $(window).height();
+     $hideBtn.css({ 'top': 20 + 'px' });
+     $mainPanel.css({
+        'position': 'fixed',        // Fixed position relative to the viewport
+        'top': '0px',              // 10px from the top
+        'height': (windowHeight ) + 'px', // Full viewport height minus 20px for spacing
+        'width': '350px',           // Set width to 300px
+        'right': '-350px' ,          // Shift the panel 300px to the left (off-screen)
+        'border-top-right-radius': '0px' 
+    });
+    $('#topPanelTilesListBox').css({ 'display': 'block' });
+
+
+}
 function adjustPanelPosition() {
-   
     var $hideBtn = $('#topPanelHideBtn');
     var $roomCanvasContainer = $('.room-canvas-container');
     var $mainPanel = $('.top-panel-product');
@@ -814,31 +869,42 @@ function adjustPanelPosition() {
     var containerBottom = $roomCanvasContainer.offset().top + $roomCanvasContainer.outerHeight();
     var windowHeight = $(window).height();
 
-    $hideBtn.css({
-        'top': (containerBottom - 60) + 'px'
-    });
-
+    $hideBtn.css({ 'top': (containerBottom - 60) + 'px' });
     $mainPanel.css({
         'top': containerBottom + 'px',
         'height': (windowHeight - containerBottom) + 'px'
     });
-
-    $('#topPanelTilesListBox').css({'display':'block'});
+    $('#topPanelTilesListBox').css({ 'display': 'block' });
 }
 
-
-// Trigger only if the screen width is less than 768px (mobile)
+// Trigger only if the screen width is less than 991px or in portrait mode
 $('#roomCanvas').on('click', function () {
-    if ($(window).width() < 991) {
+    if (isMobileOrPortrait()) {
         $('#topPanelHideBtn').show();
         $(".top-panel-product").show();
+        adjustPanelPosition();
+        
+        if ($(window).width() < 767 && isLandscape()) {
+
+            $('#topPanelHideBtn').show();
+            $(".top-panel-product").show();
+            landscapadjustPanelPosition();
+          
+
+        }
+    }
+});
+
+// Handle window resize for mobile and portrait transitions
+$(window).on('resize', function () {
+    if (isMobileOrPortrait()) {
         adjustPanelPosition();
     }
 });
 
-// Also handle window resize in case the user switches between mobile and desktop views
-$(window).on('resize', function () {
-    if ($(window).width() < 991) {
+// Handle orientation change (for mobile portrait/landscape switches)
+$(window).on('orientationchange', function () {
+    if (isMobileOrPortrait()) {
         adjustPanelPosition();
     }
 });
