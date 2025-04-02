@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Normalizer;
 
 class ProcessTilesJob implements ShouldQueue
 {
@@ -105,69 +106,81 @@ class ProcessTilesJob implements ShouldQueue
                 foreach ($surfaces as $surface) {
                     $product['surface'] = trim($surface);
 
+                    $normalizedVariantName = iconv('UTF-8', 'UTF-8//IGNORE', $variantName);
+                    $normalizedVariantName = mb_convert_encoding($normalizedVariantName, 'UTF-8', 'UTF-8');
+
+                    Log::info('Fixed Variant Name: ' . $normalizedVariantName);
+                    Log::info('HEX After Fix: ' . bin2hex($normalizedVariantName));
+
                     $existingTile = DB::table('tiles')
                         ->where('sku', $sku)
                         ->where('surface', $surface)
-                        ->where('name', $variantName)
+                        ->whereRaw("BINARY name = ?", [$normalizedVariantName])
                         ->first();
 
                     if ($existingTile) {
-                        $updateData = [];
-                        // Determine which column to update
-                        $mappedColumn = $column; // 'real_file', 'image_variation_1', etc.
-                        $existingImage = $existingTile->$mappedColumn;
-
-                        if ($existingImage !== $imageURL) {
-                            // Fetch new image only if different
-                            $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
-                            $updateData[$mappedColumn] = $imageURL;
-
-                            // Store the file name in the 'file' column
-                            $updateData['file'] = $imageFileName;
-
-                            // Set all other image variation columns to NULL
-                            $updateData['real_file'] = ($mappedColumn === 'real_file') ? $imageURL : null;
-                            $updateData['image_variation_1'] = ($mappedColumn === 'image_variation_1') ? $imageURL : null;
-                            $updateData['image_variation_2'] = ($mappedColumn === 'image_variation_2') ? $imageURL : null;
-                            $updateData['image_variation_3'] = ($mappedColumn === 'image_variation_3') ? $imageURL : null;
-                            $updateData['image_variation_4'] = ($mappedColumn === 'image_variation_4') ? $imageURL : null;
-
-                            // Update the record
-                            DB::table('tiles')->where('id', $existingTile->id)->update($updateData);
-
-                            $updatedRecords[] = [
-                                'id' => $existingTile->id,
-                                'name' => $existingTile->name,
-                                'sku' => $sku,
-                                'surface' => $surface
-                            ];
-
-                            Log::info("Updated Tile ID: {$existingTile->id} - Column: $mappedColumn - SKU: $sku");
-                        }
+                        Log::info("✅ Tile Found: " . $existingTile->name);
                     } else {
-                        $product['product_name'] = $variantName;
-                        $product['rotoPrintSetName'] = $rotoPrintSetName;
-
-                        // Store unique image for each variation
-                        $product['file'] = $imageFileName;
-                        $product[$column] = $imageURL;
-
-                        $data = $this->prepareTileData($product, $creation_time, $imageFileName);
-                        $data['created_at'] = now();
-                        $data['updated_at'] = now();
-                        $data['api_json'] = json_encode($aTile);
-
-                        DB::table('tiles')->insert($data);
-                        Log::info("Inserted: {$variantName} (SKU: {$sku}, Surface: {$surface})");
-
-                        $insertedRecords[] = [
-                            'name' => $variantName,
-                            'sku' => $sku,
-                            'surface' => $surface
-                        ];
-
-                        $insertedCount++;
+                        Log::warning("❌ Tile Not Found: " . $normalizedVariantName);
                     }
+
+                    // if ($existingTile) {
+                    //     $updateData = [];
+                    //     // Determine which column to update
+                    //     $mappedColumn = $column; // 'real_file', 'image_variation_1', etc.
+                    //     $existingImage = $existingTile->$mappedColumn;
+
+                    //     if ($existingImage !== $imageURL) {
+                    //         // Fetch new image only if different
+                    //         $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
+                    //         $updateData[$mappedColumn] = $imageURL;
+
+                    //         // Store the file name in the 'file' column
+                    //         $updateData['file'] = $imageFileName;
+
+                    //         // Set all other image variation columns to NULL
+                    //         $updateData['real_file'] = ($mappedColumn === 'real_file') ? $imageURL : null;
+                    //         $updateData['image_variation_1'] = ($mappedColumn === 'image_variation_1') ? $imageURL : null;
+                    //         $updateData['image_variation_2'] = ($mappedColumn === 'image_variation_2') ? $imageURL : null;
+                    //         $updateData['image_variation_3'] = ($mappedColumn === 'image_variation_3') ? $imageURL : null;
+                    //         $updateData['image_variation_4'] = ($mappedColumn === 'image_variation_4') ? $imageURL : null;
+
+                    //         // Update the record
+                    //         DB::table('tiles')->where('id', $existingTile->id)->update($updateData);
+
+                    //         $updatedRecords[] = [
+                    //             'id' => $existingTile->id,
+                    //             'name' => $existingTile->name,
+                    //             'sku' => $sku,
+                    //             'surface' => $surface
+                    //         ];
+
+                    //         Log::info("Updated Tile ID: {$existingTile->id} - Column: $mappedColumn - SKU: $sku");
+                    //     }
+                    // } else {
+                    //     $product['product_name'] = $variantName;
+                    //     $product['rotoPrintSetName'] = $rotoPrintSetName;
+
+                    //     // Store unique image for each variation
+                    //     $product['file'] = $imageFileName;
+                    //     $product[$column] = $imageURL;
+
+                    //     $data = $this->prepareTileData($product, $creation_time, $imageFileName);
+                    //     $data['created_at'] = now();
+                    //     $data['updated_at'] = now();
+                    //     $data['api_json'] = json_encode($aTile);
+
+                    //     DB::table('tiles')->insert($data);
+                    //     Log::info("Inserted: {$variantName} (SKU: {$sku}, Surface: {$surface})");
+
+                    //     $insertedRecords[] = [
+                    //         'name' => $variantName,
+                    //         'sku' => $sku,
+                    //         'surface' => $surface
+                    //     ];
+
+                    //     $insertedCount++;
+                    // }
                 }
             }
             unset($imageCache[$imageURL]); // Free memory
@@ -176,21 +189,21 @@ class ProcessTilesJob implements ShouldQueue
         }
 
 
-        $this->softDeleteMissingTiles($skippedRecords , $deletedRecords);
+        // $this->softDeleteMissingTiles($skippedRecords , $deletedRecords);
 
-        DB::table('companies')->update([
-            'last_fetch_date_from_api' => $this->endDate,
-            'fetch_products_count' => $this->totalCount,
-            'updated_at' => now(),
-        ]);
+        // DB::table('companies')->update([
+        //     'last_fetch_date_from_api' => $this->endDate,
+        //     'fetch_products_count' => $this->totalCount,
+        //     'updated_at' => now(),
+        // ]);
 
-        $this->updateProcessingCache($processedCount, $insertedCount, $updatedCount, $skippedCount, "{$processedCount} / {$this->totalCount} records processed", $skippedRecords);
+        // $this->updateProcessingCache($processedCount, $insertedCount, $updatedCount, $skippedCount, "{$processedCount} / {$this->totalCount} records processed", $skippedRecords);
 
-        Mail::to('kinjalupadhyay.tps@gmail.com')
-            ->send(new TileProcessingReport($insertedRecords, $updatedRecords, $deletedRecords,$skippedRecords));
+        // Mail::to('kinjalupadhyay.tps@gmail.com')
+        //     ->send(new TileProcessingReport($insertedRecords, $updatedRecords, $deletedRecords,$skippedRecords));
 
-        unset($insertedRecords, $updatedRecords, $deletedRecords);
-        gc_collect_cycles();
+        // unset($insertedRecords, $updatedRecords, $deletedRecords);
+        // gc_collect_cycles();
         Log::info('Tile processing completed successfully.');
     }
 
@@ -280,7 +293,7 @@ class ProcessTilesJob implements ShouldQueue
             ->value('file');
 
         if ($existingFile) {
-            Log::info("Found Existing File for SKU: {$sku} => {$existingFile}");
+            //Log::info("Found Existing File for SKU: {$sku} => {$existingFile}");
             $imageCache[$sku][$imageURL] = $existingFile;
             return $existingFile;
         }
