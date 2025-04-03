@@ -30,7 +30,8 @@ class DispatchInsertTilesJob extends Command
         $endDate = now()->format('Y-m-d'); // Dynamically get today's date
 
         // Dispatch the job
-        InsertTilesFromAPI::dispatch($startDate, $endDate);
+        //InsertTilesFromAPI::dispatch($startDate, $endDate);
+        dispatch_sync(new InsertTilesFromAPI($startDate, $endDate));
 
         $this->info('Job dispatched successfully!');
     }
