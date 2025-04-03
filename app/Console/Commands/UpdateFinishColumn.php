@@ -43,7 +43,7 @@ class UpdateFinishColumn extends Command
 
         $queryParams = http_build_query([
             's' => '2000-01-01',
-            'e' => '2025-02-18',
+            'e' => now()->toDateString(),
         ]);
 
         $curl = curl_init();
@@ -113,7 +113,7 @@ class UpdateFinishColumn extends Command
                 unset($expProps['finish']);
 
                 // Add new properties
-                $expProps['product code'] = $this->mapFinishType($product['design_finish']);
+                $expProps['product code'] = $this->mapFinishType(trim($product['design_finish']));
                 $expProps['finishes'] = $newFinish;
                 $expProps['category'] = $this->mapCategoryType(strtolower($product['brand_name'])) ?? null;
 
@@ -136,16 +136,17 @@ class UpdateFinishColumn extends Command
                     $existing->finish !== $newFinish ||
                     ($expProps['finishes'] ?? null) !== $newFinish
                 ) {
+                    $finish = $this->mapFinishType(trim($product['design_finish']));
                     // Update record
                     \DB::table('tiles')->where('sku', $product['sku'])->update([
-                        'finish' => $this->mapFinishType($product['design_finish']), // ✅ Apply Mapping
+                        'finish' => $finish, // ✅ Apply Mapping
                         'design_finish' => $newFinish,
                         'expProps' => json_encode($expProps),
                         'brand' => $product['brand_name'] ?? null,
                     ]);
 
                     $updatedCount++;
-                    \Log::info("Updated SKU: {$product['sku']} | Finish: $newFinish");
+                    \Log::info("Updated SKU: {$product['sku']} | API Finish: $newFinish | Finish: $finish");
                 } else {
                     $unchangedCount++;
                 }
@@ -153,34 +154,6 @@ class UpdateFinishColumn extends Command
         }
 
         return ['updatedCount' => $updatedCount, 'unchangedCount' => $unchangedCount];
-    }
-
-
-    protected function mapFinishType($designFinish): string
-    {
-        $mapping = [
-            'LUCIDO' => 'glossy',
-            'FULL POLISHED' => 'glossy',
-            'HIGH GLOSS FP' => 'glossy',
-            'NANO' => 'glossy',
-            'NANO FP' => 'glossy',
-            'RUSTIC' => 'matt',
-            'RUSTIC CARVING' => 'matt',
-            'STONE' => 'matt',
-            'WOOD' => 'glossy',
-            'MATT' => 'matt',
-            'GLOSSY' => 'glossy',
-            'DAZZLE' => 'matt',
-            'Metallic'=>'matt',
-            'SUGAR HOME' => 'matt',
-            'SATIN MATT' => 'matt',
-            'SEMI GLOSSY' => 'matt',
-            'MATT ENGRAVE' => 'matt',
-            'PRM FULL POLISHED' => 'glossy',
-            'ROTTO' => 'matt',
-            'Lapato' => 'matt',
-        ];
-        return $mapping[$designFinish] ?? $designFinish; // Default to original value if not in mapping
     }
 
     protected function loginAPI()
@@ -227,23 +200,5 @@ class UpdateFinishColumn extends Command
         // Get the value of MY_CUSTOM_VAR from the .env file
         $customVar = config('app.curl'); // 'default_value' is the fallback in case MY_CUSTOM_VAR is not set
         return !(($customVar === "localhost"));
-    }
-
-    protected function mapCategoryType($brand_name): string
-    {
-        $mapping = [
-            'coverstone' => 'Large Format Slab - Coverstone',
-            'regalia collection' => 'Large Format Tiles - Regalia Collection',
-            'porto collection' => 'Large Format Tiles - Porto Collection',
-            'sedimento collection' => 'Large Format Tiles - Sedimento Collection',
-            'colorato collection' => 'Large Format Tiles - Colorato Collection',
-            'ceramica' => 'Ceramic - Ceramica',
-            'duragres' => 'Glazed Vitrified Tiles - Duragres',
-            'vitro' => 'Polished Vitrified Tiles - Vitro',
-            'durastone' => 'Heavy Duty Vitrified Tiles - Durastone',
-            'italmarmi' => 'Subway Tiles - Italmarmi',
-        ];
-
-        return $mapping[$brand_name] ?? $brand_name; // Default to original value if not in mapping
     }
 }

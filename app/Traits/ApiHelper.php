@@ -186,7 +186,7 @@ trait ApiHelper
     {
         return array_filter([
             'thickness' => $product['thickness'] ?? null,
-            'product code' => $this->mapFinishType($product['design_finish']) ?? null,
+            'product code' => $this->mapFinishType(trim($product['design_finish'])) ?? null,
             'colour' => $product['color'] ?? null,
             'finishes' => $product['design_finish'] ?? null,
             'category' => $this->mapCategoryType(strtolower($product['brand_name'])) ?? null,
@@ -202,6 +202,13 @@ trait ApiHelper
      */
     private function mapFinishType($designFinish): string
     {
+        if (!$designFinish) {
+            return '';
+        }
+    
+        // Normalize input: trim spaces, convert to uppercase, and replace multiple spaces with a single space
+        $normalizedFinish = preg_replace('/\s+/', ' ', strtoupper(trim($designFinish)));
+    
         $mapping = [
             'LUCIDO' => 'glossy',
             'FULL POLISHED' => 'glossy',
@@ -222,9 +229,13 @@ trait ApiHelper
             'MATT ENGRAVE' => 'matt',
             'PRM FULL POLISHED' => 'glossy',
             'ROTTO' => 'matt',
-            'Lapato' => 'matt',
+            'LAPATO' => 'matt',
+            'POLISHED CARVING' => 'glossy',
+            'MATT CARVING' => 'matt'
         ];
-        return $mapping[$designFinish] ?? $designFinish; // Default to original value if not in mapping
+
+        // Return the mapped value or the normalized input if not found
+        return $mapping[$normalizedFinish] ?? strtolower($normalizedFinish);
     }
 
     private function mapCategoryType($brand_name): string
