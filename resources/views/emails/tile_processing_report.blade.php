@@ -154,7 +154,7 @@
             </tbody>
         </table>
     @else
-        <p>No tiles were deleted.</p>
+        <p>No tiles were Skipped or getting error .</p>
     @endif
 
 

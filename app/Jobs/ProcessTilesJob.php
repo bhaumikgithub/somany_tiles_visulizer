@@ -105,26 +105,30 @@ class ProcessTilesJob implements ShouldQueue
 
                 foreach ($surfaces as $surface) {
                     $product['surface'] = trim($surface);
+                    Log::info("Name : {$variantName}");
 
-                    $existingTile = DB::table('tiles')
-                        ->where('sku', $sku)->first();
+                    // Check if an entry exists with both SKU and Surface
+                    $existingTile = DB::table('tiles')->where('sku', $sku)
+                        ->where('surface', $surface)
+                        ->where('name', $variantName) // Ensure we match the variation name
+                        ->first();
 
                     if ($existingTile) {
-                        Log::info("Updating tile - SKU: $sku");
-                        Log::info("Updating surface - surface: $existingTile->surface");
-
+                        // Prepare update data
                         $updateData = $this->prepareTileData($product, $creation_time, $imageFileName, true);
                         $updateData['updated_at'] = now();
-                        DB::table('tiles')
-                            ->where('sku', $sku)
-                            ->update($updateData);
+
+                        DB::table('tiles')->where('sku', $sku)->where('surface', $surface)->update($updateData);
+            
 
                         $updatedRecords[] = [
                             'id' => $existingTile->id,
                             'name' => $existingTile->name,
                             'sku' => $sku,
-                            'surface' => $surface
+                            'surface' => $updateData['surface']
                         ];
+
+                        Log::info("Updated Tile ID: {$existingTile->id} | Surface: {$surface}");
                         
                         // $updateData = [];
                         // // Determine which column to update
@@ -155,8 +159,6 @@ class ProcessTilesJob implements ShouldQueue
                         //     'sku' => $sku,
                         //     'surface' => $surface
                         // ];
-
-                        Log::info("Updated Tile ID: {$existingTile->id}");
                     } else {
                         $product['product_name'] = $variantName;
                         $product['rotoPrintSetName'] = $rotoPrintSetName;
