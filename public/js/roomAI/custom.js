@@ -177,21 +177,6 @@ function isroomcanvas() {
     return $('#container').hasClass('room-canvas-container'); // Replace with actual check for fullscreen
 
 }
-// function checkCanvasVisibility() {
-//     var canvas = document.querySelector('.canvas-fullscreen canvas');
-//     var container = document.querySelector('.canvas-fullscreen');
-
-//     // Check
-//     if (canvas && container.contains(canvas) && canvas.offsetHeight > 0 && canvas.offsetWidth > 0) {
-
-//         $(".cmn-room-btn").css('visibility', 'visible');
-//         $(".share-div").css('visibility', 'visible');
-//     } else {
-
-//         $(".cmn-room-btn").css('visibility', 'hidden');
-//         $(".share-div").css('visibility', 'hidden');
-//     }
-// }
 
 
 $(window).on('load', function () {
@@ -200,9 +185,6 @@ $(window).on('load', function () {
     
         $('#topPanelHideBtn').hide();
         $('.partOfProductTabContent').css('display', 'none').css('!important', ''); 
-        
-        
- 
     }
 
  
@@ -215,7 +197,9 @@ $(window).on('load', function () {
 
     if (isroomcanvas()) {
         $(".cmn-room-btn").css('visibility', 'hidden');
+     
         $(".share-div").css('visibility', 'hidden');
+       
        
       
 
@@ -419,34 +403,47 @@ $('#btnGrout').on('click', function () {
     }, 0);
 });
 
+// Toggle Panel Visibility and Active Class
 function setPanelToggleStatus(p_panelIdorClass, p_buttonIdorClass) {
-    if ($(p_panelIdorClass).css('display') == 'none') {
+    var $panel = $(p_panelIdorClass);
+    var isVisible = $panel.is(':visible');
+
+    if (!isVisible) {
+        $panel.show();
         if (p_buttonIdorClass) {
-            $(p_panelIdorClass).show();
             $(p_buttonIdorClass).addClass('top-panel-button-active');
-            heightAdjust();
         }
+        heightAdjust();
+        return true;
+    } else {
+        $panel.hide();
+        if (p_buttonIdorClass) {
+            $(p_buttonIdorClass).removeClass('top-panel-button-active');
+        }
+        heightAdjust();
         return false;
     }
-    if (p_buttonIdorClass) {
-        $(p_panelIdorClass).hide();
-        $(p_buttonIdorClass).removeClass('top-panel-button-active');
-        heightAdjust();
-    }
-    return true;
 }
+// Function to adjust panel height
 function heightAdjust() {
-    setTimeout(function () {
-        if ($(".search-filter-panel-box").height() < 10) {
-            $(".search-filter-panel-box").hide();
-        }
-        else {
-            $(".search-filter-panel-box").show();
-        }
+    var $panel = $(".search-filter-panel-box");
+    if ($panel.length) {
+        setTimeout(function () {
+            if ($panel.is(':hidden')) {
+                $panel.show();
+            }
 
-        $(".search-filter-panel-box").animate({ "top": $('#topPanel').offset().top - $(".search-filter-panel-box").height() - 15 });
-    }, 10);
+            if ($panel.height() < 10) {
+                $panel.hide();
+            } else {
+                $panel.show();
+            }
 
+            $panel.animate({
+                "top": $('#topPanel').offset().top - $panel.height() - 15
+            }, 300); // Smooth animation
+        }, 100); // Ensure DOM readiness
+    }
 }
 
 function showHideTabs() {
@@ -878,7 +875,13 @@ function adjustPanelPosition() {
 }
 
 // Trigger only if the screen width is less than 991px or in portrait mode
+var isFirstClick = true;
 $('#roomCanvas').on('click', function () {
+    if (isFirstClick) {
+        // Remove the active class only on the first click
+        $('#searchIconToggle, #sliderIconToggle').removeClass('top-panel-button-active');
+        isFirstClick = false; // Prevent further removals
+    }
     if (isMobileOrPortrait()) {
         $('#topPanelHideBtn').show();
         $(".top-panel-product").show();
@@ -917,6 +920,4 @@ document.getElementById("topPanelGroutSizeRange").addEventListener("input", func
         loader.style.display = "none"; // Hide the loader
     }
 });
-
-
 
