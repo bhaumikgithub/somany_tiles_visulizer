@@ -31,8 +31,7 @@ class DispatchInsertTilesJob extends Command
         $startDate = '2000-01-01'; // Set your start date
         $endDate = now()->toDateString(); // Set end date to today's date
 
-        //InsertTilesFromAPI::dispatch($startDate, $endDate);
-        dispatch_sync(new InsertTilesFromAPI($startDate, $endDate));
+        InsertTilesFromAPI::dispatch($startDate, $endDate);
 
         $this->info('Job dispatched successfully!');
     }
