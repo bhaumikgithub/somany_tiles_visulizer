@@ -177,21 +177,6 @@ function isroomcanvas() {
     return $('#container').hasClass('room-canvas-container'); // Replace with actual check for fullscreen
 
 }
-// function checkCanvasVisibility() {
-//     var canvas = document.querySelector('.canvas-fullscreen canvas');
-//     var container = document.querySelector('.canvas-fullscreen');
-
-//     // Check
-//     if (canvas && container.contains(canvas) && canvas.offsetHeight > 0 && canvas.offsetWidth > 0) {
-
-//         $(".cmn-room-btn").css('visibility', 'visible');
-//         $(".share-div").css('visibility', 'visible');
-//     } else {
-
-//         $(".cmn-room-btn").css('visibility', 'hidden');
-//         $(".share-div").css('visibility', 'hidden');
-//     }
-// }
 
 
 $(window).on('load', function () {
@@ -200,9 +185,6 @@ $(window).on('load', function () {
     
         $('#topPanelHideBtn').hide();
         $('.partOfProductTabContent').css('display', 'none').css('!important', ''); 
-        
-        
- 
     }
 
  
@@ -215,7 +197,9 @@ $(window).on('load', function () {
 
     if (isroomcanvas()) {
         $(".cmn-room-btn").css('visibility', 'hidden');
+     
         $(".share-div").css('visibility', 'hidden');
+       
        
       
 
@@ -419,36 +403,40 @@ $('#btnGrout').on('click', function () {
     }, 0);
 });
 
+// Function to toggle panel visibility and button active class
 function setPanelToggleStatus(p_panelIdorClass, p_buttonIdorClass) {
-    if ($(p_panelIdorClass).css('display') == 'none') {
+    if ($(p_panelIdorClass).css('display') === 'none') {
+        $(p_panelIdorClass).show();
         if (p_buttonIdorClass) {
-            $(p_panelIdorClass).show();
             $(p_buttonIdorClass).addClass('top-panel-button-active');
-            heightAdjust();
         }
+        heightAdjust();
+        return true;
+    } else {
+        $(p_panelIdorClass).hide();
+        if (p_buttonIdorClass) {
+            $(p_buttonIdorClass).removeClass('top-panel-button-active');
+        }
+        heightAdjust();
         return false;
     }
-    if (p_buttonIdorClass) {
-        $(p_panelIdorClass).hide();
-        $(p_buttonIdorClass).removeClass('top-panel-button-active');
-        heightAdjust();
-    }
-    return true;
 }
+
+// Function to adjust panel height
 function heightAdjust() {
     setTimeout(function () {
-        if ($(".search-filter-panel-box").height() < 10) {
-            $(".search-filter-panel-box").hide();
-        }
-        else {
-            $(".search-filter-panel-box").show();
+        var $panel = $(".search-filter-panel-box");
+        if ($panel.height() < 10) {
+            $panel.hide();
+        } else {
+            $panel.show();
         }
 
-        $(".search-filter-panel-box").animate({ "top": $('#topPanel').offset().top - $(".search-filter-panel-box").height() - 15 });
+        $panel.animate({
+            "top": $('#topPanel').offset().top - $panel.height() - 15
+        });
     }, 10);
-
 }
-
 function showHideTabs() {
 
     //IF responsive and search icon pressed then
@@ -772,75 +760,7 @@ function isLandscape() {
     return window.innerWidth > window.innerHeight;
 }
 
-$('#topPanelHideIcon').on('click', function () {
-    if (isMobileOrPortrait()) {
-        var $icon = $(this);
-        var $hideBtn = $('#topPanelHideBtn');
-        var $roomCanvasContainer = $('.room-canvas-container');
-        var $mainPanel = $('.top-panel-product');
 
-        var containerBottom = $roomCanvasContainer.offset().top + $roomCanvasContainer.outerHeight();
-        var windowHeight = $(window).height();
-        var topPosition = windowHeight - 30; // New top position for reset
-
-        if ($(window).width() < 767 && isLandscape()) {
-            if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-left')) {
-                $hideBtn.css({ 'top': 20 + 'px' });
-                $mainPanel.css({
-                   'position': 'fixed',        // Fixed position relative to the viewport
-                   'top': '0px',              // 10px from the top
-                   'height': (windowHeight + 20 ) + 'px', // Full viewport height minus 20px for spacing
-                   'width': '350px',           // Set width to 300px
-                   'right': '-350px' ,
-                   'border-top-right-radius': '0px'            // Shift the panel 300px to the left (off-screen)
-               });
-               $('#topPanelTilesListBox').css({ 'display': 'block' });
-
-
-            }
-            else if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-right')) {
-
-                $hideBtn.css({ 'top': 20 + 'px' });
-                $mainPanel.css({
-                   'position': 'fixed',        // Fixed position relative to the viewport
-                   'top': '0px',              // 10px from the top
-                   'height': (windowHeight + 20) + 'px', // Full viewport height minus 20px for spacing
-                   'width': '300px',           // Set width to 300px
-                   'right': '0px' ,
-                   'border-top-right-radius': '0px'         // Shift the panel 300px to the left (off-screen)
-               });
-               $('#topPanelTilesListBox').css({ 'display': 'block' });
-
-            }
-
-           
-        }
-
-        else{
-
-        if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-left')) {
-            // Move the button and panel below the room-canvas-container
-            $hideBtn.css({ 'top': (containerBottom - 60) + 'px' });
-            $mainPanel.css({
-                'top': containerBottom + 'px',
-                'height': (windowHeight - containerBottom) + 'px'
-            });
-            $('#topPanelTilesListBox').css({ 'display': 'block' });
-        } 
-        else if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-right')) {
-            // Reset the button and panel to the top of the screen minus 30px
-            $hideBtn.css({ 'top': (topPosition - 60) + 'px' });
-            $mainPanel.css({
-                'top': (topPosition - 60) + 'px',
-                'height': windowHeight + 'px'
-            });
-            $('.partOfProductTabContent').hide();
-        }
-    }
-}
-
- 
-});
 
 function landscapadjustPanelPosition() {
     var $hideBtn = $('#topPanelHideBtn');
@@ -878,7 +798,13 @@ function adjustPanelPosition() {
 }
 
 // Trigger only if the screen width is less than 991px or in portrait mode
+var isFirstClick = true;
 $('#roomCanvas').on('click', function () {
+    if (isFirstClick) {
+        // Remove the active class only on the first click
+        $('#searchIconToggle, #sliderIconToggle').removeClass('top-panel-button-active');
+        isFirstClick = false; // Prevent further removals
+    }
     if (isMobileOrPortrait()) {
         $('#topPanelHideBtn').show();
         $(".top-panel-product").show();
@@ -917,6 +843,4 @@ document.getElementById("topPanelGroutSizeRange").addEventListener("input", func
         loader.style.display = "none"; // Hide the loader
     }
 });
-
-
 
