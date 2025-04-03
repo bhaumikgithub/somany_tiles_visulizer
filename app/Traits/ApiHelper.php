@@ -88,44 +88,44 @@ trait ApiHelper
     /**
      * @throws Exception
      */
-    protected function prepareTileData(array $product, $creation_time , $imageFileName): ?array
+    protected function prepareTileData(array $product, $creation_time , $imageFileName, $isUpdate = false): ?array
     {
         // Track missing fields
         $missingFields = [];
 
-        // Check if 'design_finish' key is missing and log a warning
+        // Check if 'design_finish' key is missing
         if (!isset($product['design_finish'])) {
             \Log::warning("Missing key 'design_finish' for SKU: " . ($product['sku'] ?? 'Unknown'));
             $missingFields[] = "design_finish";
-            $product['design_finish'] = "GLOSSY";
+            $product['design_finish'] = "GLOSSY"; // Set default value
         }
 
-        if( !isset($product['brand_name'])){
+        if (!isset($product['brand_name'])) {
             \Log::warning("Missing key 'brand_name' for SKU: " . ($product['sku'] ?? 'Unknown'));
             $missingFields[] = "brand_name";
             $product['brand_name'] = "";
         }
 
-        //If one or both fields are missing, return null and set reason dynamically
-         if (!empty($missingFields)) {
-             return [
-                 'skip' => true, // Special flag to signal skipping in updateOrInsertMultiple()
-                 'reason' => "Missing required field(s): " . implode(" & ", $missingFields)
-             ];
-         }
+        // If inserting a new tile and required fields are missing, skip the insert
+        if (!$isUpdate && !empty($missingFields)) {
+            return [
+                'skip' => true, // Special flag to signal skipping insert
+                'reason' => "Missing required field(s): " . implode(" & ", $missingFields)
+            ];
+        }
 
-        $surface = strtolower($product['surface']);
+        $surface = strtolower($product['surface'] ?? '');
 
-        //Prepare an array but remove null values
+        // Prepare an array but remove null values
         $expPropsArray = $this->extraProps($product);
 
-        return [
+        $tileData = [
             'name' => $product['product_name'] ?? null,
-            'shape' => $this->getShapeFromWidthHeight($product['size_wt'],$product['size_ht']),
-            'width' => intval($product['size_wt']) ?? 0,
-            'height' => intval($product['size_ht']) ?? 0,
+            'shape' => $this->getShapeFromWidthHeight($product['size_wt'], $product['size_ht']),
+            'width' => intval($product['size_wt'] ?? 0),
+            'height' => intval($product['size_ht'] ?? 0),
             'size' => $product['size'] ?? null,
-            'surface' => $surface ?? null,
+            'surface' => $surface,
             'finish' => $this->mapFinishType($product['design_finish']),
             'design_finish' => $product['design_finish'] ?? null,
             'file' => $imageFileName,
@@ -133,11 +133,11 @@ trait ApiHelper
             'image_variation_1' => $product['image_variation_1'] ?? null,
             'image_variation_2' => $product['image_variation_2'] ?? null,
             'image_variation_3' => $product['image_variation_3'] ?? null,
-            'grout' => ( $surface === "wall" || $surface === "floor" ) ? 1 : null,
+            'grout' => (in_array($surface, ["wall", "floor"])) ? 1 : null,
             'url' => $product['url'] ?? null,
             'price' => $product['price'] ?? null,
-            'expProps' =>  json_encode($expPropsArray),
-            'rotoPrintSetName' => $product['rotoPrintSetName'],
+            'expProps' => json_encode($expPropsArray),
+            'rotoPrintSetName' => $product['rotoPrintSetName'] ?? null,
             'access_level' => $product['access_level'] ?? null,
             'sku' => $product['sku'] ?? null,
             'application_room_area' => $product['application_room_area'] ?? null,
@@ -161,7 +161,15 @@ trait ApiHelper
             'deletion' => $product['deletion'] ?? null,
             'from_api' => '1'
         ];
+
+        // For updates, remove null values (only update changed values)
+        if ($isUpdate) {
+            return array_filter($tileData, fn($value) => !is_null($value));
+        }
+
+        return $tileData;
     }
+
 
     /**
      * @param $width
