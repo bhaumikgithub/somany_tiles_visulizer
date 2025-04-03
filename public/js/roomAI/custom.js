@@ -403,20 +403,17 @@ $('#btnGrout').on('click', function () {
     }, 0);
 });
 
-// Toggle Panel Visibility and Active Class
+// Function to toggle panel visibility and button active class
 function setPanelToggleStatus(p_panelIdorClass, p_buttonIdorClass) {
-    var $panel = $(p_panelIdorClass);
-    var isVisible = $panel.is(':visible');
-
-    if (!isVisible) {
-        $panel.show();
+    if ($(p_panelIdorClass).css('display') === 'none') {
+        $(p_panelIdorClass).show();
         if (p_buttonIdorClass) {
             $(p_buttonIdorClass).addClass('top-panel-button-active');
         }
         heightAdjust();
         return true;
     } else {
-        $panel.hide();
+        $(p_panelIdorClass).hide();
         if (p_buttonIdorClass) {
             $(p_buttonIdorClass).removeClass('top-panel-button-active');
         }
@@ -424,28 +421,22 @@ function setPanelToggleStatus(p_panelIdorClass, p_buttonIdorClass) {
         return false;
     }
 }
+
 // Function to adjust panel height
 function heightAdjust() {
-    var $panel = $(".search-filter-panel-box");
-    if ($panel.length) {
-        setTimeout(function () {
-            if ($panel.is(':hidden')) {
-                $panel.show();
-            }
+    setTimeout(function () {
+        var $panel = $(".search-filter-panel-box");
+        if ($panel.height() < 10) {
+            $panel.hide();
+        } else {
+            $panel.show();
+        }
 
-            if ($panel.height() < 10) {
-                $panel.hide();
-            } else {
-                $panel.show();
-            }
-
-            $panel.animate({
-                "top": $('#topPanel').offset().top - $panel.height() - 15
-            }, 300); // Smooth animation
-        }, 100); // Ensure DOM readiness
-    }
+        $panel.animate({
+            "top": $('#topPanel').offset().top - $panel.height() - 15
+        });
+    }, 10);
 }
-
 function showHideTabs() {
 
     //IF responsive and search icon pressed then
@@ -769,75 +760,7 @@ function isLandscape() {
     return window.innerWidth > window.innerHeight;
 }
 
-$('#topPanelHideIcon').on('click', function () {
-    if (isMobileOrPortrait()) {
-        var $icon = $(this);
-        var $hideBtn = $('#topPanelHideBtn');
-        var $roomCanvasContainer = $('.room-canvas-container');
-        var $mainPanel = $('.top-panel-product');
 
-        var containerBottom = $roomCanvasContainer.offset().top + $roomCanvasContainer.outerHeight();
-        var windowHeight = $(window).height();
-        var topPosition = windowHeight - 30; // New top position for reset
-
-        if ($(window).width() < 767 && isLandscape()) {
-            if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-left')) {
-                $hideBtn.css({ 'top': 20 + 'px' });
-                $mainPanel.css({
-                   'position': 'fixed',        // Fixed position relative to the viewport
-                   'top': '0px',              // 10px from the top
-                   'height': (windowHeight + 20 ) + 'px', // Full viewport height minus 20px for spacing
-                   'width': '350px',           // Set width to 300px
-                   'right': '-350px' ,
-                   'border-top-right-radius': '0px'            // Shift the panel 300px to the left (off-screen)
-               });
-               $('#topPanelTilesListBox').css({ 'display': 'block' });
-
-
-            }
-            else if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-right')) {
-
-                $hideBtn.css({ 'top': 20 + 'px' });
-                $mainPanel.css({
-                   'position': 'fixed',        // Fixed position relative to the viewport
-                   'top': '0px',              // 10px from the top
-                   'height': (windowHeight + 20) + 'px', // Full viewport height minus 20px for spacing
-                   'width': '300px',           // Set width to 300px
-                   'right': '0px' ,
-                   'border-top-right-radius': '0px'         // Shift the panel 300px to the left (off-screen)
-               });
-               $('#topPanelTilesListBox').css({ 'display': 'block' });
-
-            }
-
-           
-        }
-
-        else{
-
-        if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-left')) {
-            // Move the button and panel below the room-canvas-container
-            $hideBtn.css({ 'top': (containerBottom - 60) + 'px' });
-            $mainPanel.css({
-                'top': containerBottom + 'px',
-                'height': (windowHeight - containerBottom) + 'px'
-            });
-            $('#topPanelTilesListBox').css({ 'display': 'block' });
-        } 
-        else if ($icon.hasClass('glyphicon') && $icon.hasClass('glyphicon-menu-right')) {
-            // Reset the button and panel to the top of the screen minus 30px
-            $hideBtn.css({ 'top': (topPosition - 60) + 'px' });
-            $mainPanel.css({
-                'top': (topPosition - 60) + 'px',
-                'height': windowHeight + 'px'
-            });
-            $('.partOfProductTabContent').hide();
-        }
-    }
-}
-
- 
-});
 
 function landscapadjustPanelPosition() {
     var $hideBtn = $('#topPanelHideBtn');
