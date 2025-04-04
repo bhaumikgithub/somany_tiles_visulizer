@@ -114,21 +114,26 @@ class ProcessTilesJob implements ShouldQueue
                         ->first();
 
                     if ($existingTile) {
+                        Log::info("Tile Id: {$existingTile->id}");
+                        Log::info("Tile surface: {$existingTile->surface}");
+                        Log::info("Tile name: {$existingTile->name}");
+                        Log::info("Tile Real File: {$existingTile->real_file}");
+                        Log::info("Tile Image Variation 1 File: {$existingTile->image_variation_1}");
                         // Prepare update data
-                        $updateData = $this->prepareTileData($product, $creation_time, $imageFileName, true);
-                        $updateData['updated_at'] = now();
+                        // $updateData = $this->prepareTileData($product, $creation_time, $imageFileName, true);
+                        // $updateData['updated_at'] = now();
 
-                        DB::table('tiles')->where('sku', $sku)->where('surface', $surface)->update($updateData);
+                        // DB::table('tiles')->where('sku', $sku)->where('surface', $surface)->update($updateData);
             
 
-                        $updatedRecords[] = [
-                            'id' => $existingTile->id,
-                            'name' => $existingTile->name,
-                            'sku' => $sku,
-                            'surface' => $updateData['surface']
-                        ];
+                        // $updatedRecords[] = [
+                        //     'id' => $existingTile->id,
+                        //     'name' => $existingTile->name,
+                        //     'sku' => $sku,
+                        //     'surface' => $updateData['surface']
+                        // ];
 
-                        Log::info("Updated Tile ID: {$existingTile->id} | Surface: {$surface}");
+                        // Log::info("Updated Tile ID: {$existingTile->id} | Surface: {$surface}");
                         
                         // $updateData = [];
                         // // Determine which column to update
