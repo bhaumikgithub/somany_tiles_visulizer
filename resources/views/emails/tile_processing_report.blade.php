@@ -88,7 +88,6 @@
         <table>
             <thead>
             <tr>
-                <th>Tile ID</th>
                 <th>Name</th>
                 <th>SKU</th>
                 <th>Surface</th>
@@ -97,9 +96,9 @@
             <tbody>
             @foreach($updatedRecords as $tile)
                 <tr>
-                    <td>{{ $tile['id'] }}</td>
                     <td>{{ $tile['name'] }}</td>
                     <td>{{ $tile['sku'] }}</td>
+                    <td>{{ $tile['surface'] }}</td>
                     <td>{{ $tile['surface'] }}</td>
                 </tr>
             @endforeach
@@ -140,14 +139,16 @@
             <tr>
                 <th>Tile Name</th>
                 <th>SKU</th>
-                <th>Error</th>
+                <th>Date</th>
+                <th>Reason</th>
             </tr>
             </thead>
             <tbody>
-            @foreach($deletedRecords as $tile)
+            @foreach($skippedRecords as $tile)
                 <tr>
                     <td>{{ $tile['name'] }}</td>
                     <td>{{ $tile['sku'] }}</td>
+                    <td>{{ $tile['date'] }}</td>
                     <td>{{ $tile['reason'] }}</td>
                 </tr>
             @endforeach
@@ -156,11 +157,6 @@
     @else
         <p>No tiles were Skipped or getting error .</p>
     @endif
-
-
-    <div class="footer">
-        <p>Generated on {{ now()->format('Y-m-d H:i:s') }}</p>
-    </div>
 </div>
 
 </body>
