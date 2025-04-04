@@ -1884,9 +1884,18 @@ input[type=checkbox] {
         margin-top: 2px;
     }
 
+  
     #topPanelHideIcon {
         font-size: 15px;
-        margin-top: 2px;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: -11px;
+        border-radius: 100%;
     }
 
     .top-panel-button {
@@ -2086,9 +2095,7 @@ input[type=checkbox] {
         rotate: 360deg;
     }
 
-    #topPanelHideIcon{
-        margin-top: 6px;
-    }
+
     .toggle-wrap-main{
         display: flex;
         width: 100%;
@@ -2111,6 +2118,7 @@ input[type=checkbox] {
     .rotate-toggle{
         margin-left: -35px;
     }
+
 }
 @media (max-width:768px){
 
