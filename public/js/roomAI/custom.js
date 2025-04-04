@@ -157,6 +157,8 @@ function isThisMobileDevice(){
 function allLoadCompleted() {
     $(".cmn-room-btn").css('visibility', 'visible');
     // $("#topPanelmainpanel").css('visibility', 'visible');
+
+    
     $(".share-div").css('visibility', 'visible');
     // $(".room-canvas").css('visibility', 'visible');
     
