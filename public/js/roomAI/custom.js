@@ -158,13 +158,8 @@ function allLoadCompleted() {
     $(".cmn-room-btn").css('visibility', 'visible');
     // $("#topPanelmainpanel").css('visibility', 'visible');
 
-    var windowWidth = $(window).width();
-    if( windowWidth <= 991){
-        $(".share-btn-img").css('visibility', 'visible');
-    }
-    else{
+    
     $(".share-div").css('visibility', 'visible');
-    }
     // $(".room-canvas").css('visibility', 'visible');
     
     
