@@ -162,7 +162,6 @@ function allLoadCompleted() {
     $(".share-div").css('visibility', 'visible');
     // $(".room-canvas").css('visibility', 'visible');
     
-    
 
     showProductContent();
    
@@ -752,90 +751,11 @@ function showAllFilters(p_show) {
 */
 
 
-// Function to check for mobile or portrait mode
-function isMobileOrPortrait() {
-    return $(window).width() < 991 || window.matchMedia("(orientation: portrait)").matches;
-    
-}
-
-function isLandscape() {
-    return window.innerWidth > window.innerHeight;
-}
 
 
 
-function landscapadjustPanelPosition() {
-    var $hideBtn = $('#topPanelHideBtn');
-    var $roomCanvasContainer = $('.room-canvas-container');
-    var $mainPanel = $('.top-panel-product');
-    var containerBottom = $roomCanvasContainer.offset().top + $roomCanvasContainer.outerHeight();
-    var windowHeight = $(window).height();
-     $hideBtn.css({ 'top': 20 + 'px' });
-     $mainPanel.css({
-        'position': 'fixed',        // Fixed position relative to the viewport
-        'top': '0px',              // 10px from the top
-        'height': (windowHeight ) + 'px', // Full viewport height minus 20px for spacing
-        'width': '350px',           // Set width to 300px
-        'right': '-350px' ,          // Shift the panel 300px to the left (off-screen)
-        'border-top-right-radius': '0px' 
-    });
-    $('#topPanelTilesListBox').css({ 'display': 'block' });
 
 
-}
-function adjustPanelPosition() {
-    var $hideBtn = $('#topPanelHideBtn');
-    var $roomCanvasContainer = $('.room-canvas-container');
-    var $mainPanel = $('.top-panel-product');
-
-    var containerBottom = $roomCanvasContainer.offset().top + $roomCanvasContainer.outerHeight();
-    var windowHeight = $(window).height();
-
-    $hideBtn.css({ 'top': (containerBottom - 60) + 'px' });
-    $mainPanel.css({
-        'top': containerBottom + 'px',
-        'height': (windowHeight - containerBottom) + 'px'
-    });
-    $('#topPanelTilesListBox').css({ 'display': 'block' });
-}
-
-// Trigger only if the screen width is less than 991px or in portrait mode
-var isFirstClick = true;
-$('#roomCanvas').on('click', function () {
-    if (isFirstClick) {
-        // Remove the active class only on the first click
-        $('#searchIconToggle, #sliderIconToggle').removeClass('top-panel-button-active');
-        isFirstClick = false; // Prevent further removals
-    }
-    if (isMobileOrPortrait()) {
-        $('#topPanelHideBtn').show();
-        $(".top-panel-product").show();
-        adjustPanelPosition();
-        
-        if ($(window).width() < 767 && isLandscape()) {
-
-            $('#topPanelHideBtn').show();
-            $(".top-panel-product").show();
-            landscapadjustPanelPosition();
-          
-
-        }
-    }
-});
-
-// Handle window resize for mobile and portrait transitions
-$(window).on('resize', function () {
-    if (isMobileOrPortrait()) {
-        adjustPanelPosition();
-    }
-});
-
-// Handle orientation change (for mobile portrait/landscape switches)
-$(window).on('orientationchange', function () {
-    if (isMobileOrPortrait()) {
-        adjustPanelPosition();
-    }
-});
 
 /*** Hide loader when grout slider is use */
 document.getElementById("topPanelGroutSizeRange").addEventListener("input", function (event) {
