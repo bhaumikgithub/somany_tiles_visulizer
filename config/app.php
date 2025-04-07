@@ -280,6 +280,7 @@ return [
     'engine_2d_enabled' => env('ENGINE_2D_ENABLED', false),
     'engine_3d_enabled' => env('ENGINE_3D_ENABLED', false),
     'engine_panorama_enabled' => env('ENGINE_PANORAMA_ENABLED', false),
+    'engine_roomai_enabled' => env('ENGINE_PANORAMA_ENABLED', false), //Added by Kinjal
     'engine_room_planner_enabled' => env('ENGINE_ROOM_PLANNER_ENABLED', false),
     'engine_blueprint3d_enabled' => env('ENGINE_BLUEPRINT3D_ENABLED', false),
 
@@ -337,4 +338,6 @@ return [
     'product_finish' => env('PRODUCT_FINISH', null),
 
     'curl' => env('CURL', null),
+
+    'socket_server' => env('SOCKET_SERVER','TileVisualiser'),
 ];

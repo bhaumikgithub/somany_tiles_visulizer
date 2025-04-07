@@ -22,12 +22,10 @@
     @if ($count > 0)
         <div class="row button-row">
             <div class="col-md-4 col-sm-4 col-xs-3 xs-text-center">
-                <button class="btn btn-info clear_all_btn modify-btn reset_btn" onclick="clearAllItems();">Clear
+                <button class="btn btn-info clear_all_btn modify-btn reset_btn" onclick="clearAllItems({{@$cartId}});">Clear
                     All</button>
             </div>
             <div class="col-md-8 col-sm-8 col-xs-9 text-right">
-{{--                <a href="#" target="_blank" class="btn modify-btn  csp-btn"--}}
-{{--                    onclick="window.location.href='{{ @$url }}';">Continue to Summary Page</a>--}}
                 <a href='{{ @$url }}' class="btn modify-btn  csp-btn"
                    onclick="window.location.href='{{ @$url }}';">Continue to Summary Page</a>
             </div>

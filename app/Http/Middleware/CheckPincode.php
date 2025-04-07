@@ -19,6 +19,7 @@ class CheckPincode
     {
         $engine_2d_enabled = config('app.engine_2d_enabled');
         $engine_panorama_enabled = config('app.engine_panorama_enabled');
+        $engine_roomai_enabled = config('app.engine_roomai_enabled');
 
         Log::info('Redirect check - Current Path: ' . $request->path());
         Log::info('Pincode session: ' . (session()->has('pincode') ? 'Present' : 'Not Present'));
@@ -40,12 +41,14 @@ class CheckPincode
 
             // Determine a redirect path based on user's requested route
             if (str_contains($request->path(), 'panorama-studio') && $engine_panorama_enabled) {
-                $redirectPath = '/panorama-studio';
+                $redirectPath = '/panorama';
             } elseif (str_contains($request->path(), '2d-studio') && $engine_2d_enabled) {
-                $redirectPath = '/2d-studio';
+                $redirectPath = '/room2d';
+            } elseif (str_contains($request->path(), 'ai-studio') && $engine_roomai_enabled) {
+                $redirectPath = '/ai-studio';
             } else {
-                // Default redirection based on available engines
-                $redirectPath = $engine_2d_enabled ? '/2d-studio' : ($engine_panorama_enabled ? '/panorama-studio' : '/');
+                // Always default to 2D Studio
+                $redirectPath = '/2d-studio';
             }
 
             // Mark as redirected

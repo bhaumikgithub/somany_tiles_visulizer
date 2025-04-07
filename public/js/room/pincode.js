@@ -6,11 +6,14 @@ window.onload = function() {
         .then(data => {
             if (!data.pincode_saved) {
                 $('#pincode').modal('show');
+                $("#sourceLoadProgressBarContainer").hide();
                 setTimeout(function() {
                     $('.onLoadWrapper').css('display','block');
                 }, 3000);
             } else {
                 $('.onLoadWrapper').css('display','block');
+                $("#dialogRoomSelect").modal("show");
+                $("#sourceLoadProgressBarContainer").hide();
             }
         });
 
@@ -40,6 +43,8 @@ $('#pincodeForm').on('submit', function (e) {
         success: function (response) {
             // Close the modal on successful response
             $('#pincode').modal('hide');
+            $("#dialogRoomSelect").modal("show");
+            $("#sourceLoadProgressBarContainer").hide();
             console.log('Pincode saved successfully:', response.message);
         },
         error: function (xhr, status, error) {
