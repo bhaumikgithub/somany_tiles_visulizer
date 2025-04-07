@@ -248,12 +248,13 @@ function hideCart() {
     $('#addToCartInfoPanelModal').modal('hide');
 }
 
-function clearAllItems() {
+function clearAllItems(cart_id) {
     window.$.ajax({
         url: `/clear-items`, // Endpoint for deletion
-        type: 'DELETE',
+        type: 'post',
         data: {
-            _token: $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+            _token: $('meta[name="csrf-token"]').attr('content'), // Include CSRF token
+            cart_id : cart_id,
         },
         success: function (response) {
             alert(response.message); // Display success message

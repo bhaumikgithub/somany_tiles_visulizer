@@ -193,11 +193,12 @@ class AddToPdfRoomsController extends Controller
         $getCartId->pincode = $pincode;
         $getCartId->update();
         $count = $allProduct->count();
+        $cartId = $getCartId->id;
 
         $url = '/pdf-summary/'.$getCartId->random_key;
         return response()->json([
-            'body' => view('common.cartPanel',compact('allProduct','count','url'))->render(),
-            'data' => ['product_info'=> $allProduct, 'all_selection' => $count,'url'=>$url],
+            'body' => view('common.cartPanel',compact('allProduct','count','url','cartId'))->render(),
+            'data' => ['product_info'=> $allProduct, 'all_selection' => $count,'url'=>$url,'cartId'=>$cartId],
             'success' => 'success'
         ]);
     }
@@ -217,10 +218,15 @@ class AddToPdfRoomsController extends Controller
             'message' => 'Item deleted successfully.']);
     }
 
-    public function removeAllItems(): JsonResponse
+    public function removeAllItems(Request $request): JsonResponse
     {
-        // Soft delete all cart items
-        CartItem::query()->delete();
+        $cartId = $request->input('cart_id'); // Get cart_id from POST
+        if (!$cartId) {
+            return response()->json(['message' => 'cart_id is required'], 400);
+        }
+        // Mark items with this cart_id as removed
+        CartItem::where('cart_id', $cartId)->delete(); // this sets deleted_at
+        
         return response()->json(['message' => 'All items have been removed from the pdf.']);
     }
 
@@ -793,11 +799,12 @@ class AddToPdfRoomsController extends Controller
         $getCartId->pincode = $pincode;
         $getCartId->update();
         $count = $allProduct->count();
+        $cartId = $getCartId->id;
 
         $url = '/pdf-summary/'.$getCartId->random_key;
         return response()->json([
-            'body' => view('common.roomAI.cartPanel',compact('allProduct','count','url'))->render(),
-            'data' => ['product_info'=> $allProduct, 'all_selection' => $count,'url'=>$url],
+            'body' => view('common.roomAI.cartPanel',compact('allProduct','count','url','cartId'))->render(),
+            'data' => ['product_info'=> $allProduct, 'all_selection' => $count,'url'=>$url , 'cartId' => $cartId],
             'success' => 'success'
         ]);
 
