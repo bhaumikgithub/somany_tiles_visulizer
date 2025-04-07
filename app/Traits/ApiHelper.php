@@ -88,7 +88,7 @@ trait ApiHelper
     /**
      * @throws Exception
      */
-    protected function prepareTileData(array $product, $creation_time , $imageFileName, $isUpdate = false): ?array
+    protected function prepareTileData(array $product, $creation_time , $imageFileName): ?array
     {
         // Track missing fields
         $missingFields = [];
@@ -107,7 +107,7 @@ trait ApiHelper
         }
 
         // If inserting a new tile and required fields are missing, skip the insert
-        if (!$isUpdate && !empty($missingFields)) {
+        if (!empty($missingFields)) {
             return [
                 'skip' => true, // Special flag to signal skipping insert
                 'reason' => "Missing required field(s): " . implode(" & ", $missingFields)
@@ -119,7 +119,7 @@ trait ApiHelper
         // Prepare an array but remove null values
         $expPropsArray = $this->extraProps($product);
 
-        $tileData = [
+        return [
             'name' => $product['product_name'] ?? null,
             'shape' => $this->getShapeFromWidthHeight($product['size_wt'], $product['size_ht']),
             'width' => intval($product['size_wt'] ?? 0),
@@ -161,15 +161,57 @@ trait ApiHelper
             'deletion' => $product['deletion'] ?? null,
             'from_api' => '1'
         ];
-
-        // For updates, remove null values (only update changed values)
-        if ($isUpdate) {
-            return array_filter($tileData, fn($value) => !is_null($value));
-        }
-
-        return $tileData;
     }
 
+
+    protected function prepareTileUpdateData(array $product, $creation_time){
+        $surface = strtolower($product['surface'] ?? '');
+
+        // Prepare an array but remove null values
+        $expPropsArray = $this->extraProps($product);
+
+        return [
+            'name' => $product['product_name'] ?? null,
+            'shape' => $this->getShapeFromWidthHeight($product['size_wt'], $product['size_ht']),
+            'width' => intval($product['size_wt'] ?? 0),
+            'height' => intval($product['size_ht'] ?? 0),
+            'size' => $product['size'] ?? null,
+            // 'surface' => $surface,
+            'finish' => $this->mapFinishType($product['design_finish']),
+            'design_finish' => $product['design_finish'] ?? null,
+            'image_variation_1' => $product['image_variation_1'] ?? null,
+            'image_variation_2' => $product['image_variation_2'] ?? null,
+            'image_variation_3' => $product['image_variation_3'] ?? null,
+            'grout' => (in_array($surface, ["wall", "floor"])) ? 1 : null,
+            'url' => $product['url'] ?? null,
+            'price' => $product['price'] ?? null,
+            'expProps' => json_encode($expPropsArray),
+            'rotoPrintSetName' => $product['rotoPrintSetName'] ?? null,
+            'access_level' => $product['access_level'] ?? null,
+            'sku' => $product['sku'] ?? null,
+            'application_room_area' => $product['application_room_area'] ?? null,
+            'brand' => $product['brand_name'] ?? null,
+            'sub_brand_1' => $product['sub_brand_1'] ?? null,
+            'innovation' => $product['innovation'] ?? null,
+            'sub_brand_2' => $product['sub_brand_2'] ?? null,
+            'color' => $product['color'] ?? null,
+            'poc' => $product['poc'] ?? null,
+            'thickness' => $product['thickness'] ?? null,
+            'tiles_per_carton' => $product['tiles_per_carton'] ?? null,
+            'avg_wt_per_carton' => $product['avg_wt_per_carton'] ?? null,
+            'coverage_sq_ft' => $product['coverage_sq_ft'] ?? null,
+            'coverage_sq_mt' => $product['coverage_sq_mt'] ?? null,
+            'pattern' => $product['pattern'] ?? null,
+            'plant' => $product['plant'] ?? null,
+            'service_geography' => $product['service_geography'] ?? null,
+            'unit_of_production' => $product['unit_of_production'] ?? null,
+            'yes_no' => $product['yes_no'] ?? null,
+            'record_creation_time' => $creation_time,
+            'deletion' => $product['deletion'] ?? null,
+            'from_api' => '1'
+        ];
+
+    }
 
     /**
      * @param $width

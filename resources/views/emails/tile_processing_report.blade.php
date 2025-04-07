@@ -99,7 +99,7 @@
                     <td>{{ $tile['name'] }}</td>
                     <td>{{ $tile['sku'] }}</td>
                     <td>{{ $tile['surface'] }}</td>
-                    <td>{{ $tile['surface'] }}</td>
+                    <td>{{ $tile['changedColumn'] }}</td>
                 </tr>
             @endforeach
             </tbody>

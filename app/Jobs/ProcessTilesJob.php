@@ -105,60 +105,46 @@ class ProcessTilesJob implements ShouldQueue
 
                 foreach ($surfaces as $surface) {
                     $product['surface'] = trim($surface);
-                    Log::info("Name : {$variantName}");
-
                     // Check if an entry exists with both SKU and Surface
-                    $existingTile = DB::table('tiles')->where('sku', $sku)
-                        ->where('surface', $surface)
-                        ->where('name', $variantName) // Ensure we match the variation name
-                        ->first();
-
+                    $existingTile = DB::table('tiles')->where('sku', $sku)->where('surface', $surface)->first();
                     if ($existingTile) {
-                        Log::info("Tile Id: {$existingTile->id}");
-                        // Check if any of the image variations have changed
-                        $imageColumns = ['real_file', 'image_variation_1', 'image_variation_2', 'image_variation_3', 'image_variation_4'];
-                        foreach ($imageColumns as $col) {
-                            if ($existingTile->$col !== $product[$col] && $product[$col] !== null) {
-                                Log::info("Image updated for column: $col");
-                                $fieldsToCheck[$col] = $product[$col];
-                            }
-                        }
-                    
-                        // Determine if an update is needed
-                        $needsUpdate = false;
+                        Log::info("Tile Found | ID: {$existingTile->id}, SKU: {$existingTile->sku}, Name: {$existingTile->name}");
+                        // Prepare new update data
+                        $updateData = $this->prepareTileUpdateData($product, $creation_time);
+                        // Compare and update only changed fields
                         $changedColumns = [];
-                        foreach ($fieldsToCheck as $column => $newValue) {
+                        foreach ($updateData as $column => $newValue) {
                             if ($existingTile->$column !== $newValue) {
-                                $updateData[$column] = $newValue;
                                 $changedColumns[] = $column;
-                                $needsUpdate = true;
                             }
                         }
-                    
-                        // If an update is required, update the record
-                        if ($needsUpdate) {
+
+                        // Perform update if any changes detected
+                        if (!empty($changedColumns)) {
+                            $updateData['updated_at'] = now();
+                            $updateData['api_json'] = json_encode($aTile);
                             DB::table('tiles')
-                                ->where('id', $existingTile->id)
+                                ->where('sku', $sku)
                                 ->update($updateData);
                     
-                            // Remove old image if updated
-                            if (isset($updateData['file']) && $existingTile->file !== $updateData['file']) {
-                                Storage::delete('public/tiles/' . $existingTile->file);
-                                Storage::delete('public/tiles/icons/' . $existingTile->file);
-                            }
-                    
-                            // Store updated record details
                             $updatedRecords[] = [
-                                'id' => $existingTile->id,
-                                'name' => $existingTile->name,
+                                'name' => $variantName,
                                 'sku' => $sku,
                                 'surface' => $surface,
-                                'updated_columns' => $changedColumns
+                                'changedColumn' => implode(', ', $changedColumns),
                             ];
-                    
-                            $updatedCount++;
-                            Log::info("Updated Tile ID: {$existingTile->id} | Columns Updated: " . implode(', ', $changedColumns));
+                        }else {
+                            Log::info("No changes detected for Tile SKU: {$existingTile->sku}");
                         }
+
+                        // Combine surfaces for the same SKU in logs
+                        if (!empty($updatedRecords)) {
+                            $surfaceList = implode(', ', array_unique(array_column($updatedRecords, 'surface')));
+                            Log::info("Updated Tile SKU: {$data['code']} | Surfaces: $surfaceList | Changes: " . json_encode($updatedRecords));
+                        } else {
+                            Log::info("No changes detected for Tile SKU: {$data['code']}");
+                        }
+                        
                     } else {
                         $product['product_name'] = $variantName;
                         $product['rotoPrintSetName'] = $rotoPrintSetName;
@@ -167,13 +153,11 @@ class ProcessTilesJob implements ShouldQueue
                         $product['file'] = $imageFileName;
                         $product[$column] = $imageURL;
 
-                        $data = $this->prepareTileData($product, $creation_time, $imageFileName, false);
+                        $data = $this->prepareTileData($product, $creation_time, $imageFileName);
                         $data['created_at'] = now();
                         $data['updated_at'] = now();
                         $data['api_json'] = json_encode($aTile);
-                        if (!isset($data['skip'])) {
-                            DB::table('tiles')->insert($data);
-                        }
+                        DB::table('tiles')->insert($data);
                         Log::info("Inserted: {$variantName} (SKU: {$sku}, Surface: {$surface})");
 
                         $insertedRecords[] = [
@@ -193,7 +177,6 @@ class ProcessTilesJob implements ShouldQueue
 
 
         $this->softDeleteMissingTiles($skippedRecords , $deletedRecords);
-        dd($updatedRecords);
 
         DB::table('companies')->update([
             'last_fetch_date_from_api' => $this->endDate,
