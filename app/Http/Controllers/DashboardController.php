@@ -552,7 +552,7 @@ class DashboardController extends Controller
             foreach ($rooms as $room) {
                 $roomId = $room["room_id"] ?? null;
                 $roomName = $room["room_name"] ?? "Unknown";
-
+                
                 if (!$roomId) continue;
 
                 if (isset($processedRooms[$roomId])) {
@@ -560,7 +560,7 @@ class DashboardController extends Controller
                 } else {
                     $processedRooms[$roomId] = [
                         "name" => $roomName,
-                        "category" => Helper::getRoomCatgory($roomId),
+                        "category" => Helper::getRoomCatgory($roomId,$room['room_type']),
                         "count" => 1
                     ];
                 }
@@ -580,7 +580,7 @@ class DashboardController extends Controller
             $room['percentage'] = ($room['count'] / $maxCount) * 100;  // Calculate %
             $room['bg_color'] = $bgColors[$index] ?? 'bg-secondary';  // Assign fixed colors
         }
-
+        
         return array_slice($processedRooms, 0, 5);
     }
 

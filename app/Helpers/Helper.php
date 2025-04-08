@@ -9,6 +9,7 @@ use App\Tile;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use App\Panorama;
 
 class Helper
 {
@@ -150,9 +151,13 @@ class Helper
         ];
     }
 
-    public static function getRoomCatgory($room_id): string
+    public static function getRoomCatgory($room_id,$room_type): string
     {
-        $room = Room2d::find($room_id);
+        if( $room_type === "2d")
+            $room = Room2d::find($room_id);
+        else
+            $room = Panorama::find($room_id);
+
         return ucwords($room->type);
     }
 
