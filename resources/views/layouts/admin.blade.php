@@ -86,12 +86,12 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="{{ route('analytics.details', ['type' => 'ai-studio'])}}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}" id="ai-studio">
                             <i class="typcn typcn-document-text menu-icon"></i>
                             <span class="menu-title">AI Studio</span>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </nav>
             <div class="main-panel">
