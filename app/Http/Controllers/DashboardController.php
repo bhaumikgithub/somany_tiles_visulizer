@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Room2d;
+use App\Panorama;
 
 class DashboardController extends Controller
 {
@@ -1045,6 +1046,7 @@ class DashboardController extends Controller
             DB::raw('JSON_UNQUOTE(room) as rooms_json')
         )->whereBetween('visited_at', [$startDate, $endDate])
             ->get();
+        
 
         $roomIds = [];
         foreach ($roomData as $row) {
@@ -1054,16 +1056,29 @@ class DashboardController extends Controller
             if (!is_array($rooms)) continue;
 
             foreach ($rooms as $room) {
-                if (!empty($room["room_id"])) {
-                    $roomIds[] = $room["room_id"];
+                if ($room['room_type'] === '2d') {
+                    $room2dIds[] = $room['room_id'];
+                } elseif ($room['room_type'] === 'panorama') {
+                    $panoramaIds[] = $room['room_id'];
                 }
             }
         }
+        
+        $roomTypes = [];
 
-        // Fetch room types from room2ds table
-        $roomTypes = Room2d::whereIn('id', $roomIds)
-            ->pluck('type', 'id')
-            ->toArray(); // Returns [room_id => room_type]
+        if (!empty($room2dIds)) {
+            $roomTypes2d = Room2d::whereIn('id', $room2dIds)
+                ->pluck('type', 'id')
+                ->toArray();
+            $roomTypes += $roomTypes2d;
+        }
+
+        if (!empty($panoramaIds)) {
+            $roomTypesPanorama = Panorama::whereIn('id', $panoramaIds)
+                ->pluck('type', 'id')
+                ->toArray();
+            $roomTypes += $roomTypesPanorama;
+        }
 
         $processedRooms = [];
 

@@ -24,7 +24,8 @@ class ActivityLogController extends Controller
         $category = $request->category;
         $roomData = [
             'room_id' => $request->room_id,
-            'room_name' => $request->room
+            'room_name' => $request->room,
+            'room_type' => $request->type,
         ];
 
         $user = "guest";

@@ -78,14 +78,14 @@ function fetchCategory(category) {
         });
 }
 
-function fetchRoom(room_id,room) {
+function fetchRoom(room_id,room,type) {
     fetch("/track-category", {
         method: "POST",
         headers: {
             "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ room_id: room_id , room:room }),
+        body: JSON.stringify({ room_id: room_id , room:room , type:type }),
     })
         .then(response => response.json())
         .then(data => {
