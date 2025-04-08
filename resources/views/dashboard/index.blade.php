@@ -109,8 +109,7 @@
                                         <canvas id="zonePincodeChart"></canvas>
                                     </div>
                                     <div class="col-12">
-                                        <ul class="session-by-channel-legend" id="summaryList">
-
+                                        <ul class="session-by-channel-legend" id="summaryList">    
                                         </ul>
                                     </div>
                                     <div class="col-12 mt-2" style="text-align: right;">

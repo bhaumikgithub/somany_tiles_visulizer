@@ -8,7 +8,7 @@
                             <img class="img-lg mb-md-0 mr-2" src="{{$aTopTiles['photo']}}" alt="profile image" style="border-radius: 10px;">
                             <div>
                                 <div class="font-weight-bold ">{{$aTopTiles['name']}}</div>
-                                <div class="mt-1">{{$aTopTiles['size']}}</div>
+                                <div class="mt-1">{{str_replace(" MM","",$aTopTiles['size'])}}</div>
                                 <div class="mt-1">{{ucfirst($aTopTiles['finish'])}}</div>
                             </div>
                         </div>

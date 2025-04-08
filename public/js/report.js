@@ -174,7 +174,16 @@ function renderSummaryOrDownloadPDFChart(summaryPDFChartData) {
                 ticks: {
                     display: true,
                     beginAtZero: true,
-                    stepSize: 1
+                    stepSize: 1,
+                    callback: function(value, index, values) {
+                        const label = summaryPDFChartData.labels[index]; // e.g., "01-Mar"
+                        
+                        if (index === 0 || index === values.length - 1) {
+                            return label; // Show full "01-Mar" and "31-Mar"
+                        }
+
+                        return label.split("-")[0]; // Just show the day part for others
+                    }
                 }
             }],
 
@@ -244,6 +253,7 @@ function renderPinCodeChart(chartData) {
             options: doughnutPieOptions()
         });
     }
+
     // Update Summary List
     let summaryHtml = "";
     let summaryElement = document.getElementById("summaryList");
@@ -251,7 +261,9 @@ function renderPinCodeChart(chartData) {
         chartData.labels.forEach((label, index) => {
             summaryHtml += `<li><div>${label}</div> <div>${chartData.values[index]} (${chartData.percentages[index]}%)</div></li>`;
         });
-        summaryHtml += `<li><div><b>Total</b></div> <div><b>${chartData.totalVisitsPinCode} (100%)</b></div></li>`;
+        if (chartData.totalVisitsPinCode > 0) {
+            summaryHtml += `<li><div><b>Total</b></div> <div><b>${chartData.totalVisitsPinCode} (100%)</b></div></li>`;
+        }
         summaryElement.innerHTML = summaryHtml;
     }
 }
@@ -342,7 +354,10 @@ function renderRoomChart(roomChartData){
         scales: {
             yAxes: [{
                 ticks: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    stepSize: 2,     // Controls the interval between ticks
+                    min: 0,          // Start at 0
+                    max: 20  
                 }
             }]
         },
