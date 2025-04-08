@@ -58,49 +58,25 @@
                         <a class="nav-link" href="{{ route('analytics.details', ['type' => 'roomCategories']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
                             <i class="typcn typcn-chart-pie-outline menu-icon"></i>
                             <span class="menu-title">Room Categories</span>
-{{--                            <i class="menu-arrow"></i>--}}
                         </a>
-{{--                        <div class="collapse" id="charts">--}}
-{{--                            <ul class="nav flex-column sub-menu">--}}
-{{--                                <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">ChartJs</a></li>--}}
-{{--                            </ul>--}}
-{{--                        </div>--}}
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('analytics.details', ['type' => 'tiles']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
                             <i class="typcn typcn-th-small-outline menu-icon"></i>
                             <span class="menu-title">Tiles</span>
-{{--                            <i class="menu-arrow"></i>--}}
                         </a>
-{{--                        <div class="collapse" id="tables">--}}
-{{--                            <ul class="nav flex-column sub-menu">--}}
-{{--                                <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Basic table</a></li>--}}
-{{--                            </ul>--}}
-{{--                        </div>--}}
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('analytics.details', ['type' => 'rooms']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
                             <i class="typcn typcn-compass menu-icon"></i>
                             <span class="menu-title">Rooms</span>
-{{--                            <i class="menu-arrow"></i>--}}
                         </a>
-{{--                        <div class="collapse" id="icons">--}}
-{{--                            <ul class="nav flex-column sub-menu">--}}
-{{--                                <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Mdi icons</a></li>--}}
-{{--                            </ul>--}}
-{{--                        </div>--}}
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('analytics.details', ['type' => 'showrooms']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}" id="viewAllShowRooms" class="viewAllShowRooms">
                             <i class="typcn typcn-user-add-outline menu-icon"></i>
                             <span class="menu-title">Showrooms</span>
                         </a>
-{{--                        <div class="collapse" id="auth">--}}
-{{--                            <ul class="nav flex-column sub-menu">--}}
-{{--                                <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>--}}
-{{--                                <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>--}}
-{{--                            </ul>--}}
-{{--                        </div>--}}
                     </li>
 
                     <li class="nav-item">

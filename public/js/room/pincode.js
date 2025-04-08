@@ -1,3 +1,6 @@
+let currentURL = new URL(window.location.href);
+let currentPathSegments = currentURL.pathname.split("/");
+
 // Check if the modal should open on a page load
 window.onload = function() {
     // Check if pincode is already set in session using AJAX
@@ -65,8 +68,12 @@ function fetchCategory(category) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Redirect to the respective category page
-                window.location.href = `/listing/${category}`;
+                if(currentPathSegments[1] === "2d-studio"){
+                    // Redirect to the respective category page
+                    window.location.href = `/listing/${category}`;
+                } else {
+                    window.location.href = `/panorama-listing/${category}`;
+                }
             }
         });
 }
@@ -83,8 +90,12 @@ function fetchRoom(room_id,room) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Redirect to the respective category page
-                window.location.href = `/2d-studio/${room_id}`;
+                if(currentPathSegments[1] === "listing"){
+                    // Redirect to the respective category page
+                    window.location.href = `/2d-studio/${room_id}`;
+                } else {
+                    window.location.href = `/panorama-studio/${room_id}`;
+                }
             }
         });
 }

@@ -41,9 +41,9 @@ class CheckPincode
 
             // Determine a redirect path based on user's requested route
             if (str_contains($request->path(), 'panorama-studio') && $engine_panorama_enabled) {
-                $redirectPath = '/panorama';
+                $redirectPath = '/panorama-studio';
             } elseif (str_contains($request->path(), '2d-studio') && $engine_2d_enabled) {
-                $redirectPath = '/room2d';
+                $redirectPath = '/2d-studio';
             } elseif (str_contains($request->path(), 'ai-studio') && $engine_roomai_enabled) {
                 $redirectPath = '/ai-studio';
             } else {
