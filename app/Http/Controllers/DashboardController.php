@@ -801,8 +801,8 @@ class DashboardController extends Controller
 
             foreach ($tiles as $tile) {
                 $tileId = $tile["tile_id"] ?? null;
-                $roomName = $tile["room_name"] ?? "-";
-                $roomType = $tile["room_type"] ?? "-";
+                $roomName = $tile["room_name"] ?? "";
+                $roomType = $tile["room_type"] ?? "";
                 $surface = $tile["surface"] ?? "-";
                 $tileName = $tile["tile_name"] ?? "Unknown";
 
@@ -1241,7 +1241,7 @@ class DashboardController extends Controller
             ->where('room', 'ai-studio')
             ->whereNotNull('unique_cart_id')
             ->pluck('unique_cart_id');
-            
+
         // Get the count from user_pdf_data
         $pdfsFromUserPdfDataCount = DB::table('user_pdf_data')->whereIn('unique_id', $cartIds)->count();
         $reachToSummaryPage = $cartIds->count();

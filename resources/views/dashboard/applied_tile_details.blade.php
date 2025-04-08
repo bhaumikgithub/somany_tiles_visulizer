@@ -5,7 +5,7 @@
             <td>{{ $tile['name'] }}</td>
             <td>{{ ucwords($tile['finish']) }}</td>
             <td>{{ $tile['room_names'] }}</td>
-            <td>{{ ucwords($tile['category']) }}</td>
+            <td>{{ ucwords(str_replace("_"," ",$tile['category'])) }}</td>
             <td>{{ $tile['used_count'] }}</td>
         </tr>
     @endforeach
