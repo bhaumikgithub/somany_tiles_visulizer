@@ -1814,7 +1814,7 @@ input[type=checkbox] {
     text-align: center;
 }
 
-.modal-body {
+#dialogRoomSelect .modal-body {
     max-height: 90vh; /* Restrict modal content height */
     overflow-y: auto; /* Enable vertical scroll inside the modal */
 }
