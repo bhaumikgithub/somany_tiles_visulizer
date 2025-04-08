@@ -602,5 +602,8 @@ if( $('.report_wrapper').length) {
 
         if( detailPageType === "pdf")
             fetchReportDetail(formattedStart, formattedEnd , "pdf");
+
+        if( detailPageType === "ai-studio")
+            fetchReportDetail(formattedStart, formattedEnd , "ai-studio");
     }
 }

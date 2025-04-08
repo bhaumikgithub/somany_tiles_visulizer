@@ -90,7 +90,28 @@ class ActivityLogController extends Controller
         $sessionId = session()->getId(); // Get session ID
         $pincode = session('pincode');
         $zone = Helper::getZoneByPincode($pincode);
-        dd($sessionId , $pincode , $zone);
-        
+    
+        $pinCodeZoneData  = [
+            'pincode' => $pincode,
+            'zone' => $zone
+        ];
+        $roomData = $request->room;
+        $user = "guest";
+
+        //Check if user has logged in backend or not
+        if (auth()->check()) {
+            $loged_user = auth()->user();
+            $user = $loged_user->id;
+        }
+         // New session, create a new analytics entry
+         Analytics::create([
+            'session_id' => $sessionId,
+            'pincode' => json_encode([$pincode]),
+            'zone' => json_encode([$zone]),
+            'category' => json_encode($request->room), // Store non-null room data
+            'room' => json_encode($request->room), // Store non-null room data
+            'user_logged_in' => $user,
+            'showroom' => $loged_user->showroom_id ?? null,
+        ]);
     }
 }

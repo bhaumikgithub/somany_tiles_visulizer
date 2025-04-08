@@ -254,6 +254,7 @@ class AddToPdfRoomsController extends Controller
                 }
             }
         }
+
         //Save data into analytics table
         $analytics = Analytics::where('session_id', $getCartId->user_id)->first();
 

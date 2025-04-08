@@ -318,6 +318,7 @@ Route::post('/get-tile-summary', 'App\Http\Controllers\AddToPdfRoomsController@g
 Route::post('/track-category', [ActivityLogController::class, 'trackCategory']);
 //store-to-analytics
 Route::post('/store-to-analytics', [ActivityLogController::class, 'storeToAnalyticsForAI']);
+
 // Route::get('/test', 'App\Http\Controllers\HomeController@index');
 // Route::get('/test', function () {
 //     return response($_SERVER['SERVER_NAME']);

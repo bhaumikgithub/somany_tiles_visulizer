@@ -24,7 +24,7 @@
                 </div>
             </div>
         </div>
-        @if($type !== "showrooms" )
+        @if($type !== "showrooms" && $type !== "ai-studio")
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
@@ -34,8 +34,6 @@
                                 Tiles Applied On Data
                             @elseif($type === "roomCategories")
                                 Room Cartegories Data
-                            @elseif($type === "showrooms")
-                                Summary For Showrooms
                             @else
                                 {{$type}} Data
                             @endif    
@@ -72,17 +70,17 @@
                                         </tbody>
                                     </table>
                                 @elseif( $type === "roomCategories")
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Category Name</th>
-                                            <th>Number of Times Used</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="roomCategories_tbody">
-                                        @include('dashboard.room_categories_details')
-                                    </tbody>
-                                </table>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Category Name</th>
+                                                <th>Number of Times Used</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="roomCategories_tbody">
+                                            @include('dashboard.room_categories_details')
+                                        </tbody>
+                                    </table>
                                 @elseif( $type === "tiles")
                                     <table class="table">
                                         <thead>
@@ -130,11 +128,15 @@
                                                 @include('dashboard.pdf_session_details')
                                             </tbody>
                                         </table>
-                                @endif
+                                    @endif
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        @elseif($type==="ai-studio")
+            <div id="ai-studio_tbody">
+                @include('dashboard.ai_studio_details')
             </div>
         @else 
             <div id="showrooms_tbody">

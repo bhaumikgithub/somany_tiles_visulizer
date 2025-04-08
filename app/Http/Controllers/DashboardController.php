@@ -645,6 +645,7 @@ class DashboardController extends Controller
             case 'rooms':
             case 'showrooms':
             case 'pdf':
+            case 'ai-studio':
                 return view('dashboard.details', compact('startDate', 'endDate','type'));
             default:
                 abort(404);
@@ -691,6 +692,9 @@ class DashboardController extends Controller
                 $data = $this->sessionPDFDetails($startDate , $endDate);
                 break;
 
+            case 'ai-studio':
+                $data = $this->aiStudioDetailsPage($startDate , $endDate);
+                break;
             default:
                 abort(404);
         }
@@ -1226,6 +1230,29 @@ class DashboardController extends Controller
             'user_analytics' => $user_analytics,
         ]);
 
+    }
+
+    protected function aiStudioDetailsPage($startDate , $endDate)
+    {
+        $aiStudioSummary = Analytics::whereBetween('visited_at', [$startDate, $endDate])->whereJsonContains('room','ai-studio')->get();
+        $totalAISession = $aiStudioSummary->count();
+        // Get all unique_cart_ids from ai-studio sessions
+        $cartIds = Analytics::whereBetween('visited_at', [$startDate, $endDate])
+            ->where('room', 'ai-studio')
+            ->whereNotNull('unique_cart_id')
+            ->pluck('unique_cart_id');
+            
+        // Get the count from user_pdf_data
+        $pdfsFromUserPdfDataCount = DB::table('user_pdf_data')->whereIn('unique_id', $cartIds)->count();
+        $reachToSummaryPage = $cartIds->count();
+        
+        return response()->json([
+            'body' => view('dashboard.ai_studio_details', compact('totalAISession','pdfsFromUserPdfDataCount','reachToSummaryPage'))->render(),
+            'totalAISession' => $totalAISession,
+            'pdfsFromUserPdfDataCount' => $pdfsFromUserPdfDataCount,
+            'reachToSummaryPage' => $reachToSummaryPage,
+        ]);
+        
     }
 
 }
