@@ -84,4 +84,13 @@ class ActivityLogController extends Controller
         }
         return response()->json(['success' => true]);
     }
+
+    public function storeToAnalyticsForAI(Request $request)
+    {
+        $sessionId = session()->getId(); // Get session ID
+        $pincode = session('pincode');
+        $zone = Helper::getZoneByPincode($pincode);
+        dd($sessionId , $pincode , $zone);
+        
+    }
 }

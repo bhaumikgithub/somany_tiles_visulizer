@@ -316,6 +316,8 @@ Route::post('/add-to-pdf-data-store-ai','App\Http\Controllers\AddToPdfRoomsContr
 Route::post('check-selection-has-data','App\Http\Controllers\AddToPdfRoomsController@checkSelectionHasData');
 Route::post('/get-tile-summary', 'App\Http\Controllers\AddToPdfRoomsController@getTileSummary');
 Route::post('/track-category', [ActivityLogController::class, 'trackCategory']);
+//store-to-analytics
+Route::post('/store-to-analytics', [ActivityLogController::class, 'storeToAnalyticsForAI']);
 // Route::get('/test', 'App\Http\Controllers\HomeController@index');
 // Route::get('/test', function () {
 //     return response($_SERVER['SERVER_NAME']);

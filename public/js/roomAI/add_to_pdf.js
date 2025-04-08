@@ -59,9 +59,6 @@ function addToPDFAI(){
     }
 }
 
-let url1 = new URL(window.location.href);
-let pathSegments1 = url1.pathname.split("/");
-
 // Get the main canvas and its context
 function generateAndDownloadThumbnail(){
     // Create an offscreen canvas for the thumbnail
