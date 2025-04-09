@@ -470,7 +470,7 @@ function updateViewAllLinks(start, end) {
     $("#viewAllPincode").attr("href", `/analytics/details/pincode?start_date=${startDate}&end_date=${endDate}`);
     $("#viewAllAppliedTiles").attr("href", `/analytics/details/appliedTiles?start_date=${startDate}&end_date=${endDate}`);
     $("#viewAllTiles").attr("href", `/analytics/details/tiles?start_date=${startDate}&end_date=${endDate}`);
-    $("#viewAllRooms").attr("href", `/analytics/details/rooms?start_date=${startDate}&end_date=${endDate}`);
+    $(".viewAllRooms").attr("href", `/analytics/details/rooms?start_date=${startDate}&end_date=${endDate}`);
     $(".viewAllShowRooms").attr("href", `/analytics/details/showrooms?start_date=${startDate}&end_date=${endDate}`);
     $("#viewAllPDF").attr("href", `/analytics/details/pdf?start_date=${startDate}&end_date=${endDate}`);
 }

@@ -197,7 +197,7 @@
                                     @include('dashboard.top_rooms')
                                 </div>
                                 <div class="col-12 mt-2" style="text-align: right;">
-                                    <a href="{{ route('analytics.details', ['type' => 'rooms']) }}" id="viewAllRooms">View All ></a>
+                                    <a href="{{ route('analytics.details', ['type' => 'rooms']) }}" class="viewAllRooms">View All ></a>
                                 </div>
                             </div>
                         </div>
