@@ -471,7 +471,7 @@ function updateViewAllLinks(start, end) {
     $("#viewAllAppliedTiles").attr("href", `/analytics/details/appliedTiles?start_date=${startDate}&end_date=${endDate}`);
     $("#viewAllTiles").attr("href", `/analytics/details/tiles?start_date=${startDate}&end_date=${endDate}`);
     $(".viewAllRooms").attr("href", `/analytics/details/rooms?start_date=${startDate}&end_date=${endDate}`);
-    $(".viewAllShowRooms").attr("href", `/analytics/details/showrooms?start_date=${startDate}&end_date=${endDate}`);
+    $(".viewAllShowRooms").attr("href", `/analytics/details/showroom?start_date=${startDate}&end_date=${endDate}`);
     $("#viewAllPDF").attr("href", `/analytics/details/pdf?start_date=${startDate}&end_date=${endDate}`);
 }
 
@@ -562,6 +562,20 @@ if( $('.report_wrapper').length) {
         $("#selectedDateRangeDetailText").text(`Showing result from ${moment(startDate).format("Do MMM")} to ${moment(endDate).format("Do MMM YYYY")}`);
         getAndFetchDetailPages(formattedStart,formattedEnd,detailPageType);
     }
+    let pdfTable ;
+
+    /** Datatable initialization */
+    pdfTable = new DataTable('#pdf_table', {
+        responsive: true,
+        pageLength: 10,
+        searching: true,
+        ordering: false,
+        autoWidth: false,
+    });
+
+    setTimeout(() => {
+        $('#pdf_table').removeClass('dataTable');
+    }, 5); // adjust delay if needed
 
     getAndFetchDetailPages(startDateFromURL,endDateFromURL,detailPageType);
 
@@ -572,7 +586,22 @@ if( $('.report_wrapper').length) {
             headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content') },
             data: { startDate, endDate , type },
             success: function(response) {
+                // Destroy previous table if exists
+                pdfTable.destroy();
+
                 $('#'+detailPageType+'_tbody').html(response.body);
+
+                // Reinitialize DataTable
+                pdfTable = $('#pdf_table').DataTable({
+                    responsive: true,
+                    pageLength: 10,
+                    searching: true,
+                    ordering: false,
+                    autoWidth: false
+                });
+                setTimeout(() => {
+                    $('#pdf_table').removeClass('dataTable');
+                }, 5); // adjust delay if needed
             },
             error: function(error) {
                 console.error("Error loading Data:", error);
@@ -597,8 +626,8 @@ if( $('.report_wrapper').length) {
         if( detailPageType === "rooms")
             fetchReportDetail(formattedStart, formattedEnd , "rooms");
 
-        if( detailPageType === "showrooms")
-            fetchReportDetail(formattedStart, formattedEnd , "showrooms");
+        if( detailPageType === "showroom")
+            fetchReportDetail(formattedStart, formattedEnd , "showroom");
 
         if( detailPageType === "pdf")
             fetchReportDetail(formattedStart, formattedEnd , "pdf");

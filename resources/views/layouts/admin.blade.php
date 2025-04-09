@@ -12,6 +12,8 @@
     <!-- base:css -->
     <link rel="stylesheet" href="/css/admin/vendors/typicons.font/font/typicons.css">
     <link rel="stylesheet" href="/css/admin/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="/css/dataTables.dataTables.css" />
+
 
     <!-- inject:css -->
     <link rel="stylesheet" href="/css/admin/vertical-layout-light/style.css">
@@ -32,8 +34,6 @@
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
                     <li class="nav-item">
-
-
                         <p class="sidebar-menu-title"><a href="/home">Back to Admin</a></p>
                     </li>
                     <li class="nav-item {{ $view_name == 'dashboard.index' ? 'active' : '' }}">
@@ -66,15 +66,16 @@
                             <span class="menu-title">Tiles</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('analytics.details', ['type' => 'rooms']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}" id="viewAllRooms">
+                    <li class="nav-item {{ Request::segment(3) === 'rooms' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('analytics.details', ['type' => 'rooms']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}" class="viewAllRooms">
                             <i class="typcn typcn-compass menu-icon"></i>
                             <span class="menu-title">Rooms</span>
                         </a>
                     </li>
+                    
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('analytics.details', ['type' => 'showrooms']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}" id="viewAllShowRooms">
-                            <i class="typcn typcn-user-add-outline menu-icon"></i>
+                        <a class="nav-link" href="{{ route('analytics.details', ['type' => 'showroom']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
+                            <i class="typcn typcn-th-small-outline menu-icon"></i>
                             <span class="menu-title">Showrooms</span>
                         </a>
                     </li>
@@ -86,12 +87,12 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="{{ route('analytics.details', ['type' => 'ai-studio'])}}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}" id="ai-studio">
                             <i class="typcn typcn-document-text menu-icon"></i>
                             <span class="menu-title">AI Studio</span>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </nav>
             <div class="main-panel">
@@ -115,14 +116,14 @@
     <!-- plugin js for this page -->
     <script src="/css/admin/vendors/progressbar.js/progressbar.min.js"></script>
     <script src="/css/admin/vendors/chart.js/Chart.min.js"></script>
+    <script src="/js/dashboard/datatables.min.js" integrity="sha384-2Ul6oqy3mEjM7dBJzKOck1Qb/mzlO+k/0BQv3D3C7u+Ri9+7OBINGa24AeOv5rgu" crossorigin="anonymous"></script>
+
     <!-- End plugin js for this page -->
     <!-- Custom js for this page-->
-{{--    <script src="/js/admin/js/dashboard.js"></script>--}}
     <script src="/js/admin/js/custom.js"></script>
     <!-- End custom js for this page-->
     <script src="/js/dashboard/moment.min.js"></script>
     <script src="/js/dashboard/daterangepicker.min.js"></script>
-{{--    <script src="/js/dashboard/chart.js"></script>--}}
     <script src="/js/report.js"></script>
     @stack('custom-scripts')
 </body>

@@ -9,6 +9,8 @@
                         Tiles Applied On
                     @elseif($type === "roomCategories")
                         Room Cartegories
+                    @elseif($type === "pdf")
+                        PDF
                     @else
                         {{ucwords($type)}}
                     @endif
@@ -24,7 +26,7 @@
                 </div>
             </div>
         </div>
-        @if($type !== "showrooms" && $type !== "ai-studio")
+        @if($type !== "showroom" && $type !== "ai-studio")
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
@@ -34,6 +36,8 @@
                                 Tiles Applied On Data
                             @elseif($type === "roomCategories")
                                 Room Cartegories Data
+                            @elseif($type === "pdf")
+                                PDF Data
                             @else
                                 {{$type}} Data
                             @endif    
@@ -114,14 +118,15 @@
                                         </tbody>
                                     </table>
                                     @else
-                                        <table class="table">
+                                        <table class="table" id="pdf_table">
                                             <thead>
-                                                <tr style="text-align:center">
-                                                    <th>Guest Users</th>
-                                                    <th>Logged in Users</th>
-                                                    <th>Total</td>
-                                                    <th>Generate Summary page</td>
-                                                    <th>Download PDF</th>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>User</th>
+                                                    <th>Contact No</td>
+                                                    <th>Pincode</td>
+                                                    <th>PDF</th>
+                                                    <th>Date</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="pdf_tbody">

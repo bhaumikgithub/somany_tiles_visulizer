@@ -644,7 +644,7 @@ class DashboardController extends Controller
             case 'roomCategories':
             case 'tiles':
             case 'rooms':
-            case 'showrooms':
+            case 'showroom':
             case 'pdf':
             case 'ai-studio':
                 return view('dashboard.details', compact('startDate', 'endDate','type'));
@@ -685,7 +685,7 @@ class DashboardController extends Controller
                 $data = $this->roomDetails($startDate , $endDate);
                 break;
 
-            case 'showrooms':
+            case 'showroom':
                 $data = $this->showRoomDetails($startDate , $endDate);
                 break;
 
@@ -1212,37 +1212,48 @@ class DashboardController extends Controller
         
     }
 
+    // protected function sessionPDFDetails($startDate, $endDate) 
+    // {
+    //     // Get all sessions in the date range
+    //     $sessions = $this->totalSession($startDate , $endDate);
+
+    //     // Count logged-in users
+    //     $loggedInUsers = $sessions->whereNotNull('user_logged_in')->unique('user_logged_in')->count();
+
+    //     // Count guest users
+    //     $guestUsers = $sessions->where('user_logged_in','guest')->count();
+
+    //     // Total users (Logged-in + Guests)
+    //     $totalUsers = $loggedInUsers + $guestUsers;
+
+    //     // Count generated summary pages (sessions that reached summary page)
+    //     $summaryPages = $sessions->whereNotNull('unique_cart_id')->count();
+
+    //     // Count PDF downloads
+    //     $pdfDownloads = UserPdfData::whereBetween('created_at', [$startDate, $endDate])->count();
+
+    //     $user_analytics = [
+    //         'guest_users' => $guestUsers,
+    //         'logged_in_users' => $loggedInUsers,
+    //         'total_users' => $totalUsers,
+    //         'generated_summary_pages' => $summaryPages,
+    //         'pdf_downloads' => $pdfDownloads
+    //     ];
+
+    //     return response()->json([
+    //         'body' => view('dashboard.pdf_session_details', compact('user_analytics'))->render(),
+    //         'user_analytics' => $user_analytics,
+    //     ]);
+
+    // }
+
     protected function sessionPDFDetails($startDate, $endDate) 
     {
-        // Get all sessions in the date range
-        $sessions = $this->totalSession($startDate , $endDate);
-
-        // Count logged-in users
-        $loggedInUsers = $sessions->whereNotNull('user_logged_in')->unique('user_logged_in')->count();
-
-        // Count guest users
-        $guestUsers = $sessions->where('user_logged_in','guest')->count();
-
-        // Total users (Logged-in + Guests)
-        $totalUsers = $loggedInUsers + $guestUsers;
-
-        // Count generated summary pages (sessions that reached summary page)
-        $summaryPages = $sessions->whereNotNull('unique_cart_id')->count();
-
         // Count PDF downloads
-        $pdfDownloads = UserPdfData::whereBetween('created_at', [$startDate, $endDate])->count();
-
-        $user_analytics = [
-            'guest_users' => $guestUsers,
-            'logged_in_users' => $loggedInUsers,
-            'total_users' => $totalUsers,
-            'generated_summary_pages' => $summaryPages,
-            'pdf_downloads' => $pdfDownloads
-        ];
-
+        $pdfDownloads = UserPdfData::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at','DESC')->get();
         return response()->json([
-            'body' => view('dashboard.pdf_session_details', compact('user_analytics'))->render(),
-            'user_analytics' => $user_analytics,
+            'body' => view('dashboard.pdf_session_details', compact('pdfDownloads'))->render(),
+            'pdfDownloads' => $pdfDownloads,
         ]);
 
     }
