@@ -566,33 +566,38 @@ if( $('.report_wrapper').length) {
     let viewdUsedTiles;
 
     /** Datatable initialization */
-    pdfTable = new DataTable('#pdf_table', {
-        responsive: true,
-        pageLength: 10,
-        searching: true,
-        ordering: false,
-        autoWidth: false,
-    });
+    if( $('#pdf_table').length){
+        pdfTable = new DataTable('#pdf_table', {
+            responsive: true,
+            pageLength: 10,
+            searching: true,
+            ordering: false,
+            autoWidth: false,
+        });
+    }
 
-    viewdUsedTiles = new DataTable('#viewed_used_table', {
-        responsive: true,
-        pageLength: 10,
-        searching: true,
-        ordering: true,
-        order: [], // disables default sorting on first column
-        autoWidth: false,
-        columnDefs: [
-            {
-                targets: Array.from({ length: 10 }, (_, i) => i), // [0 to 9]
-                orderable: false
-            }
-        ]
-    });
+    if( $('#viewed_used_table').length){
+        viewdUsedTiles = new DataTable('#viewed_used_table', {
+            responsive: true,
+            pageLength: 10,
+            searching: true,
+            ordering: true,
+            order: [], // disables default sorting on first column
+            autoWidth: false,
+            columnDefs: [
+                {
+                    targets: Array.from({ length: 10 }, (_, i) => i), // [0 to 9]
+                    orderable: false
+                }
+            ]
+        });
+    }
 
     setTimeout(() => {
         $('#pdf_table').removeClass('dataTable');
         $('#viewed_used_table').removeClass('dataTable');
     }, 5); // adjust delay if needed
+    
 
     getAndFetchDetailPages(startDateFromURL,endDateFromURL,detailPageType);
 
@@ -603,36 +608,40 @@ if( $('.report_wrapper').length) {
             headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content') },
             data: { startDate, endDate , type },
             success: function(response) {
-                // Destroy previous table if exists
-                pdfTable.destroy();
-                viewdUsedTiles.destroy();
+                if( $('#pdf_table').length || $('#viewed_used_table').length){
+                    // Destroy previous table if exists
+                    pdfTable.destroy();
+                    viewdUsedTiles.destroy();
+                }
 
                 $('#'+detailPageType+'_tbody').html(response.body);
 
-                // Reinitialize DataTable
-                pdfTable = $('#pdf_table').DataTable({
-                    responsive: true,
-                    pageLength: 10,
-                    searching: true,
-                    ordering: false,
-                    autoWidth: false
-                });
+                if( $('#pdf_table').length || $('#viewed_used_table').length){
+                    // Reinitialize DataTable
+                    pdfTable = $('#pdf_table').DataTable({
+                        responsive: true,
+                        pageLength: 10,
+                        searching: true,
+                        ordering: false,
+                        autoWidth: false
+                    });
 
-                /** Datatable initialization */
-                viewdUsedTiles = new DataTable('#viewed_used_table', {
-                    responsive: true,
-                    pageLength: 10,
-                    searching: true,
-                    ordering: true,
-                    autoWidth: false,
-                    order: [], // disables default sorting on first column
-                    columnDefs: [
-                        {
-                            targets: Array.from({ length: 10 }, (_, i) => i), // [0 to 9]
-                            orderable: false
-                        }
-                    ]
-                });
+                    /** Datatable initialization */
+                    viewdUsedTiles = new DataTable('#viewed_used_table', {
+                        responsive: true,
+                        pageLength: 10,
+                        searching: true,
+                        ordering: true,
+                        autoWidth: false,
+                        order: [], // disables default sorting on first column
+                        columnDefs: [
+                            {
+                                targets: Array.from({ length: 10 }, (_, i) => i), // [0 to 9]
+                                orderable: false
+                            }
+                        ]
+                    });
+                }
             },
             error: function(error) {
                 console.error("Error loading Data:", error);
