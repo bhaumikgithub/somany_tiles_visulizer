@@ -93,14 +93,11 @@
                                                 <th rowspan="2">Name</th>
                                                 <th rowspan="2">Size</th>
                                                 <th rowspan="2">Finishes</th>
-                                                <th rowspan="2">Tiles Category</th>
-                                                <th rowspan="2">Tiles Innovation</th>
-                                                <th rowspan="2">Tiles Colour</th>
                                                 <th rowspan="2">Floor</th>
                                                 <th rowspan="2">Wall</th>
                                                 <th rowspan="2">Counter</th>
                                                 <th colspan="5">Viewed Tiles (Zone-wise)</th>
-                                                <th colspan="5">Used Tiles (Zone-wise)</th>
+                                                <!-- <th colspan="5">Used Tiles (Zone-wise)</th> -->
                                             </tr>
                                             <tr>
                                                 <th>Central</th>
@@ -109,11 +106,11 @@
                                                 <th>North</th>
                                                 <th>South</th>
 
-                                                <th>Central</th>
+                                                <!-- <th>Central</th>
                                                 <th>East</th>
                                                 <th>West</th>
                                                 <th>North</th>
-                                                <th>South</th>
+                                                <th>South</th> -->
                                             </tr>
                                         </thead>
                                         <tbody id="tiles_tbody">
