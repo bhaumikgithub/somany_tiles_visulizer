@@ -56,14 +56,14 @@ $('#pincodeForm').on('submit', function (e) {
     });
 });
 
-function fetchCategory(category) {
+function fetchCategory(category,type) {
     fetch("/track-category", {
         method: "POST",
         headers: {
             "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ category: category }),
+        body: JSON.stringify({ category: category , type:type }),
     })
         .then(response => response.json())
         .then(data => {

@@ -20,8 +20,10 @@ class ActivityLogController extends Controller
             'pincode' => $pincode,
             'zone' => $zone
         ];
-
-        $category = $request->category;
+        $category = [
+            'category_name' => $request->category,
+            'category_type' => $request->type,
+        ];
         $roomData = [
             'room_id' => $request->room_id,
             'room_name' => $request->room,
@@ -104,16 +106,23 @@ class ActivityLogController extends Controller
             $loged_user = auth()->user();
             $user = $loged_user->id;
         }
-         // New session, create a new analytics entry
-         Analytics::create([
-            'session_id' => $sessionId,
-            'pincode' => json_encode([$pincode]),
-            'zone' => json_encode([$zone]),
-            'category' => json_encode($request->room), // Store non-null room data
-            'room' => json_encode($request->room), // Store non-null room data
-            'user_logged_in' => $user,
-            'showroom' => $loged_user->showroom_id ?? null,
-        ]);
+
+        $analytics = Analytics::where('session_id', $sessionId)->first();
+        if( $analytics){
+
+        } else {
+            // New session, create a new analytics entry
+            Analytics::create([
+                'session_id' => $sessionId,
+                'pincode' => json_encode([$pincode]),
+                'zone' => json_encode([$zone]),
+                'category' => json_encode($request->room), // Store non-null room data
+                'room' => json_encode($request->room), // Store non-null room data
+                'user_logged_in' => $user,
+                'showroom' => $loged_user->showroom_id ?? null,
+            ]);
+        }
+        
     }
 
     public function storeViewdTilesByUser(Request $request)

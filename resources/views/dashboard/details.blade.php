@@ -58,15 +58,24 @@
                                         </tbody>
                                     </table>
                                 @elseif( $type === "appliedTiles")
-                                    <table class="table">
+                                    <table class="table" id="used_tiles_table">
                                         <thead>
                                             <tr>
-                                                <th></th>
-                                                <th>Tiles Name</th>
-                                                <th>Finishes</th>
-                                                <th>Room Name</th>
-                                                <th>Category Name</th>
-                                                <th>Number of Times Used</th>
+                                                <th rowspan="2"></th>
+                                                <th rowspan="2">Name</th>
+                                                <th rowspan="2">Size</th>
+                                                <th rowspan="2">Finishes</th>
+                                                <th rowspan="2">Floor</th>
+                                                <th rowspan="2">Wall</th>
+                                                <th rowspan="2">Counter</th>
+                                                <th colspan="5">Used Tiles (Zone-wise)</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Central</th>
+                                                <th>East</th>
+                                                <th>West</th>
+                                                <th>North</th>
+                                                <th>South</th>
                                             </tr>
                                         </thead>
                                         <tbody id="appliedTiles_tbody">
@@ -97,7 +106,6 @@
                                                 <th rowspan="2">Wall</th>
                                                 <th rowspan="2">Counter</th>
                                                 <th colspan="5">Viewed Tiles (Zone-wise)</th>
-                                                <!-- <th colspan="5">Used Tiles (Zone-wise)</th> -->
                                             </tr>
                                             <tr>
                                                 <th>Central</th>
@@ -105,12 +113,6 @@
                                                 <th>West</th>
                                                 <th>North</th>
                                                 <th>South</th>
-
-                                                <!-- <th>Central</th>
-                                                <th>East</th>
-                                                <th>West</th>
-                                                <th>North</th>
-                                                <th>South</th> -->
                                             </tr>
                                         </thead>
                                         <tbody id="tiles_tbody">

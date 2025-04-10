@@ -564,38 +564,23 @@ if( $('.report_wrapper').length) {
     }
     let pdfTable ;
     let viewdUsedTiles;
+    let usedTiles;
 
     /** Datatable initialization */
     if( $('#pdf_table').length){
-        pdfTable = new DataTable('#pdf_table', {
-            responsive: true,
-            pageLength: 10,
-            searching: true,
-            ordering: false,
-            autoWidth: false,
-        });
+        pdfDatatable();
     }
 
     if( $('#viewed_used_table').length){
-        viewdUsedTiles = new DataTable('#viewed_used_table', {
-            responsive: true,
-            pageLength: 10,
-            searching: true,
-            ordering: true,
-            order: [], // disables default sorting on first column
-            autoWidth: false,
-            columnDefs: [
-                {
-                    targets: Array.from({ length: 10 }, (_, i) => i), // [0 to 9]
-                    orderable: false
-                }
-            ]
-        });
+        tilesDatatable();
+    }
+
+    if( $('#used_tiles_table').length){
+        usedTilesDatatable();
     }
 
     setTimeout(() => {
         $('#pdf_table').removeClass('dataTable');
-        $('#viewed_used_table').removeClass('dataTable');
     }, 5); // adjust delay if needed
     
 
@@ -616,33 +601,16 @@ if( $('.report_wrapper').length) {
                     viewdUsedTiles.destroy();
                 }
 
+                if( $('#used_tiles_table').length){
+                    usedTiles.destroy();
+                }
+
                 $('#'+detailPageType+'_tbody').html(response.body);
 
-                if( $('#pdf_table').length || $('#viewed_used_table').length){
-                    // Reinitialize DataTable
-                    pdfTable = $('#pdf_table').DataTable({
-                        responsive: true,
-                        pageLength: 10,
-                        searching: true,
-                        ordering: false,
-                        autoWidth: false
-                    });
-
-                    /** Datatable initialization */
-                    viewdUsedTiles = new DataTable('#viewed_used_table', {
-                        responsive: true,
-                        pageLength: 10,
-                        searching: true,
-                        ordering: true,
-                        autoWidth: false,
-                        order: [], // disables default sorting on first column
-                        columnDefs: [
-                            {
-                                targets: Array.from({ length: 10 }, (_, i) => i), // [0 to 9]
-                                orderable: false
-                            }
-                        ]
-                    });
+                if( $('#pdf_table').length || $('#viewed_used_table').length || $('#used_tiles_table').length){
+                    pdfDatatable();
+                    tilesDatatable();
+                    usedTilesDatatable();
                 }
             },
             error: function(error) {
@@ -676,5 +644,55 @@ if( $('.report_wrapper').length) {
 
         if( detailPageType === "ai-studio")
             fetchReportDetail(formattedStart, formattedEnd , "ai-studio");
+    }
+
+    function pdfDatatable()
+    {
+        // Reinitialize DataTable
+        pdfTable = $('#pdf_table').DataTable({
+            responsive: true,
+            pageLength: 10,
+            searching: true,
+            ordering: false,
+            autoWidth: false
+        });
+    }
+
+    function tilesDatatable()
+    {
+        /** Datatable initialization */
+        viewdUsedTiles = new DataTable('#viewed_used_table', {
+            responsive: true,
+            pageLength: 10,
+            searching: true,
+            ordering: true,
+            autoWidth: false,
+            order: [], // disables default sorting on first column
+            columnDefs: [
+                {
+                    targets: Array.from({ length: 6 }, (_, i) => i), // [0 to 9]
+                    orderable: false
+                }
+            ]
+        });
+    }
+
+    function usedTilesDatatable()
+    {
+         /** Datatable initialization */
+         usedTiles = new DataTable('#used_tiles_table', {
+            responsive: true,
+            pageLength: 10,
+            searching: true,
+            ordering: true,
+            autoWidth: false,
+            order: [], // disables default sorting on first column
+            columnDefs: [
+                {
+                    targets: Array.from({ length: 6 }, (_, i) => i), // [0 to 9]
+                    orderable: false
+                }
+            ]
+        });
     }
 }

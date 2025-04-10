@@ -1,12 +1,21 @@
-@if( isset($appliedTiles))
-    @foreach($appliedTiles as $tile)
+@if( isset($processedTiles))
+    @foreach($processedTiles as $aTiles)
+    @php
+        $zoneCounts = is_array($aTiles['zone_used_count']) ? $aTiles['zone_used_count'] : (array) $aTiles['zone_used_count'];
+    @endphp
         <tr>
-            <td><img class="img-lg mb-md-0 mr-2" src="{{$tile['photo']}}" alt="profile image" style="border-radius: 10px;"></td>
-            <td>{{ $tile['name'] }}</td>
-            <td>{{ ucwords($tile['finish']) }}</td>
-            <td>{{ $tile['room_names'] }}</td>
-            <td>{{ ucwords(str_replace("_"," ",$tile['category'])) }}</td>
-            <td>{{ $tile['used_count'] }}</td>
+            <td><img class="img-lg mb-md-0 mr-2" src="{{$aTiles['photo']}}" alt="profile image" style="border-radius: 10px;"></td>
+            <td>{{$aTiles['name']}}</td>
+            <td>{{str_replace(" MM","",$aTiles['size'])}}</td>
+            <td>{{ucfirst($aTiles['finish'])}}</td>
+            <td>{{$aTiles['floor_count'] }}</td>
+            <td>{{$aTiles['wall_count']}}</td>
+            <td>{{$aTiles['counter_count']}}</td>
+            <td>{{ $zoneCounts['central'] ?? "-" }}</td>
+            <td>{{ $zoneCounts['east'] ?? "-" }}</td>
+            <td>{{ $zoneCounts['west'] ?? "-" }}</td>
+            <td>{{ $zoneCounts['north'] ?? "-" }}</td>
+            <td>{{ $zoneCounts['south'] ?? "-" }}</td>
         </tr>
     @endforeach
 @endif

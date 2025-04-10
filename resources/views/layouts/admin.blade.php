@@ -51,7 +51,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('analytics.details', ['type' => 'appliedTiles']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
                             <i class="typcn typcn-film menu-icon"></i>
-                            <span class="menu-title">Tiles Applied On</span>
+                            <span class="menu-title">Used Tiles</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -63,7 +63,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('analytics.details', ['type' => 'tiles']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
                             <i class="typcn typcn-th-small-outline menu-icon"></i>
-                            <span class="menu-title">Tiles</span>
+                            <span class="menu-title">Viewd Tiles</span>
                         </a>
                     </li>
                     <li class="nav-item {{ Request::segment(3) === 'rooms' ? 'active' : '' }}">

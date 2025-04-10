@@ -172,7 +172,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-wrap justify-content-between">
-                            <h4 class="card-title mb-3">Most Used Tiles (Top 5)</h4>
+                            <h4 class="card-title mb-3">Most Viewd/Used Tiles (Top 5)</h4>
                         </div>
 
                         <div class="table-responsive topFiveTilesWrapper">
