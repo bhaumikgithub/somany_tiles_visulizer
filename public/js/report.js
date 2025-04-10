@@ -608,9 +608,11 @@ if( $('.report_wrapper').length) {
             headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content') },
             data: { startDate, endDate , type },
             success: function(response) {
-                if( $('#pdf_table').length || $('#viewed_used_table').length){
-                    // Destroy previous table if exists
+                if( $('#pdf_table').length){
                     pdfTable.destroy();
+                }
+
+                if( $('#viewed_used_table').length){
                     viewdUsedTiles.destroy();
                 }
 
