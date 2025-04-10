@@ -116,7 +116,7 @@
     <!-- plugin js for this page -->
     <script src="/css/admin/vendors/progressbar.js/progressbar.min.js"></script>
     <script src="/css/admin/vendors/chart.js/Chart.min.js"></script>
-    <script src="/js/dashboard/datatables.min.js" integrity="sha384-2Ul6oqy3mEjM7dBJzKOck1Qb/mzlO+k/0BQv3D3C7u+Ri9+7OBINGa24AeOv5rgu" crossorigin="anonymous"></script>
+    <script src="/js/dashboard/datatables.min.js" crossorigin="anonymous"></script>
 
     <!-- End plugin js for this page -->
     <!-- Custom js for this page-->
