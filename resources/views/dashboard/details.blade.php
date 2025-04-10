@@ -86,19 +86,34 @@
                                         </tbody>
                                     </table>
                                 @elseif( $type === "tiles")
-                                    <table class="table">
+                                    <table class="table" id="viewed_used_table">
                                         <thead>
                                             <tr>
-                                                <th>Image</th>
-                                                <th>Name</th>
-                                                <th>Size</th>
-                                                <th>Finishes</th> <!-- KEY PARAM -->
-                                                <th>Tiles Category</th>
-                                                <th>Tiles Innovation</th>
-                                                <th>Tiles Colour</th>
-                                                <th>Floor</th>
-                                                <th>Wall</th>
-                                                <th>Counter</th>
+                                                <th rowspan="2"></th>
+                                                <th rowspan="2">Name</th>
+                                                <th rowspan="2">Size</th>
+                                                <th rowspan="2">Finishes</th>
+                                                <th rowspan="2">Tiles Category</th>
+                                                <th rowspan="2">Tiles Innovation</th>
+                                                <th rowspan="2">Tiles Colour</th>
+                                                <th rowspan="2">Floor</th>
+                                                <th rowspan="2">Wall</th>
+                                                <th rowspan="2">Counter</th>
+                                                <th colspan="5">Viewed Tiles (Zone-wise)</th>
+                                                <th colspan="5">Used Tiles (Zone-wise)</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Central</th>
+                                                <th>East</th>
+                                                <th>West</th>
+                                                <th>North</th>
+                                                <th>South</th>
+
+                                                <th>Central</th>
+                                                <th>East</th>
+                                                <th>West</th>
+                                                <th>North</th>
+                                                <th>South</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tiles_tbody">
@@ -117,7 +132,7 @@
                                             @include('dashboard.rooms_details')
                                         </tbody>
                                     </table>
-                                    @else
+                                @else
                                         <table class="table" id="pdf_table">
                                             <thead>
                                                 <tr>

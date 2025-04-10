@@ -240,7 +240,6 @@ class AddToPdfRoomsController extends Controller
 
             foreach ($allProduct as $product) {
                 $tiles = json_decode($product->tiles_json, true); // Decode JSON to array
-
                 if (!empty($tiles) && is_array($tiles)) {
                     foreach ($tiles as $tile) {
                         $usedTiles[] = [
@@ -248,7 +247,9 @@ class AddToPdfRoomsController extends Controller
                             'tile_name' => $tile['name'],
                             'surface' => $tile['surface'],
                             'room_name' => $product['room_name'],
-                            'room_type' => $product['room_type']
+                            'room_type' => $product['room_type'],
+                            "pincode" => $getCartId->pincode,
+                            "zone" => Helper::getZoneByPincode($getCartId->pincode),
                         ];
                     }
                 }
@@ -257,7 +258,6 @@ class AddToPdfRoomsController extends Controller
 
         //Save data into analytics table
         $analytics = Analytics::where('session_id', $getCartId->user_id)->first();
-
         if ($analytics) {
             $existingTiles = json_decode($analytics->used_tiles, true) ?? [];
             $existingTiles = array_merge($existingTiles, $usedTiles); // Append new tiles

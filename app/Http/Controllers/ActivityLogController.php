@@ -115,4 +115,37 @@ class ActivityLogController extends Controller
             'showroom' => $loged_user->showroom_id ?? null,
         ]);
     }
+
+    public function storeViewdTilesByUser(Request $request)
+    {
+        $sessionId = session()->getId(); // Get session ID
+        $pincode = session('pincode');
+        $zone = Helper::getZoneByPincode($pincode);
+        // Check if an analytics record exists for the session
+        $analytics = Analytics::where('session_id', $sessionId)->first();
+        if($analytics)
+        {   
+            $tileData = Helper::getTileNameAndSurface($request->userSelectedTileId);
+            // Get existing viewed_tiles and decode
+            $viewedTiles = json_decode($analytics->viewed_tiles, true) ?? [];
+            // New tile view entry
+            $newTile = [
+                "surface" => $request->surface,
+                "tile_id" => $request->userSelectedTileId,
+                "room_name" => $request->current_room_name ?? "",
+                "room_type" => $request->current_room_type ?? "",
+                "tile_name" => $tileData['tile_name'],
+                "pincode" => $pincode,
+                "zone" => $zone,
+            ];
+
+            // Append new entry
+            $viewedTiles[] = $newTile;
+            
+            $analytics->update([
+                'viewed_tiles' => json_encode(array_values($viewedTiles)), // Store updated JSON
+            ]);
+        }
+        return response()->json(['success' => true]);
+    }
 }

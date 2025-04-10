@@ -563,6 +563,7 @@ if( $('.report_wrapper').length) {
         getAndFetchDetailPages(formattedStart,formattedEnd,detailPageType);
     }
     let pdfTable ;
+    let viewdUsedTiles;
 
     /** Datatable initialization */
     pdfTable = new DataTable('#pdf_table', {
@@ -573,8 +574,24 @@ if( $('.report_wrapper').length) {
         autoWidth: false,
     });
 
+    viewdUsedTiles = new DataTable('#viewed_used_table', {
+        responsive: true,
+        pageLength: 10,
+        searching: true,
+        ordering: true,
+        order: [], // disables default sorting on first column
+        autoWidth: false,
+        columnDefs: [
+            {
+                targets: Array.from({ length: 10 }, (_, i) => i), // [0 to 9]
+                orderable: false
+            }
+        ]
+    });
+
     setTimeout(() => {
         $('#pdf_table').removeClass('dataTable');
+        $('#viewed_used_table').removeClass('dataTable');
     }, 5); // adjust delay if needed
 
     getAndFetchDetailPages(startDateFromURL,endDateFromURL,detailPageType);
@@ -588,6 +605,7 @@ if( $('.report_wrapper').length) {
             success: function(response) {
                 // Destroy previous table if exists
                 pdfTable.destroy();
+                viewdUsedTiles.destroy();
 
                 $('#'+detailPageType+'_tbody').html(response.body);
 
@@ -599,9 +617,22 @@ if( $('.report_wrapper').length) {
                     ordering: false,
                     autoWidth: false
                 });
-                setTimeout(() => {
-                    $('#pdf_table').removeClass('dataTable');
-                }, 5); // adjust delay if needed
+
+                /** Datatable initialization */
+                viewdUsedTiles = new DataTable('#viewed_used_table', {
+                    responsive: true,
+                    pageLength: 10,
+                    searching: true,
+                    ordering: true,
+                    autoWidth: false,
+                    order: [], // disables default sorting on first column
+                    columnDefs: [
+                        {
+                            targets: Array.from({ length: 10 }, (_, i) => i), // [0 to 9]
+                            orderable: false
+                        }
+                    ]
+                });
             },
             error: function(error) {
                 console.error("Error loading Data:", error);

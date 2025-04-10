@@ -463,69 +463,145 @@ class DashboardController extends Controller
     //     dd($topTiles);
     //     return $topTiles;
     // }
+    // protected function topFiveTiles($startDate, $endDate): array
+    // {
+    //     $tilesData = Analytics::select(
+    //         DB::raw('JSON_UNQUOTE(used_tiles) as tiles_json')
+    //     )->whereBetween('visited_at', [$startDate, $endDate])->get();
+
+    //     $processedTiles = [];
+    //     $totalUsedCount = 0;
+
+    //     foreach ($tilesData as $row) {
+    //         if (empty($row->tiles_json)) continue;
+
+    //         $tiles = json_decode($row->tiles_json, true);
+    //         if (!is_array($tiles)) continue;
+
+    //         foreach ($tiles as $tile) {
+    //             $tileId = $tile["tile_id"] ?? null;
+    //             $tileName = $tile["tile_name"] ?? null;
+    //             if (!$tileId || !$tileName) continue;
+
+    //             // Fetch tile details
+    //             $tileDetails = Helper::getTileNameAndSurface($tileId);
+
+    //             // Group by tile name
+    //             if (!isset($processedTiles[$tileName])) {
+    //                 $processedTiles[$tileName] = [
+    //                     "name" => $tileName,
+    //                     "size" => $tileDetails['size'] ?? "Unknown",
+    //                     "surface" => $tileDetails['surface'] ?? "Unknown", // Could be "wall", "floor", or overwrite later if needed
+    //                     "photo" => $tileDetails['photo'] ?? "default.jpg",
+    //                     "used_count" => 0,
+    //                     "finish" => $tileDetails["finish"] ?? "Unknown",
+    //                 ];
+    //             }
+
+    //             // Add usage count
+    //             $processedTiles[$tileName]['used_count'] += 1;
+    //             $totalUsedCount += 1;
+
+    //             // Optional: prefer wall surface in display if exists
+    //             if ($tileDetails['surface'] === 'wall') {
+    //                 $processedTiles[$tileName]['surface'] = 'wall';
+    //             }
+    //         }
+    //     }
+
+    //     // Sort by usage
+    //     usort($processedTiles, function ($a, $b) {
+    //         return $b['used_count'] <=> $a['used_count'];
+    //     });
+
+    //     // Top 5 tiles
+    //     $topTiles = array_slice($processedTiles, 0, 5);
+
+    //     // Add percentages
+    //     foreach ($topTiles as &$tile) {
+    //         $tile['percentage'] = ($totalUsedCount > 0)
+    //             ? round(($tile['used_count'] / $totalUsedCount) * 100, 2)
+    //             : 0;
+    //     }
+
+    //     return $topTiles;
+    // }
+
     protected function topFiveTiles($startDate, $endDate): array
     {
         $tilesData = Analytics::select(
-            DB::raw('JSON_UNQUOTE(used_tiles) as tiles_json')
+            DB::raw('JSON_UNQUOTE(viewed_tiles) as viewed'),
+            DB::raw('JSON_UNQUOTE(used_tiles) as used')
         )->whereBetween('visited_at', [$startDate, $endDate])->get();
-
+    
         $processedTiles = [];
-        $totalUsedCount = 0;
-
+        $totalCount = 0;
+    
         foreach ($tilesData as $row) {
-            if (empty($row->tiles_json)) continue;
-
-            $tiles = json_decode($row->tiles_json, true);
-            if (!is_array($tiles)) continue;
-
-            foreach ($tiles as $tile) {
+            $allTiles = [];
+    
+            // Decode viewed tiles
+            $viewed = json_decode($row->viewed ?? '[]', true);
+            if (is_array($viewed)) {
+                $allTiles = array_merge($allTiles, $viewed);
+            }
+    
+            // Decode used tiles
+            $used = json_decode($row->used ?? '[]', true);
+            if (is_array($used)) {
+                $allTiles = array_merge($allTiles, $used);
+            }
+    
+            foreach ($allTiles as $tile) {
                 $tileId = $tile["tile_id"] ?? null;
                 $tileName = $tile["tile_name"] ?? null;
+    
                 if (!$tileId || !$tileName) continue;
-
-                // Fetch tile details
-                $tileDetails = Helper::getTileNameAndSurface($tileId);
-
-                // Group by tile name
+    
+                // Use tile_id as unique key
                 if (!isset($processedTiles[$tileName])) {
+                    $tileDetails = Helper::getTileNameAndSurface($tileId);
+    
                     $processedTiles[$tileName] = [
+                        "tile_id" => $tileId,
                         "name" => $tileName,
-                        "size" => $tileDetails['size'] ?? "Unknown",
-                        "surface" => $tileDetails['surface'] ?? "Unknown", // Could be "wall", "floor", or overwrite later if needed
+                        "size" => $tileDetails['size'] ?? "",
+                        "surface" => $tileDetails['surface'] ?? "Unknown",
                         "photo" => $tileDetails['photo'] ?? "default.jpg",
                         "used_count" => 0,
                         "finish" => $tileDetails["finish"] ?? "Unknown",
                     ];
                 }
-
-                // Add usage count
+    
+                // Increment usage count
                 $processedTiles[$tileName]['used_count'] += 1;
-                $totalUsedCount += 1;
-
-                // Optional: prefer wall surface in display if exists
-                if ($tileDetails['surface'] === 'wall') {
+                $totalCount += 1;
+    
+                // Prefer 'wall' as surface if found
+                if (($tileDetails['surface'] ?? '') === 'wall') {
                     $processedTiles[$tileName]['surface'] = 'wall';
                 }
             }
         }
-
-        // Sort by usage
+    
+        // Sort tiles by usage count (descending)
         usort($processedTiles, function ($a, $b) {
             return $b['used_count'] <=> $a['used_count'];
         });
-
-        // Top 5 tiles
+    
+        // Get top 5 tiles
         $topTiles = array_slice($processedTiles, 0, 5);
-
-        // Add percentages
+    
+        // Add usage percentage
         foreach ($topTiles as &$tile) {
-            $tile['percentage'] = ($totalUsedCount > 0)
-                ? round(($tile['used_count'] / $totalUsedCount) * 100, 2)
+            $tile['percentage'] = ($totalCount > 0)
+                ? round(($tile['used_count'] / $totalCount) * 100, 2)
                 : 0;
         }
-
+    
         return $topTiles;
     }
+    
 
 
     /**
@@ -958,78 +1034,176 @@ class DashboardController extends Controller
     /**
      * param => $startDate , $endDate
      */
+    // protected function tilesDetails($startDate, $endDate)
+    // {
+    //     $tilesData = Analytics::select(
+    //         DB::raw('JSON_UNQUOTE(used_tiles) as tiles_json')
+    //     )->whereBetween('visited_at', [$startDate, $endDate])->get();
+
+    //     $processedTiles = [];
+
+    //     foreach ($tilesData as $row) {
+    //         if (empty($row->tiles_json)) {
+    //             continue;
+    //         }
+
+    //         $tiles = json_decode($row->tiles_json, true);
+    //         if (!is_array($tiles)) {
+    //             dd("JSON decoding failed", json_last_error_msg(), $row->tiles_json);
+    //         }
+
+    //         foreach ($tiles as $tile) {
+    //             $tileName = $tile["tile_name"] ?? null;
+    //             $surface = $tile["surface"] ?? null;
+    //             $tileId = $tile["tile_id"] ?? null;
+
+    //             if (!$tileName || !$tileId) continue;
+
+    //             $key = strtolower(trim($tileName));
+
+    //             if (!isset($processedTiles[$key])) {
+    //                 $tileMeta = Helper::getTileNameAndSurface($tileId);
+    //                 $processedTiles[$key] = [
+    //                     "name" => $tileName,
+    //                     "photo" => $tileMeta['photo'] ?? "default.jpg",
+    //                     "size" => $tileMeta['size'] ?? "Unknown",
+    //                     "finish" => $tileMeta['finish'] ?? "Unknown",
+    //                     "view_count" => 0,
+    //                     "used_count" => 1,
+    //                     "floor_count" => ($surface === "floor") ? 1 : 0,
+    //                     "wall_count" => ($surface === "wall") ? 1 : 0,
+    //                     "counter_count" => ($surface === "counter") ? 1 : 0,
+    //                     "category" => $tileMeta['category'] ?? "-",
+    //                     "color" => $tileMeta['color'] ?? "-",
+    //                     "innovation" => $tileMeta['innovation'] ?? "-",
+    //                 ];
+    //             } else {
+    //                 $processedTiles[$key]['used_count'] += 1;
+    //                 if ($surface === "floor") {
+    //                     $processedTiles[$key]['floor_count'] += 1;
+    //                 }
+    //                 if ($surface === "wall") {
+    //                     $processedTiles[$key]['wall_count'] += 1;
+    //                 }
+    //                 if ($surface === "counter") {
+    //                     $processedTiles[$key]['counter_count'] += 1;
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     $processedTiles = array_values($processedTiles);
+
+    //     $wallCount = array_sum(array_column($processedTiles, 'wall_count'));
+    //     $floorCount = array_sum(array_column($processedTiles, 'floor_count'));
+    //     $counterCount = array_sum(array_column($processedTiles, 'counter_count'));
+
+    //     foreach ($processedTiles as &$tile) {
+    //         $tile['total_wall_count'] = $wallCount > 0 ? $wallCount : "-";
+    //         $tile['total_floor_count'] = $floorCount > 0 ? $floorCount : "-";
+    //         $tile['total_counter_count'] = $counterCount > 0 ? $counterCount : "-";
+
+    //         $tile['wall_count'] = $tile['wall_count'] > 0 ? $tile['wall_count'] : "-";
+    //         $tile['floor_count'] = $tile['floor_count'] > 0 ? $tile['floor_count'] : "-";
+    //         $tile['counter_count'] = $tile['counter_count'] > 0 ? $tile['counter_count'] : "-";
+    //     }
+
+    //     return response()->json([
+    //         'body' => view('dashboard.tiles_details', compact('processedTiles'))->render(),
+    //         'processedTiles' => $processedTiles,
+    //     ]);
+    // }
+
     protected function tilesDetails($startDate, $endDate)
     {
-        $tilesData = Analytics::select(
-            DB::raw('JSON_UNQUOTE(used_tiles) as tiles_json')
-        )->whereBetween('visited_at', [$startDate, $endDate])->get();
+        $analyticsData = Analytics::select(
+            DB::raw('JSON_UNQUOTE(viewed_tiles) as viewed_tiles_json'),
+            DB::raw('JSON_UNQUOTE(used_tiles) as used_tiles_json')
+        )
+        ->whereBetween('visited_at', [$startDate, $endDate])
+        ->get();
 
         $processedTiles = [];
 
-        foreach ($tilesData as $row) {
-            if (empty($row->tiles_json)) {
-                continue;
-            }
+        foreach ($analyticsData as $row) {
+            $viewedTiles = json_decode($row->viewed_tiles_json, true) ?: [];
+            $usedTiles = json_decode($row->used_tiles_json, true) ?: [];
 
-            $tiles = json_decode($row->tiles_json, true);
-            if (!is_array($tiles)) {
-                dd("JSON decoding failed", json_last_error_msg(), $row->tiles_json);
-            }
+            foreach (['viewed' => $viewedTiles, 'used' => $usedTiles] as $type => $tileSet) {
+                foreach ($tileSet as $tile) {
+                    $tileId = $tile["tile_id"] ?? null;
+                    $tileName = $tile["tile_name"] ?? null;
+                    $surface = strtolower(trim($tile["surface"] ?? ""));
+                    $zone = strtolower(trim($tile["zone"] ?? "unknown"));
 
-            foreach ($tiles as $tile) {
-                $tileName = $tile["tile_name"] ?? null;
-                $surface = $tile["surface"] ?? null;
-                $tileId = $tile["tile_id"] ?? null;
+                    if (!$tileId || !$tileName || !$surface) continue;
 
-                if (!$tileName || !$tileId) continue;
+                    $key = $tileName;
 
-                $key = strtolower(trim($tileName));
+                    if (!isset($processedTiles[$key])) {
+                        $tileMeta = Helper::getTileNameAndSurface($tileId);
 
-                if (!isset($processedTiles[$key])) {
-                    $tileMeta = Helper::getTileNameAndSurface($tileId);
-                    $processedTiles[$key] = [
-                        "name" => $tileName,
-                        "photo" => $tileMeta['photo'] ?? "default.jpg",
-                        "size" => $tileMeta['size'] ?? "Unknown",
-                        "finish" => $tileMeta['finish'] ?? "Unknown",
-                        "view_count" => 0,
-                        "used_count" => 1,
-                        "floor_count" => ($surface === "floor") ? 1 : 0,
-                        "wall_count" => ($surface === "wall") ? 1 : 0,
-                        "counter_count" => ($surface === "counter") ? 1 : 0,
-                        "category" => $tileMeta['category'] ?? "-",
-                        "color" => $tileMeta['color'] ?? "-",
-                        "innovation" => $tileMeta['innovation'] ?? "-",
-                    ];
-                } else {
-                    $processedTiles[$key]['used_count'] += 1;
-                    if ($surface === "floor") {
-                        $processedTiles[$key]['floor_count'] += 1;
+                        $processedTiles[$key] = [
+                            "name" => $tileMeta['name'] ?? $tileName,
+                            "photo" => $tileMeta['photo'] ?? "default.jpg",
+                            "size" => $tileMeta['size'] ?? "Unknown",
+                            "finish" => $tileMeta['finish'] ?? "Unknown",
+                            "category" => $tileMeta['category'] ?? "-",
+                            "color" => $tileMeta['color'] ?? "-",
+                            "innovation" => $tileMeta['innovation'] ?? "-",
+                            "view_count" => 0,
+                            "used_count" => 0,
+                            "wall_count" => 0,
+                            "floor_count" => 0,
+                            "counter_count" => 0,
+                            "zone_view_count" => [],
+                            "zone_used_count" => [],
+                        ];
                     }
-                    if ($surface === "wall") {
-                        $processedTiles[$key]['wall_count'] += 1;
+
+                    // Surface counts
+                    switch ($surface) {
+                        case "wall":
+                            $processedTiles[$key]['wall_count'] += 1;
+                            break;
+                        case "floor":
+                            $processedTiles[$key]['floor_count'] += 1;
+                            break;
+                        case "counter":
+                            $processedTiles[$key]['counter_count'] += 1;
+                            break;
                     }
-                    if ($surface === "counter") {
-                        $processedTiles[$key]['counter_count'] += 1;
+
+                    // Type-specific counts
+                    if ($type === 'viewed') {
+                        $processedTiles[$key]['view_count'] += 1;
+                        $processedTiles[$key]['zone_view_count'][$zone] = ($processedTiles[$key]['zone_view_count'][$zone] ?? 0) + 1;
+                    }
+
+                    if ($type === 'used') {
+                        $processedTiles[$key]['used_count'] += 1;
+                        $processedTiles[$key]['zone_used_count'][$zone] = ($processedTiles[$key]['zone_used_count'][$zone] ?? 0) + 1;
                     }
                 }
             }
         }
 
-        $processedTiles = array_values($processedTiles);
-
+        // Totals
         $wallCount = array_sum(array_column($processedTiles, 'wall_count'));
         $floorCount = array_sum(array_column($processedTiles, 'floor_count'));
         $counterCount = array_sum(array_column($processedTiles, 'counter_count'));
 
         foreach ($processedTiles as &$tile) {
-            $tile['total_wall_count'] = $wallCount > 0 ? $wallCount : "-";
-            $tile['total_floor_count'] = $floorCount > 0 ? $floorCount : "-";
-            $tile['total_counter_count'] = $counterCount > 0 ? $counterCount : "-";
+            $tile['total_wall_count'] = $wallCount ?: "-";
+            $tile['total_floor_count'] = $floorCount ?: "-";
+            $tile['total_counter_count'] = $counterCount ?: "-";
 
-            $tile['wall_count'] = $tile['wall_count'] > 0 ? $tile['wall_count'] : "-";
-            $tile['floor_count'] = $tile['floor_count'] > 0 ? $tile['floor_count'] : "-";
-            $tile['counter_count'] = $tile['counter_count'] > 0 ? $tile['counter_count'] : "-";
+            foreach (['wall_count', 'floor_count', 'counter_count', 'view_count', 'used_count'] as $field) {
+                $tile[$field] = $tile[$field] ?: "-";
+            }
+
+            $tile['zone_view_count'] = empty($tile['zone_view_count']) ? new \stdClass() : $tile['zone_view_count'];
+            $tile['zone_used_count'] = empty($tile['zone_used_count']) ? new \stdClass() : $tile['zone_used_count'];
         }
 
         return response()->json([
@@ -1038,6 +1212,8 @@ class DashboardController extends Controller
         ]);
     }
 
+
+    
 
     protected function roomDetails($startDate , $endDate)
     {

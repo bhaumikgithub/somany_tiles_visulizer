@@ -117,3 +117,7 @@
     border-radius: 5px;
     transition: width 0.4s ease-in-out;
 }
+
+table.dataTable > tbody > tr > th, table.dataTable > tbody > tr > td {
+    padding: 14px 20px !important;
+}

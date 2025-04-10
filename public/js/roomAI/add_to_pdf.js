@@ -97,6 +97,8 @@ function getTileId(id) {
     let selectedTileId = $('li#' + id).data('tile');
     let selectedTileSurface = $('li#' + id).data('surface');
 
+    viewdTilesIds(selectedTileId,selectedTileSurface)
+
     // Check if the free tile checkbox is checked
     let isFreeTileEnabled = $('#free_tile_checkbox_value_ai').val() === "on";
 
@@ -885,5 +887,24 @@ $(window).on('resize', function () {
         tableresize();  // Call after resizing has stopped
     }, 200);  // Adjust 200ms as needed for your preference
 });
+
+
+/** This function stored data under analytics table where check how many tiles applied in which room */
+function viewdTilesIds(userSelectedTileId,selectedSurface)
+{   
+    $.ajax({
+        url:`/user-viewd-tiles`, // Endpoint for deletion,
+        type:'POST',
+        data:{
+            userSelectedTileId:userSelectedTileId,
+            current_room_type:"ai_room",
+            surface:selectedSurface,
+            _token: $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+        },
+        success: function (response) {
+            console.log(response);
+        }
+    });
+}
 
 
