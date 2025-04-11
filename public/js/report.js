@@ -611,6 +611,10 @@ if( $('.report_wrapper').length) {
                     pdfDatatable();
                     tilesDatatable();
                     usedTilesDatatable();
+
+                    setTimeout(() => {
+                        $('#pdf_table').removeClass('dataTable');
+                    }, 5); // adjust delay if needed
                 }
             },
             error: function(error) {
