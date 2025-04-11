@@ -98,7 +98,17 @@ class ActivityLogController extends Controller
             'pincode' => $pincode,
             'zone' => $zone
         ];
-        $roomData = $request->room;
+
+        $category = [
+            'category_name' => "users_room",
+            'category_type' => $request->room,
+        ];
+
+        $roomData = [
+            'room_name' => "users_room",
+            'room_type' => $request->room,
+        ];
+
         $user = "guest";
 
         //Check if user has logged in backend or not
@@ -109,6 +119,30 @@ class ActivityLogController extends Controller
 
         $analytics = Analytics::where('session_id', $sessionId)->first();
         if( $analytics){
+            // Decode existing category JSON
+            $existingCategories = json_decode($analytics->category, true) ?? [];
+            $existingRooms = json_decode($analytics->room, true) ?? [];
+            $existingPincodeZones = json_decode($analytics->pincode_zone, true) ?? [];
+            // **Update Pincode & Zone**
+            if (!in_array($pinCodeZoneData , $existingPincodeZones)) {
+                $existingPincodeZones[] = $pinCodeZoneData;
+            }
+
+             // Update category if not already present
+            if (!in_array($category, $existingCategories)) {
+                $existingCategories[] = $category;
+                $analytics->update([
+                    'category' => json_encode($existingCategories),
+                ]);
+            }
+
+            // Update room if not already present
+            if (!in_array($roomData, $existingRooms)) {
+                $existingRooms[] = $roomData;
+                $analytics->update([
+                    'room' => json_encode($existingRooms),
+                ]);
+            }
 
         } else {
             // New session, create a new analytics entry
@@ -116,8 +150,8 @@ class ActivityLogController extends Controller
                 'session_id' => $sessionId,
                 'pincode' => json_encode([$pincode]),
                 'zone' => json_encode([$zone]),
-                'category' => json_encode($request->room), // Store non-null room data
-                'room' => json_encode($request->room), // Store non-null room data
+                'category' => json_encode([$category]),
+                'room' => json_encode([$roomData]),
                 'user_logged_in' => $user,
                 'showroom' => $loged_user->showroom_id ?? null,
             ]);

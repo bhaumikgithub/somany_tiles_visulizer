@@ -13,7 +13,7 @@
                 <!--<div class="text-info mb-1">
                     URL Generated
                 </div>-->
-                <h2 class="mb-2 mt-2 font-weight-bold">{{@number_format($totalSessionCount)}}</h2>
+                <h2 class="mb-2 mt-2 font-weight-bold">{{number_format(@$totalSessionCount)}}</h2>
                 <div class="">
                     Total Sessions
                 </div>
@@ -22,7 +22,7 @@
                 <!--<div class="text-info mb-1">
                     URL Generated
                 </div>-->
-                <h2 class="mb-2 mt-2 font-weight-bold">{{@number_format($summaryPageCount)}}</h2>
+                <h2 class="mb-2 mt-2 font-weight-bold">{{number_format(@$summaryPageCount)}}</h2>
                 <div class="">
                     Session reached to Summary Page
                 </div>
@@ -31,7 +31,7 @@
                 <!-- <div class="text-info mb-1">
                     Downloaded PDF
                 </div> -->
-                <h2 class="mb-2 mt-2  font-weight-bold">{{@number_format($totalCustomers)}}</h2>
+                <h2 class="mb-2 mt-2  font-weight-bold">{{number_format(@$totalCustomers)}}</h2>
                 <div class="">
                     Customers
                 </div>
@@ -54,7 +54,7 @@
                 <thead>
                     <tr>
                         <th>Showroom Name</th> 
-                        <th>City</th> <!-- KEY PARAM-->
+                        <th>City</th>
                         <th>Session Created</th>
                         <th>Summary Page</th>
                         <th>Customers</th>

@@ -207,8 +207,13 @@ class DashboardController extends Controller
                     if (!empty($cat['category_name']) && !empty($cat['category_type'])) {
                         $name = ucwords(str_replace('-', ' ', $cat['category_name']));
                         $type = strtoupper($cat['category_type']);
-                        $label = "{$name} ({$type})";
-    
+                        if($cat['category_name'] === "users_room"){
+                            $label = "Users Room";
+                        } else {
+                            $label =  "{$name} ({$type})";
+                        }
+                        
+                        $label = $label;
                         $categories[] = $label;
                     }
                 }
@@ -218,7 +223,7 @@ class DashboardController extends Controller
         // Count each category label
         $categoryCounts = array_count_values($categories);
         $totalVisits = array_sum($categoryCounts);
-    
+        
         // Prepare data for Chart.js
         return [
             'labels' => array_keys($categoryCounts),
@@ -500,25 +505,43 @@ class DashboardController extends Controller
         $processedRooms = [];
         $bgColors = ['bg-success', 'bg-warning', 'bg-info', 'bg-danger', 'bg-primary'];
 
-        // Loop through room data
         foreach ($roomData as $row) {
-            if (empty($row->rooms_json)) continue; // Skip empty rows
+            if (empty($row->rooms_json)) continue;
 
             $rooms = json_decode($row->rooms_json, true);
-            if (!is_array($rooms)) continue; // Skip invalid JSON
+            if (!is_array($rooms)) continue;
 
             foreach ($rooms as $room) {
                 $roomId = $room["room_id"] ?? null;
                 $roomName = $room["room_name"] ?? "Unknown";
-                $fromApp = ( $room["room_type"] === "2d") ? "2d" : "3d"; 
+                $roomType = $room["room_type"] ?? null;
+
+                // Special case: users_room (ai-studio)
+                if ($roomName === "users_room" && $roomType === "ai-studio") {
+                    $key = "users_room|ai-studio";
+                    if (isset($processedRooms[$key])) {
+                        $processedRooms[$key]['count'] += 1;
+                    } else {
+                        $processedRooms[$key] = [
+                            "name" => "User's Room",
+                            "category" => null, // or 'AI Studio' if you want
+                            "count" => 1
+                        ];
+                    }
+                    continue; // Skip regular processing for users_room
+                }
+
+                // Handle regular rooms with ID
+                $fromApp = ($roomType === "2d") ? "2d" : "3d";
+
                 if (!$roomId) continue;
 
                 if (isset($processedRooms[$roomId])) {
                     $processedRooms[$roomId]['count'] += 1;
                 } else {
                     $processedRooms[$roomId] = [
-                        "name" => $roomName . " (".$fromApp.") ",
-                        "category" => Helper::getRoomCatgory($roomId,$room['room_type']),
+                        "name" => $roomName . " (" . $fromApp . ") ",
+                        "category" => Helper::getRoomCatgory($roomId, $roomType),
                         "count" => 1
                     ];
                 }
@@ -533,14 +556,14 @@ class DashboardController extends Controller
         // Get the highest count to calculate percentages
         $maxCount = $processedRooms[0]['count'] ?? 1;
 
-        // Assign background colors and percentages
         foreach ($processedRooms as $index => &$room) {
-            $room['percentage'] = ($room['count'] / $maxCount) * 100;  // Calculate %
-            $room['bg_color'] = $bgColors[$index] ?? 'bg-secondary';  // Assign fixed colors
+            $room['percentage'] = ($room['count'] / $maxCount) * 100;
+            $room['bg_color'] = $bgColors[$index] ?? 'bg-secondary';
         }
-        
+
         return array_slice($processedRooms, 0, 5);
     }
+
 
 
     /**
@@ -781,6 +804,15 @@ class DashboardController extends Controller
         // Format the result
         $categoryData = $categoryCount->map(function ($count, $key) {
             [$name, $type] = explode('|', $key);
+        
+            // Handle special case for users_room
+            if ($name === 'users_room') {
+                return [
+                    "category_name" => "User's Room",
+                    "visits" => $count
+                ];
+            }
+        
             return [
                 "category_name" => ucwords(str_replace("-", " ", $name)) . " (" . strtoupper($type) . ")",
                 "visits" => $count
@@ -929,23 +961,38 @@ class DashboardController extends Controller
             foreach ($rooms as $room) {
                 $roomName = $room["room_name"] ?? "Unknown";
                 $roomId = $room["room_id"] ?? null;
-                $fromApp = ( $room['room_type'] === "2d") ? "2d" : "3d" ;
+                $fromApp = ($room['room_type'] === "2d") ? "2d" : "3d";
 
                 // Fetch room_type from room2ds table
                 $roomType = $roomId ? ($roomTypes[$roomId] ?? "Unknown") : "Unknown";
 
-                $key = $roomName . "|" . $roomType; // Unique key for grouping
+                // Special case for users_room
+                if ($roomName === 'users_room') {
+                    $key = 'users_room'; // Group by simple key
+                    if (!isset($processedRooms[$key])) {
+                        $processedRooms[$key] = [
+                            "room_name" => "User's Room",
+                            "category_name" => null, // Or you can omit this key
+                            "used_count" => 0,
+                            "from_app" => null, // Optional: can omit if not needed
+                        ];
+                    }
+                    $processedRooms[$key]["used_count"] += 1;
+                    continue; // Skip normal logic for this case
+                }
+
+                $key = $roomName . "|" . $roomType;
 
                 if (!isset($processedRooms[$key])) {
                     $processedRooms[$key] = [
-                        "room_name" => $roomName . " (".$fromApp.") ",
+                        "room_name" => $roomName . " (" . $fromApp . ") ",
                         "category_name" => ucwords($roomType),
                         "used_count" => 0,
                         "from_app" => $fromApp,
                     ];
                 }
 
-                $processedRooms[$key]["used_count"] += 1; // Count usage
+                $processedRooms[$key]["used_count"] += 1;
             }
         }
 
@@ -1022,12 +1069,13 @@ class DashboardController extends Controller
         // Get total unique customers across all showrooms
         $totalCustomers = count(array_unique(array_merge(...array_map(fn($x) => (array) $x['customers'], $showroomData))));
 
+        //dd($totalSessionCount,$summaryPageCount,$totalCustomers);
         // Format and return the final response
         return response()->json([
             'body' => view('dashboard.showroom_details', compact('showroomData', 'totalSessionCount', 'summaryPageCount', 'totalCustomers'))->render(),
             'showroomData' => array_values($showroomData), // Convert associative array to indexed array
-            'totalSessions' => $totalSessionCount,
-            'summaryPageSessions' => $summaryPageCount,
+            'totalSessionCount' => $totalSessionCount,
+            'summaryPageCount' => $summaryPageCount,
             'totalCustomers' => $totalCustomers,
         ]);
     }

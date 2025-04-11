@@ -153,12 +153,12 @@
                     </div>
                 </div>
             </div>
-        @elseif($type==="ai-studio")
+        <!-- @elseif($type==="ai-studio")
             <div id="ai-studio_tbody">
                 @include('dashboard.ai_studio_details')
-            </div>
+            </div> -->
         @else 
-            <div id="showrooms_tbody">
+            <div id="showroom_tbody">
                 @include('dashboard.showroom_details')
             </div>
         @endif
