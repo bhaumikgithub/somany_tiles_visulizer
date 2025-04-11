@@ -181,6 +181,7 @@ Route::group(['middleware' => 'role:editor'], function () {
         Route::post('/panoramas/delete', 'App\Http\Controllers\ControllerPanorama@roomsDelete');
         Route::post('/panoramas/enable', 'App\Http\Controllers\ControllerPanorama@roomsEnable');
         Route::post('/panoramas/disable', 'App\Http\Controllers\ControllerPanorama@roomsDisable');
+        Route::post('/panoramas/clear-theme', 'App\Http\Controllers\ControllerPanorama@clearTheme');
 
 //        Route::get('/panorama/{id}/surfaces', 'App\Http\Controllers\ControllerPanorama@roomSurfaces');
 //        Route::post('/panorama/surfaces/update', 'App\Http\Controllers\ControllerPanorama@roomSurfacesUpdate');

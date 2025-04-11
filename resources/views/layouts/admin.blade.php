@@ -55,17 +55,17 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('analytics.details', ['type' => 'roomCategories']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
-                            <i class="typcn typcn-chart-pie-outline menu-icon"></i>
-                            <span class="menu-title">Room Categories</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('analytics.details', ['type' => 'tiles']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
                             <i class="typcn typcn-th-small-outline menu-icon"></i>
                             <span class="menu-title">Viewd Tiles</span>
                         </a>
                     </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="{{ route('analytics.details', ['type' => 'roomCategories']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
+                            <i class="typcn typcn-chart-pie-outline menu-icon"></i>
+                            <span class="menu-title">Room Categories</span>
+                        </a>
+                    </li> -->
                     <li class="nav-item {{ Request::segment(3) === 'rooms' ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('analytics.details', ['type' => 'rooms']) }}?start_date={{ now()->subDays(6)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}" class="viewAllRooms">
                             <i class="typcn typcn-compass menu-icon"></i>
