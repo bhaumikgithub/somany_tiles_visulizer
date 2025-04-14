@@ -48,7 +48,7 @@ class AjaxController extends Controller
         if (config('app.tiles_access_level')) {
             $roomID = $request->input('room_id');
             $currentRoomType = $request->input('room_type');
-            if( $currentRoomType === 'ai-studio'){
+            if( $currentRoomType === 'your-space-studio'){
                 $tiles = Tile::select('id','name','size','finish','surface','file','rotoPrintSetName','expProps','width','height','thickness')->where('enabled', 1)->get();
             } else {
                 if( $currentRoomType === "2d-studio" ) {

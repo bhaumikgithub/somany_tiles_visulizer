@@ -40,7 +40,7 @@ if ($engine_3d_enabled) {
 } elseif ($engine_panorama_enabled) {
     Route::get('/', function () { return redirect('/panorama-studio'); });
 } elseif ($engine_roomai_enabled) {
-    Route::get('/', function () { return redirect('/ai-studio'); });
+    Route::get('/', function () { return redirect('/your-space-studio'); });
 }
 
 Route::get('/home', 'App\Http\Controllers\HomeController@index');
@@ -106,7 +106,7 @@ if ($engine_panorama_enabled) {
 }
 if ($engine_roomai_enabled) {
     Route::middleware(['check.pincode'])->group(function () {
-        Route::get('/ai-studio', 'App\Http\Controllers\ControllerRoomAI@index');
+        Route::get('/your-space-studio', 'App\Http\Controllers\ControllerRoomAI@index');
     });
 }
 

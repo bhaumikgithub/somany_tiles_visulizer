@@ -168,7 +168,7 @@ function allLoadCompleted() {
     //Check URL and then store data into the analytics table
     let url1 = new URL(window.location.href);
     let pathSegments1 = url1.pathname.split("/");
-    if( pathSegments1[1] === "ai-studio"){
+    if( pathSegments1[1] === "your-space-studio"){
         $.ajax({
             url:"/store-to-analytics",
             type: 'POST',
