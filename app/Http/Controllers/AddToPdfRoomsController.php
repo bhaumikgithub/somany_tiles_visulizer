@@ -255,14 +255,12 @@ class AddToPdfRoomsController extends Controller
                 }
             }
         }
-
+    
         //Save data into analytics table
         $analytics = Analytics::where('session_id', $getCartId->user_id)->first();
         if ($analytics) {
-            $existingTiles = json_decode($analytics->used_tiles, true) ?? [];
-            $existingTiles = array_merge($existingTiles, $usedTiles); // Append new tiles
             $analytics->update([
-                'used_tiles' => json_encode(array_values($existingTiles)), // Store updated JSON
+                'used_tiles' => json_encode(array_values($usedTiles)), // Store updated JSON
                 'unique_cart_id' => $getCartId->random_key, // Store unique cart ID
             ]);
         }
