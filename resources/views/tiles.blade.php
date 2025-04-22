@@ -1271,7 +1271,8 @@ Select All items on all pages
         </td>
         <td class="table-text bold"><a href="#" onclick="editTile( {{ $tile->id }} )" title="Edit Tile">{{ $tile->name }}</a></td>
         <td class="table-text">{{ $tile->shape }}</td>
-        <td class="table-text">{{ $tile->width . 'x' . $tile->height }}</td>
+        <!-- <td class="table-text">{{ $tile->width . 'x' . $tile->height }}</td> -->
+        <td class="table-text">{{ $tile->size }}</td>
         <td class="table-text">@if (isset($surfaceTypes[$tile->surface])) {{ $surfaceTypes[$tile->surface] }} @else {{ $tile->surface }} @endif</td>
         @if (!$config_app_product_finish)
         <td class="table-text">{{ $tile->finish }}</td>
