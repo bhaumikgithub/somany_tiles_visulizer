@@ -91,6 +91,7 @@
                 <th>Name</th>
                 <th>SKU</th>
                 <th>Surface</th>
+                <th>Changed Columns</th>
             </tr>
             </thead>
             <tbody>
@@ -134,7 +135,7 @@
 
     @if(count($skippedRecords) > 0)
         <h3>Skipped / Error Tiles ({{ count($skippedRecords) }})</h3>
-        <table id="skippedRecordTable">
+        <table>
             <thead>
             <tr>
                 <th>Tile Name</th>

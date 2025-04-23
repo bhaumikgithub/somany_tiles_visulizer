@@ -166,7 +166,6 @@ trait ApiHelper
 
     protected function prepareTileUpdateData(array $product, $creation_time){
         $surface = strtolower($product['surface'] ?? '');
-
         // Prepare an array but remove null values
         $expPropsArray = $this->extraProps($product);
 
@@ -176,13 +175,11 @@ trait ApiHelper
             'width' => intval($product['size_wt'] ?? 0),
             'height' => intval($product['size_ht'] ?? 0),
             'size' => $product['size'] ?? null,
-            // 'surface' => $surface,
             'finish' => $this->mapFinishType($product['design_finish']),
             'design_finish' => $product['design_finish'] ?? null,
             'image_variation_1' => $product['image_variation_1'] ?? null,
             'image_variation_2' => $product['image_variation_2'] ?? null,
             'image_variation_3' => $product['image_variation_3'] ?? null,
-            'grout' => (in_array($surface, ["wall", "floor"])) ? 1 : null,
             'url' => $product['url'] ?? null,
             'price' => $product['price'] ?? null,
             'expProps' => json_encode($expPropsArray),

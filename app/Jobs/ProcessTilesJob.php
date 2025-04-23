@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Normalizer;
 
 class ProcessTilesJob implements ShouldQueue
 {
@@ -140,7 +139,7 @@ class ProcessTilesJob implements ShouldQueue
                         // Combine surfaces for the same SKU in logs
                         if (!empty($updatedRecords)) {
                             $surfaceList = implode(', ', array_unique(array_column($updatedRecords, 'surface')));
-                            Log::info("Updated Tile SKU: {$data['code']} | Surfaces: $surfaceList | Changes: " . json_encode($updatedRecords));
+                            Log::info("Updated Tile SKU: {$sku} | Surfaces: $surfaceList | Changes: " . json_encode($updatedRecords));
                         } else {
                             Log::info("No changes detected for Tile SKU: {$data['code']}");
                         }
@@ -216,7 +215,7 @@ class ProcessTilesJob implements ShouldQueue
      */
     private function shouldSkipTile(string $code , array $product, string $sku, array &$skippedRecords): bool
     {
-        if (in_array($code, ['12345678', '1223324324','1234'])) {
+        if (in_array($code, ['12345678', '1223324324','1234','TESTSKU'])) {
             $this->logSkippedRecord($code, "Excluded SKU", $skippedRecords);
             return true;
         }
