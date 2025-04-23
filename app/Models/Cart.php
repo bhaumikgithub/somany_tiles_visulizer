@@ -11,6 +11,6 @@ class Cart extends Model
     use HasFactory, softDeletes;
 
     protected $fillable = [
-        'user_type','user_id','unique_url'
+        'user_type','user_id','random_key','pincode'
     ];
 }

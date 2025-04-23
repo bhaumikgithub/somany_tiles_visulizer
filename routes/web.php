@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PincodeController;
 use App\Http\Controllers\UserPdfController;
 use Illuminate\Support\Facades\Route;
@@ -37,7 +39,7 @@ if ($engine_3d_enabled) {
 } elseif ($engine_panorama_enabled) {
     Route::get('/', function () { return redirect('/panorama-studio'); });
 } elseif ($engine_roomai_enabled) {
-    Route::get('/', function () { return redirect('/ai-studio'); });
+    Route::get('/', function () { return redirect('/your-space-studio'); });
 }
 
 Route::get('/home', 'App\Http\Controllers\HomeController@index');
@@ -103,7 +105,7 @@ if ($engine_panorama_enabled) {
 }
 if ($engine_roomai_enabled) {
     Route::middleware(['check.pincode'])->group(function () {
-        Route::get('/ai-studio', 'App\Http\Controllers\ControllerRoomAI@index');
+        Route::get('/your-space-studio', 'App\Http\Controllers\ControllerRoomAI@index');
     });
 }
 
@@ -178,6 +180,7 @@ Route::group(['middleware' => 'role:editor'], function () {
         Route::post('/panoramas/delete', 'App\Http\Controllers\ControllerPanorama@roomsDelete');
         Route::post('/panoramas/enable', 'App\Http\Controllers\ControllerPanorama@roomsEnable');
         Route::post('/panoramas/disable', 'App\Http\Controllers\ControllerPanorama@roomsDisable');
+        Route::post('/panoramas/clear-theme', 'App\Http\Controllers\ControllerPanorama@clearTheme');
 
 //        Route::get('/panorama/{id}/surfaces', 'App\Http\Controllers\ControllerPanorama@roomSurfaces');
 //        Route::post('/panorama/surfaces/update', 'App\Http\Controllers\ControllerPanorama@roomSurfacesUpdate');
@@ -273,6 +276,24 @@ Route::group(['middleware' => 'role:administrator'], function () {
     Route::post('/showrooms/delete', [ShowroomController::class, 'showroomsDelete']);
     Route::get('/user_pdf_list', [UserPdfController::class , 'viewUserPdfList'])->name(name: 'user_pdf-summary'); //yash changes
     Route::get('/filter_pdf_list', [UserPdfController::class , 'filteredPdfList'])->name(name: 'filter_pdf_list'); //yash changes
+
+
+    //Dashboard controller
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/analytics/details/{type}', [DashboardController::class, 'showDetails'])->name('analytics.details');
+
+    //Chart block wise ajax call functions
+    Route::post('/get_summary_pdf_chart',[DashboardController::class, 'getSummaryPdfChart'])->name('getSummaryPdfChart');
+    Route::post('/get_pincode_chart',[DashboardController::class, 'getPinCodeChart'])->name('getPinCodeChart');
+    Route::post('/get_tiles_applied_chart',[DashboardController::class, 'getTilesAppliedChart'])->name('getTilesAppliedChart');
+    Route::post('/get_room_category_chart',[DashboardController::class, 'getRoomCategory'])->name('getRoomCategory');
+    Route::post('/get_top_tiles',[DashboardController::class, 'getTopTiles'])->name('getTopTiles');
+    Route::post('/get_top_rooms',[DashboardController::class, 'getTopRooms'])->name('getTopRooms');
+    Route::post('/get_top_show_rooms',[DashboardController::class, 'getTopShowRooms'])->name('getTopShowRooms');
+
+
+    Route::post('/get_detail_report',[DashboardController::class, 'getDetailReport'])->name('getDetailReport');
+
 });
 
 
@@ -302,7 +323,7 @@ Route::get('/pdf-summary/{randomKey}','App\Http\Controllers\AddToPdfRoomsControl
 Route::post('/generate-pdf', 'App\Http\Controllers\AddToPdfRoomsController@downlaodPdf')->name('generate-pdf');
 Route::post('/add-to-pdf-data-store','App\Http\Controllers\AddToPdfRoomsController@store');
 Route::delete('/add-to-pdf-data/{id}', 'App\Http\Controllers\AddToPdfRoomsController@destroy')->name('add-to-pdf-data.destroy');
-Route::delete('/clear-items', 'App\Http\Controllers\AddToPdfRoomsController@removeAllItems')->name('add-to-pdf-data.remove-all-items');
+Route::post('/clear-items', 'App\Http\Controllers\AddToPdfRoomsController@removeAllItems')->name('add-to-pdf-data.remove-all-items');
 Route::post('/update-tile-price','App\Http\Controllers\AddToPdfRoomsController@updateTilePrice');
 Route::post('/update-tile-calc','App\Http\Controllers\AddToPdfRoomsController@updateTileCalculation');
 Route::post('/update-preference', 'App\Http\Controllers\AddToPdfRoomsController@updatePreference')->name('update-preference');
@@ -312,6 +333,10 @@ Route::post('/add-to-pdf-data-store-ai','App\Http\Controllers\AddToPdfRoomsContr
 
 Route::post('check-selection-has-data','App\Http\Controllers\AddToPdfRoomsController@checkSelectionHasData');
 Route::post('/get-tile-summary', 'App\Http\Controllers\AddToPdfRoomsController@getTileSummary');
+Route::post('/track-category', [ActivityLogController::class, 'trackCategory']);
+//store-to-analytics
+Route::post('/store-to-analytics', [ActivityLogController::class, 'storeToAnalyticsForAI']);
+Route::post('/user-viewd-tiles', [ActivityLogController::class, 'storeViewdTilesByUser']);
 // Route::get('/test', 'App\Http\Controllers\HomeController@index');
 // Route::get('/test', function () {
 //     return response($_SERVER['SERVER_NAME']);

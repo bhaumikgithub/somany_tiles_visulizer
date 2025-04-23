@@ -123,7 +123,9 @@ function getTileId(id) {
 
     // Get the selected tile ID from the clicked <li>
     let selectedTileId = $('li#' + id).data('tile');
-   
+    let selectedSurface = $('li#' + id).data('surface');
+    viewdTilesIds(selectedTileId,selectedSurface);
+
     // Check if the free tile checkbox is checked
     let isFreeTileEnabled = $('#free_tile_checkbox_value').val() === "on";
 
@@ -248,12 +250,13 @@ function hideCart() {
     $('#addToCartInfoPanelModal').modal('hide');
 }
 
-function clearAllItems() {
+function clearAllItems(cart_id) {
     window.$.ajax({
         url: `/clear-items`, // Endpoint for deletion
-        type: 'DELETE',
+        type: 'post',
         data: {
-            _token: $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+            _token: $('meta[name="csrf-token"]').attr('content'), // Include CSRF token
+            cart_id : cart_id,
         },
         success: function (response) {
             alert(response.message); // Display success message
@@ -909,3 +912,25 @@ $(window).on('resize', function () {
 });
 
 
+/** This function stored data under analytics table where check how many tiles applied in which room */
+function viewdTilesIds(userSelectedTileId,selectedSurface)
+{   
+    let current_room_id = $('#current_room_id').val();
+    let current_room_name = $('#current_room_name').val();
+    let current_room_type = $("#current_room_type").val();
+    $.ajax({
+        url:`/user-viewd-tiles`, // Endpoint for deletion,
+        type:'POST',
+        data:{
+            userSelectedTileId:userSelectedTileId,
+            current_room_id:current_room_id,
+            current_room_name:current_room_name,
+            current_room_type:current_room_type,
+            surface:selectedSurface,
+            _token: $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+        },
+        success: function (response) {
+            console.log(response);
+        }
+    });
+}

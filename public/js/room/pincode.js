@@ -1,3 +1,6 @@
+let currentURL = new URL(window.location.href);
+let currentPathSegments = currentURL.pathname.split("/");
+
 // Check if the modal should open on a page load
 window.onload = function() {
     // Check if pincode is already set in session using AJAX
@@ -52,3 +55,48 @@ $('#pincodeForm').on('submit', function (e) {
         }
     });
 });
+
+function fetchCategory(category,type) {
+    fetch("/track-category", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ category: category , type:type }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if(currentPathSegments[1] === "2d-studio"){
+                    // Redirect to the respective category page
+                    window.location.href = `/listing/${category}`;
+                } else {
+                    window.location.href = `/panorama-listing/${category}`;
+                }
+            }
+        });
+}
+
+function fetchRoom(room_id,room,type) {
+    fetch("/track-category", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ room_id: room_id , room:room , type:type }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if(currentPathSegments[1] === "listing"){
+                    // Redirect to the respective category page
+                    window.location.href = `/2d-studio/${room_id}`;
+                } else {
+                    window.location.href = `/panorama-studio/${room_id}`;
+                }
+            }
+        });
+}
+

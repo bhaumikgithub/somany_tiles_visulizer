@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
+use App\Models\Analytics;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Showroom;
@@ -92,7 +93,6 @@ class AddToPdfRoomsController extends Controller
         Storage::disk('public')->put($filePath1, base64_decode($image1));
 
 
-
         //Check if the same session key exists or not
         $checkSessionId = Cart::where('user_id',$sessionId)->first();
 
@@ -165,8 +165,7 @@ class AddToPdfRoomsController extends Controller
                 'finish' => $tile->finish,
                 'file' => $tile->file,
                 'price' => $tile->price,
-                'icon' => $tile->icon, // Access the appended 'icon' attribute,
-                'free_tile' => $selectedTile['isFreeTile']
+                'icon' => $tile->icon, // Access the appended 'icon' attribute
             ];
         });
 
@@ -182,7 +181,7 @@ class AddToPdfRoomsController extends Controller
         $productInfo->cart_id = $cart_id;
         $productInfo->save();
 
-        // Store cart session
+       // Store cart session
         $request->session()->put('cart', $cart_id);
 
         $getCartId = Cart::where('user_id',$sessionId)->first();
@@ -193,11 +192,12 @@ class AddToPdfRoomsController extends Controller
         $getCartId->pincode = $pincode;
         $getCartId->update();
         $count = $allProduct->count();
+        $cartId = $getCartId->id;
 
         $url = '/pdf-summary/'.$getCartId->random_key;
         return response()->json([
-            'body' => view('common.cartPanel',compact('allProduct','count','url'))->render(),
-            'data' => ['product_info'=> $allProduct, 'all_selection' => $count,'url'=>$url],
+            'body' => view('common.cartPanel',compact('allProduct','count','url','cartId'))->render(),
+            'data' => ['product_info'=> $allProduct, 'all_selection' => $count,'url'=>$url,'cartId'=>$cartId],
             'success' => 'success'
         ]);
     }
@@ -217,23 +217,59 @@ class AddToPdfRoomsController extends Controller
             'message' => 'Item deleted successfully.']);
     }
 
-    public function removeAllItems(): JsonResponse
+    public function removeAllItems(Request $request): JsonResponse
     {
-        // Soft delete all cart items
-        CartItem::query()->delete();
+        $cartId = $request->input('cart_id'); // Get cart_id from POST
+        if (!$cartId) {
+            return response()->json(['message' => 'cart_id is required'], 400);
+        }
+        // Mark items with this cart_id as removed
+        CartItem::where('cart_id', $cartId)->delete(); // this sets deleted_at
+        
         return response()->json(['message' => 'All items have been removed from the pdf.']);
     }
 
     public function pdfSummary(Request $request , $randomKey): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
+        $pincode = Session::get('pincode'); // Store the pincode temporarily
+        //Update pin code in cart summary page
+        $getCartId = Cart::where('random_key',$randomKey)->first();
+        if( $getCartId ){
+            $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
+            $usedTiles = [];
+
+            foreach ($allProduct as $product) {
+                $tiles = json_decode($product->tiles_json, true); // Decode JSON to array
+                if (!empty($tiles) && is_array($tiles)) {
+                    foreach ($tiles as $tile) {
+                        $usedTiles[] = [
+                            'tile_id' => $tile['id'],
+                            'tile_name' => $tile['name'],
+                            'surface' => $tile['surface'],
+                            'room_name' => $product['room_name'],
+                            'room_type' => $product['room_type'],
+                            "pincode" => $getCartId->pincode,
+                            "zone" => Helper::getZoneByPincode($getCartId->pincode),
+                        ];
+                    }
+                }
+            }
+        }
+    
+        //Save data into analytics table
+        $analytics = Analytics::where('session_id', $getCartId->user_id)->first();
+        if ($analytics) {
+            $analytics->update([
+                'used_tiles' => json_encode(array_values($usedTiles)), // Store updated JSON
+                'unique_cart_id' => $getCartId->random_key, // Store unique cart ID
+            ]);
+        }
+
         // Destroy only the cart session, keeping user login session
         Session::forget(['cart','pincode']);
 
         // Optionally, regenerate session ID for the user
         $request->session()->regenerate();  // This generates a new session ID
-
-        $getCartId = Cart::where('random_key',$randomKey)->first();
-        $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
         $firstProduct = $allProduct->first(); // This returns the first CartItem model
         if ($firstProduct && $firstProduct->user_showroom_info) {
             $userShowroomInfo = json_decode($firstProduct->user_showroom_info, true);
@@ -244,7 +280,6 @@ class AddToPdfRoomsController extends Controller
             ];
         }        // Retrieve the pincode from the session
         $pincode = $getCartId->pincode ?? null;
-
 
         $groupedTiles = $this->getProcessedTiles($allProduct);
 
@@ -306,7 +341,6 @@ class AddToPdfRoomsController extends Controller
         $existingPdfPath = storage_path('app/public/Tile_Visualizer_PDF_1_4.pdf'); // Path to the existing PDF
         $existingPdfContent = file_get_contents($existingPdfPath);
 
-
         $getCartId = Cart::where('random_key',$request->random_key)->first();
         $allProduct = CartItem::where('cart_id',$getCartId->id)->get();
         $basic_info = [
@@ -315,7 +349,7 @@ class AddToPdfRoomsController extends Controller
             'contact_no' => $request->mobileNumber,
             'state' => $request->state,
             'city' => $request->city,
-            'pin_code' => $getCartId->pincode ?? null
+            'pin_code' => $getCartId->pincode ?? null// Default to null if not set
         ];
 
         $firstProduct = $allProduct->first(); // This returns the first CartItem model
@@ -338,7 +372,6 @@ class AddToPdfRoomsController extends Controller
         $userPdfData = UserPdfData::where('unique_id',$request->random_key)->get();
 
         if($userPdfData->isEmpty()){
-
             $savedPdf = UserPdfData::create([
                 'name' => $request->firstName . ' ' . $request->lastName,
                 'first_name' => $request->firstName,
@@ -351,6 +384,10 @@ class AddToPdfRoomsController extends Controller
                 'city' => $request->city
             ]);
 
+            //Save data into analytics table
+            $analytics = Analytics::where('session_id', $getCartId->user_id)->first();
+            $analytics->downloaded_pdf = $userPdfData->count();
+            $analytics->update();
         }
 
         // Generate the second PDF (dynamic content) using mPDF (in landscape mode)
@@ -667,8 +704,6 @@ class AddToPdfRoomsController extends Controller
 
         if( $cart->count() === 0 ){
             return response()->json(['success' => false, 'message' => 'No selection in Cart Found.','count'=>$cart->count()]);
-        } else if( $cart->count() > 0 && $cartItems === 0 ){
-            return response()->json(['success' => false, 'message' => 'No selection in Cart Found.','count'=>$cartItems]);
         } else {
             return response()->json(['success' => true,'message' => 'selection in Cart.','count'=>$cart->count()]);
         }
@@ -793,11 +828,12 @@ class AddToPdfRoomsController extends Controller
         $getCartId->pincode = $pincode;
         $getCartId->update();
         $count = $allProduct->count();
+        $cartId = $getCartId->id;
 
         $url = '/pdf-summary/'.$getCartId->random_key;
         return response()->json([
-            'body' => view('common.roomAI.cartPanel',compact('allProduct','count','url'))->render(),
-            'data' => ['product_info'=> $allProduct, 'all_selection' => $count,'url'=>$url],
+            'body' => view('common.roomAI.cartPanel',compact('allProduct','count','url','cartId'))->render(),
+            'data' => ['product_info'=> $allProduct, 'all_selection' => $count,'url'=>$url , 'cartId' => $cartId],
             'success' => 'success'
         ]);
 

@@ -11,7 +11,12 @@
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <link href="/css/daterangepicker.css" rel="stylesheet">
     <link href="/css/admin_custom.css" rel="stylesheet">
+    <link href="/css/dashboard.css" rel="stylesheet">
 
     <!-- Scripts -->
     <script>
@@ -136,8 +141,8 @@
                                     <li><a href="{{route('user_pdf-summary')}}">Pdf-Summary</a></li>
                                 </ul>
                             </li>
+                            <li @if ($view_name == 'dashboard.index') class="active" @endif ><a href="/dashboard">Reports</a></li>
                         @endif
-
                     </ul>
                 </div>
             </div>
@@ -148,8 +153,15 @@
 
     <!-- Scripts -->
     <script src="/js/app.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
+    <script src="/js/dashboard/moment.min.js"></script>
+    <script src="/js/dashboard/daterangepicker.min.js"></script>
+    <script src="/js/dashboard/chart.js"></script>
     <script src="/js/add_theme_option_to_room.js"></script>
+    <script src="/js/dashboard.js"></script>
     @stack('custom-scripts')
 </body>
 </html>

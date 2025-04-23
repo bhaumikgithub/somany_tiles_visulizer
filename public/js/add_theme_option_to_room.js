@@ -218,25 +218,48 @@ function clearThemeFields(group,method) {
     if (thumbnailInput) thumbnailInput.value = ""; // Clear thumbnail input
     if (textInput) textInput.value = ""; // Clear text input
 
+    let url = new URL(window.location.href);
+    let pathSegments = url.pathname.split("/");
+    
     // Send AJAX request to remove the file, thumbnail, and text from the database
     if( method === "update"){
-        fetch('/room2d/clear-theme', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-            },
-            body: JSON.stringify({ theme: group.theme , room_id:room_id })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log(`Theme ${group.theme} cleared from the database.`);
-            } else {
-                alert(`Error clearing Theme ${group.theme}.`);
-            }
-        })
-        .catch(error => console.error("Error:", error));
+        if( pathSegments[1] === "panoramas"){
+            fetch('/panoramas/clear-theme', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                },
+                body: JSON.stringify({ theme: group.theme , room_id:room_id })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(`Theme ${group.theme} cleared from the database.`);
+                } else {
+                    alert(`Error clearing Theme ${group.theme}.`);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        } else {
+            fetch('/room2d/clear-theme', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                },
+                body: JSON.stringify({ theme: group.theme , room_id:room_id })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(`Theme ${group.theme} cleared from the database.`);
+                } else {
+                    alert(`Error clearing Theme ${group.theme}.`);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
     }
 }
 

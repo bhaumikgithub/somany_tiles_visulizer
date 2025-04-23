@@ -4,8 +4,12 @@ namespace App\Helpers;
 
 use App\Models\CartItem;
 use App\Models\Showroom;
+use App\Room2d;
 use App\Tile;
+use GuzzleHttp\Client;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use App\Panorama;
 
 class Helper
 {
@@ -69,5 +73,107 @@ class Helper
     {
         $tile = Tile::find($tile_id);
         return $tile->sku;
+    }
+
+    public static function getZoneFromState($state): string
+    {
+        $zones = [
+            'Central' => ['Madhya Pradesh', 'Chhattisgarh'],
+            'West' => ['Maharashtra', 'Gujarat', 'Goa', 'Daman & Diu', 'Dadra & Nagar Haveli'],
+            'North' => ['Delhi', 'NCR', 'Rajasthan', 'Punjab', 'Haryana', 'Chandigarh', 'Himachal Pradesh', 'Jammu & Kashmir', 'Uttarakhand', 'Uttar Pradesh'],
+            'South' => ['Lakshadweep', 'Pondicherry', 'Tamil Nadu', 'Kerala', 'Karnataka', 'Andhra Pradesh', 'Telangana'],
+            'East' => ['Andaman & Nicobar', 'West Bengal', 'Bihar', 'Jharkhand', 'Odisha', 'Assam', 'Manipur', 'Arunachal Pradesh', 'Nagaland', 'Mizoram', 'Tripura'],
+        ];
+
+        foreach ($zones as $zone => $states) {
+            if (in_array($state, $states)) {
+                return $zone;
+            }
+        }
+
+        return 'Unknown';
+    }
+
+    // Fetch Zone Based on Pincode
+    public static function getZoneByPincode($pincode): string | JsonResponse
+    {
+        try {
+            // Create a Guzzle client
+            $client = new Client();
+
+            // Call the external pincode API
+            $response = $client->request('GET', "http://www.postalpincode.in/api/pincode/{$pincode}", [
+                'timeout' => 5, // Set timeout to avoid long delays
+                'connect_timeout' => 3, // Connection timeout
+            ]);
+
+            // Decode the response
+            $data = json_decode($response->getBody()->getContents(), true);
+
+            // Check if the API call was successful
+            if (!isset($data['Status']) || $data['Status'] !== 'Success' || empty($data['PostOffice'])) {
+                throw new \Exception("Invalid response from API.");
+            }
+
+            // Extract area and state
+            $postOffice = $data['PostOffice'][0];
+            $state = $postOffice['State'] ?? 'Gujarat'; // Use Gujarat if the state is missing
+
+        } catch (\Exception $e) {
+            \Log::error("Pincode API Failed: " . $e->getMessage());
+
+            // Default to Gujarat when API fails
+            $state = 'Gujarat';
+        }
+
+        return self::getZoneFromState($state); // Call Helper Function
+    }
+
+    public static function getTileNameAndSurface($tileId): array
+    {
+        $tile = Tile::find($tileId);
+        if ($tile) {
+            return [
+                'tile_name' => $tile->name,
+                'surface' => $tile->surface ?? 'Unknown Surface', // Assuming `surface` is a column in the Tile table
+                'photo' => $tile->icon,
+                'size' => $tile->size,
+                'finish' => $tile->finish,
+                'category' => $tile->brand,
+                'innovation' => $tile->innovation,
+                'color' => $tile->color,
+            ];
+        }
+
+        return [
+            'tile_name' => 'Unknown Tile',
+            'surface' => 'Unknown Surface'
+        ];
+    }
+
+    public static function getRoomCatgory($room_id,$room_type): string
+    {
+        if( $room_type === "2d")
+            $room = Room2d::find($room_id);
+        else
+            $room = Panorama::find($room_id);
+
+        return ucwords($room->type);
+    }
+
+    public static function getShowroomDetails($showRoomId) 
+    {
+        $showroom = Showroom::find($showRoomId);
+        if ($showroom) {
+            return [
+                'name' => $showroom->name,
+                'city' => $showroom->city ?? 'Unknown city', // Assuming `surface` is a column in the Tile table
+            ];
+        }
+
+        return [
+            'name' => 'Unknown Tile',
+            'city' => 'Unknown Surface'
+        ];
     }
 }

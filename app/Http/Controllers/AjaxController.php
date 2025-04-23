@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Helpers\Helper;
 use App\Panorama;
 use App\Room2d;
 use GuzzleHttp\Client;
@@ -47,7 +48,7 @@ class AjaxController extends Controller
         if (config('app.tiles_access_level')) {
             $roomID = $request->input('room_id');
             $currentRoomType = $request->input('room_type');
-            if( $currentRoomType === 'ai-studio'){
+            if( $currentRoomType === 'your-space-studio'){
                 $tiles = Tile::select('id','name','size','finish','surface','file','rotoPrintSetName','expProps','width','height','thickness')->where('enabled', 1)->get();
             } else {
                 if( $currentRoomType === "2d-studio" ) {
@@ -107,7 +108,7 @@ class AjaxController extends Controller
     protected function getTilesByRoomType($roomType)
     {
         if (session()->has('pincode')) {
-            $getZone = $this->getZoneByPincode(session('pincode'));
+            $getZone = Helper::getZoneByPincode(session('pincode'));
             $query = Tile::filterByZone($getZone)->filterByRoomType($roomType);
         } else {
             $user = Auth::user();
@@ -361,59 +362,5 @@ class AjaxController extends Controller
         }
 
         return response()->json(['state' => 'error'], 401); // Unauthorized
-    }
-
-
-    private function getZoneByPincode($pincode): string | JsonResponse
-    {
-        try {
-            // Create a Guzzle client
-            $client = new Client();
-
-            // Call the external pincode API
-            $response = $client->request('GET', "http://www.postalpincode.in/api/pincode/{$pincode}", [
-                'timeout' => 5, // Set timeout to avoid long delays
-                'connect_timeout' => 3, // Connection timeout
-            ]);
-
-            // Decode the response
-            $data = json_decode($response->getBody()->getContents(), true);
-
-            // Check if the API call was successful
-            if (!isset($data['Status']) || $data['Status'] !== 'Success' || empty($data['PostOffice'])) {
-                throw new \Exception("Invalid response from API.");
-            }
-
-            // Extract area and state
-            $postOffice = $data['PostOffice'][0];
-            $state = $postOffice['State'] ?? 'Gujarat'; // Use Gujarat if state is missing
-
-        } catch (\Exception $e) {
-            \Log::error("Pincode API Failed: " . $e->getMessage());
-
-            // Default to Gujarat when API fails
-            $state = 'Gujarat';
-        }
-
-        return $this->getZoneFromState($state);
-    }
-
-    private function getZoneFromState($state): string
-    {
-        $zones = [
-            'Central' => ['Madhya Pradesh','Chhattisgarh'],
-            'West' => ['Maharashtra', 'Gujarat','Goa','Daman & Diu','Dadra & Nagar Haveli'],
-            'North' => ['Delhi', 'NCR','Rajasthan','Punjab', 'Haryana','Chandigarh','Himachal Pradesh','Jammu & Kashmir','Uttarakhand','Uttar Pradesh'],
-            'South' => ['Lakshadweep','Pondicherry','Tamil Nadu', 'Kerala', 'Karnataka','Andhra Pradesh','Telangana'],
-            'East' => ['Andaman & Nicobar', 'West Bengal','Bihar','Jharkhand','Odisha','Assam','Manipur','Arunachal Pradesh','Nagaland','Mizoram','Tripura'],
-        ];
-
-        foreach ($zones as $zone => $states) {
-            if (in_array($state, $states)) {
-                return $zone;
-            }
-        }
-
-        return 'Unknown';
     }
 }
