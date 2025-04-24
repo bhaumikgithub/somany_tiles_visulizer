@@ -42,7 +42,7 @@ class RunNightlyTask extends Command
         $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete";
 
         $queryParams = http_build_query([
-            'limit' => 5,
+            'limit' => 20,
             's' => '2000-01-01',
             'e' => now()->format('Y-m-d'), // Dynamically get today's date
         ]);

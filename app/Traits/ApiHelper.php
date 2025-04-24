@@ -164,13 +164,14 @@ trait ApiHelper
     }
 
 
-    protected function prepareTileUpdateData(array $product, $creation_time){
+    protected function prepareTileUpdateData(array $product, $creation_time,$excludeName = "false"){
         $surface = strtolower($product['surface'] ?? '');
         // Prepare an array but remove null values
         $expPropsArray = $this->extraProps($product);
+        $productVar = gettype($product['image_variation_1']);
 
-        return [
-            'name' => $product['product_name'] ?? null,
+        Log::info("Type of image_variation_1 : {$productVar}");
+        $data = [
             'shape' => $this->getShapeFromWidthHeight($product['size_wt'], $product['size_ht']),
             'width' => intval($product['size_wt'] ?? 0),
             'height' => intval($product['size_ht'] ?? 0),
@@ -180,6 +181,7 @@ trait ApiHelper
             'image_variation_1' => $product['image_variation_1'] ?? null,
             'image_variation_2' => $product['image_variation_2'] ?? null,
             'image_variation_3' => $product['image_variation_3'] ?? null,
+            'image_variation_4' => $product['image_variation_4'] ?? null,
             'url' => $product['url'] ?? null,
             'price' => $product['price'] ?? null,
             'expProps' => json_encode($expPropsArray),
@@ -193,8 +195,8 @@ trait ApiHelper
             'sub_brand_2' => $product['sub_brand_2'] ?? null,
             'color' => $product['color'] ?? null,
             'poc' => $product['poc'] ?? null,
-            'thickness' => $product['thickness'] ?? null,
-            'tiles_per_carton' => $product['tiles_per_carton'] ?? null,
+            'thickness' => number_format((float) $product['thickness'], 2, '.', '') ?? null,
+            'tiles_per_carton' => (int) $product['tiles_per_carton'] ?? null,
             'avg_wt_per_carton' => $product['avg_wt_per_carton'] ?? null,
             'coverage_sq_ft' => $product['coverage_sq_ft'] ?? null,
             'coverage_sq_mt' => $product['coverage_sq_mt'] ?? null,
@@ -207,6 +209,11 @@ trait ApiHelper
             'deletion' => $product['deletion'] ?? null,
             'from_api' => '1'
         ];
+        if ($excludeName !== "true") {
+            $data['name'] = $product['product_name'] ?? null;
+        }
+    
+        return $data;
 
     }
 
