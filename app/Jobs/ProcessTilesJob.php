@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Mail\TileProcessingReport;
+use App\Mail\TileProcessingReportSummary;
 use App\Traits\ApiHelper;
 use Carbon\Carbon;
 use Exception;
@@ -113,7 +114,7 @@ class ProcessTilesJob implements ShouldQueue
                         // Compare and update only changed fields
                         $changedColumns = [];
                         foreach ($updateData as $column => $newValue) {
-                            if ($existingTile->$column !== $newValue) {
+                            if (!$this->valuesAreEqual($existingTile->$column, $newValue)) {
                                 $changedColumns[] = $column;
                             }
                         }
@@ -141,7 +142,7 @@ class ProcessTilesJob implements ShouldQueue
                             $surfaceList = implode(', ', array_unique(array_column($updatedRecords, 'surface')));
                             Log::info("Updated Tile SKU: {$sku} | Surfaces: $surfaceList | Changes: " . json_encode($updatedRecords));
                         } else {
-                            Log::info("No changes detected for Tile SKU: {$data['code']}");
+                            Log::info("No changes detected for Tile SKU: {$sku}");
                         }
                         
                     } else {
@@ -188,9 +189,30 @@ class ProcessTilesJob implements ShouldQueue
         Mail::to('kinjalupadhyay.tps@gmail.com')
             ->send(new TileProcessingReport($insertedRecords, $updatedRecords, $deletedRecords,$skippedRecords));
 
+        // Mail::to('kinjalupadhyay.tps@gmail.com')
+        //     ->send(new TileProcessingReportSummary(
+        //         count($insertedRecords),
+        //         count($updatedRecords),
+        //         count($deletedRecords),
+        //         count($skippedRecords),
+        //         $this->totalCount
+        //     ));
+
         unset($insertedRecords, $updatedRecords, $deletedRecords);
         gc_collect_cycles();
         Log::info('Tile processing completed successfully.');
+    }
+
+
+    private function valuesAreEqual($a, $b): bool
+    {
+        // Both numeric → compare numerically
+        if (is_numeric($a) && is_numeric($b)) {
+            return floatval($a) == floatval($b);
+        }
+
+        // Otherwise, compare as strings
+        return strval($a) === strval($b);
     }
 
     /**

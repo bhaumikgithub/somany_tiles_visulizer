@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Carbon\Carbon;
+use App\Traits\ApiHelper;
+use Illuminate\Support\Facades\Log;
 
 class RunNightlyTask extends Command
 {
