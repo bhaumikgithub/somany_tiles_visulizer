@@ -38,8 +38,8 @@
             <table border="1" cellpadding="10" cellspacing="0" width="100%">
                 <tbody>
                     <tr>
-                        <td style="background-color: #d0e7ff; font-weight: bold;width: 15%;">SKUs</td>
-                        <td>{{$insertedSkus}}</td>
+                        <td style="font-weight: bold;width: 15%;color: #3c763d;background-color: #dff0d8;border-color: #d6e9c6;">SKUs</td>
+                        <td style="border-color: #d6e9c6;">{{$insertedSkus}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -52,8 +52,8 @@
             <table border="1" cellpadding="10" cellspacing="0" width="100%">
                 <tbody>
                     <tr>
-                        <td style="background-color: #d0e7ff; font-weight: bold;width: 15%;">SKUs</td>
-                        <td>{{$updatedSkus}}</td>
+                        <td style="font-weight: bold;width: 15%;color: #3c763d;background-color: #dff0d8;border-color: #d6e9c6;">SKUs</td>
+                        <td style="border-color: #d6e9c6;">{{$updatedSkus}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -66,8 +66,8 @@
             <table border="1" cellpadding="10" cellspacing="0" width="100%">
                 <tbody>
                     <tr>
-                        <td style="background-color: #d0e7ff; font-weight: bold;width: 15%;">SKUs</td>
-                        <td>{{$deletedSkus}}</td>
+                        <td style="background-color: #f2dede;font-weight: bold;color: #a94442;width: 15%;border-color: #ebccd1;">SKUs</td>
+                        <td style="border-color: #ebccd1;">{{$deletedSkus}}</td>
                     </tr>
                 </tbody>
             </table>
