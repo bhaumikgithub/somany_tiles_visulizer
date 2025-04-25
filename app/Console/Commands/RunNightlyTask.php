@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Carbon\Carbon;
 use App\Traits\ApiHelper;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\ProcessTilesJob;
 
 class RunNightlyTask extends Command
 {
