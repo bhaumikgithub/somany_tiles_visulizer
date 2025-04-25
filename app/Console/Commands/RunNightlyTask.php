@@ -37,12 +37,14 @@ class RunNightlyTask extends Command
         set_time_limit(0);
         ini_set('memory_limit', '2048M'); // Adjust the limit as needed
 
+        $endDate = now()->format('Y-m-d');
+
         $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete";
 
         $queryParams = http_build_query([
             'limit' => 5,
             's' => '2000-01-01',
-            'e' => now()->format('Y-m-d'), // Dynamically get today's date
+            'e' => $endDate, // Dynamically get today's date
         ]);
 
         $headers = [
@@ -60,7 +62,7 @@ class RunNightlyTask extends Command
         if (empty($data)) {
             exit(); // Stop if there are no more records
         }
-
+    
         $totalRecords = count($data);
     
         // Dispatch Job to Process Records in Background
