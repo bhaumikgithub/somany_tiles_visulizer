@@ -80,8 +80,8 @@
             <table border="1" cellpadding="10" cellspacing="0" width="100%">
                 <tbody>
                     <tr>
-                        <td style="background-color: #721c24; font-weight: bold;color: #fff;width: 15%;">SKUs</td>
-                        <td>{{$skippedSkus}}</td>
+                        <td style="background-color: #f2dede;font-weight: bold;color: #a94442;width: 15%;border-color: #ebccd1;">SKUs</td>
+                        <td style="border-color: #ebccd1;">{{$skippedSkus}}</td>
                     </tr>
                 </tbody>
             </table>
