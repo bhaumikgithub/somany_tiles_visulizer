@@ -36,9 +36,6 @@ class RunNightlyTask extends Command
         set_time_limit(0);
         ini_set('memory_limit', '2048M'); // Adjust the limit as needed
 
-        $startDate = $request->start_date;
-        $endDate = $request->end_date;
-
         $apiUrl = "https://somany-backend.brndaddo.ai/api/v1/en_GB/products/autocomplete";
 
         $queryParams = http_build_query([
