@@ -215,12 +215,24 @@ class ProcessTilesJob implements ShouldQueue
         // Mail::to('kinjalupadhyay.tps@gmail.com')
         //     ->send(new TileProcessingReport($insertedRecords, $updatedRecordsList, $deletedRecords,$skippedRecords));
 
+
+        // Collect unique SKUs from each list
+        $insertedSkus = collect($insertedRecords)->pluck('sku')->unique()->values()->implode(',');
+        $updatedSkus = collect($updatedRecordsList)->pluck('sku')->unique()->values()->implode(',');
+        $deletedSkus = collect($deletedRecords)->pluck('sku')->unique()->values()->implode(',');
+        $skippedSkus = collect($skippedRecords)->pluck('sku')->unique()->values()->implode(',');
+
+
         Mail::to('kinjalupadhyay.tps@gmail.com')
             ->send(new TileProcessingReportSummary(
                 count($insertedRecords),
                 count($updatedRecordsList),
                 count($deletedRecords),
                 count($skippedRecords),
+                $insertedSkus,
+                $updatedSkus,
+                $deletedSkus,
+                $skippedSkus,
                 $this->totalCount
             ));
 

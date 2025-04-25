@@ -2,16 +2,92 @@
 <html>
 <head>
     <title>Tile Processing Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h2>Tile Processing Report Summary</h2>
+    <div class="container">
+        <h2>Tile Processing Report Summary</h2>
 
-    <p><strong>Total Processed with Variants:</strong> {{ $insertedCount + $updatedCount + $skippedCount }}</p>
-    <ul>
-        <li><strong>Inserted:</strong> {{ $insertedCount }}</li>
-        <li><strong>Updated:</strong> {{ $updatedCount }}</li>
-        <li><strong>Deleted:</strong> {{ $deletedCount }}</li>
-        <li><strong>Skipped:</strong> {{ $skippedCount }}</li>
-    </ul>
+        @if( $insertedCount > 0  )
+            <h3>Inserted Tiles : {{$insertedCount}}</h3>
+            <table border="1" cellpadding="10" cellspacing="0" width="100%">
+                <tbody>
+                    <tr>
+                        <td style="background-color: #d0e7ff; font-weight: bold;width: 15%;">SKUs</td>
+                        <td>{{$insertedSkus}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        @else
+            <p>No new tiles were inserted.</p>
+        @endif
+
+        @if( $updatedCount > 0  )
+            <h3>Updated Tiles : {{$updatedCount}}</h3>
+            <table border="1" cellpadding="10" cellspacing="0" width="100%">
+                <tbody>
+                    <tr>
+                        <td style="background-color: #d0e7ff; font-weight: bold;width: 15%;">SKUs</td>
+                        <td>{{$updatedSkus}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        @else
+            <p>No tiles were updated.</p>
+        @endif
+
+        @if( $deletedCount > 0 ) )
+            <h3>Deleted Tiles : {{$deletedCount}}</h3>
+            <table border="1" cellpadding="10" cellspacing="0" width="100%">
+                <tbody>
+                    <tr>
+                        <td style="background-color: #d0e7ff; font-weight: bold;width: 15%;">SKUs</td>
+                        <td>{{$deletedSkus}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        @else
+            <p>No tiles were deleted.</p>
+        @endif
+
+        @if( $skippedCount > 0  )
+            <h3>Skipped / Error Tiles : {{$skippedCount}}</h3>
+            <table border="1" cellpadding="10" cellspacing="0" width="100%">
+                <tbody>
+                    <tr>
+                        <td style="background-color: #721c24; font-weight: bold;color: #fff;width: 15%;">SKUs</td>
+                        <td>{{$skippedSkus}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        @else
+            <p>No tiles were skipped or detecting errors.</p>
+        @endif
+    </div>
 </body>
 </html>

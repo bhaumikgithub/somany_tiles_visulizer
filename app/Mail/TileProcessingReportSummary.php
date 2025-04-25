@@ -17,18 +17,32 @@ class TileProcessingReportSummary extends Mailable
     public $updatedCount;
     public $deletedCount;
     public $skippedCount;
-    public $totalCount;
+    
+    public $insertedSkus;
+    public $updatedSkus;
+    public $deletedSkus;
+    public $skippedSkus;
+    
+    public $total;
+    
 
     /**
      * Create a new message instance.
      */
-    public function __construct($insertedCount, $updatedCount, $deletedCount, $skippedCount, $totalCount)
+    public function __construct($insertedCount, $updatedCount, $deletedCount, $skippedCount, $insertedSkus, $updatedSkus, $deletedSkus, $skippedSkus, $total)
     {
         $this->insertedCount = $insertedCount;
         $this->updatedCount = $updatedCount;
         $this->deletedCount = $deletedCount;
         $this->skippedCount = $skippedCount;
-        $this->totalCount = $totalCount;
+
+        $this->insertedSkus = $insertedSkus;
+        $this->updatedSkus = $updatedSkus;
+        $this->deletedSkus = $deletedSkus;
+        $this->skippedSkus = $skippedSkus;
+
+        $this->totalCount = $total;
+        
     }
 
     /**
