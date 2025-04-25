@@ -168,9 +168,6 @@ trait ApiHelper
         $surface = strtolower($product['surface'] ?? '');
         // Prepare an array but remove null values
         $expPropsArray = $this->extraProps($product);
-        $productVar = gettype($product['image_variation_1']);
-
-        Log::info("Type of image_variation_1 : {$productVar}");
         $data = [
             'shape' => $this->getShapeFromWidthHeight($product['size_wt'], $product['size_ht']),
             'width' => intval($product['size_wt'] ?? 0),
