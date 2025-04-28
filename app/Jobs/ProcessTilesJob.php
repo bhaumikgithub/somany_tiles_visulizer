@@ -232,18 +232,18 @@ class ProcessTilesJob implements ShouldQueue
         $skippedSkus = collect($skippedRecords)->pluck('sku')->unique()->values()->implode(',');
 
 
-        // Mail::to('kinjalupadhyay.tps@gmail.com')
-        //     ->send(new TileProcessingReportSummary(
-        //         count($insertedRecords),
-        //         count($updatedRecordsList),
-        //         count($deletedRecords),
-        //         count($skippedRecords),
-        //         $insertedSkus,
-        //         $updatedSkus,
-        //         $deletedSkus,
-        //         $skippedSkus,
-        //         $this->totalCount
-        //     ));
+        Mail::to('kinjalupadhyay.tps@gmail.com')
+            ->send(new TileProcessingReportSummary(
+                count($insertedRecords),
+                count($updatedRecordsList),
+                count($deletedRecords),
+                count($skippedRecords),
+                $insertedSkus,
+                $updatedSkus,
+                $deletedSkus,
+                $skippedSkus,
+                $this->totalCount
+            ));
 
         unset($insertedRecords, $updatedRecords, $deletedRecords,$skippedRecords);
         gc_collect_cycles();
