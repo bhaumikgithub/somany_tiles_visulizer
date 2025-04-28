@@ -54,7 +54,7 @@ class ProcessTilesJob implements ShouldQueue
 
         $this->updateProcessingCache(0, 0, 0, 0, "Processing started...", []);
 
-        $existingTiles = DB::table('tiles')->get()->groupBy('sku');
+        // $existingTiles = DB::table('tiles')->get()->groupBy('sku');
         $imageCache = [];
 
         foreach ($this->records as $aTile) {
@@ -104,38 +104,51 @@ class ProcessTilesJob implements ShouldQueue
                 }
 
                 foreach ($surfaces as $surface) {
-                    // $product['product_name'] = $variantName; // update it in all column of that sku.
                     $product['rotoPrintSetName'] = $rotoPrintSetName;
                     $product['surface'] = trim($surface);
-                    // Check if an entry exists with both SKU and Surface
-                    $existingTile = DB::table('tiles')->where('sku', $sku)->where('surface', $surface)->first();
+                    // Try to find existing tile
+                    $existingTile = DB::table('tiles')
+                        ->where('sku', $sku)
+                        ->where('surface', $surface)
+                        ->where('name', $variantName)
+                        ->first();
+
                     if ($existingTile) {
-                        Log::info("Tile Found | ID: {$existingTile->id}, SKU: {$existingTile->sku}, Name: {$existingTile->name}");
-                        $skipNameUpdate = "false";
-                        if( trim($product['product_name']) !== $variantName){
-                            $skipNameUpdate = "true";
+                         // If tile exists, check if image URL matches
+                        if ($existingTile->real_file === $imageURL) {
+                            Log::info("No need to fetch new image, same URL found for SKU: {$sku}, Surface: {$surface}");
+                        } else {
+                            // If the URL differs, fetch and update the image
+                            $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
+                            Log::info("Tile Found | SKU: {$existingTile->sku}, Name: {$existingTile->name} | Updating image as URL has changed.");
                         }
-                        
+                    
+                        // If exists, update if something changed (you're already doing this part well)
+                        Log::info("Tile Found | ID: {$existingTile->id}, SKU: {$existingTile->sku}, Name: {$existingTile->name}");
+                
+                        $skipNameUpdate = (trim($product['product_name']) !== $variantName) ? "true" : "false";
+                
                         $updateData = $this->prepareTileUpdateData($product, $creation_time, $skipNameUpdate);
-                        $updatedJson = json_encode($updateData);
-                        
-                        // Compare and update only changed fields
+                
                         $changedColumns = [];
                         foreach ($updateData as $column => $newValue) {
                             if ($existingTile->$column !== $newValue) {
                                 $changedColumns[] = $column;
                             }
                         }
-                        
-                        // Perform update if any changes detected
+                
                         if (!empty($changedColumns)) {
                             $updateData['updated_at'] = now();
                             $updateData['api_json'] = json_encode($aTile);
-                            DB::table('tiles')->where('sku', $sku)->where('surface', $surface)->where('name',$variantName)->update($updateData);
-
-                            // Combine by name + sku + columns
+                
+                            DB::table('tiles')
+                                ->where('sku', $sku)
+                                ->where('surface', $surface)
+                                ->where('name', $variantName)
+                                ->update($updateData);
+                
                             $changeKey = $variantName . '|' . $sku . '|' . implode(',', $changedColumns);
-                    
+                
                             if (isset($updatedRecords[$changeKey])) {
                                 $updatedRecords[$changeKey]['surfaces'][] = $surface;
                             } else {
@@ -146,40 +159,34 @@ class ProcessTilesJob implements ShouldQueue
                                     'changedColumns' => $changedColumns,
                                 ];
                             }
-                        }else {
+
+                            $updatedCount++;
+                        } else {
                             Log::info("No changes detected for Tile SKU: {$existingTile->sku}");
                         }
-
-                        // // Combine surfaces for the same SKU in logs
-                        // if (!empty($updatedRecords)) {
-                        //     $surfaceList = implode(', ', (array_column($updatedRecords, 'surface')));
-                        //     Log::info("Updated Tile SKU: {$sku} | Surfaces: $surfaceList | Changes: " . json_encode($updatedRecords));
-                        // } else {
-                        //     Log::info("No changes detected for Tile SKU: {$aTile['code']}");
-                        // }
-                        
                     } else {
+                        Log::info("Inserting new surface {$surface} for SKU: {$sku} with variant: {$variantName}");
+                
                         $product['product_name'] = $variantName;
-                        // Store unique image for each variation
                         $product['file'] = $imageFileName;
-                        $product[$column] = $imageURL;
-
+                
                         $data = $this->prepareTileData($product, $creation_time, $imageFileName);
                         $data['created_at'] = now();
                         $data['updated_at'] = now();
                         $data['api_json'] = json_encode($aTile);
+                
                         DB::table('tiles')->insert($data);
-                        //Log::info("Inserted: {$variantName} (SKU: {$sku}, Surface: {$surface})");
-
+                
                         $insertedRecords[] = [
-                            'name' => $variantName,
                             'sku' => $sku,
-                            'surface' => $surface
+                            'name' => $variantName,
+                            'surface' => $surface,
                         ];
-
+                
                         $insertedCount++;
                     }
                 }
+                
             }
             unset($imageCache[$imageURL]); // Free memory
             unset($imageVariations);
@@ -212,8 +219,8 @@ class ProcessTilesJob implements ShouldQueue
 
         $this->updateProcessingCache($processedCount, $insertedCount, $updatedCount, $skippedCount, "{$processedCount} / {$this->totalCount} records processed", $skippedRecords);
 
-        // Mail::to('kinjalupadhyay.tps@gmail.com')
-        //     ->send(new TileProcessingReport($insertedRecords, $updatedRecordsList, $deletedRecords,$skippedRecords));
+        Mail::to('kinjalupadhyay.tps@gmail.com')
+            ->send(new TileProcessingReport($insertedRecords, $updatedRecordsList, $deletedRecords,$skippedRecords));
 
 
         // Collect unique SKUs from each list
@@ -223,20 +230,20 @@ class ProcessTilesJob implements ShouldQueue
         $skippedSkus = collect($skippedRecords)->pluck('sku')->unique()->values()->implode(',');
 
 
-        Mail::to('kinjalupadhyay.tps@gmail.com')
-            ->send(new TileProcessingReportSummary(
-                count($insertedRecords),
-                count($updatedRecordsList),
-                count($deletedRecords),
-                count($skippedRecords),
-                $insertedSkus,
-                $updatedSkus,
-                $deletedSkus,
-                $skippedSkus,
-                $this->totalCount
-            ));
+        // Mail::to('kinjalupadhyay.tps@gmail.com')
+        //     ->send(new TileProcessingReportSummary(
+        //         count($insertedRecords),
+        //         count($updatedRecordsList),
+        //         count($deletedRecords),
+        //         count($skippedRecords),
+        //         $insertedSkus,
+        //         $updatedSkus,
+        //         $deletedSkus,
+        //         $skippedSkus,
+        //         $this->totalCount
+        //     ));
 
-        unset($insertedRecords, $updatedRecords, $deletedRecords);
+        unset($insertedRecords, $updatedRecords, $deletedRecords,$skippedRecords);
         gc_collect_cycles();
         Log::info('Tile processing completed successfully.');
     }
