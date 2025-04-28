@@ -120,15 +120,17 @@ class ProcessTilesJob implements ShouldQueue
                         } else {
                             // If the URL differs, fetch and update the image
                             $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
-                            Log::info("Tile Found | SKU: {$existingTile->sku}, Name: {$existingTile->name} | Updating image as URL has changed.");
+                            Log::info("{$imageFileName}");
+                            // Update the 'real_file' in the update data also
+                            $product['image'] = $imageURL;
+                            Log::info("Tile Found | SKU: {$existingTile->sku}, Name: {$existingTile->name} | Updating image (image URL updated in database).");
                         }
                     
                         // If exists, update if something changed (you're already doing this part well)
                         Log::info("Tile Found | ID: {$existingTile->id}, SKU: {$existingTile->sku}, Name: {$existingTile->name}");
                 
                         $skipNameUpdate = (trim($product['product_name']) !== $variantName) ? "true" : "false";
-                
-                        $updateData = $this->prepareTileUpdateData($product, $creation_time, $skipNameUpdate);
+                        $updateData = $this->prepareTileUpdateData($product, $creation_time, $skipNameUpdate,$imageFileName);
                 
                         $changedColumns = [];
                         foreach ($updateData as $column => $newValue) {
@@ -246,18 +248,6 @@ class ProcessTilesJob implements ShouldQueue
         unset($insertedRecords, $updatedRecords, $deletedRecords,$skippedRecords);
         gc_collect_cycles();
         Log::info('Tile processing completed successfully.');
-    }
-
-
-    private function valuesAreEqual($a, $b): bool
-    {
-        // Both numeric → compare numerically
-        if (is_numeric($a) && is_numeric($b)) {
-            return floatval($a) == floatval($b);
-        }
-
-        // Otherwise, compare as strings
-        return strval($a) === strval($b);
     }
 
     /**

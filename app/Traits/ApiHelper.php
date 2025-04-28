@@ -164,7 +164,7 @@ trait ApiHelper
     }
 
 
-    protected function prepareTileUpdateData(array $product, $creation_time,$excludeName = "false"){
+    protected function prepareTileUpdateData(array $product, $creation_time,$excludeName = "false" ,$imageFileName){
         $surface = strtolower($product['surface'] ?? '');
         // Prepare an array but remove null values
         $expPropsArray = $this->extraProps($product);
@@ -175,6 +175,8 @@ trait ApiHelper
             'size' => $product['size'] ?? null,
             'finish' => $this->mapFinishType($product['design_finish']),
             'design_finish' => $product['design_finish'] ?? null,
+            'file' => $imageFileName,
+            'real_file' => $product['image'] ?? null,
             'image_variation_1' => $product['image_variation_1'] ?? null,
             'image_variation_2' => $product['image_variation_2'] ?? null,
             'image_variation_3' => $product['image_variation_3'] ?? null,
