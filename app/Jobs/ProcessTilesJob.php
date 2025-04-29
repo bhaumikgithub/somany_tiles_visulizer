@@ -87,12 +87,13 @@ class ProcessTilesJob implements ShouldQueue
                 // Define variant name (Base name + number for variations)
                 $variantName = ($column == 'real_file') ? $baseName : "$baseName " . str_pad($variantIndex, 2, '0', STR_PAD_LEFT);
 
+                //Log::info('product : '.json_encode($product));
                 // Clear all image fields
                 $product['real_file'] = $product['image_variation_1'] = $product['image_variation_2'] = $product['image_variation_3'] = $product['image_variation_4'] = null;
-
+                //Log::info('product mid : '.json_encode($product));
                 // Assign the image to the correct column
                 $product[$column] = $imageURL;
-
+                //Log::info('product after : '.json_encode($product));
                 $variantIndex++;
 
                 // Fetch image (ensuring unique images for each variation)
@@ -118,16 +119,15 @@ class ProcessTilesJob implements ShouldQueue
 
                     if ($existingTile) {
                          // If tile exists, check if image URL matches
-                        if ($existingTile->real_file === $imageURL) {
-                            Log::info("No need to fetch new image, same URL found for SKU: {$sku}, Surface: {$surface}");
-                        } else {
-                            Log::info("Fetch new image, New URL found for SKU: {$sku}, Surface: {$surface}");
-                            // If the URL differs, fetch and update the image
-                            $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
-                            // Update real_file and file
-                            $updateData['real_file'] = $imageURL;
-                            $changedColumns[] = 'real_file';
-                        }
+                        if( $column === "real_file" ){
+                            if ($existingTile->real_file === $imageURL) {
+                                Log::info("No need to fetch new image, same URL found for SKU: {$sku}, Surface: {$surface}");
+                            } else {
+                                Log::info("Fetch new image, New URL found for SKU: {$sku}, Surface: {$surface}");
+                                // If the URL differs, fetch and update the image
+                                $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
+                            }
+                        } 
 
                         // Handle image variations
                         foreach (['image_variation_1', 'image_variation_2', 'image_variation_3', 'image_variation_4'] as $variationKey) {
@@ -141,11 +141,8 @@ class ProcessTilesJob implements ShouldQueue
                         Log::info("Tile Found | ID: {$existingTile->id}, SKU: {$existingTile->sku}, Name: {$existingTile->name}");
                 
                         $skipNameUpdate = (trim($product['product_name']) !== $variantName) ? "true" : "false";
-                        $otherFields = $this->prepareTileUpdateData($product, $creation_time, $skipNameUpdate, $imageFileName ?? $existingTile->real_file);
+                        $otherFields = $this->prepareTileUpdateData($product, $creation_time, $skipNameUpdate, $imageFileName ?? $existingTile->file);
 
-                        // Remove real_file from $otherFields to prevent overwrite if not changed
-                        unset($otherFields['real_file']);
-                
                         // Merge other changes if they differ
                         foreach ($otherFields as $column => $newValue) {
                             if ($existingTile->$column !== $newValue) {
@@ -280,13 +277,22 @@ class ProcessTilesJob implements ShouldQueue
      */
     private function getValidImages(array $product): array
     {
-        return array_filter([
+        // return array_filter([
+        //     'real_file' => $product['image'] ?? null,
+        //     'image_variation_1' => $product['image_variation_1'] ?? null,
+        //     'image_variation_2' => $product['image_variation_2'] ?? null,
+        //     'image_variation_3' => $product['image_variation_3'] ?? null,
+        //     'image_variation_4' => $product['image_variation_4'] ?? null,
+        // ], fn($url) => !empty($url) && !$this->isInvalidFormat($url));
+
+
+        return array(
             'real_file' => $product['image'] ?? null,
             'image_variation_1' => $product['image_variation_1'] ?? null,
             'image_variation_2' => $product['image_variation_2'] ?? null,
             'image_variation_3' => $product['image_variation_3'] ?? null,
             'image_variation_4' => $product['image_variation_4'] ?? null,
-        ], fn($url) => !empty($url) && !$this->isInvalidFormat($url));
+        );
     }
 
     /**
