@@ -105,7 +105,7 @@
                                      title="Surface Color"></div>
                             </div>
                         @endif
-                        <div class="toggle-wrap-main">
+                        <div class="toggle-wrap-main" id="getFreeDesignVal">
                             <div id="topPanelContentFreeDesign" class="top-panel-box row mb-10 landscap-toggle1">
                                 <div class="col-md-12 col-xs-12 ">
                                     <div class="d-flex flex-wrap row align-items-center">
@@ -117,7 +117,7 @@
                                         <div class="stiled-checkbox-wrap col-md-6 col-sm-6  col-xs-4 text-right free-design-toggle ">
 
                                             <div class="stiled-checkbox">
-                                                <input type="checkbox" id="topPanelCheckFreeDesign" />
+                                                <input type="checkbox" id="topPanelCheckFreeDesign" class="topPanelCheckFreeDesign"/>
                                                 <label for="topPanelCheckFreeDesign"></label>
                                             </div>
                                         </div>

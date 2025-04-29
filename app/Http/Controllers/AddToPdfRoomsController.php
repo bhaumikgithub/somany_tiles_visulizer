@@ -165,7 +165,8 @@ class AddToPdfRoomsController extends Controller
                 'finish' => $tile->finish,
                 'file' => $tile->file,
                 'price' => $tile->price,
-                'icon' => $tile->icon, // Access the appended 'icon' attribute
+                'icon' => $tile->icon, // Access the appended 'icon' attribute,
+                'free_tile' => $selectedTile['isFreeTile']
             ];
         });
 
@@ -783,7 +784,7 @@ class AddToPdfRoomsController extends Controller
         
         // Decode the JSON string from the request
         $selectedTiles = collect(json_decode($request->data['selected_tiles_ids'], true)); // Convert to a collection
-
+    
         // Fetch tiles data from the database using all tile IDs (including duplicates)
         $tileIds = $selectedTiles->pluck('tileId')->all();
 
