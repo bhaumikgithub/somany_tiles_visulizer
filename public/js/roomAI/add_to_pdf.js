@@ -89,69 +89,99 @@ function canvasImage() {
 // Initialize an empty array
 let ids = [];
 
+// function getTileId(id) {
+//     // Retrieve and parse the existing array from the hidden field
+//     let ids = JSON.parse($('#selected_tile_ids_ai').val() || '[]');
+
+//     // Get the selected tile ID and surface from the clicked <li>
+//     let selectedTileId = $('li#' + id).data('tile');
+//     let selectedTileSurface = $('li#' + id).data('surface');
+
+//     viewdTilesIds(selectedTileId,selectedTileSurface)
+
+//     // Check if the free tile checkbox is checked
+//     let isFreeTileEnabled = $('#free_tile_checkbox_value_ai').val() === "on";
+
+//     // Track whether a free tile was added
+//     let freeTileAdded = false;
+
+//     if (isFreeTileEnabled) {
+//         // Ensure only one free tile exists per surface
+//         let existingFreeTileIndex = ids.findIndex(tile => tile.surface === selectedTileSurface && tile.isFreeTile);
+//         if (existingFreeTileIndex !== -1) {
+//             // Replace the previous free tile for the same surface
+//             ids[existingFreeTileIndex] = {
+//                 tileId: selectedTileId,
+//                 surface: selectedTileSurface,
+//                 isFreeTile: true
+//             };
+//         } else {
+//             // Add a new free tile if not present for this surface
+//             ids.push({
+//                 tileId: selectedTileId,
+//                 surface: selectedTileSurface,
+//                 isFreeTile: true
+//             });
+//         }
+//         freeTileAdded = true;
+//     } else {
+//         // Ensure only one regular tile per surface
+//         let existingRegularTileIndex = ids.findIndex(tile => tile.surface === selectedTileSurface && !tile.isFreeTile);
+//         if (existingRegularTileIndex !== -1) {
+//             // Replace the previous tile for the same surface
+//             ids[existingRegularTileIndex] = {
+//                 tileId: selectedTileId,
+//                 surface: selectedTileSurface,
+//                 isFreeTile: false
+//             };
+//         } else {
+//             // Add new tile if no tile exists for this surface
+//             ids.push({
+//                 tileId: selectedTileId,
+//                 surface: selectedTileSurface,
+//                 isFreeTile: false
+//             });
+//         }
+//     }
+
+//     // Store the updated array in the hidden field
+//     $('#selected_tile_ids_ai').val(JSON.stringify(ids));
+
+//     // If a free tile was added, reset the checkbox value to "off"
+//     if (freeTileAdded) {
+//         $('#free_tile_checkbox_value_ai').val("off");
+//     }
+// }
+
 function getTileId(id) {
-    // Retrieve and parse the existing array from the hidden field
     let ids = JSON.parse($('#selected_tile_ids_ai').val() || '[]');
 
-    // Get the selected tile ID and surface from the clicked <li>
     let selectedTileId = $('li#' + id).data('tile');
     let selectedTileSurface = $('li#' + id).data('surface');
 
-    viewdTilesIds(selectedTileId,selectedTileSurface)
+    viewdTilesIds(selectedTileId, selectedTileSurface);
 
-    // Check if the free tile checkbox is checked
     let isFreeTileEnabled = $('#free_tile_checkbox_value_ai').val() === "on";
 
-    // Track whether a free tile was added
-    let freeTileAdded = false;
+    // Remove any existing tile (free or regular) for the same surface
+    ids = ids.filter(tile => tile.surface !== selectedTileSurface);
 
-    if (isFreeTileEnabled) {
-        // Ensure only one free tile exists per surface
-        let existingFreeTileIndex = ids.findIndex(tile => tile.surface === selectedTileSurface && tile.isFreeTile);
-        if (existingFreeTileIndex !== -1) {
-            // Replace the previous free tile for the same surface
-            ids[existingFreeTileIndex] = {
-                tileId: selectedTileId,
-                surface: selectedTileSurface,
-                isFreeTile: true
-            };
-        } else {
-            // Add a new free tile if not present for this surface
-            ids.push({
-                tileId: selectedTileId,
-                surface: selectedTileSurface,
-                isFreeTile: true
-            });
-        }
-        freeTileAdded = true;
-    } else {
-        // Ensure only one regular tile per surface
-        let existingRegularTileIndex = ids.findIndex(tile => tile.surface === selectedTileSurface && !tile.isFreeTile);
-        if (existingRegularTileIndex !== -1) {
-            // Replace the previous tile for the same surface
-            ids[existingRegularTileIndex] = {
-                tileId: selectedTileId,
-                surface: selectedTileSurface,
-                isFreeTile: false
-            };
-        } else {
-            // Add new tile if no tile exists for this surface
-            ids.push({
-                tileId: selectedTileId,
-                surface: selectedTileSurface,
-                isFreeTile: false
-            });
-        }
-    }
+    // Add the selected tile with appropriate isFreeTile flag
+    ids.push({
+        tileId: selectedTileId,
+        surface: selectedTileSurface,
+        isFreeTile: isFreeTileEnabled
+    });
 
-    // Store the updated array in the hidden field
+    // Store the updated array
     $('#selected_tile_ids_ai').val(JSON.stringify(ids));
 
-    // If a free tile was added, reset the checkbox value to "off"
-    if (freeTileAdded) {
+    // Reset the checkbox after adding a free tile
+    if (isFreeTileEnabled) {
         $('#free_tile_checkbox_value_ai').val("off");
     }
 }
+
 
 
 function removeProductFromCart(id) {
@@ -816,11 +846,15 @@ if( $('.pdf-summary-container').length > 0 ) {
 } else {
     $('input[type="checkbox"]').change(function () {
         const $checkbox = $(this);
-        if( $checkbox.attr('id') == "topPanelCheckFreeDesign"){
-            if( $checkbox.prop('checked') === true){
-                $('#free_tile_checkbox_value').val($checkbox.val());
+        console.log($checkbox); // This will log the checkbox element
+    
+        if ($checkbox.hasClass('topPanelCheckFreeDesign')) { // Use hasClass() to check the class
+            console.log("Checkbox with class 'topPanelCheckFreeDesign' triggered");
+            
+            if ($checkbox.prop('checked') === true) {
+                $('#free_tile_checkbox_value_ai').val($checkbox.val());
             } else {
-                $('#free_tile_checkbox_value').val("off");
+                $('#free_tile_checkbox_value_ai').val("off");
             }
         }
     });

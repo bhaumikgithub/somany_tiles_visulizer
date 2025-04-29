@@ -2064,6 +2064,7 @@ input[type=checkbox] {
     }
     .room-canvas-container{
         height: auto !important;
+        max-height: 340px !important;
     }
    
 }
