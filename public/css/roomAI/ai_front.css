@@ -2064,9 +2064,13 @@ input[type=checkbox] {
     }
     .room-canvas-container{
         height: auto !important;
-        max-height: 340px !important;
+        max-height: 550px !important;
+             
     }
-   
+
+    .room-canvas-container .room-canvas{
+        max-width: -webkit-fill-available !important;
+    }
 }
 @media (max-width:991px) and (orientation:landscape){
     .showOnMobile{
@@ -2164,6 +2168,10 @@ input[type=checkbox] {
         margin-right: 0px !important;
         left: 21px;
     }
+    .room-canvas-container{
+        height: auto !important;
+        max-height: 350px !important;
+    }
 
    
 }
@@ -2177,6 +2185,10 @@ input[type=checkbox] {
           padding: 8px;
           font-size: 13px;
       }
+      .room-canvas-container{
+        height: auto !important;
+        max-height: 230px !important;
+    }
   }
 
     @media (max-width: 350px) and (orientation: portrait) {
@@ -2198,4 +2210,3 @@ input[type=checkbox] {
 .room-canvas-container .surface-select img {
     opacity: 0.0 !important;
 }
-
