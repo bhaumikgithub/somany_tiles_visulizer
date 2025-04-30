@@ -90,74 +90,74 @@ class ActivityLogController extends Controller
 
     public function storeToAnalyticsForAI(Request $request)
     {
-        $sessionId = session()->getId(); // Get session ID
-        $pincode = session('pincode');
-        $zone = Helper::getZoneByPincode($pincode);
-    
-        $pinCodeZoneData  = [
-            'pincode' => $pincode,
-            'zone' => $zone
-        ];
+        try {
+            $sessionId = session()->getId(); // Get session ID
+            $pincode = session('pincode');
+            $zone = Helper::getZoneByPincode($pincode);
 
-        $category = [
-            'category_name' => "users_room",
-            'category_type' => $request->room,
-        ];
+            $pinCodeZoneData  = [
+                'pincode' => $pincode,
+                'zone' => $zone
+            ];
 
-        $roomData = [
-            'room_name' => "users_room",
-            'room_type' => $request->room,
-        ];
+            $category = [
+                'category_name' => "users_room",
+                'category_type' => $request->room,
+            ];
 
-        $user = "guest";
+            $roomData = [
+                'room_name' => "users_room",
+                'room_type' => $request->room,
+            ];
 
-        //Check if user has logged in backend or not
-        if (auth()->check()) {
-            $loged_user = auth()->user();
-            $user = $loged_user->id;
-        }
+            $user = "guest";
+            $loged_user = null;
 
-        $analytics = Analytics::where('session_id', $sessionId)->first();
-        if( $analytics){
-            // Decode existing category JSON
-            $existingCategories = json_decode($analytics->category, true) ?? [];
-            $existingRooms = json_decode($analytics->room, true) ?? [];
-            $existingPincodeZones = json_decode($analytics->pincode_zone, true) ?? [];
-            // **Update Pincode & Zone**
-            if (!in_array($pinCodeZoneData , $existingPincodeZones)) {
-                $existingPincodeZones[] = $pinCodeZoneData;
+            if (auth()->check()) {
+                $loged_user = auth()->user();
+                $user = $loged_user->id;
             }
 
-             // Update category if not already present
-            if (!in_array($category, $existingCategories)) {
-                $existingCategories[] = $category;
-                $analytics->update([
-                    'category' => json_encode($existingCategories),
+            $analytics = Analytics::where('session_id', $sessionId)->first();
+
+            if ($analytics) {
+                $existingCategories = json_decode($analytics->category, true) ?? [];
+                $existingRooms = json_decode($analytics->room, true) ?? [];
+                $existingPincodeZones = json_decode($analytics->pincode_zone, true) ?? [];
+
+                if (!in_array($pinCodeZoneData, $existingPincodeZones)) {
+                    $existingPincodeZones[] = $pinCodeZoneData;
+                    $analytics->update(['pincode_zone' => json_encode($existingPincodeZones)]);
+                }
+
+                if (!in_array($category, $existingCategories)) {
+                    $existingCategories[] = $category;
+                    $analytics->update(['category' => json_encode($existingCategories)]);
+                }
+
+                if (!in_array($roomData, $existingRooms)) {
+                    $existingRooms[] = $roomData;
+                    $analytics->update(['room' => json_encode($existingRooms)]);
+                }
+            } else {
+                Analytics::create([
+                    'session_id' => $sessionId,
+                    'pincode' => json_encode([$pincode]),
+                    'zone' => json_encode([$zone]),
+                    'pincode_zone' => json_encode([$pinCodeZoneData]),
+                    'category' => json_encode([$category]),
+                    'room' => json_encode([$roomData]),
+                    'user_logged_in' => $user,
+                    'showroom' => $loged_user->showroom_id ?? null,
                 ]);
             }
 
-            // Update room if not already present
-            if (!in_array($roomData, $existingRooms)) {
-                $existingRooms[] = $roomData;
-                $analytics->update([
-                    'room' => json_encode($existingRooms),
-                ]);
-            }
-
-        } else {
-            // New session, create a new analytics entry
-            Analytics::create([
-                'session_id' => $sessionId,
-                'pincode' => json_encode([$pincode]),
-                'zone' => json_encode([$zone]),
-                'category' => json_encode([$category]),
-                'room' => json_encode([$roomData]),
-                'user_logged_in' => $user,
-                'showroom' => $loged_user->showroom_id ?? null,
-            ]);
+            return response()->json(['status' => 'success', 'message' => 'Analytics data stored successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Failed to store analytics data.', 'error' => $e->getMessage()], 500);
         }
-        
     }
+
 
     public function storeViewdTilesByUser(Request $request)
     {
