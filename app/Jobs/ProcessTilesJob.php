@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class ProcessTilesJob implements ShouldQueue
 {
@@ -122,26 +123,29 @@ class ProcessTilesJob implements ShouldQueue
                          // If tile exists, check if image URL matches
                         if( $column === "real_file" ){
                             if ($existingTile->real_file === $imageURL) {
-                                //Log::info("No need to fetch new image, same URL found for Tile: {$variantName}, SKU: {$sku}, Surface: {$surface}");
                                 $product['image'] = $existingTile->real_file;
                                 $imageFileName = $existingTile->file;
                             } else {
-                                //Log::info("Fetch new image, New URL found for SKU: {$sku}, Surface: {$surface}");
                                 // If the URL differs, fetch and update the image
+                                $product['image'] = $imageURL;
                                 $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
                             }
                         } 
 
-                        // Handle image variations
-                        foreach (['image_variation_1', 'image_variation_2', 'image_variation_3', 'image_variation_4'] as $variationKey) {
-                            Log::info("Variation Key: {$variationKey}");
-                            if (!empty($product[$variationKey]) && $existingTile->$variationKey !== $product[$variationKey]) {
-                                Log::info("Update Data Key: {$updateData[$variationKey]}");
-                                Log::info("Update Data Key: {$product[$variationKey]}");
-                                $updateData[$variationKey] = $product[$variationKey];
-                                $changedColumns[] = $variationKey;
+                        if (Str::startsWith($column, 'image_variation_')) {
+                            $existingImageUrl = $existingTile->{$column} ?? null;
+                        
+                            if ($existingImageUrl === $imageURL) {
+                                // Same URL exists, no need to fetch
+                                $product[$column] = $existingImageUrl;
+                                $imageFileName = $existingTile->file;
+                            } else {
+                                $product[$column] = $imageURL;
+                                // New URL found, fetch and update the image
+                                $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
                             }
                         }
+                        
 
                         $skipNameUpdate = (trim($product['product_name']) !== $variantName) ? "true" : "false";
                         $otherFields = $this->prepareTileUpdateData($product, $creation_time, $skipNameUpdate, $imageFileName);
@@ -175,11 +179,11 @@ class ProcessTilesJob implements ShouldQueue
                             $updateData['updated_at'] = now();
                             $updateData['api_json'] = json_encode($aTile);
                 
-                            // DB::table('tiles')
-                            //     ->where('sku', $sku)
-                            //     ->where('surface', $surface)
-                            //     ->where('name', $variantName)
-                            //     ->update($updateData);
+                            DB::table('tiles')
+                                ->where('sku', $sku)
+                                ->where('surface', $surface)
+                                ->where('name', $variantName)
+                                ->update($updateData);
                 
                             $changeKey = $variantName . '|' . $sku . '|' . implode(',', $changedColumns);
                 
