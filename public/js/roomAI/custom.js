@@ -168,28 +168,26 @@ function allLoadCompleted() {
     //Check URL and then store data into the analytics table
     let url1 = new URL(window.location.href);
     let pathSegments1 = url1.pathname.split("/");
-    if( pathSegments1[1] === "your-space-studio"){
-        $.ajax({
-            url:"/store-to-analytics",
-            type: 'POST',
-            dataType: 'json', // Expected response format,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token
-            },
-            data: {
-                'room': 'ai-studio'
-            },
-            success: function (response) {
-                if (response.success) {
-                    console.log("Data stored into the analytics table");
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('Error saving on :', error);
+    $.ajax({
+        url:"/store-to-analytics",
+        type: 'POST',
+        dataType: 'json', // Expected response format,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+        },
+        data: {
+            'room': 'ai-studio'
+        },
+        success: function (response) {
+            if (response.success) {
+                console.log("Data stored into the analytics table");
             }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error saving on :', error);
+        }
 
-        });
-    }
+    });
 
 }
 
@@ -790,4 +788,3 @@ document.getElementById("topPanelGroutSizeRange").addEventListener("input", func
         loader.style.display = "none"; // Hide the loader
     }
 });
-
