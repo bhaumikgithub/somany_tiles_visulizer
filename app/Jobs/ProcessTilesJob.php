@@ -117,32 +117,32 @@ class ProcessTilesJob implements ShouldQueue
                     $changedColumns = [];
 
                     if ($existingTile) {
+                        // If exists, update if something changed (you're already doing this part well)
+                        Log::info("Tile Found | ID: {$existingTile->id}, SKU: {$existingTile->sku}, Name: {$existingTile->name}");
                          // If tile exists, check if image URL matches
                         if( $column === "real_file" ){
                             if ($existingTile->real_file === $imageURL) {
-                                Log::info("No need to fetch new image, same URL found for Tile: {$variantName}, SKU: {$sku}, Surface: {$surface}");
+                                //Log::info("No need to fetch new image, same URL found for Tile: {$variantName}, SKU: {$sku}, Surface: {$surface}");
                                 $product['image'] = $existingTile->real_file;
                                 $imageFileName = $existingTile->file;
                             } else {
-                                Log::info("Fetch new image, New URL found for SKU: {$sku}, Surface: {$surface}");
+                                //Log::info("Fetch new image, New URL found for SKU: {$sku}, Surface: {$surface}");
                                 // If the URL differs, fetch and update the image
                                 $imageFileName = $this->getOrFetchImage($sku, $imageURL, $imageCache);
-                                Log::info("Image File Name : {$imageFileName}");
                             }
                         } 
 
                         // Handle image variations
                         foreach (['image_variation_1', 'image_variation_2', 'image_variation_3', 'image_variation_4'] as $variationKey) {
+                            Log::info("Variation Key: {$variationKey}");
                             if (!empty($product[$variationKey]) && $existingTile->$variationKey !== $product[$variationKey]) {
+                                Log::info("Update Data Key: {$updateData[$variationKey]}");
+                                Log::info("Update Data Key: {$product[$variationKey]}");
                                 $updateData[$variationKey] = $product[$variationKey];
                                 $changedColumns[] = $variationKey;
                             }
                         }
-                    
-                        // If exists, update if something changed (you're already doing this part well)
-                        Log::info("Tile Found | ID: {$existingTile->id}, SKU: {$existingTile->sku}, Name: {$existingTile->name}");
-                        Log::info($imageFileName);
-                
+
                         $skipNameUpdate = (trim($product['product_name']) !== $variantName) ? "true" : "false";
                         $otherFields = $this->prepareTileUpdateData($product, $creation_time, $skipNameUpdate, $imageFileName);
 
@@ -203,7 +203,7 @@ class ProcessTilesJob implements ShouldQueue
                             }
                             
                             // 🔽 Log before/after values
-                            Log::info("Updated Tile | SKU: {$sku} | Surface: {$surface} | Variant: {$variantName}");
+                            Log::info("Updated Tile => Tile ID : {$existingTile->id} | SKU: {$sku} | Surface: {$surface} | Variant: {$variantName}");
                             foreach ($beforeAfterChanges as $field => $values) {
                                 Log::info("  - Field: {$field} | Before: {$values['before']} | After: {$values['after']}");
                             }
@@ -454,7 +454,7 @@ class ProcessTilesJob implements ShouldQueue
                 ];
             }
         } else {
-            Log::info("No changes detected for Tile SKU: {$sku}");
+            Log::info("No changes detected");
         }
     
         Mail::to('kinjalupadhyay.tps@gmail.com')

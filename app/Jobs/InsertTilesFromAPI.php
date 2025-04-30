@@ -99,8 +99,8 @@ class InsertTilesFromAPI implements ShouldQueue
                 continue;
             }
 
-            if (isset($product['sku']) && in_array($product['sku'], ['12345678', '1223324324', '1234','TESTSKU'])) {
-                Log::info("Key: {$product['sku']}");
+            if (isset($aTile['code']) && in_array($aTile['code'], ['12345678', '1223324324', '1234','TESTSKU'])) {
+                Log::info("Key: {$aTile['code']}");
                 continue;
             }
 
@@ -151,7 +151,7 @@ class InsertTilesFromAPI implements ShouldQueue
                     $variationName = ($variationIndex === 1) ? $baseName : "{$baseName} " . str_pad($variationIndex, 2, '0', STR_PAD_LEFT);
 
                     // Clear all image fields
-                    $product['real_file'] = $product['image_variation_1'] = $product['image_variation_2'] = $product['image_variation_3'] = null;
+                    $product['real_file'] = $product['image_variation_1'] = $product['image_variation_2'] = $product['image_variation_3'] = $product['image_variation_4'] = null;
 
                     // Assign the image to the correct column
                     $product[$column] = $imageURL;
