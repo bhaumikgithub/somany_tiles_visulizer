@@ -66,7 +66,7 @@
             <tr>
                 <th>Tile Name</th>
                 <th>SKU</th>
-                <th>Surface</th>
+                <th>Surfaces</th>
             </tr>
             </thead>
             <tbody>
@@ -90,7 +90,7 @@
             <tr>
                 <th>Name</th>
                 <th>SKU</th>
-                <th>surfaces</th>
+                <th>Surfaces</th>
                 <th>Changed Columns</th>
             </tr>
             </thead>
@@ -116,7 +116,7 @@
             <tr>
                 <th>Tile Name</th>
                 <th>SKU</th>
-                <th>Surface</th>
+                <th>Surfaces</th>
             </tr>
             </thead>
             <tbody>
