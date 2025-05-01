@@ -40,7 +40,7 @@ class TileProcessingReport extends Mailable
     {
         return new Envelope(
             from: new Address('no-reply@tilesvisualizer.com', 'Tile Processor'), // Correct format
-            subject: 'Tile Processing Report'
+            subject: 'Tile Processing Report From Somany Server'
         );
     }
 
