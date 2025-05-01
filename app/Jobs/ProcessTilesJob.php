@@ -148,7 +148,7 @@ class ProcessTilesJob implements ShouldQueue
                         
 
                         $skipNameUpdate = (trim($product['product_name']) !== $variantName) ? "true" : "false";
-                        $otherFields = $this->prepareTileUpdateData($product, $creation_time, $skipNameUpdate, $imageFileName);
+                        $otherFields = $this->prepareTileUpdateData($product, $creation_time, $imageFileName , $skipNameUpdate);
 
                         // Merge other changes if they differ
                         // foreach ($otherFields as $column => $newValue) {
