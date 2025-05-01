@@ -133,6 +133,7 @@ trait ApiHelper
             'image_variation_1' => $product['image_variation_1'] ?? null,
             'image_variation_2' => $product['image_variation_2'] ?? null,
             'image_variation_3' => $product['image_variation_3'] ?? null,
+            'image_variation_4' => $product['image_variation_4'] ?? null,
             'grout' => (in_array($surface, ["wall", "floor"])) ? 1 : null,
             'url' => $product['url'] ?? null,
             'price' => $product['price'] ?? null,

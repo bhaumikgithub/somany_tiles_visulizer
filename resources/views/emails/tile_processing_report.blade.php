@@ -116,7 +116,7 @@
             <tr>
                 <th>Tile Name</th>
                 <th>SKU</th>
-                <th>Surfaces</th>
+                <th>Reason</th>
             </tr>
             </thead>
             <tbody>
@@ -124,7 +124,7 @@
                 <tr>
                     <td>{{ $tile['name'] }}</td>
                     <td>{{ $tile['sku'] }}</td>
-                    <td>{{ $tile['surface'] }}</td>
+                    <td>{{ $tile['reason'] }}</td>
                 </tr>
             @endforeach
             </tbody>

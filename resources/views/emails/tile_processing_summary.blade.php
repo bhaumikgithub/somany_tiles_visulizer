@@ -61,7 +61,7 @@
             <p>No tiles were updated.</p>
         @endif
 
-        @if( $deletedCount > 0 ) )
+        @if( $deletedCount > 0 ) 
             <h3>Deleted Tiles : {{$deletedCount}}</h3>
             <table border="1" cellpadding="10" cellspacing="0" width="100%">
                 <tbody>
