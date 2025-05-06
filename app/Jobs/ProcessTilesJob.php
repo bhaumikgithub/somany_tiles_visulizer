@@ -245,7 +245,7 @@ class ProcessTilesJob implements ShouldQueue
             gc_collect_cycles();
         }
         
-        $this->softDeleteMissingTiles($skippedRecords , $deletedRecords);
+        //$this->softDeleteMissingTiles($skippedRecords , $deletedRecords);
 
         DB::table('companies')->update([
             'last_fetch_date_from_api' => $this->endDate,
@@ -256,7 +256,7 @@ class ProcessTilesJob implements ShouldQueue
         $this->updateProcessingCache($processedCount, $insertedCount, $updatedCount, $skippedCount, "{$processedCount} / {$this->totalCount} records processed", $skippedRecords);
 
         /** Send mail to the admin */
-        $sendMail = $this->sendMailTileReport($insertedRecords, $updatedRecords, $deletedRecords,$skippedRecords);
+        $sendMail = $this->sendMailTileReport($insertedRecords, $updatedRecords, $deletedRecords,$skippedRecords , $this->endDate);
 
         gc_collect_cycles();
         Log::info('Tile processing completed successfully.');
@@ -421,7 +421,7 @@ class ProcessTilesJob implements ShouldQueue
         ]);
     }
 
-    private function sendMailTileReport($insertedRecords , $updatedRecords , $deletedRecords , $skippedRecords){
+    private function sendMailTileReport($insertedRecords , $updatedRecords , $deletedRecords , $skippedRecords , $endDate){
         // Step 1: Group by SKU + Name and combine surfaces
         $groupedRecords = [];
 
@@ -472,7 +472,7 @@ class ProcessTilesJob implements ShouldQueue
     
         Mail::to('tracingidea@gmail.com')
             ->bcc('kinjalupadhyay.tps@gmail.com')
-            ->send(new TileProcessingReport($finalRecords, $updatedRecordsList, $deletedRecords,$skippedRecords));
+            ->send(new TileProcessingReport($finalRecords, $updatedRecordsList, $deletedRecords,$skippedRecords , $endDate));
 
 
         // Collect unique SKUs from each list

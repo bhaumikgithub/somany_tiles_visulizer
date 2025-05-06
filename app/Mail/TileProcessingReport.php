@@ -11,6 +11,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Mail\Mailables\Address; //Import Address class
+use Carbon\Carbon;
 
 class TileProcessingReport extends Mailable
 {
@@ -20,27 +21,30 @@ class TileProcessingReport extends Mailable
     public $updatedRecords;
     public $deletedRecords;
     public $skippedRecords;
+    public $endDate;
 
 
     /**
      * Create a new message instance.
      */
-    public function __construct($insertedRecords, $updatedRecords, $deletedRecords , $skippedRecords)
+    public function __construct($insertedRecords, $updatedRecords, $deletedRecords , $skippedRecords , $endDate)
     {
         $this->insertedRecords = is_array($insertedRecords) ? $insertedRecords : [];
         $this->updatedRecords = is_array($updatedRecords) ? $updatedRecords : [];
         $this->deletedRecords = is_array($deletedRecords) ? $deletedRecords : [];
         $this->skippedRecords = is_array($skippedRecords) ? $skippedRecords : [];
+        $this->endDate = $endDate;
     }
 
     /**
      * Get the message envelope.
      */
     public function envelope(): Envelope
-    {
+    {   
+        $formattedDate = Carbon::parse($this->endDate)->format('dS F, Y');
         return new Envelope(
             from: new Address('no-reply@tilesvisualizer.com', 'Tile Processor'), // Correct format
-            subject: 'Tile Processing Report From Somany Server'
+            subject: 'Tile Processing Report – ' . $formattedDate
         );
     }
 
