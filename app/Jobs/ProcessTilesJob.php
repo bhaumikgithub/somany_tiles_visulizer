@@ -245,7 +245,7 @@ class ProcessTilesJob implements ShouldQueue
             gc_collect_cycles();
         }
         
-        //$this->softDeleteMissingTiles($skippedRecords , $deletedRecords);
+        $this->softDeleteMissingTiles($skippedRecords , $deletedRecords);
 
         DB::table('companies')->update([
             'last_fetch_date_from_api' => $this->endDate,
@@ -470,8 +470,8 @@ class ProcessTilesJob implements ShouldQueue
             Log::info("No changes detected");
         }
     
-        Mail::to('tracingidea@gmail.com')
-            ->bcc('kinjalupadhyay.tps@gmail.com')
+        Mail::to(['chandan.parihar@somanyceramics.com','Sonu@somanyceramics.com'])
+            ->bcc('tracingidea@gmail.com')
             ->send(new TileProcessingReport($finalRecords, $updatedRecordsList, $deletedRecords,$skippedRecords , $endDate));
 
 
