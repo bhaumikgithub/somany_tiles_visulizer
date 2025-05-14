@@ -17,6 +17,8 @@ var isTablet = false;
 document.getElementById("roomLoaderBackground").style.visibility = "hidden";
 
 function AdjustCanvasWidthHeight() {
+    if($("#inputSearch").is(":focus")==true)
+        return;
 
     var windowWidth = $(window).width();
     var windowHeight = $(window).height();
