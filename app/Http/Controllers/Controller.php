@@ -825,6 +825,8 @@ class Controller extends BaseController
         $user->email = $request->email;
         if( $request->show_rooms )
             $user->showroom_id = json_encode($request->show_rooms);  // Store selected skill IDs as JSON
+        else 
+            $user->showroom_id = null;
 
         if ($request->hasFile('avatar')) {
             $user->deleteAvatarFile();
