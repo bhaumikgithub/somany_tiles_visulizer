@@ -49,7 +49,7 @@ class AjaxController extends Controller
             $roomID = $request->input('room_id');
             $currentRoomType = $request->input('room_type');
             if( $currentRoomType === 'your-space-studio'){
-                $tiles = Tile::select('id','name','size','finish','surface','file','rotoPrintSetName','expProps','width','height','thickness')->where('enabled', 1)->get();
+                $allTiles = Tile::select('id','name','size','finish','surface','file','rotoPrintSetName','expProps','width','height','thickness','brand')->where('enabled', 1)->get();
             } else {
                 if( $currentRoomType === "2d-studio" ) {
                     $findRoom = Room2d::select('type')->findOrFail($roomID);
@@ -80,12 +80,34 @@ class AjaxController extends Controller
                         ->get();
                         return response()->json($tiles);
                 }
-                $tiles = $this->getTilesByRoomType($roomType);
+                $allTiles = $this->getTilesByRoomType($roomType);
             }
+            $mapping = $this->getTilesByCategory();
+            $tiles = $allTiles->sortBy(function ($tile) use ($mapping) {
+                $tileKey = strtolower($tile->brand ?? $tile->name);
+                $index = array_search($tileKey, array_keys($mapping));
+                return $index !== false ? $index : 999;
+            })->values();
             return response()->json($tiles);
         }
         $tiles = Tile::where('enabled', 1)->get();
         return response()->json($tiles);
+    }
+
+    protected function getTilesByCategory()
+    {
+        return [
+            'coverstone' => 'Large Format Slab - Coverstone',
+            'colorato collection' => 'Large Format Tiles - Colorato Collection',
+            'sedimento collection' => 'Large Format Tiles - Sedimento Collection',
+            'porto collection' => 'Large Format Tiles - Porto Collection',
+            'regalia collection' => 'Large Format Tiles - Regalia Collection',
+            'duragres' => 'Glazed Vitrified Tiles - Duragres',
+            'ceramica' => 'Ceramic - Ceramica',
+            'vitro' => 'Polished Vitrified Tiles - Vitro',
+            'durastone' => 'Heavy Duty Vitrified Tiles - Durastone',
+            'italmarmi' => 'Subway Tiles - Italmarmi',
+        ];
     }
 
     public function getTilesForBackedPanorama(Request $request): JsonResponse

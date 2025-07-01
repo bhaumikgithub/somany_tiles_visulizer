@@ -44,7 +44,7 @@
 
 
                     </div>
-                    <div class="partOfProductTabContent-wrap">
+                    <div class="partOfProductTabContent-wrap" id="hideForPanorama">
                         <div class="top-panel-box search-filter-panel-box partOfProductTabContent">
                             <div class="input-box d-flex flex-wrap serch-box-wrap">
                                 <div class="serach-pad-set d-flex flex-wrap w-100">
