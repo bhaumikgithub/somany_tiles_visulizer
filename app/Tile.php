@@ -265,26 +265,30 @@ class Tile extends Model
     public function scopeFilterByRoomType($query, $roomType)
     {
         return $query->where(function ($query) use ($roomType) {
-            $query->whereNull('application_room_area'); // Include NULL values
+            $query->where(function ($q) use ($roomType) {
+                // Apply filter only if surface is not 'counter'
+                $q->where('surface', '!=', 'counter')
+                ->where(function ($subQuery) use ($roomType) {
+                    $subQuery->whereNull('application_room_area'); // Include NULLs
 
-            if (is_array($roomType)) {
-                $query->orWhere(function ($subQuery) use ($roomType) {
-                    foreach ($roomType as $room) {
-                        $formattedRoom = strtolower(trim(str_replace('-', ' ', $room))); // Convert "prayer-room" to "prayer room"
+                    if (is_array($roomType)) {
+                        $subQuery->orWhere(function ($innerQuery) use ($roomType) {
+                            foreach ($roomType as $room) {
+                                $formattedRoom = strtolower(trim(str_replace('-', ' ', $room)));
+
+                                $innerQuery->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$formattedRoom])
+                                            ->orWhereRaw("LOWER(application_room_area) REGEXP ?", ['(^|[ ,])' . $formattedRoom . '($|[ ,])']);
+                            }
+                        });
+                    } else {
+                        $formattedRoom = strtolower(trim(str_replace('-', ' ', $roomType)));
 
                         $subQuery->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$formattedRoom])
-                            ->orWhereRaw("LOWER(application_room_area) REGEXP ?", ['(^|[ ,])' . $formattedRoom . '($|[ ,])']);
+                                ->orWhereRaw("LOWER(application_room_area) REGEXP ?", ['(^|[ ,])' . $formattedRoom . '($|[ ,])']);
                     }
                 });
-            } else {
-                $formattedRoom = strtolower(trim(str_replace('-', ' ', $roomType))); // Convert single input
-
-                $query->orWhereRaw("FIND_IN_SET(?, REPLACE(application_room_area, ' ', ''))", [$formattedRoom])
-                    ->orWhereRaw("LOWER(application_room_area) REGEXP ?", ['(^|[ ,])' . $formattedRoom . '($|[ ,])']);
-            }
+            })
+            ->orWhere('surface', 'counter'); // Allow all 'counter' tiles (bypass filter)
         });
     }
-
-
-
 }
