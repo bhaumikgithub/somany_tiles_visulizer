@@ -22,3 +22,11 @@
     top: calc(50% - 34px);
     z-index: 9999;
 }
+
+.command {
+	display: inline-block;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-right: 20px;
+}

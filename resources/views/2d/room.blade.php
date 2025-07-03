@@ -12,6 +12,8 @@
 
         </button>
         <div class="share-div d-flex flex-wrap social-share">
+             <button class="share-link d-flex flex-wrap align-items-center normal-pdf-link" onclick="openAIModal();">
+                <i class="fa-regular fa-share-from-square" aria-hidden="true"></i> <span class="btn-text-set">AI </span></button>
             @if (config('app.share_button_whatsapp'))
                 <a href="https://wa.me/?text={{ urlencode(__('SHARE_WHATSAPP_MESSAGE')) }}%20" title="@lang('Whatsapp Share')"
                    target="_blank" class="share-link d-flex flex-wrap align-items-center">
@@ -22,6 +24,7 @@
                         class="fa-solid fa-download"></i> <span class="btn-text-set">Download </span></button>
             <button class="share-link d-flex flex-wrap align-items-center normal-pdf-link" onclick="addToPDF();"><i
                         class="fa-regular fa-file-lines"></i> <span class="btn-text-set">Add to Selection </span></button>
+             
             <button class="share-link d-flex flex-wrap align-items-center share-btn-close"><i
                         class="fa-solid fa-xmark"></i></button>
         </div>
@@ -114,4 +117,31 @@
                 </div>
             </div>
         </div>
+
+        <!---- Open AI Modal popup ---->
+        <div class="modal fade open_ai_modal" id="open_ai_modal" role="dialog" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header add-sec-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4>Choose option</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12 col-xs-12">
+                                <div class="d-flex flex-wrap align-items-center">
+                                    <span class="command" id="cmdOpenDrawer" onclick="cmdOpenDrawer();">Open Drawer</span>
+                                    <span class="command" id="cmdCloseDrawer" onclick="cmdCloseDrawer();">Close Drawer</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
 @endsection

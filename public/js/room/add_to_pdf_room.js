@@ -220,6 +220,7 @@ function getTileId(id) {
     let ids = JSON.parse($('#selected_tile_ids').val() || '[]');
 
     let selectedTileId = $('li#' + id).data('tile');
+    
     let selectedSurface = $('li#' + id).data('surface');
     viewdTilesIds(selectedTileId, selectedSurface);
 
@@ -227,7 +228,6 @@ function getTileId(id) {
     let freeTileAdded = false;
 
     if (isFreeTileEnabled) {
-        console.log("inside if kinjall");
         ids = ids.filter(tile => !(tile.surfaceTitle === surface_title && tile.isFreeTile));
         ids.push({
             tileId: selectedTileId,
@@ -235,9 +235,7 @@ function getTileId(id) {
             isFreeTile: true
         });
         freeTileAdded = true;
-        console.log(ids);
     } else {
-        console.log("inside else kinjall");
         ids = ids.filter(tile => !(tile.surfaceTitle === surface_title && !tile.isFreeTile));
         ids.push({
             tileId: selectedTileId,
