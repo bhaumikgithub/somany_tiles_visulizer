@@ -100,7 +100,9 @@
     <script src="/js/room/add_to_pdf_room.js"></script>
     <script src="/js/room/pincode.js"></script>
     <script src="/js/room/surface_area.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
     <script src="/js/room/custom.js"></script>
+    <script src="/js/room/ai_command.js"></script>
 
     <!-- Google Tag Manager -->
     <script>

@@ -4,6 +4,7 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PincodeController;
 use App\Http\Controllers\UserPdfController;
+use App\Http\Controllers\AIController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShowroomController;
 use Illuminate\Support\Facades\Cache;
@@ -337,6 +338,8 @@ Route::post('/track-category', [ActivityLogController::class, 'trackCategory']);
 //store-to-analytics
 Route::post('/store-to-analytics', [ActivityLogController::class, 'storeToAnalyticsForAI']);
 Route::post('/user-viewd-tiles', [ActivityLogController::class, 'storeViewdTilesByUser']);
+Route::post('/ai/transcribe', [AIController::class, 'transcribe']);
+
 // Route::get('/test', 'App\Http\Controllers\HomeController@index');
 // Route::get('/test', function () {
 //     return response($_SERVER['SERVER_NAME']);

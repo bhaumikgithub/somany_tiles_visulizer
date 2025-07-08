@@ -12,8 +12,8 @@
 
         </button>
         <div class="share-div d-flex flex-wrap social-share">
-             <button class="share-link d-flex flex-wrap align-items-center normal-pdf-link" onclick="openAIModal();">
-                <i class="fa-regular fa-share-from-square" aria-hidden="true"></i> <span class="btn-text-set">AI </span></button>
+            <!-- 🎤 AI Voice Button -->
+            <button id="startRecording" class="share-link d-flex flex-wrap align-items-center">🎤 <span class="btn-text-set">AI button</span></button>
             @if (config('app.share_button_whatsapp'))
                 <a href="https://wa.me/?text={{ urlencode(__('SHARE_WHATSAPP_MESSAGE')) }}%20" title="@lang('Whatsapp Share')"
                    target="_blank" class="share-link d-flex flex-wrap align-items-center">
@@ -52,6 +52,7 @@
         @endif
 
         <script src="/js/room/three.min.js"></script>
+        
         <!-- contine modal start -->
         <div class="modal fade continue-modal" id="continue-modal" role="dialog" data-keyboard="false" data-backdrop="static">
             <div class="modal-dialog modal-dialog-centered">
@@ -119,9 +120,8 @@
         </div>
 
         <!---- Open AI Modal popup ---->
-        <div class="modal fade open_ai_modal" id="open_ai_modal" role="dialog" data-keyboard="false" data-backdrop="static">
+        <!-- <div class="modal fade open_ai_modal" id="open_ai_modal" role="dialog" data-keyboard="false" data-backdrop="static">
             <div class="modal-dialog modal-dialog-centered">
-                <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header add-sec-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -133,6 +133,7 @@
                                 <div class="d-flex flex-wrap align-items-center">
                                     <span class="command" id="cmdOpenDrawer" onclick="cmdOpenDrawer();">Open Drawer</span>
                                     <span class="command" id="cmdCloseDrawer" onclick="cmdCloseDrawer();">Close Drawer</span>
+                                    <span class="command" id="applyTile" onclick="cmdAppliedTiles();">Apply Tile</span>
                                 </div>
                             </div>
 
@@ -142,6 +143,16 @@
                     </div>
                 </div>
             </div>
+        </div> -->
+
+        <!--AI Listening Popup -->
+        <div id="aiPopup" style="display:none; position:fixed; top:30%; left:50%; transform:translateX(-50%); background:white; padding:20px; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.2); text-align:center; z-index:9999;">
+            <h4>🎧 Listening...</h4>
+            <p id="aiStatus" style="margin-top:10px; font-style:italic;"></p>
+            <div id="volumeBarWrapper" style="width: 100%; height: 10px; background: #eee; border-radius: 5px; margin-top: 8px;">
+            <div id="volumeBar" style="height: 100%; width: 0%; background: #4caf50; border-radius: 5px;"></div>
+            </div>
         </div>
+
         
 @endsection

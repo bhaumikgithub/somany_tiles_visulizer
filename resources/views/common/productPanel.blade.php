@@ -105,7 +105,7 @@
                             </div>
                         </div>
                     </div>
-                    <button id="applyTileBtn" class="btn btn-primary mt-2" onClick="cmdAppliedTiles()">Apply Tile</button>
+                    
                     <div id="topPanelLayout" class="top-panel-option-box top-panel-box-overflow-y partOfLayoutTabContent" style="display: none;">
                         @if ($view_name == '3d.room')
                             <div class="top-panel-box">
