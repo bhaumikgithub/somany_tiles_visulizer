@@ -56,3 +56,11 @@ Thumbs.db
 #storage/debugbar ingore
 
 /storage/debugbar/
+whisper-server/
+venv/
+__pycache__/
+*.pt
+*.mp3
+*.wav
+*.webm
+*.zip
