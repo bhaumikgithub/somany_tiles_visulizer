@@ -12,6 +12,9 @@
 
         </button>
         <div class="share-div d-flex flex-wrap social-share">
+            <button id="startRecording">Start Voice</button>
+            <div id="aiStatus"></div>
+
             @if (config('app.share_button_whatsapp'))
                 <a href="https://wa.me/?text={{ urlencode(__('SHARE_WHATSAPP_MESSAGE')) }}%20" title="@lang('Whatsapp Share')"
                    target="_blank" class="share-link d-flex flex-wrap align-items-center">
