@@ -2,43 +2,59 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
 
 class AIController extends Controller
 {
-    public function transcribeAzure(Request $request)
+   public function transcribeAzure(Request $request)
     {
         if (!$request->hasFile('audio')) {
             return response()->json(['error' => 'No audio uploaded'], 400);
         }
 
         $audio = $request->file('audio');
-        $filename = uniqid() . '.wav';
+        $filename = Str::uuid() . '.wav';
         $path = $audio->storeAs('temp_audio', $filename);
         $filePath = storage_path('app/' . $path);
 
-        $subscriptionKey = '45dedbad-0179-4757-b19d-63684f4b8ff0';
+        $subscriptionKey = 'L7NtvAGILkurrlKtrKnViALWuR2HaknlTkFEhi69bf0k6ffgF9AsJQQJ99BGACGhslBXJ3w3AAAYACOGc7PE';
         $region = 'centralindia';
-
         $endpoint = "https://$region.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US";
 
         try {
-            $response = Http::withHeaders([
+            $stream = fopen($filePath, 'r');
+
+            $response = Http::withOptions([
+                'verify' => false
+            ])->withHeaders([
                 'Ocp-Apim-Subscription-Key' => $subscriptionKey,
                 'Content-Type' => 'audio/wav',
                 'Accept' => 'application/json',
-            ])->attach(
-                'audio', file_get_contents($filePath), $filename
-            )->post($endpoint);
+            ])->withBody($stream, 'audio/wav')
+            ->post($endpoint);
 
+            fclose($stream);
             Storage::delete($path);
 
             if ($response->successful()) {
                 $text = $response->json()['DisplayText'] ?? '';
                 return response()->json(['text' => $text]);
             } else {
-                return response()->json(['error' => 'Azure STT failed', 'details' => $response->body()], 500);
+                logger()->error('Azure response status', [
+                    'status' => $response->status(),
+                    'headers' => $response->headers(),
+                    'body' => $response->body(),
+                ]);
+                return response()->json([
+                    'error' => 'Azure STT failed',
+                    'details' => $response->body()
+                ], 500);
             }
+
         } catch (\Exception $e) {
             Storage::delete($path);
             return response()->json(['error' => $e->getMessage()], 500);

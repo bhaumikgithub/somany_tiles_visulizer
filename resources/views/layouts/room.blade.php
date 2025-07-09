@@ -101,7 +101,8 @@
     <script src="/js/room/pincode.js"></script>
     <script src="/js/room/surface_area.js"></script>
     <script src="/js/room/custom.js"></script>
-
+    <script src="/js/fuse.min.js"></script>
+    <script src="/js/room/speech_to_text.js"></script>
     <!-- Google Tag Manager -->
     <script>
         (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
