@@ -237,7 +237,6 @@ function getTileId(id) {
         freeTileAdded = true;
         console.log(ids);
     } else {
-        console.log("inside else kinjall");
         ids = ids.filter(tile => !(tile.surfaceTitle === surface_title && !tile.isFreeTile));
         ids.push({
             tileId: selectedTileId,

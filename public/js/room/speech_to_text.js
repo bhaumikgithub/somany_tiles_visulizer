@@ -155,7 +155,7 @@ function processCommand(text) {
     }
 
     // Matching apply tile command: "apply Aaren Dark on Wall A"
-	let applyTileMatch = cleaned.match(/(?:apply|put|place)?\s*([\w\s]+?)\s*(?:tile|tiles)?\s*(?:on|to)?\s*(wall|floor)\s+([a-c])/i);
+	let applyTileMatch = cleaned.match(/(?:apply|put|place)?\s*([\w\s]+?)\s*(?:tile|tiles)?\s*(?:on|to)?\s*(wall|floor|paint)\s+([a-c])/i);
 	if (applyTileMatch) {
 		console.log(applyTileMatch);
 		const spokenTile = capitalizeWords(applyTileMatch[1].trim());
@@ -168,6 +168,13 @@ function processCommand(text) {
 		} else {
 			document.getElementById("aiStatus").textContent = `❌ No tile matched "${spokenTile}"`;
 		}
+	}
+
+	const showOptionsMatch = cleaned.match(/(?:show|any)?\s*(?:tile)?\s*options?\s*(?:for)?\s*(wall|floor)\s+([a-c])/i);
+	if (showOptionsMatch) {
+		const surface = `${showOptionsMatch[1]} ${showOptionsMatch[2]}`.toUpperCase(); // e.g., "FLOOR A"
+		cmdShowTilesOptions(surface);
+		return;
 	}
 }
 
@@ -209,16 +216,16 @@ function cmdAppliedTiles(tileName,surfaceName) {
 	console.log("======================== Consoling AI TOOLS STARTS =================================");
 	console.log(tileName , surfaceName);
 	console.log("======================== Consoling AI TOOLS ENDS ===================================");
-    // Open drawer if not open
-    const drawer = $('#topPanel');
-    const isDrawerOpen = drawer.is(':visible') && drawer.css('right') === '0px';
-    if (!isDrawerOpen) {
-        drawer.show().animate({ right: '0px' }, 200);
-        console.log('Drawer opened');
-    }
+    // // Open drawer if not open
+    // const drawer = $('#topPanel');
+    // const isDrawerOpen = drawer.is(':visible') && drawer.css('right') === '0px';
+    // if (!isDrawerOpen) {
+    //     drawer.show().animate({ right: '0px' }, 200);
+    //     console.log('Drawer opened');
+    // }
 
-    // Always attempt to switch panel (harmless if already correct)
-  	openTileSelectionPanel(surfaceName.replace(" ", "_")); // e.g., Wall A → Wall_A
+    // // Always attempt to switch panel (harmless if already correct)
+  	// openTileSelectionPanel(surfaceName.replace(" ", "_")); // e.g., Wall A → Wall_A
 	const currentSurface = $('#slected-panel .display_surface_name h5#optionText').text().trim();
 	if (currentSurface.toLowerCase() === surfaceName.toLowerCase()){
 		//Find tile by caption
@@ -235,5 +242,22 @@ function cmdAppliedTiles(tileName,surfaceName) {
 		//Simulate tile click
 		tileElement.trigger('click');
 	}
+}
+
+//Show Tiles options for Wall A, Wall B, Floor Etc
+function cmdShowTilesOptions(surfaceName)
+{
+	// Open drawer if not open
+    const drawer = $('#topPanel');
+    const isDrawerOpen = drawer.is(':visible') && drawer.css('right') === '0px';
+    if (!isDrawerOpen) {
+        drawer.show().animate({ right: '0px' }, 200);
+        console.log('Drawer opened');
+    }
+	// Always attempt to switch panel (harmless if already correct)
+  	openTileSelectionPanel(surfaceName.replace(" ", "_")); // e.g., Wall A → Wall_A
+
+	// Update status (optional)
+    document.getElementById("aiStatus").textContent = `Showing tile options for ${surfaceName}`;
 }
 

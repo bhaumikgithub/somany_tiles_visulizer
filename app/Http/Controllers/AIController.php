@@ -29,7 +29,7 @@ class AIController extends Controller
             $stream = fopen($filePath, 'r');
 
             $response = Http::withOptions([
-                'verify' => false
+                'verify' => $this->getSSLVerifier()
             ])->withHeaders([
                 'Ocp-Apim-Subscription-Key' => $subscriptionKey,
                 'Content-Type' => 'audio/wav',
@@ -59,5 +59,16 @@ class AIController extends Controller
             Storage::delete($path);
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+
+     /**
+     * Get SSL Verifier (can be modified based on environment needs).
+     */
+    protected function getSSLVerifier(): bool
+    {
+        // Get the value of MY_CUSTOM_VAR from the .env file
+        $customVar = config('app.curl'); // 'default_value' is the fallback in case MY_CUSTOM_VAR is not set
+        return !(($customVar === "localhost"));
     }
 }
