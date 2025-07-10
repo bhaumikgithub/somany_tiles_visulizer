@@ -184,12 +184,7 @@ function capitalizeWords(str) {
 
 /*** All Commands starts from here */
 function cmdOpenDrawer() {
-    hideTopPanelMainPanel();
-    if (!isMobilePortrait()) {
-        $('#topPanel').show();
-        $('#topPanel').animate({ right: '0px' }); // Move the panel to the right
-        $('#topPanelHideIcon').addClass('glyphicon-menu-right');
-    }
+   openTopPanel();
 }
 
 function cmdCloseDrawer(){
