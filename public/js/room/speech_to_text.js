@@ -19,7 +19,7 @@ document.getElementById('startRecording').addEventListener('click', async () => 
     mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
 
     mediaRecorder.onstop = async () => {
-		// ✅ Fully stop the mic
+		// Fully stop the mic
 		if (stream && stream.getTracks) {
 			stream.getTracks().forEach(track => track.stop());
 		}
@@ -155,11 +155,19 @@ function processCommand(text) {
     }
 
     // Matching apply tile command: "apply Aaren Dark on Wall A"
-	let applyTileMatch = cleaned.match(/(?:apply|put|place)?\s*([\w\s]+?)\s*(?:tile|tiles)?\s*(?:on|to)?\s*(wall|floor|paint)\s+([a-c])/i);
-	if (applyTileMatch) {
+	let applyTileMatch = cleaned.match(/(?:apply|put|place)?\s*([\w\s]+?)\s*(?:tile|tiles)?\s*(?:on|to)?\s*(wall|floor|paint|counter)\s+([a-c])/i);
+	//let applyTileMatch = cleaned.match(/(?:apply|put|place)?\s*([\w\s]+?)\s*(?:tile|tiles)?\s*(?:on|to)?\s+([\w\s]+)/i);
+    if (applyTileMatch) {
 		console.log(applyTileMatch);
+        // const spokenTile = capitalizeWords(applyTileMatch[1].trim());
+        // const rawSurface = applyTileMatch[2].trim(); // e.g., "Vol A", "Wall 8", "Paint B"
+        // const surface = fuzzyMatchSurface(rawSurface); // dynamic matching here
+        // console.log(spokenTile + ", " + rawSurface + ", " + surface);
+        //return false;
+
 		const spokenTile = capitalizeWords(applyTileMatch[1].trim());
-		const surface = `${applyTileMatch[2]} ${applyTileMatch[3]}`.toUpperCase();
+		let rawSurface = `${applyTileMatch[2]} ${applyTileMatch[3]}`;
+        const surface = fuzzyMatchSurface(rawSurface);
 
 		const matchedTile = fuzzyMatchTile(spokenTile);
 		if (matchedTile) {
@@ -170,16 +178,40 @@ function processCommand(text) {
 		}
 	}
 
-	const showOptionsMatch = cleaned.match(/(?:show|any)?\s*(?:tile)?\s*options?\s*(?:for)?\s*(wall|floor)\s+([a-c])/i);
-	if (showOptionsMatch) {
-		const surface = `${showOptionsMatch[1]} ${showOptionsMatch[2]}`.toUpperCase(); // e.g., "FLOOR A"
-		cmdShowTilesOptions(surface);
-		return;
-	}
+	// const showOptionsMatch = cleaned.match(/(?:show|any)?\s*(?:tile)?\s*options?\s*(?:for)?\s*(wall|floor|paint|counter)\s+([a-c])/i);
+	// if (showOptionsMatch) {
+	// 	const surface = `${showOptionsMatch[1]} ${showOptionsMatch[2]}`.toUpperCase(); // e.g., "FLOOR A"
+	// 	cmdShowTilesOptions(surface);
+	// 	return;
+	// }
+
+    let command = "show me white tiles for floor A";
+    let { surface, color } = parseFilterCommand(command);
+    console.log("Parsed:", { color, surface });
+
+    checkColorFilterInPanel(color);
+
 }
 
 function capitalizeWords(str) {
   return str.replace(/\b\w/g, char => char.toUpperCase());
+}
+
+
+function getAllSurfaceNames() {
+    return Array.from(document.querySelectorAll('#selectd-data .-caption'))
+        .map(el => el.textContent.trim().toLowerCase())
+        .filter(text => text.length > 0);
+}
+
+function fuzzyMatchSurface(spoken) {
+    const surfaces = getAllSurfaceNames(); // From DOM
+    const fuse = new Fuse(surfaces, {
+        includeScore: true,
+        threshold: 0.4
+    });
+    const result = fuse.search(spoken.toLowerCase().trim());
+    return result.length ? capitalizeWords(result[0].item) : null;
 }
 
 /*** All Commands starts from here */
@@ -219,7 +251,6 @@ function cmdAppliedTiles(tileName,surfaceName) {
     //     console.log('Drawer opened');
     // }
 
-    // // Always attempt to switch panel (harmless if already correct)
   	// openTileSelectionPanel(surfaceName.replace(" ", "_")); // e.g., Wall A → Wall_A
 	const currentSurface = $('#slected-panel .display_surface_name h5#optionText').text().trim();
 	if (currentSurface.toLowerCase() === surfaceName.toLowerCase()){
@@ -242,7 +273,29 @@ function cmdAppliedTiles(tileName,surfaceName) {
 //Show Tiles options for Wall A, Wall B, Floor Etc
 function cmdShowTilesOptions(surfaceName)
 {
-	// Open drawer if not open
+	openSurfacePanel(surfaceName);
+
+    // Update status (optional)
+    document.getElementById("aiStatus").textContent = `Showing tile options for ${surfaceName}`;
+}
+
+
+function parseFilterCommand(text) {
+    text = text.toLowerCase();
+
+    // Match known surfaces like Wall A, Floor B, etc.
+    const surfaceMatch = text.match(/\b(wall|floor|counter|paint)\s*([a-o])/i);
+    const surface = surfaceMatch ? `${capitalizeWords(surfaceMatch[1])} ${surfaceMatch[2].toUpperCase()}` : null;
+
+    // Match colors
+    const colorMatch = text.match(/\b(white|black|grey|beige|brown|blue|pink|red|green|yellow|cream|multi colour)\b/i);
+    const color = colorMatch ? capitalizeWords(colorMatch[1]) : null;
+
+    return { surface, color };
+}
+
+function openSurfacePanel(surfaceName) {
+   // Open drawer if not open
     const drawer = $('#topPanel');
     const isDrawerOpen = drawer.is(':visible') && drawer.css('right') === '0px';
     if (!isDrawerOpen) {
@@ -251,8 +304,21 @@ function cmdShowTilesOptions(surfaceName)
     }
 	// Always attempt to switch panel (harmless if already correct)
   	openTileSelectionPanel(surfaceName.replace(" ", "_")); // e.g., Wall A → Wall_A
-
-	// Update status (optional)
-    document.getElementById("aiStatus").textContent = `Showing tile options for ${surfaceName}`;
 }
 
+function checkColorFilterInPanel(color, surface) {
+    if (!color || !surface) return;
+
+    openSurfacePanel(surface);
+
+    // Uncheck all first
+    $panel.find('.checkboxClass').prop('checked', false);
+
+    // Check matching label
+    $panel.find('.filter-item-checkbox').each(function () {
+        const label = $(this).find('label').text().trim();
+        if (label.toLowerCase() === color.toLowerCase()) {
+            $(this).find('input[type="checkbox"]').prop('checked', true).trigger('change');
+        }
+    });
+}
