@@ -223,6 +223,13 @@ class ProcessTilesJob implements ShouldQueue
                         $product['file'] = $imageFileName;
                 
                         $data = $this->prepareTileData($product, $creation_time, $imageFileName);
+
+                        if (isset($data['skip']) && $data['skip'] === true) {
+                            \Log::warning("Tile insert skipped for SKU: {$product['sku']} - Reason: " . $data['reason']);
+                            $skippedCount++;
+                            $this->logSkippedRecord($product['sku'], $data['reason'], $skippedRecords,$product['product_name']);
+                            continue; // SKIP INSERT
+                        }
                         $data['created_at'] = now();
                         $data['updated_at'] = now();
                         $data['api_json'] = json_encode($aTile);
@@ -284,7 +291,7 @@ class ProcessTilesJob implements ShouldQueue
      */
     private function shouldSkipTile(string $code , array $product, string $sku, array &$skippedRecords): bool
     {
-        if (in_array($code, ['12345678', '1223324324','1234','TESTSKU'])) {
+        if (in_array($code, ['12345678', '1223324324','1234','TESTSKU','NT11H111000010106'])) {
             $this->logSkippedRecord($code, "Excluded SKU", $skippedRecords);
             return true;
         }
@@ -375,32 +382,41 @@ class ProcessTilesJob implements ShouldQueue
     private function softDeleteMissingTiles(array &$skippedRecords ,array &$deletedRecords): void
     {
         $apiSkus = collect($this->records)->pluck('attributes.sku')->filter()->unique()->toArray();
-        $existingTiles = DB::table('tiles')->where('from_api', "1")->get()->keyBy('sku');
+        
+        // Step 2: Collect DB SKUs
+        $dbSkus = DB::table('tiles')->where('from_api', '1')->pluck('sku')->filter()->unique()->values()->toArray();
+               
+        // Step 3a: Find SKUs to delete (present in DB but missing in API)
+        $skusToDelete = array_diff($apiSkus, $dbSkus);
 
-        // Get SKUs to soft delete (those that exist in DB but not in API)
-        $skusToDelete = array_diff($existingTiles->keys()->toArray(), $apiSkus);
+        //$existingTiles = DB::table('tiles')->where('from_api', "1")->get()->keyBy('sku');           
+        //$skusToDelete = array_diff($existingTiles->keys()->toArray(), $apiSkus);
     
+        // if (!empty($skusToDelete)) {
+        //     //DB::table('tiles')->whereIn('sku', $skusToDelete)->update(['enabled' => 0, 'deleted_at' => now()]);
+
+        //     foreach ($skusToDelete as $sku) {
+        //         $tile = $existingTiles[$sku] ?? null;
+
+        //         if (!$tile) {
+        //             Log::warning("Tile not found in existingTiles for SKU: $sku");
+        //             continue;
+        //         }
+        //         // $this->logSkippedRecord($sku, "Product not exists in API", $skippedRecords, $tile->name ?? '-');
+
+        //         // Store deleted records for email reporting
+        //         $deletedRecords[] = [
+        //             'id' => $tile->id,
+        //             'name' => $tile->name,
+        //             'sku' => $tile->sku,
+        //             'reason' => 'Product not exists in API'
+        //         ];
+        //     }
+
+        //     Log::info("Soft deleted missing SKUs: " . implode(', ', $skusToDelete));
+        // }
         if (!empty($skusToDelete)) {
-            DB::table('tiles')->whereIn('sku', $skusToDelete)->update(['enabled' => 0, 'deleted_at' => now()]);
-
-            foreach ($skusToDelete as $sku) {
-                $tile = $existingTiles[$sku] ?? null;
-
-                if (!$tile) {
-                    Log::warning("Tile not found in existingTiles for SKU: $sku");
-                    continue;
-                }
-                // $this->logSkippedRecord($sku, "Product not exists in API", $skippedRecords, $tile->name ?? '-');
-
-                // Store deleted records for email reporting
-                $deletedRecords[] = [
-                    'id' => $tile->id,
-                    'name' => $tile->name,
-                    'sku' => $tile->sku,
-                    'reason' => 'Product not exists in API'
-                ];
-            }
-
+            DB::table('tiles')->whereIn('sku', $skusToDelete)->update(['enabled' => 0,'deleted_at' => now()]);
             Log::info("Soft deleted missing SKUs: " . implode(', ', $skusToDelete));
         }
     }
