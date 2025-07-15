@@ -98,35 +98,37 @@ class Helper
     public static function getZoneByPincode($pincode): string | JsonResponse
     {
         try {
-            // Create a Guzzle client
-            $client = new Client();
-
-            // Call the external pincode API
-            $response = $client->request('GET', "http://www.postalpincode.in/api/pincode/{$pincode}", [
-                'timeout' => 5, // Set timeout to avoid long delays
-                'connect_timeout' => 3, // Connection timeout
+            $client = new Client([
+                'headers' => [
+                    'User-Agent' => 'LaravelApp', // Important
+                ],
+                'curl' => [
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                ],
+                'verify' => false,
             ]);
 
-            // Decode the response
-            $data = json_decode($response->getBody()->getContents(), true);
+            $response = $client->request('GET', "http://www.postalpincode.in/api/pincode/{$pincode}", [
+                'timeout' => 5,
+                'connect_timeout' => 3,
+            ]);
 
-            // Check if the API call was successful
+            $data = json_decode($response->getBody()->getContents(), true);
+            \Log::info('PINCODE API response', $data);
+
             if (!isset($data['Status']) || $data['Status'] !== 'Success' || empty($data['PostOffice'])) {
                 throw new \Exception("Invalid response from API.");
             }
 
-            // Extract area and state
             $postOffice = $data['PostOffice'][0];
-            $state = $postOffice['State'] ?? 'Gujarat'; // Use Gujarat if the state is missing
+            $state = $postOffice['State'] ?? 'Delhi';
 
         } catch (\Exception $e) {
             \Log::error("Pincode API Failed: " . $e->getMessage());
-
-            // Default to Gujarat when API fails
-            $state = 'Gujarat';
+            $state = 'Delhi';
         }
 
-        return self::getZoneFromState($state); // Call Helper Function
+        return self::getZoneFromState($state);
     }
 
     public static function getTileNameAndSurface($tileId): array
