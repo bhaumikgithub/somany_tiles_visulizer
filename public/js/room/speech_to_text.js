@@ -155,28 +155,28 @@ function processCommand(text) {
     }
 
     // Matching apply tile command: "apply Aaren Dark on Wall A"
-	let applyTileMatch = cleaned.match(/(?:apply|put|place)?\s*([\w\s]+?)\s*(?:tile|tiles)?\s*(?:on|to)?\s*(wall|floor|paint|counter)\s+([a-c])/i);
+	//let applyTileMatch = cleaned.match(/(?:apply|put|place)?\s*([\w\s]+?)\s*(?:tile|tiles)?\s*(?:on|to)?\s*(wall|floor|paint|counter)\s+([a-c])/i);
 	//let applyTileMatch = cleaned.match(/(?:apply|put|place)?\s*([\w\s]+?)\s*(?:tile|tiles)?\s*(?:on|to)?\s+([\w\s]+)/i);
-    if (applyTileMatch) {
-		console.log(applyTileMatch);
-        // const spokenTile = capitalizeWords(applyTileMatch[1].trim());
-        // const rawSurface = applyTileMatch[2].trim(); // e.g., "Vol A", "Wall 8", "Paint B"
-        // const surface = fuzzyMatchSurface(rawSurface); // dynamic matching here
-        // console.log(spokenTile + ", " + rawSurface + ", " + surface);
-        //return false;
+    // if (applyTileMatch) {
+	// 	console.log(applyTileMatch);
+    //     // const spokenTile = capitalizeWords(applyTileMatch[1].trim());
+    //     // const rawSurface = applyTileMatch[2].trim(); // e.g., "Vol A", "Wall 8", "Paint B"
+    //     // const surface = fuzzyMatchSurface(rawSurface); // dynamic matching here
+    //     // console.log(spokenTile + ", " + rawSurface + ", " + surface);
+    //     //return false;
 
-		const spokenTile = capitalizeWords(applyTileMatch[1].trim());
-		let rawSurface = `${applyTileMatch[2]} ${applyTileMatch[3]}`;
-        const surface = fuzzyMatchSurface(rawSurface);
+	// 	const spokenTile = capitalizeWords(applyTileMatch[1].trim());
+	// 	let rawSurface = `${applyTileMatch[2]} ${applyTileMatch[3]}`;
+    //     const surface = fuzzyMatchSurface(rawSurface);
 
-		const matchedTile = fuzzyMatchTile(spokenTile);
-		if (matchedTile) {
-			document.getElementById("aiStatus").textContent = `🧱 Applying ${matchedTile} to ${surface}…`;
-			cmdAppliedTiles(matchedTile, surface);
-		} else {
-			document.getElementById("aiStatus").textContent = `❌ No tile matched "${spokenTile}"`;
-		}
-	}
+	// 	const matchedTile = fuzzyMatchTile(spokenTile);
+	// 	if (matchedTile) {
+	// 		document.getElementById("aiStatus").textContent = `🧱 Applying ${matchedTile} to ${surface}…`;
+	// 		cmdAppliedTiles(matchedTile, surface);
+	// 	} else {
+	// 		document.getElementById("aiStatus").textContent = `❌ No tile matched "${spokenTile}"`;
+	// 	}
+	// }
 
 	// const showOptionsMatch = cleaned.match(/(?:show|any)?\s*(?:tile)?\s*options?\s*(?:for)?\s*(wall|floor|paint|counter)\s+([a-c])/i);
 	// if (showOptionsMatch) {
@@ -189,7 +189,7 @@ function processCommand(text) {
     let { surface, color } = parseFilterCommand(command);
     console.log("Parsed:", { color, surface });
 
-    checkColorFilterInPanel(color);
+    checkColorFilterInPanel(color,surface);
 
 }
 
@@ -295,6 +295,7 @@ function parseFilterCommand(text) {
 }
 
 function openSurfacePanel(surfaceName) {
+    console.log(surfaceName);
    // Open drawer if not open
     const drawer = $('#topPanel');
     const isDrawerOpen = drawer.is(':visible') && drawer.css('right') === '0px';
@@ -302,23 +303,33 @@ function openSurfacePanel(surfaceName) {
         drawer.show().animate({ right: '0px' }, 200);
         console.log('Drawer opened');
     }
+    console.log(surfaceName.replace(" ", "_"));
 	// Always attempt to switch panel (harmless if already correct)
   	openTileSelectionPanel(surfaceName.replace(" ", "_")); // e.g., Wall A → Wall_A
 }
 
 function checkColorFilterInPanel(color, surface) {
+    console.log("CurrentRoom");
+    console.log(currentRoom);
     if (!color || !surface) return;
 
-    openSurfacePanel(surface);
+    openSurfacePanel(surface); // <-- your own function to show the panel
 
-    // Uncheck all first
-    $panel.find('.checkboxClass').prop('checked', false);
+    const filters = currentRoom?._filters;
+    if (!filters || !filters._list) {
+        console.warn("No filters found in engine");
+        return;
+    }
 
-    // Check matching label
-    $panel.find('.filter-item-checkbox').each(function () {
-        const label = $(this).find('label').text().trim();
-        if (label.toLowerCase() === color.toLowerCase()) {
-            $(this).find('input[type="checkbox"]').prop('checked', true).trigger('change');
-        }
-    });
+    const colorFilter = filters._list.find(f =>
+        (f.field === 'colour' || f.field === 'color') &&
+        f.surface === surfaceKey
+    );
+
+    if (!colorFilter) {
+        console.warn(`Color filter not found for surface: ${surfaceKey}`);
+        return;
+    }
+
 }
+
