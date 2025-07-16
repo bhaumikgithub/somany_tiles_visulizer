@@ -188,9 +188,7 @@ function processCommand(text) {
     let command = "show me white tiles for floor A";
     let { surface, color } = parseFilterCommand(command);
     console.log("Parsed:", { color, surface });
-
-    checkColorFilterInPanel(color,surface);
-
+    applyColorFilterByLabel(color,surface,"1200");
 }
 
 function capitalizeWords(str) {
@@ -295,41 +293,82 @@ function parseFilterCommand(text) {
 }
 
 function openSurfacePanel(surfaceName) {
-    console.log(surfaceName);
-   // Open drawer if not open
+    // Open drawer if not open
     const drawer = $('#topPanel');
     const isDrawerOpen = drawer.is(':visible') && drawer.css('right') === '0px';
     if (!isDrawerOpen) {
         drawer.show().animate({ right: '0px' }, 200);
         console.log('Drawer opened');
     }
-    console.log(surfaceName.replace(" ", "_"));
 	// Always attempt to switch panel (harmless if already correct)
   	openTileSelectionPanel(surfaceName.replace(" ", "_")); // e.g., Wall A → Wall_A
 }
 
-function checkColorFilterInPanel(color, surface) {
-    console.log("CurrentRoom");
-    console.log(currentRoom);
-    if (!color || !surface) return;
+function openSurfacePanelAndInitialize(surfaceName) {
+    return new Promise((resolve) => {
+        openSurfacePanel(surfaceName);
 
-    openSurfacePanel(surface); // <-- your own function to show the panel
+        setTimeout(() => {
+            const refineBtn = document.getElementById('btnRefine');
+            if (refineBtn) {
+                refineBtn.click(); // Important: trigger filter logic
+                clickFilterCategory('floor_colour');
+                console.log('✅ Simulated first-time #btnRefine click');
+            } else {
+                console.warn('❌ #btnRefine not found.');
+            }
+            resolve();
+        }, 300); // delay to allow panel to render
+    });
+}
 
-    const filters = currentRoom?._filters;
-    if (!filters || !filters._list) {
-        console.warn("No filters found in engine");
-        return;
-    }
+async function applyColorFilterByLabel(colorLabel, surfaceName) {
+    if (!colorLabel || !surfaceName) return;
 
-    const colorFilter = filters._list.find(f =>
+    await openSurfacePanelAndInitialize(surfaceName);
+
+    const surfaceType = surfaceName.toLowerCase().includes("floor") ? "floor" : "wall";
+
+    const filters = currentRoom?._filters?._list || [];
+    const colorFilter = filters.find(f =>
         (f.field === 'colour' || f.field === 'color') &&
-        f.surface === surfaceKey
+        f.surface?.toLowerCase() === surfaceType
     );
 
     if (!colorFilter) {
-        console.warn(`Color filter not found for surface: ${surfaceKey}`);
+        console.warn(`❌ No color filter found for surface: "${surfaceName}"`);
         return;
     }
 
+    const targetItem = colorFilter._items.find(item =>
+        item.value?.toLowerCase() === colorLabel.toLowerCase()
+    );
+
+    if (!targetItem?.domElement) {
+        console.warn(`❌ Color "${colorLabel}" not found in filter items`);
+        return;
+    }
+
+    // Uncheck others
+    colorFilter._items.forEach(item => {
+        if (item.domElement) {
+            item.domElement.checked = false;
+            item.checked = false;
+        }
+    });
+
+    // Click target
+    targetItem.domElement.click();
+
+    // Reapply logic
+    colorFilter._apply?.();
+    currentRoom._filters._find?.();
+    console.log(`✅ Final reapply triggered for "${colorLabel}" on "${surfaceName}"`);
 }
+
+
+
+
+
+
 
