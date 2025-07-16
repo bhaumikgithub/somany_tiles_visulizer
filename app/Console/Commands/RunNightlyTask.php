@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Traits\ApiHelper;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\ProcessTilesJob;
+use Illuminate\Support\Facades\Mail;
 
 class RunNightlyTask extends Command
 {
