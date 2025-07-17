@@ -154,41 +154,58 @@ function processCommand(text) {
         document.getElementById("aiStatus").textContent = "Unrecognized command: " + cleaned;
     }
 
-    // Matching apply tile command: "apply Aaren Dark on Wall A"
-	//let applyTileMatch = cleaned.match(/(?:apply|put|place)?\s*([\w\s]+?)\s*(?:tile|tiles)?\s*(?:on|to)?\s*(wall|floor|paint|counter)\s+([a-c])/i);
-	//let applyTileMatch = cleaned.match(/(?:apply|put|place)?\s*([\w\s]+?)\s*(?:tile|tiles)?\s*(?:on|to)?\s+([\w\s]+)/i);
-    // if (applyTileMatch) {
-	// 	console.log(applyTileMatch);
-    //     // const spokenTile = capitalizeWords(applyTileMatch[1].trim());
-    //     // const rawSurface = applyTileMatch[2].trim(); // e.g., "Vol A", "Wall 8", "Paint B"
-    //     // const surface = fuzzyMatchSurface(rawSurface); // dynamic matching here
-    //     // console.log(spokenTile + ", " + rawSurface + ", " + surface);
-    //     //return false;
 
-	// 	const spokenTile = capitalizeWords(applyTileMatch[1].trim());
-	// 	let rawSurface = `${applyTileMatch[2]} ${applyTileMatch[3]}`;
-    //     const surface = fuzzyMatchSurface(rawSurface);
+    // 1. Apply a tile to a surface
+    let applyTileMatch = cleaned.match(/(?:\bapply\b|\bput\b|\bplace\b)\s+([\w\s]+?)\s*(?:tile|tiles)?\s*(?:on|to)?\s*(wall|floor|paint|counter)\s*([a-c])/i);    if (applyTileMatch) {
+        console.log("Option 1");
+        const spokenTile = capitalizeWords(applyTileMatch[1].trim());
+        const rawSurface = `${applyTileMatch[2]} ${applyTileMatch[3]}`;
+        const surface = fuzzyMatchSurface(rawSurface);
+        const matchedTile = fuzzyMatchTile(spokenTile);
 
-	// 	const matchedTile = fuzzyMatchTile(spokenTile);
-	// 	if (matchedTile) {
-	// 		document.getElementById("aiStatus").textContent = `🧱 Applying ${matchedTile} to ${surface}…`;
-	// 		cmdAppliedTiles(matchedTile, surface);
-	// 	} else {
-	// 		document.getElementById("aiStatus").textContent = `❌ No tile matched "${spokenTile}"`;
-	// 	}
-	// }
+        if (matchedTile) {
+            document.getElementById("aiStatus").textContent = `🧱 Applying ${matchedTile} to ${surface}…`;
+            cmdAppliedTiles(matchedTile, surface);
+        } else {
+            document.getElementById("aiStatus").textContent = `❌ No tile matched "${spokenTile}"`;
+        }
+        return;
+    }
 
-	// const showOptionsMatch = cleaned.match(/(?:show|any)?\s*(?:tile)?\s*options?\s*(?:for)?\s*(wall|floor|paint|counter)\s+([a-c])/i);
-	// if (showOptionsMatch) {
-	// 	const surface = `${showOptionsMatch[1]} ${showOptionsMatch[2]}`.toUpperCase(); // e.g., "FLOOR A"
-	// 	cmdShowTilesOptions(surface);
-	// 	return;
-	// }
+	// 2. Show tile options for surface
+    let showOptionsMatch = cleaned.match(/(?:show|any)?\s*(?:tile)?\s*options?\s*(?:for)?\s*(wall|floor|paint|counter)\s*([a-c])/i);
+    if (showOptionsMatch) {
+        console.log("Option 2");
+        console.log(showOptionsMatch);
+        const surface = `${showOptionsMatch[1]} ${showOptionsMatch[2]}`.toUpperCase();
+        console.log(surface);
+        cmdShowTilesOptions(surface);
+        return;
+    }
 
-    let command = "show me white tiles for floor A";
-    let { surface, color } = parseFilterCommand(command);
-    console.log("Parsed:", { color, surface });
-    applyColorFilterByLabel(color,surface,"1200");
+    // 3. Show me [Color] tiles for [Surface]
+    // const preCleaned = cleaned
+    //     .replace(/\btales\b/g, "tiles")
+    //     .replace(/\bflor\b/g, "floor")
+    //     .replace(/\bwal\b/g, "wall");
+
+    // let colorOnlyMatch = preCleaned.match(/(?:show|display)?\s*(?:me)?\s*([\w\s]+?)\s+(?:tile|tiles)\s+for\s+(wall|floor|paint|counter)\s*([a-c])/i);
+    // if (colorOnlyMatch) {
+    //     const rawColor = colorOnlyMatch[1].trim();
+    //     const color = normalizeColor(rawColor); // Only "multicolor" is converted
+    //     const surface = `${colorOnlyMatch[2]} ${colorOnlyMatch[3]}`.toUpperCase();
+    //     console.log("color is " + color + ", surface is " + surface);
+    //     cmdFilterOptions(color, surface);
+    //     return;
+    // }
+
+    // 4. Show me [size] [color] [finish] tile for [surface]
+    handleVoiceFilterCommand("Show me white and pink glossy tiles for Floor A");
+    //cmdApplyVoiceFilters(parsed);
+
+
+    // If nothing matches
+    document.getElementById("aiStatus").textContent = "Unrecognized command: " + cleaned;
 }
 
 function capitalizeWords(str) {
@@ -304,25 +321,7 @@ function openSurfacePanel(surfaceName) {
   	openTileSelectionPanel(surfaceName.replace(" ", "_")); // e.g., Wall A → Wall_A
 }
 
-function openSurfacePanelAndInitialize(surfaceName) {
-    return new Promise((resolve) => {
-        openSurfacePanel(surfaceName);
-
-        setTimeout(() => {
-            const refineBtn = document.getElementById('btnRefine');
-            if (refineBtn) {
-                refineBtn.click(); // Important: trigger filter logic
-                clickFilterCategory('floor_colour');
-                console.log('✅ Simulated first-time #btnRefine click');
-            } else {
-                console.warn('❌ #btnRefine not found.');
-            }
-            resolve();
-        }, 300); // delay to allow panel to render
-    });
-}
-
-async function applyColorFilterByLabel(colorLabel, surfaceName) {
+async function cmdFilterOptions(colorLabel, surfaceName) {
     if (!colorLabel || !surfaceName) return;
 
     await openSurfacePanelAndInitialize(surfaceName);
@@ -349,13 +348,13 @@ async function applyColorFilterByLabel(colorLabel, surfaceName) {
         return;
     }
 
-    // Uncheck others
-    colorFilter._items.forEach(item => {
-        if (item.domElement) {
-            item.domElement.checked = false;
-            item.checked = false;
-        }
-    });
+    // // Uncheck others
+    // colorFilter._items.forEach(item => {
+    //     if (item.domElement) {
+    //         item.domElement.checked = false;
+    //         item.checked = false;
+    //     }
+    // });
 
     // Click target
     targetItem.domElement.click();
@@ -366,7 +365,146 @@ async function applyColorFilterByLabel(colorLabel, surfaceName) {
     console.log(`✅ Final reapply triggered for "${colorLabel}" on "${surfaceName}"`);
 }
 
+function normalizeColor(color) {
+    const lower = color.toLowerCase().trim();
+    
+    if (lower === "multicolor" || lower === "multi color" || lower === "multi-color") {
+        return "Multi Colour";
+    }
 
+    return capitalizeWords(color.trim());
+}
+
+function parseVoiceFilters(text) {
+    const lowerText = text.toLowerCase();
+    const surfaceMatch = text.match(/\b(floor|wall)\s+[a-z]/i);
+    const surface = surfaceMatch ? surfaceMatch[0].trim() : null;
+
+    const cleaned = lowerText
+        .replace(/show me|i want to see|give me|tiles for/g, '')
+        .replace(/\b(floor|wall)\s+[a-z]/gi, '')
+        .replace(/[^a-zA-Z0-9\s]/g, '')
+        .trim();
+
+    const stopWords = ['and', 'tiles', 'tile', 'for', 'on', 'the', 'a'];
+    const rawWords = cleaned
+        .split(/\s+/)
+        .filter(w => w && !stopWords.includes(w));
+
+    return { surface, rawWords };
+}
+
+function openSurfacePanelAndInitialize(surfaceName) {
+    return new Promise((resolve) => {
+        openSurfacePanel(surfaceName);
+
+        setTimeout(() => {
+            const refineBtn = document.getElementById('btnRefine');
+            if (refineBtn) {
+                refineBtn.click(); // Important: trigger filter logic
+                console.log('✅ Simulated first-time #btnRefine click');
+            } else {
+                console.warn('❌ #btnRefine not found.');
+            }
+            resolve();
+        }, 300); // delay to allow panel to render
+    });
+}
+
+function applyVoiceFiltersToRoom(rawWords, surfaceName) {
+    const surfaceType = surfaceName.toLowerCase().includes("floor") ? "floor" : "wall";
+
+    const filters = currentRoom?._filters?._list || [];
+    if (!filters.length) return console.warn('❌ No filters found');
+
+    let matchCount = 0;
+
+    filters.forEach(filter => {
+        if (!filter.surface || filter.surface.toLowerCase() !== surfaceType) return;
+
+        const fieldName = filter.field;
+        const matchedItems = [];
+
+        rawWords.forEach(word => {
+            let value = word;
+
+            // Handle "Multicolor" voice variations
+            if (value.toLowerCase() === 'multicolor' || value.toLowerCase() === 'multi') {
+                value = 'Multi Colour';
+            }
+
+            const item = filter._items.find(i => i.value.toLowerCase() === value.toLowerCase());
+            if (item && item.domElement) {
+                matchedItems.push(item);
+            }
+        });
+
+        if (matchedItems.length) {
+            matchedItems.forEach(item => {
+                item.domElement.checked = true;
+                item.checked = true;
+            });
+
+            filter._apply?.();
+            matchCount += matchedItems.length;
+        }
+    });
+
+    if (matchCount > 0) {
+        currentRoom._filters._find?.();
+        console.log(`✅ Applied ${matchCount} filter(s) to ${surfaceName}`);
+    } else {
+        console.warn('❌ No matching filter values found in rawWords');
+    }
+}
+
+function highlightMatchedFilterCategory(rawWords, surfaceType) {
+    const filterPriority = ['size', 'colour', 'finishes', 'category', 'innovation'];
+
+    const filters = currentRoom?._filters?._list || [];
+    if (!filters.length) return;
+
+    // Reset all tabs
+    $('#topPanelNavFilter li').removeClass('filter-click-active');
+
+    for (let field of filterPriority) {
+        const fullField = `${surfaceType}_${field}`;
+        const filter = filters.find(f => f.field === field && f.surface?.toLowerCase() === surfaceType);
+
+        if (filter) {
+            const match = rawWords.find(word =>
+                filter._items?.some(item => item.value.toLowerCase() === word.toLowerCase())
+            );
+
+            if (match) {
+                const liId = `#filterclick_${fullField}`;
+                const liEl = $(liId);
+                if (liEl.length) {
+                    liEl.addClass('filter-click-active');
+                    liEl[0].click(); // simulate tab change
+                    console.log(`✅ Activated filter tab: ${field}`);
+                }
+                break;
+            }
+        }
+    }
+}
+
+
+async function handleVoiceFilterCommand(voiceText) {
+    const { surface, rawWords } = parseVoiceFilters(voiceText);
+    if (!surface || rawWords.length === 0) return;
+
+    const panelOpen = openSurfacePanel(surface);
+    const filterOpen = $('#topPanelNavFilter').is(':visible');
+
+    if (!panelOpen || !filterOpen) {
+        await openSurfacePanelAndInitialize(surface);
+    }
+
+    highlightMatchedFilterCategory(rawWords, surface);
+    applyVoiceFiltersToRoom(rawWords, surface);
+}
 
 
 
