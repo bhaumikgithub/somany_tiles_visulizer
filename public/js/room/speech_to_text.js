@@ -421,6 +421,16 @@ function normalizeFilterWord(word) {
     return word.replace(/mm$/i, '').toLowerCase();
 }
 
+const categorySlugMap = {
+    "living room": "livingroom",
+    "prayer room": "prayer-room",
+    "kitchen": "kitchen",
+    "bathroom": "bathroom",
+    "bedroom": "bedroom",
+    "outdoor":"outdoor",
+    "commercial":"commercial"
+    // Add more as needed
+};
 
 function handleCategoryNavigation(cleanedText) {
     let lowerText = cleanedText.toLowerCase().trim();
@@ -432,10 +442,10 @@ function handleCategoryNavigation(cleanedText) {
         .replace(/[.?!]+$/, '')                          // remove trailing punctuation
         .trim();
 
-    console.log("Extracted category name:", categoryName);
+    const slug = categorySlugMap[categoryName];
 
-    if (categoryName) {
-        redirectToCategory(categoryName);
+    if (slug) {
+        redirectToCategory(slug);
     } else {
         console.warn("⚠️ No valid category name found in voice input");
     }
