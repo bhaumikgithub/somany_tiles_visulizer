@@ -183,26 +183,12 @@ function processCommand(text) {
         return;
     }
 
-    // 3. Show me [Color] tiles for [Surface]
-    // const preCleaned = cleaned
-    //     .replace(/\btales\b/g, "tiles")
-    //     .replace(/\bflor\b/g, "floor")
-    //     .replace(/\bwal\b/g, "wall");
-
-    // let colorOnlyMatch = preCleaned.match(/(?:show|display)?\s*(?:me)?\s*([\w\s]+?)\s+(?:tile|tiles)\s+for\s+(wall|floor|paint|counter)\s*([a-c])/i);
-    // if (colorOnlyMatch) {
-    //     const rawColor = colorOnlyMatch[1].trim();
-    //     const color = normalizeColor(rawColor); // Only "multicolor" is converted
-    //     const surface = `${colorOnlyMatch[2]} ${colorOnlyMatch[3]}`.toUpperCase();
-    //     console.log("color is " + color + ", surface is " + surface);
-    //     cmdFilterOptions(color, surface);
-    //     return;
-    // }
-
-    // 4. Show me [size] [color] [finish] tile for [surface]
-    handleVoiceFilterCommand("Show me white and pink glossy tiles for Floor A");
-    //cmdApplyVoiceFilters(parsed);
-
+    // 3. Handle filter-based voice command like "Show me 600x1200 white glossy tiles for Wall A"
+    const filterCommandTriggerWords = ["show", "display", "list", "give me", "may i see", "can you show", "please show", "let me see"];
+    if (filterCommandTriggerWords.some(trigger => cleaned.includes(trigger))) {
+        handleVoiceFilterCommand(cleaned);
+        return;
+    }
 
     // If nothing matches
     document.getElementById("aiStatus").textContent = "Unrecognized command: " + cleaned;
@@ -258,15 +244,7 @@ function cmdAppliedTiles(tileName,surfaceName) {
 	console.log("======================== Consoling AI TOOLS STARTS =================================");
 	console.log(tileName , surfaceName);
 	console.log("======================== Consoling AI TOOLS ENDS ===================================");
-    // // Open drawer if not open
-    // const drawer = $('#topPanel');
-    // const isDrawerOpen = drawer.is(':visible') && drawer.css('right') === '0px';
-    // if (!isDrawerOpen) {
-    //     drawer.show().animate({ right: '0px' }, 200);
-    //     console.log('Drawer opened');
-    // }
 
-  	// openTileSelectionPanel(surfaceName.replace(" ", "_")); // e.g., Wall A → Wall_A
 	const currentSurface = $('#slected-panel .display_surface_name h5#optionText').text().trim();
 	if (currentSurface.toLowerCase() === surfaceName.toLowerCase()){
 		//Find tile by caption
@@ -285,7 +263,7 @@ function cmdAppliedTiles(tileName,surfaceName) {
 	}
 }
 
-//Show Tiles options for Wall A, Wall B, Floor Etc
+
 function cmdShowTilesOptions(surfaceName)
 {
 	openSurfacePanel(surfaceName);
@@ -294,20 +272,46 @@ function cmdShowTilesOptions(surfaceName)
     document.getElementById("aiStatus").textContent = `Showing tile options for ${surfaceName}`;
 }
 
+//Multiple Filter commands
+async function handleVoiceFilterCommand(voiceText) {
+    const { surface, rawWords } = parseVoiceFilters(voiceText);
+    if (!surface || rawWords.length === 0) return;
 
-function parseFilterCommand(text) {
-    text = text.toLowerCase();
+    const panelOpen = openSurfacePanel(surface);
+    const filterOpen = $('#topPanelNavFilter').is(':visible');
 
-    // Match known surfaces like Wall A, Floor B, etc.
-    const surfaceMatch = text.match(/\b(wall|floor|counter|paint)\s*([a-o])/i);
-    const surface = surfaceMatch ? `${capitalizeWords(surfaceMatch[1])} ${surfaceMatch[2].toUpperCase()}` : null;
+    if (!panelOpen || !filterOpen) {
+        await openSurfacePanelAndInitialize(surface);
+    }
 
-    // Match colors
-    const colorMatch = text.match(/\b(white|black|grey|beige|brown|blue|pink|red|green|yellow|cream|multi colour)\b/i);
-    const color = colorMatch ? capitalizeWords(colorMatch[1]) : null;
-
-    return { surface, color };
+    applyVoiceFiltersToRoom(rawWords, surface);
 }
+
+function parseVoiceFilters(text) {
+    const lowerText = text.toLowerCase();
+
+    // ✅ Match full surface name (e.g., "floor a", "wall b", "counter top")
+    const surfaceMatch = lowerText.match(/\b(?:floor|wall|counter|paint)\s*[a-z0-9]*/i);
+    const surface = surfaceMatch ? surfaceMatch[0].trim().replace(/\s+/g, ' ') : null;
+
+    // ✅ Normalize spoken sizes like "600 by 1200" or "600 1200" to "600x1200mm"
+    let cleaned = lowerText
+        .replace(/show me|please show|i want to see|give me|tiles for|can you show|may i see/g, '')
+        .replace(/\b(?:floor|wall|counter|paint)\s*[a-z0-9]*/gi, '') // remove surface phrases
+        .replace(/(\d{2,4})\s*(?:by|x|\s)\s*(\d{2,4})/g, (_, w1, w2) => `${w1}x${w2}mm`)
+        .replace(/[^a-zA-Z0-9\sx]/g, ' ') // remove extra punctuation
+        .replace(/\s+/g, ' ') // collapse spaces
+        .trim();
+
+    const stopWords = ['and', 'tiles', 'tile', 'for', 'on', 'the', 'a'];
+    const rawWords = cleaned
+        .split(/\s+/)
+        .filter(w => w && !stopWords.includes(w));
+
+    return { surface, rawWords };
+}
+
+
 
 function openSurfacePanel(surfaceName) {
     // Open drawer if not open
@@ -319,79 +323,6 @@ function openSurfacePanel(surfaceName) {
     }
 	// Always attempt to switch panel (harmless if already correct)
   	openTileSelectionPanel(surfaceName.replace(" ", "_")); // e.g., Wall A → Wall_A
-}
-
-async function cmdFilterOptions(colorLabel, surfaceName) {
-    if (!colorLabel || !surfaceName) return;
-
-    await openSurfacePanelAndInitialize(surfaceName);
-
-    const surfaceType = surfaceName.toLowerCase().includes("floor") ? "floor" : "wall";
-
-    const filters = currentRoom?._filters?._list || [];
-    const colorFilter = filters.find(f =>
-        (f.field === 'colour' || f.field === 'color') &&
-        f.surface?.toLowerCase() === surfaceType
-    );
-
-    if (!colorFilter) {
-        console.warn(`❌ No color filter found for surface: "${surfaceName}"`);
-        return;
-    }
-
-    const targetItem = colorFilter._items.find(item =>
-        item.value?.toLowerCase() === colorLabel.toLowerCase()
-    );
-
-    if (!targetItem?.domElement) {
-        console.warn(`❌ Color "${colorLabel}" not found in filter items`);
-        return;
-    }
-
-    // // Uncheck others
-    // colorFilter._items.forEach(item => {
-    //     if (item.domElement) {
-    //         item.domElement.checked = false;
-    //         item.checked = false;
-    //     }
-    // });
-
-    // Click target
-    targetItem.domElement.click();
-
-    // Reapply logic
-    colorFilter._apply?.();
-    currentRoom._filters._find?.();
-    console.log(`✅ Final reapply triggered for "${colorLabel}" on "${surfaceName}"`);
-}
-
-function normalizeColor(color) {
-    const lower = color.toLowerCase().trim();
-    
-    if (lower === "multicolor" || lower === "multi color" || lower === "multi-color") {
-        return "Multi Colour";
-    }
-
-    return capitalizeWords(color.trim());
-}
-
-function parseVoiceFilters(text) {
-    const lowerText = text.toLowerCase();
-    const surfaceMatch = text.match(/\b(floor|wall)\s+[a-z]/i);
-    const surface = surfaceMatch ? surfaceMatch[0].trim() : null;
-
-    const cleaned = lowerText
-        .replace(/show me|i want to see|give me|tiles for/g, '')
-        .replace(/\b(floor|wall)\s+[a-z]/gi, '')
-        .replace(/[^a-zA-Z0-9\s]/g, '')
-        .trim();
-
-    const stopWords = ['and', 'tiles', 'tile', 'for', 'on', 'the', 'a'];
-    const rawWords = cleaned
-        .split(/\s+/)
-        .filter(w => w && !stopWords.includes(w));
-
-    return { surface, rawWords };
 }
 
 function openSurfacePanelAndInitialize(surfaceName) {
@@ -419,14 +350,17 @@ function applyVoiceFiltersToRoom(rawWords, surfaceName) {
 
     let matchCount = 0;
 
+    const normalize = word => word.toLowerCase().replace(/mm$/, '');
+
     filters.forEach(filter => {
         if (!filter.surface || filter.surface.toLowerCase() !== surfaceType) return;
 
-        const fieldName = filter.field;
         const matchedItems = [];
 
         rawWords.forEach(word => {
-            let value = word;
+            //let value = word;
+
+            let value = normalize(word); // strip mm and lowercase
 
             // Handle "Multicolor" voice variations
             if (value.toLowerCase() === 'multicolor' || value.toLowerCase() === 'multi') {
@@ -449,7 +383,7 @@ function applyVoiceFiltersToRoom(rawWords, surfaceName) {
             matchCount += matchedItems.length;
         }
     });
-
+    console.log("matchCount " + matchCount);
     if (matchCount > 0) {
         currentRoom._filters._find?.();
         console.log(`✅ Applied ${matchCount} filter(s) to ${surfaceName}`);
@@ -458,55 +392,7 @@ function applyVoiceFiltersToRoom(rawWords, surfaceName) {
     }
 }
 
-function highlightMatchedFilterCategory(rawWords, surfaceType) {
-    const filterPriority = ['size', 'colour', 'finishes', 'category', 'innovation'];
-
-    const filters = currentRoom?._filters?._list || [];
-    if (!filters.length) return;
-
-    // Reset all tabs
-    $('#topPanelNavFilter li').removeClass('filter-click-active');
-
-    for (let field of filterPriority) {
-        const fullField = `${surfaceType}_${field}`;
-        const filter = filters.find(f => f.field === field && f.surface?.toLowerCase() === surfaceType);
-
-        if (filter) {
-            const match = rawWords.find(word =>
-                filter._items?.some(item => item.value.toLowerCase() === word.toLowerCase())
-            );
-
-            if (match) {
-                const liId = `#filterclick_${fullField}`;
-                const liEl = $(liId);
-                if (liEl.length) {
-                    liEl.addClass('filter-click-active');
-                    liEl[0].click(); // simulate tab change
-                    console.log(`✅ Activated filter tab: ${field}`);
-                }
-                break;
-            }
-        }
-    }
+function normalizeFilterWord(word) {
+    // Convert "600x1200mm" → "600x1200"
+    return word.replace(/mm$/i, '').toLowerCase();
 }
-
-
-async function handleVoiceFilterCommand(voiceText) {
-    const { surface, rawWords } = parseVoiceFilters(voiceText);
-    if (!surface || rawWords.length === 0) return;
-
-    const panelOpen = openSurfacePanel(surface);
-    const filterOpen = $('#topPanelNavFilter').is(':visible');
-
-    if (!panelOpen || !filterOpen) {
-        await openSurfacePanelAndInitialize(surface);
-    }
-
-    highlightMatchedFilterCategory(rawWords, surface);
-    applyVoiceFiltersToRoom(rawWords, surface);
-}
-
-
-
-
-
