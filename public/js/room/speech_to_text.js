@@ -1,6 +1,8 @@
 let mediaRecorder;
 let audioChunks = [];
 let micStream = null;
+let speechToTextURL = new URL(window.location.href);
+let baseUrl = window.location.origin;
 
 document.getElementById('startRecording').addEventListener('click', async () => {
     const popup = document.getElementById('aiPopup');
@@ -150,8 +152,6 @@ function processCommand(text) {
 
     if (matched) {
         matched.action();
-    } else {
-        document.getElementById("aiStatus").textContent = "Unrecognized command: " + cleaned;
     }
 
 
@@ -175,10 +175,7 @@ function processCommand(text) {
 	// 2. Show tile options for surface
     let showOptionsMatch = cleaned.match(/(?:show|any)?\s*(?:tile)?\s*options?\s*(?:for)?\s*(wall|floor|paint|counter)\s*([a-c])/i);
     if (showOptionsMatch) {
-        console.log("Option 2");
-        console.log(showOptionsMatch);
         const surface = `${showOptionsMatch[1]} ${showOptionsMatch[2]}`.toUpperCase();
-        console.log(surface);
         cmdShowTilesOptions(surface);
         return;
     }
@@ -187,6 +184,33 @@ function processCommand(text) {
     const filterCommandTriggerWords = ["show", "display", "list", "give me", "may i see", "can you show", "please show", "let me see"];
     if (filterCommandTriggerWords.some(trigger => cleaned.includes(trigger))) {
         handleVoiceFilterCommand(cleaned);
+        return;
+    }
+
+    const pathSegments = window.location.pathname.split("/");
+    if( pathSegments[1] == "listing"){
+        // Check if it's a room navigation command
+        const roomTriggers = ["select", "open", "go to", "show"];
+        if (roomTriggers.some(trigger => cleaned.startsWith(trigger))) {
+            handleRoomSelectionCommand(cleaned,pathSegments[1]);
+            return;
+        }
+    } else {
+        const categoryCommandTriggers = ["open", "select", "go to", "show"];
+        if (categoryCommandTriggers.some(trigger => cleaned.includes(trigger) && cleaned.includes(trigger))) {
+            handleCategoryNavigation(cleaned);
+            return;
+        }
+    }
+    
+    const backCommandTriggerWords = ["go back","back","go to previous","return","go back to listing","go to listing page","go back to listing page"];
+    const cleanedText = cleaned.replace(/[^\w\s]/gi, '').trim();
+    const isBackCommand = backCommandTriggerWords.some(trigger =>
+        cleanedText.includes(trigger)
+    );
+
+    if (isBackCommand) {
+        handleBackNavigation();
         return;
     }
 
@@ -343,14 +367,14 @@ function openSurfacePanelAndInitialize(surfaceName) {
 }
 
 function applyVoiceFiltersToRoom(rawWords, surfaceName) {
-    const surfaceType = surfaceName.toLowerCase().includes("floor") ? "floor" : "wall";
+    let surfaceType = surfaceName.toLowerCase().includes("floor") ? "floor" : "wall";
 
-    const filters = currentRoom?._filters?._list || [];
+    let filters = currentRoom?._filters?._list || [];
     if (!filters.length) return console.warn('❌ No filters found');
 
     let matchCount = 0;
 
-    const normalize = word => word.toLowerCase().replace(/mm$/, '');
+    let normalize = word => word.toLowerCase().replace(/mm$/, '');
 
     filters.forEach(filter => {
         if (!filter.surface || filter.surface.toLowerCase() !== surfaceType) return;
@@ -395,4 +419,100 @@ function applyVoiceFiltersToRoom(rawWords, surfaceName) {
 function normalizeFilterWord(word) {
     // Convert "600x1200mm" → "600x1200"
     return word.replace(/mm$/i, '').toLowerCase();
+}
+
+
+function handleCategoryNavigation(cleanedText) {
+    let lowerText = cleanedText.toLowerCase().trim();
+
+    // Remove all common voice trigger phrases and trailing "category" or punctuation
+    let categoryName = lowerText
+        .replace(/^(open|select|go to|show)\s+/, '')     // remove start commands
+        .replace(/\s*category\s*$/, '')                  // remove 'category' at end
+        .replace(/[.?!]+$/, '')                          // remove trailing punctuation
+        .trim();
+
+    console.log("Extracted category name:", categoryName);
+
+    if (categoryName) {
+        redirectToCategory(categoryName);
+    } else {
+        console.warn("⚠️ No valid category name found in voice input");
+    }
+}
+
+
+function redirectToCategory(categorySlug) {
+    let pathSegments = speechToTextURL.pathname.split("/");
+    // Customize this URL pattern as per your app routing
+    if (pathSegments[1] === "2d-studio") {
+        fetchCategory(categorySlug.toLowerCase(),'2d');
+        window.location.href = `${baseUrl}/listing/${categorySlug.toLowerCase()}`;
+    } else if (pathSegments[1] === "panorama-studio"){
+        fetchCategory(categorySlug.toLowerCase(),'');
+        window.location.href = `${baseUrl}/panorama-listing/${categorySlug.toLowerCase()}`;
+    }
+}
+
+//Go back to previous page
+function handleBackNavigation() {
+    let pathSegments = window.location.pathname.split("/");
+    let baseUrl = window.location.origin;
+    let roomSlug = (typeof currentRoom !== "undefined" && currentRoom?.type) 
+        ? currentRoom.type.toLowerCase() 
+        : null;
+
+    let from = pathSegments[1];
+
+    if (from === "listing") {
+        window.location.href = `${baseUrl}/2d-studio`;
+    } else if (from === "panorama-listing") {
+        window.location.href = `${baseUrl}/panorama-studio`;
+    } else if (from === "2d-studio" && roomSlug) {
+        window.location.href = `${baseUrl}/listing/${roomSlug}`;
+    } else if (from === "panorama-studio" && roomSlug) {
+        window.location.href = `${baseUrl}/panorama-listing/${roomSlug}`;
+    } else {
+        console.warn("⚠️ Unable to determine current room type or invalid path");
+    }
+}
+
+let allRooms = Array.from(document.querySelectorAll('.body-selection-item a')).map(el => {
+    return {
+        id: el.getAttribute('data-room-id'),
+        name: el.title.trim()
+    };
+});
+
+function handleRoomSelectionCommand(cleanedText,redirectionWord) {
+    let triggers = ["select", "open", "go to", "show"];
+    let spokenRoom = cleanedText.toLowerCase().trim();
+
+    // Remove trigger prefix
+    triggers.forEach(trigger => {
+        if (spokenRoom.startsWith(trigger)) {
+            spokenRoom = spokenRoom.replace(trigger, "").trim();
+        }
+    });
+    // Remove trailing punctuation like "." or ","
+    spokenRoom = spokenRoom.replace(/[.,!?]$/, "").trim();
+    // Try to match
+    let matchedRoom = allRooms.find(room =>
+        room.name.toLowerCase() === spokenRoom
+    );
+    let redirectUrl = "";
+    if (matchedRoom) {
+        let baseUrl = window.location.origin;
+        // Redirect to your 2d-studio route with ID
+        if( redirectionWord == "listing"){
+            redirectUrl = `${baseUrl}/2d-studio/${matchedRoom.id}`;
+            fetchRoom(matchedRoom.id, matchedRoom.name, '2d');
+        } else {
+            redirectUrl = `${baseUrl}/panorama-studio/${matchedRoom.id}`;
+            fetchRoom(matchedRoom.id, matchedRoom.name, '3d');
+        }
+        window.location.href = redirectUrl;        
+    } else {
+        console.warn("⚠️ No room found for:", spokenRoom);
+    }
 }

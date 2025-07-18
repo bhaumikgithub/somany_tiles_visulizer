@@ -1355,7 +1355,8 @@ body {
 
 }
 
-.cmn-back-btn .span-icon {
+.cmn-back-btn .span-icon,
+.cmn-ai-button .span-icon {
     background: rgba(246, 247, 245, 0.8);
     /* border: 1px solid #bfbfbf;*/
     cursor: pointer;
@@ -1374,7 +1375,8 @@ body {
 
 }
 
-.cmn-back-btn .span-icon i {
+.cmn-back-btn .span-icon i,
+.cmn-ai-button .span-icon i {
     font-size: 18px;
 }
 
@@ -2053,4 +2055,18 @@ input[type=checkbox] {
 
         }
     }
+}
+
+.cmn-ai-button{
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+    margin-right: 15px;
+}
+
+.btn-text-set-ai-button {
+    color: #fff !important;
+    margin-left: 0;
+    margin-top: 10px;
+    text-shadow: 1px 1px 4px #000;
 }

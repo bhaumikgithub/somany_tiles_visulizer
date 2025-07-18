@@ -7,7 +7,7 @@
                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 padding-section">
                         <div class="cms-element-text">
                             <div class="body-selection-item">
-                                <a title="{{$aRoom->name}}" href="javascript:void(0)" onclick="fetchRoom({{$aRoom->id}},'{{$aRoom->name}}','2d');">
+                                <a title="{{$aRoom->name}}" href="javascript:void(0)" onclick="fetchRoom({{$aRoom->id}},'{{$aRoom->name}}','2d');" data-room-id="{{$aRoom->id}}">
                                     <div class="body-selection-item-text">{{$aRoom->name}}</div>
                                     <div style="background-image:url({{$aRoom->icon}});" class="body-selection-item-image"></div>
                                    <!-- <div style="background-image:url(../images/l-1.jpg);" class="body-selection-item-image"></div> -->
@@ -24,5 +24,11 @@
             </span></a>
             <p class="btn-text-set-back">Back </p>
         </div>
+        <div class="cmn-ai-button">
+            <span class="span-icon">
+                <button id="startRecording" class="share-link d-flex flex-wrap align-items-center">🎤</button></span>
+            <!-- <p class="btn-text-set-ai-button">AI Button </p> -->
+        </div>
     </div>
+    @include('common.speech_to_text')
 @endsection

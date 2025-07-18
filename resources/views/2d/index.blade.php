@@ -101,4 +101,12 @@
             </div>
         </div>
     </div>
+
+    <div class="cmn-ai-button">
+        <span class="span-icon">
+            <button id="startRecording" class="share-link d-flex flex-wrap align-items-center">🎤</button></span>
+        <!-- <p class="btn-text-set-back">AI Button </p> -->
+    </div>
+
+    @include('common.speech_to_text')
 @endsection

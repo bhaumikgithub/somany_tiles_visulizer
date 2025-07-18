@@ -79,6 +79,7 @@
 
     <script src="/js/room/add_to_pdf_room.js"></script>
     <script src="/js/room/pincode.js"></script>
+    <script src="/js/room/speech_to_text.js"></script>
 
     <!-- Google Tag Manager -->
     <script>
